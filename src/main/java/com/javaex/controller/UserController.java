@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping(value="/user")
+@RequestMapping(value="/onespace")
 public class UserController {
 	
 	//필드
@@ -16,7 +16,7 @@ public class UserController {
 	public String joinForm() {
 		System.out.println("UserController.joinFrom()");
 		
-		return "user/joinForm";
+		return "admin/auth/signup";
 	}
 	// --회원가입
 	
