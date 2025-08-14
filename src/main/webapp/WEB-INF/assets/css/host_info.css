@@ -1,0 +1,487 @@
+@charset "UTF-8";
+
+/* ----- 호스트 button background colour ----- */
+.header-buttons .host-btn {
+  background-color: #D9CCFA;
+  color: #704CE4;
+}
+
+/* ----- 탭버튼 ----- */
+.tab-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+.tab {
+  background: #fff;
+  border: 2px solid #704CE4;
+  border-radius: 40px;
+  font-size: 1.24rem;
+  font-weight: 700;
+  color: #704CE4;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  padding: 5px 10px;
+}
+.tab.active {
+  background: #704CE4;
+  color: #fff;
+  border: 2px solid #704CE4;
+  padding: 5px 10px 5px 10px;
+}
+
+/* ----- 메인 타이틀/밑줄 ----- */
+.main-title-box {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.main-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 0.9rem;
+
+  border-bottom: 3px solid #704CE4;
+  width: 1200px;            /* 폼 폭에 맞게 */
+  /*margin: 0 auto 32px auto;  /* 가운데+밑 여백 */
+  padding-bottom: 16px;
+}
+.main-underline {
+  width: 1200px;
+  height: 4px;
+  background: #704CE4;
+  margin: 0 auto;
+  border-radius: 2px;
+  opacity: 0.8;
+  margin-bottom: 34px;  /* 아래와 더 간격 */
+}
+
+/* ----- 안내문구/체크박스 한 줄 ----- */
+.maininfo-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1200px;
+  margin: 0 auto 0 auto;
+  margin-bottom: 18px;
+}
+.maininfo-guide {
+  font-size: 28px;
+  font-weight: 800;
+  color: #222;
+}
+.maininfo-hide-label {
+  font-size: 20px;
+  font-weight: 500;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.maininfo-hide-chk {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  accent-color: #704CE4;
+  border: 2px solid #704CE4;
+  box-sizing: border-box;
+}
+
+/* ----- 회색 밑줄 ----- */
+.main-bottomline {
+  width: 1200px;
+  height: 3px;
+  background: #ddd;
+  margin: 0 auto 24px auto;
+  border-radius: 2px;
+}
+
+/* ----- 입력폼 ----- */
+.form-section {
+  margin-bottom: 36px;
+}
+.input-group {
+  position: relative;
+  margin-bottom: 22px;
+}
+.input-group label {
+  font-size: 25px;
+  font-weight: 900;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+.input-group .char-count {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  font-size: 0.98rem;
+  color: #888;
+  font-weight: 400;
+}
+.input-group input[type="text"], 
+.input-group textarea {
+  width: 100%;
+  padding: 14px 13px;
+  font-size: 1.06rem;
+  border-radius: 7px;
+  border: 1.3px solid #e2e2e2;
+  background: #f7f7fa;
+  margin-top: 7px;
+  resize: none;
+}
+.input-group textarea { min-height: 92px; }
+
+.form-section .input-group input[type="text"],
+.form-section .input-group textarea {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+/* ----- 시설 안내 ----- */
+.section-title {
+  font-size: 25px;
+  font-weight: 900;
+  margin-bottom: 14px;
+}
+.facility-list {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 17px 30px;
+  padding-top: 20px;
+}
+.facility-list label {
+  font-size: 17px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* ----- 환불규정 ----- */
+.refund-title {
+  font-size: 25px;
+  font-weight: 900;
+  margin-bottom: 14px;
+  display: block;
+}
+.refund-row {
+  display: flex;
+  justify-content: space-between; /* 좌우로 벌려줌! */
+  align-items: flex-start;         /* 세로로 위에 맞추기 */
+  width: 100%;
+}
+.refund-list {
+  margin: 8px 0 0 0;
+  padding-left: 22px;   /* li 앞에 점 대신 '-' 쓸 거면 22px 정도가 적당 */
+  list-style: none;     /* 점 없애기 */
+}
+.refund-list li {
+  font-size: 20px;
+  margin-bottom: 2px;
+  color: #222;
+}
+.refund-check {
+  white-space: nowrap; /* 텍스트가 한 줄로 유지되게 */
+  margin-left: 16px;  /* 필요시 간격 조절 */
+}
+
+/* ----- 대표 이미지 ----- */
+.img-section {
+  margin-bottom: 42px;
+}
+.img-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;  /* 세로 중앙 정렬 */
+  margin-bottom: 8px;
+}
+.section-title {
+  margin-bottom: 0; /* 기존 margin-bottom 제거! */
+}
+.img-guide {
+  text-align: right;
+  display: block;
+  font-size: 1.09rem;
+  color: #888;
+  margin-bottom: 0; /* 기존 margin-bottom 제거! */
+}
+.img-box {
+  background: #f7f7f7;
+  padding: 5px 36px 28px 10px;
+  margin: 0 0 16px auto;
+  max-width: 100%;
+}
+.img-box b {
+  font-size: 1.14rem;
+  color: #777;
+  font-weight: 800;
+  margin-bottom: 12px;
+  display: block;
+  text-align: left; 
+}
+.img-box ul {
+  margin-top: 5px;
+  color: #777;
+  font-size: 1.01rem;
+  line-height: 1.75;
+}
+
+/*파일 첨부 버튼*/
+.attach-btn-wrap .attach-btn {
+  display: inline-flex;
+  text-align: right;
+  align-items: end;
+  padding: 5px 15px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  /* 마진 대신 버튼만 내려주기, 오른쪽 보내기 */
+  transform: translate(1110px, 1px); 
+}
+
+/*
+.attach-btn-wrap .attach-btn {
+  display: inline-flex;
+  text-align: right;
+  align-items: end;
+  padding: 5px 15px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  /* 마진 대신 버튼만 내려주기, 오른쪽 보내기 */
+  /*
+  transform: translate(1110px, 10px); 
+}
+   */
+
+/* ----- 주소 ----- */
+.form-section .section-title{
+  font-size: 25px;
+  font-weight: 900;
+}
+.addr-alert {
+  color: #e13c3c;
+  font-size: 1.01rem;
+  margin-bottom: 10px;
+}
+.addr-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.addr-input-long {
+  flex: 1;
+  padding: 13px 11px;
+  font-size: 1.01rem;
+  border-radius: 7px;
+  border: 1.3px solid #e2e2e2;
+  background: #f7f7fa;
+}
+.addr-btn {
+  padding: 13px 26px;
+  font-size: 1.01rem;
+  background: #704CE4;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.addr-detail {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 8px;
+  padding: 13px 11px;
+  font-size: 1.01rem;
+  border-radius: 7px;
+  border: 1.3px solid #e2e2e2;
+  background: #f7f7fa;
+}
+
+/* 고객센터 a 링크 파란색+밑줄 */
+.blue-link {
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.blue-link:hover {
+  color: #1d4ed8; /* hover시 더 진한 파랑, 선택 */
+}
+
+
+/* ----- 연락처 이메일 ----- */
+.contact-section .section-title{
+  font-size: 25px;
+  font-weight: 900;
+}
+.contact-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+
+.email-row {
+  /* font-size: 25px;
+  font-weight: 900; */
+  display: flex;
+  flex-direction: column;   /* 세로로 쌓이게 */
+  align-items: flex-start;  /* label을 왼쪽 정렬 */
+  padding-top: 10px;
+  gap: 8px;                 /* label과 입력줄 간격 */
+  width: 100%;
+}
+.email-inputs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+
+.email-row label {
+  min-width: 80px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.email-id {
+  flex: 1 1 25%;
+  min-width: 0;
+  padding: 13px 11px;
+  font-size: 1rem;
+  border-radius: 7px;
+  border: 1.3px solid #e2e2e2;
+  background: #f7f7fa;
+}
+.at {
+  margin: 0 2px;
+  font-size: 1.05rem;
+  color: #888;
+}
+.email-domain {
+  flex: 1 1 25%;
+  min-width: 0;
+  padding: 13px 11px;
+  font-size: 1rem;
+  border-radius: 7px;
+  border: 1.3px solid #e2e2e2;
+  background: #f7f7fa;
+}
+.email-select {
+  flex: 1 1 25%;
+  min-width: 0;
+  padding: 13px 11px;
+  border-radius: 7px;
+  border: 1.3px solid #e2e2e2;
+  background: #f7f7fa;
+  font-size: 1rem;
+}
+
+/* ----- 휴대폰, 대표전화 ----- */
+.phone-flex-row {
+  display: flex;
+  gap: 28px;
+  margin-top: 22px;
+  align-items: flex-start;
+  max-width: 1200px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.phone-col {
+  width: calc(50% - 14px);  /* gap 고려해서 딱 반반 */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.phone-col label,
+.phone-label-bold {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.same-phone {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  gap: 4px;
+}
+
+.same-phone input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 4px;
+}
+
+.chk-label {
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+  margin: 0;
+}
+
+.phone-col input[type="text"] {
+  width: 100%;
+  padding: 13px 11px;
+  font-size: 16px;
+  border-radius: 7px;
+  border: 1.3px solid #e2e2e2;
+  background: #f7f7fa;
+  box-sizing: border-box;
+}
+
+.phone-desc {
+  margin-top: 11px;
+  color: #704CE4;
+  font-size: 1.05rem;
+}
+
+
+/* ----- 버튼 ----- */
+.btn-row {
+  margin: 40px auto 50px auto;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  max-width: 1200px;
+}
+.btn {
+  font-size: 32px;
+  padding: 15px 0; 
+  flex: 1 1 0;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+}
+.prev-btn {
+  background: #595959;
+  color: #fff;
+}
+.save-btn {
+  background: #FFD012;
+  color: #111;
+}
+
+::-webkit-input-placeholder { color: #b3b3b3; }
+::-moz-placeholder { color: #b3b3b3; }
+:-ms-input-placeholder { color: #b3b3b3; }
+::placeholder { color: #b3b3b3; }

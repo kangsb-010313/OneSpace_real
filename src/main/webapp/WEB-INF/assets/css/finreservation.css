@@ -1,0 +1,244 @@
+@charset "UTF-8";
+
+/* 헤더 팀페이지 메뉴 보라색------------------------------ */
+.nav ul li .click {
+    color: #704CE4;
+}
+/* /헤더 팀페이지 메뉴 보라색------------------------------ */
+
+/* 팀 작성글 전체 컨테이너 */
+.team-wrote-wrap {
+    margin-top: 20px;
+}
+
+/* 예약 페이지 전체 레이아웃 */
+.reservation-page-wrap {
+    display: flex;
+    gap: 60px; /* 좌우 컬럼 사이 간격 */
+    margin-top: 30px;
+}
+
+/* 게시글 전체를 감싸는 컨테이너 */
+.post-container {
+    position: relative; /* 자식 요소의 'absolute' 위치 기준점으로 설정 (가장 중요!) */
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    /* min-height: 350px; */
+
+}
+
+
+/* 게시글 헤더 (제목, 날짜) */
+.post-header {
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+/* 게시글 제목 */
+.post-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 날짜 */
+.post-date {
+    display: block; /* 블록 요소로 만들어 한 줄을 차지하게 함 */
+    text-align: right; /* 오른쪽 정렬 */
+    font-size: 14px;
+    color: #555;
+}
+
+.left-column {
+    flex: 1;
+}
+
+.right-column {
+    flex: 2;
+    max-width: 65%;
+}
+
+.left-column .section-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #704CE4;
+    margin-bottom: 10px;
+}
+
+/* ▼▼▼▼▼ 좌측 연습실 카드 스타일을 투표 페이지와 동일하게 수정합니다 ▼▼▼▼▼ */
+
+.vote-option {
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px; /* 아래 멤버 목록과의 간격 */
+}
+
+.vote-item-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s;
+}
+
+.vote-item-card:hover {
+    background-color: #f9f9f9;
+}
+
+.vote-item-card img {
+    width: 100%;
+    height: 140px; /* 투표 페이지와 동일한 높이 */
+    object-fit: cover;
+}
+
+.card-content-wrapper {
+    padding: 15px;
+}
+
+.card-main-info, .card-sub-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.card-main-info {
+    margin-bottom: 10px;
+}
+
+.item-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 0 5px 0;
+}
+
+.item-datetime, .item-info, .item-location {
+    font-size: 13px;
+    color: #666;
+}
+
+.item-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.item-location {
+    display: flex;
+    align-items: center;
+}
+
+.item-location .map-icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+}
+/* ▲▲▲▲▲ 스타일 수정 끝 ▲▲▲▲▲ */
+
+/* 좌측: 투표한 멤버들 */
+.voted-members {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    font-size: 15px;
+}
+
+/* 우측: 예약 정보 영역 */
+.right-column h3 {
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #333;
+    margin-bottom: 20px;
+}
+
+/* ▼▼▼▼▼ 예약 정보 영역 스타일을 ul에 맞게 수정 ▼▼▼▼▼ */
+.reservation-details .reservation-info-list {
+    list-style: none; /* 리스트의 기본 점 제거 */
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+}
+
+.reservation-details .reservation-info-list li {
+    display: flex;
+    align-items: center; /* 라벨과 내용을 수직 중앙 정렬 */
+    margin-bottom: 20px; /* 각 항목 사이의 세로 간격 */
+}
+.reservation-details .reservation-info-list li:last-child {
+    margin-bottom: 0;
+}
+
+.reservation-details .label {
+    width: 100px; /* 라벨의 너비를 고정하여 정렬을 맞춤 */
+    flex-shrink: 0; /* 라벨 너비가 줄어들지 않도록 설정 */
+    font-weight: 500;
+    color: #555;
+}
+
+.reservation-details .value {
+    color: #333;
+}
+
+.reservation-details input[type="text"] {
+    width: 230px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 15px;
+}
+/* ▲▲▲▲▲ 스타일 수정 끝 ▲▲▲▲▲ */
+
+
+/* 환불 규정 & 결제 수단 */
+.refund-policy {
+    margin-top: 40px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* 최종 금액 */
+.final-amount {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+}
+.final-amount .amount-value {
+    font-size: 24px;
+    color: #704CE4;
+}
+
+/* 결제 버튼 */
+.payment-action {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+.btn-payment {
+    padding: 10px 30px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #704CE4;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.btn-payment:hover {
+    background-color: #5a379e;
+}
+

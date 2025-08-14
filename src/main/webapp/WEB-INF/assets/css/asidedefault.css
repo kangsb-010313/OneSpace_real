@@ -1,0 +1,103 @@
+@charset "UTF-8";
+
+/* aside---------------------------------------------- */
+#content {
+    display: flex;      /* 2단 레이아웃 */
+    min-height: 600px;
+
+}
+
+#team-aside {
+    width: 150px;
+    margin-right: 90px;
+    background: #fff;
+    min-height: 200px;
+    /* box-sizing: border-box; */
+}
+
+#team-aside h2 {
+    /* border-bottom: 1px solid #CDC5C5; */
+    width: 100%;
+    font-size: 27px;
+    font-weight: bold;
+    color: #000;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+}
+
+#team-aside .btn-outline2.teamadd-btn {
+    border: 1.5px solid #704CE4;
+    color: #ffcc00;
+    font-size: 16px;
+    padding: 14px 10px;
+    border-radius: 30px;
+    display: block;
+    margin-bottom: 20px;
+    margin-top: 0;
+    text-align: left;
+    font-weight: bolder;
+    background-color: #704CE4;
+    transition: background 0.2s, color 0.2s;
+    text-align: center;
+}
+
+#team-aside .team-list-section h3 {
+    /* border-bottom: 1px solid #CDC5C5; */
+    font-size: 17px;
+    color: #000;
+    font-weight: bolder;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    padding-left: 6px;
+    padding-bottom: 6px;
+}
+
+.btn-outline3.teamlist-btn {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 12px;
+    border: 1.5px solid #704CE4;
+    color: #704CE4;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 14px 0;
+    background: #fff;
+    text-align: left;
+    transition: background 0.2s, color 0.2s;
+}
+
+#team-aside .team-list-section a {
+    padding-left: 10px;
+}
+
+.btn-outline3.teamlist-btn:hover,
+#team-aside .btn-outline2.teamadd-btn:hover {
+    background: #704CE4;
+    color: #fff;
+}
+/* /aside---------------------------------------------- */
+
+/* 메인컨텐츠-------------------------------------------- */
+
+ #main-content {
+    flex: none;           /* flex-grow, shrink 무효화 */
+    /* border: 1px solid #000; */
+    width: 960px;       
+    background: #ffffff;
+    margin-bottom: 20px;
+}
+
+#main-content h2{
+    font-size: 27px;
+}
+/* /메인컨텐츠-------------------------------------------- */
+
+/* 팀일정 box------------------------------------------ */
+
+
+
+
+
+/* 팀일정 box------------------------------------------ */

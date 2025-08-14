@@ -1,0 +1,122 @@
+.nav ul li .click {
+    color: #704CE4;
+}
+
+.perforlist-title {
+    text-align: center; 
+    font-size: 30px; 
+    font-weight: 800;
+    margin-top: 50px; 
+    margin-bottom: 28px; 
+    color: #000;
+}
+
+.perforlist-list { 
+    width: 100%; 
+}
+
+.perforlist-list th {
+    border-collapse: collapse;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000000; /* 헤더의 하단 선을 더 강조 */
+    padding: 10px 10px;
+    font-size: 15px;
+    font-weight: bold; /* 제목이므로 굵게 표시 */
+    background-color: #f0f0f0; /* 헤더 배경색을 살짝 추가하여 구분 */
+}
+
+
+
+.perforlist-table {
+    width: 100%; 
+    border-collapse: collapse; 
+    table-layout: fixed;
+}
+
+.perforlist-table th:last-child {
+    text-align: center;
+}
+
+.perforlist-table tr { 
+    font-size: 16px;
+    border-bottom: 1px solid #D1D1D1; 
+}
+
+.perforlist-table td { 
+    padding: 14px 10px; 
+    vertical-align: middle; 
+}
+
+.perforlist-table .cate { 
+    white-space: nowrap; 
+    color: #333; 
+}
+
+.perforlist-table .tit a { 
+    display: block;
+    color: #111; 
+    text-decoration: none; 
+}
+
+.perforlist-table .date { 
+    display: block;
+    color: #111; 
+    text-decoration: none; 
+
+    text-align: center;
+}
+
+.perforlist-table .tit a:hover {
+    text-decoration: underline; 
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px; 
+    color: #704CE4;
+}
+
+/* 글쓰기 버튼: 오른쪽 아래 */
+.btn-area { 
+    display: flex; 
+    justify-content: flex-end; 
+    margin-top: 10px; 
+}
+
+.btn-write {
+    padding: 10px 18px; 
+    font-size: 14px; 
+    font-weight: 700; 
+    line-height: 1;
+    background: #704CE4; 
+    color: #fff; 
+    border: none; 
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+
+
+
+/* 페이징 */
+.pagination { 
+    display: flex; 
+    justify-content: center; 
+    gap: 10px; 
+    margin-top: 20px; 
+}
+
+.page-plain {
+    background: none; 
+    border: none; 
+    font-size: 14px; 
+    cursor: pointer; 
+    padding: 4px;
+}
+
+.page-plain.is-active { 
+    color: #704CE4; 
+    font-weight: 700; 
+}
+
+.page-plain[disabled] { 
+    opacity: .4; 
+    cursor: default; 
+}

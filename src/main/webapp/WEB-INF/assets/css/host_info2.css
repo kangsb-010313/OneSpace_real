@@ -1,0 +1,315 @@
+@charset "UTF-8";
+
+/* ----- 호스트 button background colour ----- */
+.header-buttons .host-btn {
+  background-color: #D9CCFA;
+  color: #704CE4;
+}
+
+/* ----- 탭버튼 ----- */
+.tab-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+.tab {
+  background: #fff;
+  border: 2px solid #704CE4;
+  border-radius: 40px;
+  font-size: 1.24rem;
+  font-weight: 700;
+  color: #704CE4;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  padding: 5px 10px 5px 10px;
+}
+.tab.active {
+  background: #704CE4;
+  color: #fff;
+  border: 2px solid #704CE4;
+  padding: 5px 10px 5px 10px;
+}
+
+/* ----- 메인 타이틀/밑줄 ----- */
+.main-title-box {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.main-title {
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 14px;
+
+  border-bottom: 3px solid #704CE4;
+  width: 1200px;            /* 폼 폭에 맞게 */
+  /*margin: 0 auto 32px auto;  /* 가운데+밑 여백 */
+  padding-bottom: 16px;
+}
+
+
+/* ----- 안내문구 ----- */
+.maininfo-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1200px;
+  margin: 0 auto 18px auto;
+}
+.maininfo-guide {
+  font-size: 28px;
+  font-weight: 800;
+  color: #222;
+}
+
+
+
+/* ----- 입력폼 ----- */
+.form-section {
+  margin-bottom: 36px;
+}
+.input-group {
+  position: relative;
+  margin-bottom: 22px;
+}
+.input-group label {
+  font-size: 25px;
+  font-weight: 900;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+.input-group .char-count {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  font-size: 15px;
+  color: #888;
+  font-weight: 400;
+}
+.input-group input[type="text"], 
+.input-group textarea {
+  width: 100%;
+  padding: 15px 18px;
+  font-size: 17px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e2e2;
+  background: #f7f7fa;
+  margin-top: 7px;
+  resize: none;
+
+  box-sizing: border-box;
+}
+.input-group textarea { min-height: 92px; }
+
+/* ----- 이미지 입력 라벨/안내문구 flex 한 줄 ----- */
+.input-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 8px;
+  width: 100%;
+}
+.input-label-row label {
+  font-size: 25px;
+  font-weight: 900;
+  margin-right: 16px;
+}
+.input-label-row .img-guide {
+  font-size: 15px;
+  color: #888;
+  text-align: right;
+  line-height: 1.38;
+  margin-left: 40px;
+  min-width: 300px;
+  display: block;
+}
+
+  /* ----- 이미지 첨부 버튼 ----- */
+
+.attach-btn-wrap .attach-btn {
+  display: inline-flex;
+  text-align: right;
+  align-items: end;
+  padding: 5px 15px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  /* 마진 대신 버튼만 내려주기, 오른쪽 보내기 */
+  transform: translate(1110px, 10px); 
+}
+
+
+/* ====================== */
+/* ----- 메인 타이틀 ----- */
+/* ====================== */
+.main-title-box {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.main-title {
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 14px;
+  border-bottom: 3px solid #704CE4;
+  width: 1200px;
+  padding-bottom: 16px;
+}
+
+/* ====================== */
+/* ----- 안내문구 ----- */
+/* ====================== */
+.maininfo-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1200px;
+  margin: 0 auto 18px auto;
+}
+.maininfo-guide {
+  font-size: 28px;
+  font-weight: 800;
+  color: #222;
+  border-bottom: 3px solid #CDC5C5;
+  width: 1200px;
+  padding-bottom: 16px;
+}
+
+/* ====================== */
+/* ----- 공통 행 구조 ----- */
+/* ====================== */
+.row-block {
+  width: 1200px;
+  margin: 0 auto 40px auto;
+}
+.row-block.center-align {
+  width: 1200px;
+  margin: 0 auto 40px auto;
+}
+
+/* ====================== */
+/* ----- 라벨 ----- */
+/* ====================== */
+.row-label-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.row-label {
+  font-size: 20px;
+  font-weight: 800;
+  display: inline-block;
+}
+
+/* ====================== */
+/* ----- 최대인원 셀렉트 ----- */
+/* ====================== */
+.select-box {
+  width: 480px;
+  height: 52px;
+  padding: 0 16px;
+  font-size: 16px;
+  border: 1.3px solid #ccc;
+  display: block;
+  margin-top: 12px;
+}
+
+/* ====================== */
+/* ----- 요일 별 금액 ----- */
+/* ====================== */
+.price-row-wrap {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.price-row {
+  display: grid;
+  grid-template-columns: 150px 150px 30px 150px 30px 570px; /* 금액 칸 줄임 */
+  align-items: center;
+  gap: 20px; /* 넉넉하게 띄움 */
+  margin-bottom: 16px;
+  width: 1200px;
+}
+
+.select-day,
+.select-time,
+.input-price {
+  width: 100%;
+  height: 48px;
+  padding: 0 8px;
+  font-size: 15px;
+  border: 1.3px solid #ccc;
+  border-radius: 0;
+}
+
+/* "부터", "까지" */
+.text-label {
+  font-size: 15px;
+  text-align: center;
+}
+
+/* 삭제 버튼 (자리만) */
+.btn-delete {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  text-align: center;
+  line-height: 1;
+}
+
+/* ====================== */
+/* ----- 추가하기 버튼 ----- */
+/* ====================== */
+.btn-add {
+  background-color: #704CE4;
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 10px 18px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+
+
+
+
+/* ----- 버튼 ----- */
+.btn-row {
+  margin: 40px auto 50px auto;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  max-width: 1200px;
+}
+.btn {
+  font-size: 32px;
+  padding: 15px 0; 
+  flex: 1 1 0;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+}
+.prev-btn {
+  background: #595959;
+  color: #fff;
+}
+.save-btn {
+  background: #FFD012;
+  color: #111;
+}
+
+
+::-webkit-input-placeholder { color: #b3b3b3; }
+::-moz-placeholder { color: #b3b3b3; }
+:-ms-input-placeholder { color: #b3b3b3; }
+::placeholder { color: #b3b3b3; }

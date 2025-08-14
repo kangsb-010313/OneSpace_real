@@ -1,0 +1,97 @@
+/* =========================
+   팀 자랑 (컨텐츠 영역)
+   ========================= */
+.nav li a.space {
+  color: #704CE4 
+}
+   
+.pride {
+  max-width: 1200px;
+  margin: 36px auto 0;
+
+}
+
+
+.pride .main-head {
+  display: flex;
+  flex-direction: column; /* 제목 위, 버튼 아래 */
+  margin-bottom: 20px;
+}
+
+.pride .main-head h1 {
+  text-align: center; /* 제목 가운데 */
+  font-size: 30px;
+  font-weight:bold;
+  margin-bottom: 12px;
+}
+
+.pride .write-btn {
+  display: inline-block;
+  margin-left: auto; /* 오른쪽 끝 */
+  background-color: #fff;
+  color: #704CE4;
+  border: 1px solid #704CE4;
+  border-radius: 20px;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 5px 20px;
+  transition: background 0.2s;
+}
+.pride .write-btn:hover { background: #D9CCFA; }
+
+/* 카드 그리드 */
+.pride .team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 280px);
+  gap: 28px;
+  width: 1205px;
+  margin-bottom: 40px;
+}
+
+/* 카드 */
+.pride .team-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  border: 1.2px solid #ececec;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: box-shadow .15s;
+  width: 275px;   
+}
+.pride .team-card:hover {
+  box-shadow: 0 6px 20px rgba(112,76,228,0.08);
+}
+.pride .team-card img {
+  width: 275px;   
+  height: 204px;  
+  object-fit: cover; 
+  display: block;
+  background: #eee;
+}
+.pride .team-info {
+  /*padding: 14px 15px 13px 15px;*/
+  text-align: left;
+}
+.pride .team-title {
+  font-weight: bold;
+  font-size: 17px;
+  margin: 0 0 1px 0;
+}
+.pride .team-id {
+  color: #704CE4;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 2px 0;
+}
+.pride .team-desc {
+  color: #555;
+  font-size: 15px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+

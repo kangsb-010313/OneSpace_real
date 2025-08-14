@@ -1,0 +1,76 @@
+@charset "UTF-8";
+
+/* ----- 호스트 button background colour ----- */
+.header-buttons .host-btn {
+  background-color: #D9CCFA;
+  color: #704CE4;
+}
+
+/* 탭 버튼 */
+.tab-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+.tab {
+  background: #704CE4;
+  border: 2px solid #704CE4;
+  font-size: 1.24rem;
+  font-weight: 700;
+  color: #fff;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  border-radius: 25px;
+}
+.tab.active {
+  background: #fff;
+  color: #704CE4;
+  border: 2px solid #704CE4;
+  
+  padding: 5px 10px 5px 10px;
+}
+
+
+.space-manage-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 80px; /* 버튼 여백용 */
+}
+
+.main-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 0.9rem;
+
+  border-bottom: 3px solid #704CE4;
+  width: 1200px;            /* 폼 폭에 맞게 */
+  /*margin: 0 auto 32px auto;  /* 가운데+밑 여백 */
+  padding-bottom: 16px;
+}
+
+.btn-wrapper {
+    text-align: center;
+    margin-top: 60px; 
+}
+
+.btn-host-manage {
+    background: #fff;
+    border: 1px solid #704CE4;
+    border-radius: 20px;
+    font-size: 30px;
+    font-weight: 700;
+    color: #704CE4;
+    width: 1000px;
+    height: 85px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    display: inline-block;
+    text-align: center;
+    line-height: 85px;
+}
+
+

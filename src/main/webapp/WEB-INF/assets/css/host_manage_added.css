@@ -1,0 +1,147 @@
+@charset "UTF-8";
+
+/* ----- 호스트 button background colour ----- */
+.header-buttons .host-btn {
+  background-color: #D9CCFA;
+  color: #704CE4;
+}
+
+.tab-btns {
+display: flex;
+gap: 10px;
+margin-top: 24px;
+margin-bottom: 32px;
+}
+.tab {
+background: #704ce4;
+border: 2px solid #704ce4;
+font-size: 1.24rem;
+font-weight: 700;
+color: #fff;
+padding: 5px 10px;
+cursor: pointer;
+transition: background 0.2s, color 0.2s;
+border-radius: 25px;
+}
+.tab.active {
+background: #fff;
+color: #704ce4;
+border: 2px solid #704ce4;
+}
+
+.space-manage-container {
+max-width: 1200px;
+margin: 0 auto;
+padding-bottom: 80px;
+}
+
+
+.main-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 0.9rem;
+
+  border-bottom: 3px solid #704CE4;
+  width: 1200px;            /* 폼 폭에 맞게 */
+  /*margin: 0 auto 32px auto;  /* 가운데+밑 여백 */
+  padding-bottom: 16px;
+}
+
+.btn-wrapper {
+text-align: center;
+margin-top: 60px;
+}
+
+.btn-host-manage {
+background: #fff;
+border: 1px solid #704ce4;
+border-radius: 20px;
+font-size: 30px;
+font-weight: 700;
+color: #704ce4;
+width: 1000px;
+height: 85px;
+cursor: pointer;
+transition: background 0.2s, color 0.2s;
+display: inline-block;
+text-align: center;
+line-height: 85px;
+}
+
+/* 공간 카드 */
+.space-item {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 28px 0;
+  border-bottom: 1px solid #CDC5C5;
+}
+
+.space-thumb {
+width: 260px;
+height: 160px;
+object-fit: cover;
+flex-shrink: 0;
+}
+
+.space-contents {
+display: flex;
+align-items: center;
+justify-content: space-between;
+flex: 1;
+gap: 40px;
+}
+
+.space-info {
+display: flex;
+flex-direction: column;
+gap: 0; /* row 간 gap 없이! */
+}
+
+.row {
+display: flex;
+align-items: stretch; /* 선 높이 일정하게! */
+min-height: 40px;
+}
+
+.label {
+width: 120px; /* 고정 필수! */
+font-weight: 700;
+font-size: 18px;
+color: #333;
+padding-right: 16px;
+border-right: 1px solid #CDC5C5; 
+display: flex;
+align-items: center;
+}
+
+.value {
+font-size: 18px;
+color: #333;
+word-break: keep-all;
+padding-left: 16px; 
+flex: 1;
+display: flex;
+align-items: center;
+}
+
+
+
+.space-edit {
+flex-shrink: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.btn-edit {
+border: 0;
+padding: 10px 22px;
+border-radius: 999px;
+background: #704ce4;
+color: #fff;
+font-size: 15px;
+cursor: pointer;
+}

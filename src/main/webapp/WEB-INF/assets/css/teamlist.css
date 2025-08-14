@@ -1,0 +1,190 @@
+@charset "UTF-8";
+
+/* 헤더 팀페이지 메뉴 보라색------------------------------ */
+.nav ul li .click {
+    color: #704CE4;
+}
+/* /헤더 팀페이지 메뉴 보라색------------------------------ */
+
+/* 팀페이지 content-box------------------------------------------ */
+
+/* 링크 기본 스타일 */
+.team-management-links a,
+.registration-links a {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: #555; /* 링크 색상 지정 */
+}
+
+/* 링크에 마우스를 올렸을 때 밑줄 표시 */
+.team-management-links a:hover,
+.registration-links a:hover {
+    text-decoration: underline;
+}
+
+/* 각 링크 그룹의 첫 번째 링크 뒤에 구분선 추가 */
+.team-management-links a:first-of-type::after,
+.registration-links a:first-of-type::after {
+    content: "|";        /* 구분선으로 사용할 문자 */
+    margin: 0 8px;       /* 구분선 양 옆에 8px 간격 주기 */
+    color: #ccc;         /* 구분선 색상 */
+    text-decoration: none; /* 링크 hover 시 구분선에 밑줄 생기지 않도록 */
+}
+
+/* 링크 그룹 스타일 */
+.team-management-links {
+    margin-bottom: 10px;
+    font-size: 13px;
+    text-align: right;
+}
+
+.registration-links {
+    font-size: 15px;
+    text-align: right;
+}
+
+.team-management-links .team-setting {
+    width: 13px;
+    height: 13px;
+}
+
+/* 검색창부터 아래 */
+
+/* 검색창과 투표 버튼을 감싸는 컨테이너 */
+#team-search-voting {
+    display: flex;              /* 자식 요소들을 가로로 배치 */
+    justify-content: space-between; /* 자식 요소들을 양쪽 끝으로 정렬 */
+    align-items: center;        /* 자식 요소들을 세로 중앙에 정렬 */
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.team-schedule-search-box {
+    /* 기존의 width와 margin은 부모(#team-search-voting)에서 관리하므로 제거합니다. */
+    background: #fff;
+    box-sizing: border-box;
+}
+
+/* ===== 수정된 부분 끝 ===== */
+
+.team-schedule-search-box h3 {
+    font-size: 17px;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
+
+.team-schedule-search-form {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.team-schedule-input {
+    width: 400px;
+    font-size: 15px;
+    padding: 10px 25px;
+    border-radius: 25px;
+    border: 1.5px solid #704CE4;
+    background: #ffffff;
+    /* outline: none; */
+}
+
+.team-schedule-btn {
+    background: #fff;
+    color: #704CE4;
+    border: 1px solid #704CE4;
+    border-radius: 25px;
+    padding: 10px 30px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.team-schedule-btn:hover {
+    background: #704CE4;
+    color: #fff;
+}
+
+
+
+#team-schedule-list {
+    border-top: 1px solid #000000; /* 검색어 밑선, 리스트 윗선*/
+    width: 960px;
+    min-height: auto;
+}
+
+
+/* 헤더(thead)의 제목 셀(th) 스타일 */
+#team-schedule-list th {
+    border-collapse: collapse;
+    border-bottom: 1px solid #000000; /* 헤더의 하단 선을 더 강조 */
+    padding: 15px 10px;
+    font-size: 15px;
+    font-weight: bold; /* 제목이므로 굵게 표시 */
+    background-color: #f0f0f0; /* 헤더 배경색을 살짝 추가하여 구분 */
+}
+
+/* 데이터(tbody)의 셀(td) 스타일 */
+#team-schedule-list td {
+    border-collapse: collapse;
+    border-bottom: 1px solid #D1D1D1;
+    padding: 15px 10px;
+    font-size: 15px;
+}
+
+/* 마우스 호버 효과는 tbody 안의 tr에만 적용 */
+#team-schedule-list tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+#team-schedule-list td:last-child{
+    text-align: right;
+}
+
+/* 버튼 영역 */
+.btn-area {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+/* '투표만들기' 버튼 */
+.btn-make {
+    padding: 10px 30px;
+    background-color: #704CE4; /* 이미지와 유사한 보라색 */
+    color: white;
+    border: none;
+    border-radius: 50px; /* 타원형 버튼 모양 */
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-make:hover {
+    background-color: #5a379e; /* 호버 시 약간 더 어둡게 */
+}
+
+/* 페이징-더보기버튼 */
+/* '더보기' 버튼을 감싸는 컨테이너 */
+.load-more-container {
+    text-align: center; /* 버튼 중앙 정렬 */
+    margin-top: 25px;   /* 테이블과의 상단 간격 */
+}
+
+/* '더보기' 버튼 스타일 */
+#load-more-btn {
+    padding: 10px 45px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #704CE4;
+    background-color: #fff;
+    border: 1px solid #704CE4;
+    border-radius: 25px; /* 타원형 모양 */
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#load-more-btn:hover {
+    background-color: #704CE4;
+    color: #fff;
+}
+
+/* 팀페이지 content-box------------------------------------------ */

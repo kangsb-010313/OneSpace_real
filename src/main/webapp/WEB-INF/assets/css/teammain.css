@@ -1,0 +1,120 @@
+@charset "UTF-8";
+
+/* 헤더 팀페이지 메뉴 보라색------------------------------ */
+.nav ul li .click {
+    color: #704CE4;
+}
+/* /헤더 팀페이지 메뉴 보라색------------------------------ */
+
+/* 팀일정 box------------------------------------------ */
+
+.team-schedule-search-box {
+    /* border: 1px solid #000; */
+    background: #fff;
+    /* padding: 5px 0; */
+    margin-top: 20px;
+    margin-bottom: 25px;
+    width: 960px;
+    box-sizing: border-box;
+}
+.team-schedule-search-box h3 {
+    font-size: 17px;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
+
+.team-schedule-search-form {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.team-schedule-input {
+    flex: 1;
+    font-size: 15px;
+    padding: 10px 25px;
+    border-radius: 25px;
+    border: 1.5px solid #704CE4;
+    background: #ffffff;
+    outline: none;
+}
+
+.team-schedule-btn {
+    background: #704CE4;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 30px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.team-schedule-btn:hover {
+    background: #512cb7;
+}
+
+#team-schedule-list {
+    border-top: 1px solid #000000; /* 검색어 밑선, 리스트 윗선*/
+    width: 960px;
+    min-height: auto;
+}
+
+
+
+/* 헤더(thead)의 제목 셀(th) 스타일 */
+#team-schedule-list th {
+    border-collapse: collapse;
+    border-bottom: 1px solid #000000; /* 헤더의 하단 선을 더 강조 */
+    padding: 15px 10px;
+    font-size: 15px;
+    font-weight: bold; /* 제목이므로 굵게 표시 */
+    background-color: #f0f0f0; /* 헤더 배경색을 살짝 추가하여 구분 */
+}
+
+/* 데이터(tbody)의 셀(td) 스타일 */
+#team-schedule-list td {
+    border-collapse: collapse;
+    border-bottom: 1px solid #D1D1D1;
+    padding: 15px 10px;
+    font-size: 15px;
+}
+
+/* 마우스 호버 효과는 tbody 안의 tr에만 적용 */
+#team-schedule-list tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+#team-schedule-list td:last-child{
+    text-align: right;
+}
+
+
+/* 페이징-더보기버튼 */
+/* '더보기' 버튼을 감싸는 컨테이너 */
+.load-more-container {
+    text-align: center; /* 버튼 중앙 정렬 */
+    margin-top: 25px;   /* 테이블과의 상단 간격 */
+}
+
+/* '더보기' 버튼 스타일 */
+#load-more-btn {
+    padding: 10px 45px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #704CE4;
+    background-color: #fff;
+    border: 1px solid #704CE4;
+    border-radius: 25px; /* 타원형 모양 */
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#load-more-btn:hover {
+    background-color: #704CE4;
+    color: #fff;
+}
+
+
+/* 팀일정 box------------------------------------------ */

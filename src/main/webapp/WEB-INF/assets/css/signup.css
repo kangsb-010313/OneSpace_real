@@ -1,0 +1,176 @@
+@charset "UTF-8";
+
+/* ----- signup button background colour ----- */
+.header-buttons .signup-btn {
+  background-color: #D9CCFA;
+  color: #704CE4;
+}
+
+
+/* 회원가입 메인 */
+.signup-main {
+  width: 100%;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 80px; /* 로그인 폼과 동일 */
+}
+
+.signup-wrap {
+  width: 560px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px; /* 로그인 폼과 동일 */
+}
+
+/* h2 */
+.signup-title {
+  text-align: center;
+  font-size: 32px;       /* 로그인 폼과 동일 */
+  font-weight: 800;      /* 로그인 폼과 동일 */
+  /* letter-spacing: -1.2px; */ /* 로그인 폼에 없으니 삭제 */
+  color: #222;
+  margin-bottom: 40px;
+  border-bottom: 1px solid #cdc5c5;
+  width: 1200px;         /* 로그인 폼과 동일 */
+  padding-bottom: 15px;
+}
+
+
+
+
+/* FORM */
+.signup-form {
+  width: 560px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  background: #fff;
+}
+.signup-form input[type="text"],
+.signup-form input[type="email"],
+.signup-form input[type="password"] {
+  width: 100%;
+  font-size: 17px;
+  padding: 13px 13px;
+  /* border-radius: 7px; */ /*피그마는 직각*/
+  border: 1.5px solid #CDC5C5; /* 진한회색(선) */
+  margin-top: 0;
+  box-sizing: border-box;
+  outline: none;
+  color: #646363; /* 진한글씨회색 */
+}
+.pw-rule {
+  font-size: 13px;
+  color: #CDC5C5; /* 진한회색 */
+  margin: 3px 0 0 0;
+  padding-left: 2px;
+  font-weight: 400;
+}
+.checkbox-area {
+  margin-top: 15px;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 15px;
+  color: #646363;
+  width: 360px;  /* px로 고정! 폼 가로 사이즈 맞춰서 */
+  max-width: 100%;
+}
+
+.checkbox-area label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+  cursor: pointer;
+  user-select: none;
+}
+
+.agree-all {
+  font-weight: 600;
+  color: #646363;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.agree-all-underline {
+  width: 560px;  /* px 고정! 위에랑 맞추기 */
+  height: 1.5px;
+  background: #CDC5C5;
+  margin: 6px 0 10px 0;
+  border: none;
+}
+
+.required-text {
+  font-weight: 700 !important;
+  text-decoration: underline;
+  text-underline-position: under;
+  color: #222;
+}
+
+/* 회원가입 버튼 */
+.btn-join {
+  border: 2px solid #FFD012;
+  background: #FFD012; 
+  color: #000; 
+  width: 100%;
+  font-size: 19px;
+  font-weight: 600;
+  padding: 15px 0; 
+  cursor: pointer;
+  letter-spacing: 0.1px;
+}
+
+
+/* ----- 또는 ----- */
+.divider {
+  display: flex;
+  align-items: center;
+  /* margin: 0 0 10px 0; */
+  width: 100%;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1.5px;
+  background: #e2e2e2;
+  border-radius: 1px;
+}
+.divider span {
+  margin: 0 12px;
+  color: #bbb;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+
+/* 카카오 버튼 (색상 예시) */
+.btn-kakao {
+  border: 2px solid #FFD012;
+  background-color: #fff;
+  color: #222;
+  width: 100%;
+  margin-bottom: 100px;
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+  padding: 15px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-kakao img {
+  width: 26px;
+  height: 26px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
