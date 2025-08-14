@@ -14,7 +14,7 @@ public class UserController {
 	// --회원가입 폼
 	@RequestMapping(value = "/joinform", method = { RequestMethod.GET, RequestMethod.POST })
 	public String joinForm() {
-		System.out.println("UserController.joinFrom()");
+		System.out.println("UserController.joinFrom()test.");
 		
 		return "admin/auth/signup";
 	}
