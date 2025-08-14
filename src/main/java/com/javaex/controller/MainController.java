@@ -19,7 +19,7 @@ public class MainController {
 	//--사이트 시작 페이지
 	@RequestMapping(value="/main", method= {RequestMethod.GET, RequestMethod.POST})
 	public String main() {
-		System.out.println("MainController.main()");
+		System.out.println("MainController.main()테스트");
 		
 		return "main/main";
 	}
