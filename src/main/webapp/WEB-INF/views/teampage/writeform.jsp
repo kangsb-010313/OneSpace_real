@@ -8,10 +8,10 @@
     <head>
         <meta charset="UTF-8">
         <title>팀페이지-일반공지등록폼</title>
-        <link rel="stylesheet" href="../../assets/css/reset.css">
-        <link rel="stylesheet" href="../../assets/css/basicdefault.css">
-        <link rel="stylesheet" href="../../assets/css/asidedefault.css">
-        <link rel="stylesheet" href="../../assets/css/teamwriteform.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/teamwriteform.css">
     </head>
 
     <body>

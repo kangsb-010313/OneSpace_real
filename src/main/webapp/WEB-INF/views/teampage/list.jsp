@@ -8,10 +8,10 @@
     <head>
         <meta charset="UTF-8">
         <title>팀페이지-리스트</title>
-        <link rel="stylesheet" href="../../assets/css/reset.css">
-        <link rel="stylesheet" href="../../assets/css/basicdefault.css">
-        <link rel="stylesheet" href="../../assets/css/asidedefault.css">
-        <link rel="stylesheet" href="../../assets/css/teamlist.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/teamlist.css">
 
     </head>
 
@@ -84,7 +84,7 @@
                             </div>
                             <!-- 일반공지/팀자랑 등록 링크 -->
                             <div class="registration-links">
-                                <a href="#">일반공지등록</a>
+                                <a href="${pageContext.request.contextPath}/onespace/teamwriteform">일반공지등록</a>
                                 <a href="#">팀자랑 등록하기</a>
                             </div>
 
