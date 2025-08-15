@@ -6,4 +6,33 @@
 
 <!-- 쿼리문 작성 -->
 
+
+  <!-- 회원가입 -->
+  <insert id="insert" parameterType="com.javaex.vo.UserVO">
+    <![CDATA[
+      insert into users
+        (userId, password, userName, email, createdDate)
+      values
+        (#{userId}, #{password}, #{userName}, #{email}, now())
+    ]]>
+  </insert>
+
+  <!-- 로그인 -->
+  <select id="selectOneByIdPw"
+          parameterType="com.javaex.vo.UserVO"
+          resultType="com.javaex.vo.UserVO">
+    <![CDATA[
+      select
+        userNo,
+        userId,
+        password,
+        userName,
+        email,
+        createdDate
+      from users
+      where userId = #{userId}
+        and password = #{password}
+    ]]>
+  </select>
+
 </mapper>

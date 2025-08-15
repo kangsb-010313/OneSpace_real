@@ -8,9 +8,9 @@
     <head>
         <meta charset="UTF-8">
         <title>원스페이스</title>
-        <link rel="stylesheet" href="../../../assets/css/reset.css">
-        <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
-        <link rel="stylesheet" href="../../../assets/css/signup_complete.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/signup_complete.css">
     </head>
 
     <body>
