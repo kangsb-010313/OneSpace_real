@@ -37,6 +37,27 @@
         SELECT teamNo, teamName, instaAccount, teamCreatedDate FROM teams WHERE teamNo = #{teamNo}
     </select> -->
     
+    
+    <!-- 게시글 상세 조회, 수정폼 -->
+    <select id="selectPostByNo" parameterType="int" resultType="com.javaex.vo.TeamPostVO">
+        <![CDATA[
+            select  p.teamPostNo,
+                    p.teamNo,
+                    p.userNo,
+                    p.teamPostType,
+                    p.teamPostTitle,
+                    p.teamContent,
+                    date_format(p.teamWriteDate, '%Y-%m-%d') as teamWriteDate,
+                    date_format(p.teamUpdateDate, '%Y-%m-%d') as teamUpdateDate,
+                    u.userName,
+                    t.teamName
+            from posts p
+            join users u ON p.userNo = u.userNo
+            join teams t ON p.teamNo = t.teamNo
+            where p.teamPostNo = #{teamPostNo}
+        ]]>
+    </select>
+    
 
 	<!-- 일반공지등록 글쓰기 -->
 	<insert id="insert" parameterType="com.javaex.vo.TeamPostVO">

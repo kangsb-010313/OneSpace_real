@@ -115,6 +115,33 @@ public class TeampageController {
 		return "redirect:/onespace/teams/" + teamNo + "/posts/list"; // 예시 URL, 실제 리스트 URL에 맞춰야 함
 	}
 	
+	//--팀페이지 등록 글 보기
+	// URL: /onespace/teams/{teamNo}/posts/{teamPostNo} (또는 /onespace/posts/{teamPostNo}로 단순화도 가능)
+    @RequestMapping(value="/teams/{teamNo}/posts/{teamPostNo}", method= {RequestMethod.GET, RequestMethod.POST})
+    public String viewPost(@PathVariable("teamNo") int teamNo, // 리스트로 돌아갈 때 필요할 수 있음
+                           @PathVariable("teamPostNo") int teamPostNo,
+                           Model model) {
+        System.out.println("TeampageController.viewPost() for teamPostNo: " + teamPostNo);
+
+        TeamPostVO post = teampageService.exeGetPost(teamPostNo);
+        model.addAttribute("post", post); // 게시글 정보를 "post"라는 이름으로 JSP에 전달
+
+        // JSP에서 '목록으로' 돌아갈 때 현재 팀 번호가 필요할 수 있으므로 전달
+        model.addAttribute("teamNo", teamNo); 
+
+        return "teampage/view"; // 게시글 상세 보기를 위한 JSP 파일 이름 (예: view.jsp)
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

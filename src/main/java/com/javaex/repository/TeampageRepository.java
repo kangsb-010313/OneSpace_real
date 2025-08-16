@@ -52,6 +52,17 @@ public class TeampageRepository {
 		return count;
 	}
 	
+	//--팀페이지 등록 글 보기
+    public TeamPostVO teampageSelectPostByNo(int teamPostNo) {
+    	
+        System.out.println("TeampageRepository.teampageSelectPostByNo()");
+        
+        TeamPostVO post = sqlSession.selectOne("teampage.selectPostByNo", teamPostNo);
+        
+        return post;
+    }
+
+	
 	
 	// TODO: aside 출력을 위한 모든 팀 목록을 가져오는 메서드
 	// public List<TeamVO> selectAllTeams() {
