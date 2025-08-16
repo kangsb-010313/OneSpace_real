@@ -2,8 +2,15 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="user">
+<mapper namespace="teampage">
 
 <!-- 쿼리문 작성 -->
+	<insert id="insert" parameterType="com.javaex.vo.TeamPostVO">
+		<![CDATA[
+			insert into posts(teamPostNo, teamNo, teamPostType, teamPostTitle, teamContent, teamWriteDate, userNo)
+			values(null, #{teamNo}, #{teamPostType}, #{teamPostTitle}, #{teamContent}, now(), #{userNo})
+		]]>
+	</insert>
+
 
 </mapper>

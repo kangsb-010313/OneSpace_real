@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.javaex.service.TeampageService;
+import com.javaex.vo.TeamPostVO;
+import com.javaex.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
 
 
 @Controller
-@RequestMapping(value="onespace")
+@RequestMapping(value="/onespace")
 public class TeampageController {
 
 	//필드
@@ -36,17 +38,30 @@ public class TeampageController {
 	//--팀페이지 일반공지등록 폼
 	@RequestMapping(value="/writeform", method= {RequestMethod.GET, RequestMethod.POST})
 	public String teamwriteForm(HttpSession session, Model model) {
-		System.out.println("TeampageController.teamwriteform()");
+		System.out.println("TeampageController.writeform()");
+		
+		UserVO authUser = (UserVO)session.getAttribute("authUser");
+		
+//		if(authUser==null) {
+//			return "redirect:/onespace/loginForm";
+//		}
+		model.addAttribute("authUser", authUser);
 		
 		return "teampage/writeform";
 	}
 	
 	//--일반공지등록
 	@RequestMapping(value="/teamwriteadd", method= {RequestMethod.GET, RequestMethod.POST})
-	public String write() {
+	public String write(TeamPostVO teamPostVO, HttpSession session) {
 		System.out.println("TeampageController.write()");
 		
+		UserVO authUser = (UserVO)session.getAttribute("authUser");
 		
+		int no = authUser.getUserNo();
+		
+		teamPostVO.setUserNo(no);
+		
+		teampageService.exeAdd(teamPostVO);
 		
 		return "";
 	}
