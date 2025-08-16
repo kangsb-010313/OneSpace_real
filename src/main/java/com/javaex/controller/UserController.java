@@ -77,6 +77,18 @@ public class UserController {
         // 로그인 성공 후 이동 (원하면 /onespace/home 등으로 변경)
         return "redirect:/onespace/main";
     }
+    
+    
+	 // --로그아웃
+	    @RequestMapping(value = "/logout", method = { RequestMethod.GET, RequestMethod.POST })
+	    public String logout(HttpSession session) {
+	        System.out.println("UserController.logout()");
+	        if (session != null) {
+	            session.invalidate(); // 세션 전체 종료
+	        }
+	        // 로그인 폼으로 안내(원하면 "/" 로 바꿔도 됨)
+	        return "redirect:/onespace/main";
+	    }
 
  
 }

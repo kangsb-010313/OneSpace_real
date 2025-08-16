@@ -77,12 +77,10 @@
 
     <div class="divider"><span>또는</span></div>
 
-    <!-- ✅ 컨트롤러 매핑과 파라미터 이름을 정확히 맞춤 -->
     <form class="login-form"
           method="post"
           action="${pageContext.request.contextPath}/onespace/login">
 
-	      <!-- ✅ name은 반드시 userId / password -->
 	      <input type="text"     placeholder="아이디"   name="userId" />
 	      <input type="password" placeholder="비밀번호" name="password" />
 	
@@ -100,7 +98,6 @@
 	        <a href="${pageContext.request.contextPath}/onespace/signupForm">회원가입</a>
 	      </div>
 	
-	      <!-- ✅ 에러 표시 (컨트롤러에서 ?error=1 로 보냄) -->
 	      <c:if test="${param.error == '1'}">
 	        <p class="error" style="margin-top:10px;">아이디 또는 비밀번호를 확인해주세요.</p>
 	      </c:if>
