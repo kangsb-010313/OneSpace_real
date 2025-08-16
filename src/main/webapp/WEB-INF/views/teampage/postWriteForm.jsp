@@ -42,30 +42,7 @@
 <body>
     <div id="wrap">
         <!-- 헤더 영역------------------------------------------------ -->
-        <header>
-            <div class="container">
-                <div class="header-inner">
-                    <h1 class="logo"><a href="#">원 스페이스</a></h1>
-                    <div class="header-right">
-                        <nav class="nav">
-                            <ul>
-                                <li><a class="click" href="#">팀페이지</a></li>
-                                <li><a href="#">연습실찜하기</a></li>
-                                <li><a href="#">공연 및 대회 정보</a></li>
-                                <li><a href="#">팀자랑</a></li>
-                            </ul>
-                        </nav>
-                        <div class="header-buttons">
-                            <span class="username">강수빈 님</span>
-                            <div class="host-signup-group">
-                                <a href="#" class="btn-outline host-btn">호스트센터</a>
-                                <a href="#" class="btn-outline signup-btn">로그아웃</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+            <c:import url="/WEB-INF/views/include/header.jsp" />
         <!-- /헤더 영역------------------------------------------------ -->
 
         <!-- 컨텐츠 영역---------------------------------------------- -->
@@ -97,7 +74,7 @@
                         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   main container 안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
                         <div class="post-register-wrap">
                             <%-- ▼▼▼▼▼ form action과 method 변경 및 숨겨진 필드 추가 ▼▼▼▼▼ --%>
-                            <form action="${pageContext.request.contextPath}/onespace/teamwriteadd" method="get">
+                            <form action="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/teamwriteadd" method="post">
                                 <input type="hidden" name="teamPostType" value="${param.teamPostType}"> <%-- 글 종류 전달 --%>
                                 <input type="hidden" name="teamNo" value="${teamNo}"> 
                                 <%-- 
@@ -133,7 +110,7 @@
                                             --%>
                                             <li>
                                                 <a href="#" class="vote-item-card">
-                                                    <img src="../../assets/images/연습실사진01.jpg" alt="네스트 연습실">
+                                                    <img src="${pageContext.request.contextPath}/assets/images/연습실사진01.jpg" alt="네스트 연습실">
                                                     <div class="card-content-wrapper">
                                                         <div class="card-main-info">
                                                             <div class="info-left">
@@ -156,7 +133,7 @@
                                             <%-- ... 나머지 투표 카드들 ... --%>
                                             <li>
                                                 <a href="#" class="vote-item-card">
-                                                    <img src="../../assets/images/연습실사진02.jpg" alt="네스트 연습실">
+                                                    <img src="${pageContext.request.contextPath}/assets/images/연습실사진02.jpg" alt="네스트 연습실">
                                                     <div class="card-content-wrapper">
                                                         <div class="card-main-info">
                                                             <div class="info-left">
@@ -178,7 +155,7 @@
                                             </li>
                                             <li>
                                                 <a href="#" class="vote-item-card">
-                                                    <img src="../../assets/images/연습실사진03.jpg" alt="네스트 연습실">
+                                                    <img src="${pageContext.request.contextPath}/assets/images/연습실사진03.jpg" alt="네스트 연습실">
                                                     <div class="card-content-wrapper">
                                                         <div class="card-main-info">
                                                             <div class="info-left">
@@ -220,7 +197,7 @@
 
                                 <!-- 하단 버튼 영역 (공통) -->
                                 <div class="form-actions">
-                                    <a href="${pageContext.request.contextPath}/onespace/list" class="btn-cancel">취소</a>
+                                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-cancel">취소</a>
                                     <button type="submit" class="btn-submit">등록</button>
                                 </div>
                             </form>
@@ -232,27 +209,7 @@
         <!-- /컨텐츠 영역---------------------------------------------- -->
 
         <!-- 푸터 영역------------------------------------------------ -->
-        <footer>
-            <div class="container">
-                <div class="footer-top">
-                    <span class="footer-logo">원 스페이스</span>
-                    <span class="footer-links">
-                    배너광고 문의 | 이용약관 | 개인정보처리방침 | 운영정책 | 콘텐츠산업진흥법에 의한 표시 | 고객 문의
-                    </span>
-                </div>
-                <div class="footer-info">
-                    상호명: 주식회사 춤사위 | 대표: 홍길동 | 사업자등록번호: 230-81-10313 | 통신판매업신고번호: 2025-서울영등포-1093<br>
-                    영업소재지: 서울특별시 강동구 천호대로 1027 5층 501호 | 이메일: [cheonho@onespace.kr](mailto:cheonho@onespace.kr) | 제휴문의: marketing@onespace.kr<br>
-                    대표전화: 1599-1234(평일 오후 2시 ~ 오후 6시) | 온라인 1:1 문의 바로가기(평일 오전 10시 ~ 오후 6시)<br>
-                </div>
-                <div class="footer-warning">
-                    원스페이스는 통신판매중개자이며 통신판매의 당사자가 아닙니다. 따라서 원스페이스는 공간 거래정보 및 거래에 대해 책임지지 않습니다.
-                </div>
-                <div class="footer-copy">
-                    Copyright 춤사위 Corp.All Rights Reserved.
-                </div>
-            </div>
-        </footer>
+		<c:import url="/WEB-INF/views/include/footer.jsp" />
         <!-- /푸터 영역------------------------------------------------ -->
     </div>
 </body>

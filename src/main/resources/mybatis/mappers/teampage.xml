@@ -14,8 +14,8 @@
                     p.teamPostType,
                     p.teamPostTitle,
                     p.teamContent,
-                    p.teamWriteDate,
-                    p.teamUpdateDate,
+                    date_format(p.teamWriteDate, '%Y-%m-%d') as teamWriteDate,
+                    date_format(p.teamUpdateDate, '%Y-%m-%d') as teamUpdateDate,
                     u.userName,   -- users 테이블에서 작성자 이름 가져오기
                     t.teamName    -- teams 테이블에서 팀 이름 가져오기
             from posts p
@@ -37,7 +37,6 @@
         SELECT teamNo, teamName, instaAccount, teamCreatedDate FROM teams WHERE teamNo = #{teamNo}
     </select> -->
     
-    
 
 	<!-- 일반공지등록 글쓰기 -->
 	<insert id="insert" parameterType="com.javaex.vo.TeamPostVO">
@@ -48,6 +47,12 @@
 	</insert>
 	
 	
-
+    <!-- 게시글 삭제 -->
+    <delete id="delete" parameterType="int">
+        <![CDATA[
+            DELETE FROM posts
+            WHERE teamPostNo = #{teamPostNo}
+        ]]>
+    </delete>
 
 </mapper>
