@@ -201,7 +201,7 @@ public class TeampageController {
             model.addAttribute("teamName", "알 수 없는 팀");
         }
         
-        return "teampage/postWriteForm"; // 글쓰기 폼이랑 같이 사용
+        return "teampage/postModifyForm"; // 글쓰기 폼이랑 같이 사용
     }
 
     // -- 팀페이지 등록글 수정 처리

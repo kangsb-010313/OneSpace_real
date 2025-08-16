@@ -228,7 +228,7 @@
                                     </c:choose>
 
                                     <%-- 작성자만 수정/삭제 버튼 보이도록 (공통) --%>
-                                    <c:if test="${sessionScope.authUser.userNo == post.userNo}">
+                                    <c:if test="${sessionScope.authUser.userNo == post.userNo && post.teamPostType != '투표'}">
                                         <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/modifyform" class="btn-action">수정</a>
                                         <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/delete" class="btn-action">삭제</a>
                                     </c:if>
