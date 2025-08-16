@@ -1,11 +1,14 @@
 package com.javaex.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.service.UserService;
 import com.javaex.vo.UserVO;
@@ -20,80 +23,60 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // --회원가입 폼 (GET)
-    @GetMapping("/signupForm")
-    public String joinform() {
-        System.out.println("usercontroller.joinform()");
-        return "admin/auth/signup";
+    // --회원가입폼
+    @RequestMapping(value = {"/signupForm"}, method = { RequestMethod.GET, RequestMethod.POST })
+    public String joinForm() {
+        System.out.println("UserController.joinForm()");
+        return "admin/auth/signup"; // 뷰 경로: 프로젝트에 맞게 유지
     }
 
-    // --회원가입 (POST) : html name에 맞춰 받기
-    @PostMapping("/signup")
-    public String join(
-            @RequestParam("name") String name,
-            @RequestParam("id") String id,
-            @RequestParam("email") String email,
-            @RequestParam("pw") String pw,
-            @RequestParam(value = "pw_confirm", required = false) String pwConfirm
-    ) {
-        System.out.println("usercontroller.join()");
+    // --회원가입 (GET/POST 허용: 수업 스타일 유지)
+    @RequestMapping(value = "/signup", method = { RequestMethod.GET, RequestMethod.POST })
+    public String join(@ModelAttribute UserVO userVO) {
+        System.out.println("UserController.join()  param=" + userVO);
 
-        // 비밀번호 확인 체크 (옵션)
-        if (pwConfirm != null && !pw.equals(pwConfirm)) {
-            // 메시지는 쿼리스트링으로 전달하거나, 모델에 담아도 됨
-            return "redirect:/onespace/signupForm?error=pw_mismatch";
+        try {
+            userService.exeJoin(userVO);
+            // 가입 성공 페이지
+            return "onespace/signupCompleted"; 
+
+        } catch (DuplicateKeyException e) {
+            System.out.println("중복아이디: " + e.getMessage());
+            return "redirect:/onespace/signup?error=dup"; // 폼으로 리다이렉트 + 에러표시
+
+        } catch (Exception e) {
+            System.out.println("회원가입 예외: " + e);
+            return "redirect:/onespace/signup?error=fail";
         }
-
-        UserVO uservo = new UserVO();
-        uservo.setUserName(name);     // html name  -> vo userName
-        uservo.setUserId(id);         // html id    -> vo userId
-        uservo.setEmail(email);       // html email -> vo email
-        uservo.setPassword(pw);       // html pw    -> vo password
-
-        userService.exeJoin(uservo);
-        return "onespace/joinCompleted";
     }
 
-    // --로그인 폼 (GET)
-    @GetMapping("/loginForm")
-    public String loginform() {
-        System.out.println("usercontroller.loginform()");
+    // --로그인폼 
+    @RequestMapping(value = {"/loginForm"}, method = { RequestMethod.GET, RequestMethod.POST })
+    public String loginForm() {
+        System.out.println("UserController.loginForm()");
         return "admin/auth/login";
     }
 
-    // --로그인 (POST) : html name에 맞춰 받기
-    @PostMapping("/login")
-    public String login(
-            @RequestParam("id") String id,
-            @RequestParam("pw") String pw,
-            HttpSession session
-    ) {
-        System.out.println("usercontroller.login()");
+    // --로그인 
+    @RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
+    public String login(@ModelAttribute UserVO userVO, HttpSession session) {
+        System.out.println("UserController.login");
 
-        UserVO param = new UserVO();
-        param.setUserId(id);       // html id -> vo userId
-        param.setPassword(pw);     // html pw -> vo password
+        // 기대 필드: userId, password
+        UserVO authUser = userService.exeLogin(userVO);
+        System.out.println("authUser=" + authUser);
 
-        UserVO authUser = userService.exeLogin(param);
-        System.out.println(authUser);
-        
-//        if (authUser == null) {
-//            // 아이디/비번 불일치
-//            return "redirect:/onespace/loginForm?error=1";
-//        }
+        if (authUser == null) {
+            // 아이디/비번 불일치 → 폼으로
+        	return "redirect:/onespace/loginForm?error=1";
+        }
 
+        // 세션 로그인
         session.setAttribute("authUser", authUser);
-        return "";
+
+        // 로그인 성공 후 이동 (원하면 /onespace/home 등으로 변경)
+        return "redirect:/onespace/main";
     }
 
-    // (선택) 주소창으로 /signup, /login GET 들어올 때 폼으로 돌리기
-    @GetMapping("/signup")
-    public String signup_get_redirect() {
-        return "redirect:/onespace/signupForm";
-    }
-
-    @GetMapping("/login")
-    public String login_get_redirect() {
-        return "redirect:/onespace/loginForm";
-    }
+ 
 }

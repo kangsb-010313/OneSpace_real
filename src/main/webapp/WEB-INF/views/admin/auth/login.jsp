@@ -63,34 +63,51 @@
 
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   여기(main container)안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-        <!-- 로그인 폼 시작 -->
-        <div class="login-main">
-            <div class="login-wrap">
-                <h2 class="login-title">로그인</h2>
-            </div>
-            <div class="login-wrap">
-                <button type="button" class="btn-kakao">
-                <img src="../../../assets/images/kakaotalk.jpg" alt="카카오톡" /> 카카오로 로그인
-                </button>
-                <div class="divider"><span>또는</span></div>
-                <form class="login-form">
-                <input type="text" placeholder="아이디" name="id" />
-                <input type="password" placeholder="비밀번호" name="pw" />
-                <div class="login-options">
-                    <label class="remember">
-                    <input type="checkbox" /> 로그인 기억하기
-                    </label>
-                    <span class="find-pw">비밀번호 찾기</span>
-                </div>
-                <button type="submit" class="btn-login-main">아이디로 로그인하기</button>
-                <div class="for-join">
-                    아직 One Space 회원이 아니신가요? <a href="#">회원가입</a>
-                </div>
-                </form>
-            </div>
-        </div>
-        <!-- 로그인 폼 끝 -->
+<!-- 로그인 폼 시작 -->
+	<div class="login-main">
+	  <div class="login-wrap">
+	    <h2 class="login-title">로그인</h2>
+	</div>
 
+  <div class="login-wrap">
+    <button type="button" class="btn-kakao">
+      <img src="${pageContext.request.contextPath}/assets/images/kakaotalk.jpg" alt="카카오톡" />
+      카카오로 로그인
+    </button>
+
+    <div class="divider"><span>또는</span></div>
+
+    <!-- ✅ 컨트롤러 매핑과 파라미터 이름을 정확히 맞춤 -->
+    <form class="login-form"
+          method="post"
+          action="${pageContext.request.contextPath}/onespace/login">
+
+	      <!-- ✅ name은 반드시 userId / password -->
+	      <input type="text"     placeholder="아이디"   name="userId" />
+	      <input type="password" placeholder="비밀번호" name="password" />
+	
+	      <div class="login-options">
+	        <label class="remember">
+	          <input type="checkbox" /> 로그인 기억하기
+	        </label>
+	        <span class="find-pw">비밀번호 찾기</span>
+	      </div>
+	
+	      <button type="submit" class="btn-login-main">아이디로 로그인하기</button>
+	
+	      <div class="for-join">
+	        아직 One Space 회원이 아니신가요?
+	        <a href="${pageContext.request.contextPath}/onespace/signupForm">회원가입</a>
+	      </div>
+	
+	      <!-- ✅ 에러 표시 (컨트롤러에서 ?error=1 로 보냄) -->
+	      <c:if test="${param.error == '1'}">
+	        <p class="error" style="margin-top:10px;">아이디 또는 비밀번호를 확인해주세요.</p>
+	      </c:if>
+    </form>
+  </div>
+</div>
+<!-- 로그인 폼 끝 -->
 
 
                 
