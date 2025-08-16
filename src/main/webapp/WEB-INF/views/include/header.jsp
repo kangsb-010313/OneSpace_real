@@ -5,18 +5,20 @@
   <div class="container">
     <div class="header-inner">
       <h1 class="logo">
-        <a href="${pageContext.request.contextPath}/">원 스페이스</a>
+        <a class="click" href="${pageContext.request.contextPath}/onespace/main">원 스페이스</a>
       </h1>
 
       <div class="header-right">
         <nav class="nav">
-          <ul>
-            <li><a class="click" href="#">팀페이지</a></li>
-            <li><a href="#">연습실찜하기</a></li>
-            <li><a href="#">공연 및 대회 정보</a></li>
-            <li><a href="#">팀자랑</a></li>
-          </ul>
-        </nav>
+		    <ul>
+		        <li>
+		        	<a class="click" href="${pageContext.request.contextPath}/onespace/teams/1/posts/list">팀페이지</a>
+		        </li>
+		        <li><a href="#">연습실찜하기</a></li>
+		        <li><a href="#">공연 및 대회 정보</a></li>
+		        <li><a href="#">팀자랑</a></li>
+		    </ul>
+		</nav>
 
         <c:choose>
           <%-- 로그인 상태 --%>
