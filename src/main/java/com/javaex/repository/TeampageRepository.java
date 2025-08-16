@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.javaex.vo.TeamPostVO;
+import com.javaex.vo.TeamVO;
 
 @Repository
 public class TeampageRepository {
@@ -62,16 +63,30 @@ public class TeampageRepository {
         return post;
     }
 
-	
-	
-	// TODO: aside 출력을 위한 모든 팀 목록을 가져오는 메서드
-	// public List<TeamVO> selectAllTeams() {
-	//    return sqlSession.selectList("teampage.selectAllTeams"); // MyBatis 쿼리 추가 필요
-	// }
+    // -- 모든 팀 목록 조회
+    public List<TeamVO> selectAllTeams() {
+        System.out.println("TeampageRepository.selectAllTeams()");
+        
+        List<TeamVO> allTeams = sqlSession.selectList("teampage.selectAllTeams");
+        
+        return allTeams;
+    }
 
-	// TODO: 특정 팀 정보를 가져오는 메서드 (팀 이름 등)
-	// public TeamVO selectTeamInfo(int teamNo) {
-	//    return sqlSession.selectOne("teampage.selectTeamInfo", teamNo); // MyBatis 쿼리 추가 필요
-	// }
+    // -- 특정 팀 정보 조회
+    public TeamVO selectTeamInfoByNo(int teamNo) {
+        System.out.println("TeampageRepository.selectTeamInfoByNo()");
+        
+        TeamVO teamInfo = sqlSession.selectOne("teampage.selectTeamInfoByNo", teamNo);
+        
+        return teamInfo;
+    }
+    
+    // -- 게시글 수정
+    public int teampageUpdate(TeamPostVO teamPostVO) {
+        System.out.println("TeampageRepository.teampageUpdate()");
+        int count = sqlSession.update("teampage.update", teamPostVO);
+        return count;
+    }
+    
 	
 }

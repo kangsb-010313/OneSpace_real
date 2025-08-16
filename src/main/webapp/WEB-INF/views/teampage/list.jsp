@@ -31,13 +31,15 @@
                 <div class="container">
 
                     <div id="content">
+                    
                         <div id="team-aside">
                             <h2>팀페이지</h2>
                             
                             <div class="team-list-section">
-
-                                <a href="#" class="btn-outline3 teamlist-btn">팀 원밀리언</a>
-                                <a href="#" class="btn-outline3 teamlist-btn">팀 저스트절크</a>
+                                <%-- ▼▼▼▼▼ 모든 팀 목록을 동적으로 출력 ▼▼▼▼▼ --%>
+                                <c:forEach var="team" items="${allTeams}">
+                                    <a href="${pageContext.request.contextPath}/onespace/teams/${team.teamNo}/posts/list" class="btn-outline3 teamlist-btn">${team.teamName}</a>
+                                </c:forEach>
                             </div>
                             <a href="#" class="btn-outline2 teamadd-btn">팀 등록하기</a>
                         </div>
@@ -88,7 +90,10 @@
 	                                    <c:forEach items="${teamPostList}" var="teamPostVO">
 	                                        <tr>
 	                                            <td>${teamPostVO.teamPostType}</td> <%-- 글 종류 (카테고리) --%>
-	                                            <td>${teamPostVO.teamPostTitle}</td> <%-- 제목 --%>
+	                                            <td>
+                                                    <%-- ▼▼▼▼▼ 글보기 링크 추가 ▼▼▼▼▼ --%>
+                                                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${teamPostVO.teamPostNo}">${teamPostVO.teamPostTitle}</a>
+                                                </td> 
 	                                            <td>${teamPostVO.teamWriteDate}</td> <%-- 작성일 --%>
 	                                        </tr>
 	                                    </c:forEach>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.javaex.repository.TeampageRepository;
 import com.javaex.vo.TeamPostVO;
+import com.javaex.vo.TeamVO;
 
 @Service
 public class TeampageService {
@@ -61,18 +62,30 @@ public class TeampageService {
         return post;
     }
     
-	
-	// TODO: aside 출력을 위한 모든 팀 목록을 가져오는 메서드
-	// public List<TeamVO> exeGetAllTeams() {
-	//    return teampageRepository.selectAllTeams();
-	// }
+    // -- 모든 팀 목록 조회
+    public List<TeamVO> exeGetAllTeams() {
+        System.out.println("TeampageService.exeGetAllTeams()");
+        
+        List<TeamVO> allTeams = teampageRepository.selectAllTeams();
+        
+        return allTeams;
+    }
 
-	// TODO: 특정 팀 정보를 가져오는 메서드 (팀 이름 등)
-	// public TeamVO exeGetTeamInfo(int teamNo) {
-	//    return teampageRepository.selectTeamInfo(teamNo);
-	// }
+    // -- 특정 팀 정보 조회
+    public TeamVO exeGetTeamInfo(int teamNo) {
+        System.out.println("TeampageService.exeGetTeamInfo()");
+        
+        TeamVO teamInfo = teampageRepository.selectTeamInfoByNo(teamNo);
+        
+        return teamInfo;
+    }
 	
-	
+    // -- 게시글 수정
+    public int exeModify(TeamPostVO teamPostVO) {
+        System.out.println("TeampageService.exeModify()");
+        int count = teampageRepository.teampageUpdate(teamPostVO);
+        return count;
+    }
 	
 	
 }

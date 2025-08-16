@@ -27,15 +27,23 @@
 	</select>
 	
 	
-	<!-- TODO: aside 출력을 위한 모든 팀 목록 조회 쿼리 추가 -->
-    <!-- <select id="selectAllTeams" resultType="com.javaex.vo.TeamVO">
-        SELECT teamNo, teamName FROM teams ORDER BY teamName ASC
-    </select> -->
+    <!-- 모든 팀 목록 조회 -->
+    <select id="selectAllTeams" resultType="com.javaex.vo.TeamVO">
+        <![CDATA[
+            select teamNo, teamName
+            from teams
+            order by teamName asc
+        ]]>
+    </select>
 
-    <!-- TODO: 특정 팀 정보를 가져오는 쿼리 추가 -->
-    <!-- <select id="selectTeamInfo" parameterType="int" resultType="com.javaex.vo.TeamVO">
-        SELECT teamNo, teamName, instaAccount, teamCreatedDate FROM teams WHERE teamNo = #{teamNo}
-    </select> -->
+    <!-- 특정 팀 정보 조회 (팀 이름 등을 가져올 때 사용) -->
+    <select id="selectTeamInfoByNo" parameterType="int" resultType="com.javaex.vo.TeamVO">
+        <![CDATA[
+            select teamNo, teamName, instaAccount, teamCreatedDate
+            from teams
+            where teamNo = #{teamNo}
+        ]]>
+    </select>
     
     
     <!-- 게시글 상세 조회, 수정폼 -->
@@ -59,13 +67,25 @@
     </select>
     
 
-	<!-- 일반공지등록 글쓰기 -->
+	<!-- 팀페이지 글 등록 -->
 	<insert id="insert" parameterType="com.javaex.vo.TeamPostVO">
 		<![CDATA[
 			insert into posts(teamPostNo, teamNo, teamPostType, teamPostTitle, teamContent, teamWriteDate, userNo)
 			values(null, #{teamNo}, #{teamPostType}, #{teamPostTitle}, #{teamContent}, now(), #{userNo})
 		]]>
 	</insert>
+	
+	<!-- 게시글 수정 -->
+    <update id="update" parameterType="com.javaex.vo.TeamPostVO">
+        <![CDATA[
+            update posts
+            set teamPostType = #{teamPostType},
+                teamPostTitle = #{teamPostTitle},
+                teamContent = #{teamContent},
+                teamUpdateDate = now()
+            where teamPostNo = #{teamPostNo}
+        ]]>
+    </update>
 	
 	
     <!-- 게시글 삭제 -->

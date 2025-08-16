@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.javaex.service.TeampageService;
 import com.javaex.vo.TeamPostVO;
+import com.javaex.vo.TeamVO;
 import com.javaex.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -40,7 +41,7 @@ public class TeampageController {
 //		
 //		model.addAttribute("teamPostList", teamPostList);
 //		
-//		return "teampage/list"; 
+//		return "teampage/teammain"; 
 //	}
 	
     // --팀페이지 전체 리스트 (특정 팀의 리스트)
@@ -49,20 +50,27 @@ public class TeampageController {
     public String list(@PathVariable("teamNo") int teamNo, Model model) {
         System.out.println("TeampageController.list() for teamNo: " + teamNo);
         
-        // TODO: teampageService.exeList() 대신 teamNo에 해당하는 리스트만 가져오는 서비스 메서드를 호출해야 합니다.
-        // 예: List<TeamPostVO> teamPostList = teampageService.exeListByTeam(teamNo);
+       
         List<TeamPostVO> teamPostList = teampageService.exeListByTeam(teamNo);	//특정 팀의 게시글만 가져옴
-        System.out.println(teamPostList);
-        
+//        System.out.println(teamPostList);
         model.addAttribute("teamPostList", teamPostList);
+        
+        
+        // 1. 특정 팀 정보 가져오기 (팀 이름 등)
+        TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
+        if (currentTeam != null) {
+            model.addAttribute("teamName", currentTeam.getTeamName());
+        } else {
+            model.addAttribute("teamName", "팀 정보 없음"); // 팀 정보가 없을 경우 대비
+        }
+        
+        // 2. 현재 보고 있는 팀의 teamNo를 JSP로 전달
+
         model.addAttribute("teamNo", teamNo); // 현재 보고 있는 팀의 teamNo를 JSP로 전달
         
-        //model.addAttribute("teamName", "선택된 팀 이름(" + teamNo + ")"); // 임시로 하드코딩 + teamNo 추가
-        // 실제로는 teampageService.exeGetTeamInfo(teamNo) 로 가져와야 함
-        
-        // TODO: 팀 이름도 model에 담아주면 좋을 것 같습니다.
-        // 예: TeamVO currentTeam = teampageService.getTeamInfo(teamNo);
-        // model.addAttribute("currentTeamName", currentTeam.getTeamName());
+        // 3. aside에 뿌려줄 모든 팀 목록 가져오기
+        List<TeamVO> allTeams = teampageService.exeGetAllTeams();
+        model.addAttribute("allTeams", allTeams);
 
         return "teampage/list"; 
     }
@@ -85,6 +93,18 @@ public class TeampageController {
 		model.addAttribute("authUser", authUser);
 		model.addAttribute("teamPostType", teamPostType); // 글 종류 JSP 전달용
         model.addAttribute("teamNo", teamNo); // teamNo도 JSP로 전달 (hidden input에 사용)
+		
+        List<TeamVO> allTeams = teampageService.exeGetAllTeams();
+        model.addAttribute("allTeams", allTeams);
+
+        TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
+        
+        if (currentTeam != null) {
+            model.addAttribute("teamName", currentTeam.getTeamName());
+        } else {
+            model.addAttribute("teamName", "알 수 없는 팀");
+        }
+		
         
 		return "teampage/postWriteForm";
 	}
@@ -128,11 +148,95 @@ public class TeampageController {
 
         // JSP에서 '목록으로' 돌아갈 때 현재 팀 번호가 필요할 수 있으므로 전달
         model.addAttribute("teamNo", teamNo); 
+        
+        List<TeamVO> allTeams = teampageService.exeGetAllTeams();
+        model.addAttribute("allTeams", allTeams);
+
+        TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
+        if (currentTeam != null) {
+            model.addAttribute("teamName", currentTeam.getTeamName());
+        } else {
+            model.addAttribute("teamName", "알 수 없는 팀");
+        }
 
         return "teampage/view"; // 게시글 상세 보기를 위한 JSP 파일 이름 (예: view.jsp)
     }
 	
-	
+    // -- 팀페이지 등록글 수정 폼
+    // URL: /onespace/teams/{teamNo}/posts/{teamPostNo}/modifyform
+    @RequestMapping(value="/teams/{teamNo}/posts/{teamPostNo}/modifyform", method= {RequestMethod.GET, RequestMethod.POST})
+    public String modifyForm(@PathVariable("teamNo") int teamNo,
+                             @PathVariable("teamPostNo") int teamPostNo,
+                             HttpSession session,
+                             Model model) {
+        System.out.println("TeampageController.modifyForm()");
+        
+        // 로그인 체크 (필수)
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if(authUser == null) {
+            return "redirect:/onespace/loginForm";
+        }
+
+        // 기존 게시글 정보 가져오기
+        TeamPostVO post = teampageService.exeGetPost(teamPostNo);
+
+        // 작성자 본인인지 확인 (보안 강화)
+        if (post == null || post.getUserNo() != authUser.getUserNo()) {
+            // TODO: 권한 없음 페이지 또는 에러 처리
+            return "redirect:/onespace/teams/" + teamNo + "/posts/" + teamPostNo; // 상세 페이지로 돌려보냄
+        }
+        
+        model.addAttribute("post", post); // 수정할 게시글 정보
+        model.addAttribute("teamNo", teamNo); // 현재 팀 번호
+        
+
+        // aside 데이터를 위한 모든 팀 목록 및 현재 팀 이름 추가 (list, viewPost와 동일)
+        List<TeamVO> allTeams = teampageService.exeGetAllTeams();
+        model.addAttribute("allTeams", allTeams);
+        TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
+        
+        if (currentTeam != null) {
+            model.addAttribute("teamName", currentTeam.getTeamName());
+        } else {
+            model.addAttribute("teamName", "알 수 없는 팀");
+        }
+        
+        return "teampage/postWriteForm"; // 글쓰기 폼이랑 같이 사용
+    }
+
+    // -- 팀페이지 등록글 수정 처리
+    // URL: /onespace/teams/{teamNo}/posts/modify
+    @RequestMapping(value="/teams/{teamNo}/posts/modify", method= {RequestMethod.GET, RequestMethod.POST}) // 수정 처리는 POST로 받음
+    public String modify(@PathVariable("teamNo") int teamNo,
+                         TeamPostVO teamPostVO, // 폼에서 넘어온 데이터 (teamPostNo, teamPostType, teamPostTitle, teamContent)
+                         HttpSession session) {
+        System.out.println("TeampageController.modify()");
+
+        // 로그인 체크 (필수)
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if(authUser == null) {
+            return "redirect:/onespace/loginForm";
+        }
+        
+        // 작성자 userNo 설정 (보안: 세션에서 가져와 다시 설정)
+        teamPostVO.setUserNo(authUser.getUserNo()); 
+        
+        // teamNo 설정
+        teamPostVO.setTeamNo(teamNo);
+
+        // 줄바꿈 처리 (선택 사항: DB 저장 전에 처리하려면 여기에 추가)
+        // String content = teamPostVO.getTeamContent();
+        // if (content != null) {
+        //     content = content.replace("\n", "<br/>");
+        //     teamPostVO.setTeamContent(content);
+        // }
+
+        teampageService.exeModify(teamPostVO); // 서비스 호출하여 DB 업데이트
+
+        // 수정 후 해당 게시글 상세 페이지로 리다이렉트
+        return "redirect:/onespace/teams/" + teamNo + "/posts/" + teamPostVO.getTeamPostNo();
+    }
+    
 	
 	
 	

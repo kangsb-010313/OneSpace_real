@@ -11,14 +11,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
-    
-    <%-- 
-        CSS 파일은 따로 관리하신다고 하셨으므로,
-        여기서는 공통 CSS만 로드하고, 각 폼에 필요한 고유 스타일은
-        별도의 CSS 파일에서 해당 클래스나 ID에 맞춰 정의해주세요.
-        예: teamwriteform.css, makevote.css, teampriwriteform.css 등의 내용을
-            각각 필요한 요소에 직접 적용하거나, 하나의 통합 CSS에 모두 포함시키는 방식.
-    --%>
+
     
         <%-- ▼▼▼▼▼ 글 종류에 따라 다른 CSS 파일 로드 (이 부분을 다시 넣어주세요!) ▼▼▼▼▼ --%>
     <c:choose>
@@ -51,11 +44,14 @@
                 <div id="content">
                     <div id="team-aside">
                         <h2>팀페이지</h2>
+                        
                         <div class="team-list-section">
-                            <%-- <h3>우리팀 목록</h3> --%>
-                            <a href="#" class="btn-outline3 teamlist-btn">팀 원밀리언</a>
-                            <a href="#" class="btn-outline3 teamlist-btn">팀 저스트절크</a>
+                            <%-- ▼▼▼▼▼ 모든 팀 목록을 동적으로 출력 ▼▼▼▼▼ --%>
+                            <c:forEach var="team" items="${allTeams}">
+                                <a href="${pageContext.request.contextPath}/onespace/teams/${team.teamNo}/posts/list" class="btn-outline3 teamlist-btn">${team.teamName}</a>
+                            </c:forEach>
                         </div>
+                        
                         <a href="#" class="btn-outline2 teamadd-btn">팀 등록하기</a>
                     </div>
 
