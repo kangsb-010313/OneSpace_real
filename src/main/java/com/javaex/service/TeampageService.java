@@ -1,5 +1,7 @@
 package com.javaex.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,24 @@ public class TeampageService {
 	
 	
 	//메소드일반
+//	//--팀페이지 전체 리스트
+//	public List<TeamPostVO> exeList(){
+//		System.out.println("TeampageService.exeList()");
+//		
+//		List<TeamPostVO> teamPostList = teampageRepository.teampageSelectList();
+//		
+//		return teamPostList;
+//	}
+	
+    // -- 특정 팀의 게시글 리스트 조회
+    public List<TeamPostVO> exeListByTeam(int teamNo){
+    	
+        System.out.println("TeampageService.exeListByTeam()");
+        
+        List<TeamPostVO> teamPostList = teampageRepository.teampageSelectListByTeamNo(teamNo);
+        
+        return teamPostList;
+    }
 	
 	//--일반공지 글 등록하기
 	public int exeAdd(TeamPostVO teamPostVO) {
@@ -30,6 +50,16 @@ public class TeampageService {
 		
 		return count;
 	}
+	
+	// TODO: aside 출력을 위한 모든 팀 목록을 가져오는 메서드
+	// public List<TeamVO> exeGetAllTeams() {
+	//    return teampageRepository.selectAllTeams();
+	// }
+
+	// TODO: 특정 팀 정보를 가져오는 메서드 (팀 이름 등)
+	// public TeamVO exeGetTeamInfo(int teamNo) {
+	//    return teampageRepository.selectTeamInfo(teamNo);
+	// }
 	
 	
 }

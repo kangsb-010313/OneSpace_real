@@ -80,11 +80,11 @@
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   main container 안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
                             <!-- ▼▼▼▼▼ 이 부분이 새로 추가된 공지 등록 폼입니다 ▼▼▼▼▼ -->
                             <div class="post-register-wrap">
-                                <form action="#">
+                                <form action="${pageContext.request.contextPath}/onespace/teamwriteadd" method="get">
                                     <!-- 제목 입력 영역 -->
                                     <div class="form-group title-group">
                                         <label for="post-title">제목</label>
-                                        <input type="text" id="post-title" placeholder="제목을 입력하세요">
+                                        <input type="text" id="post-title" name="teamPostTitle" placeholder="제목을 입력하세요">
                                     </div>
 
                                     <!-- 글 내용 및 파일 첨부 영역 -->
@@ -97,7 +97,7 @@
                                             </div>
                                         </div>
                                         <div class="content-box">
-                                            <textarea id="post-content" placeholder="내용을 입력하세요"></textarea>
+                                            <textarea id="post-content" name="teamContent" placeholder="내용을 입력하세요"></textarea>
                                             <!-- 첨부된 파일 미리보기가 표시될 영역 -->
                                             <div id="file-preview-zone"></div>
                                         </div>
@@ -105,7 +105,7 @@
 
                                     <!-- 하단 버튼 영역 -->
                                     <div class="form-actions">
-                                        <a href="#" class="btn-cancel">취소</a>
+                                        <a href="${pageContext.request.contextPath}/onespace/list" class="btn-cancel">취소</a>
                                         <button type="submit" class="btn-submit">등록</button>
                                     </div>
                                 </form>

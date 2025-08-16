@@ -1,0 +1,259 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>팀페이지-게시글등록</title> <%-- 제목을 좀 더 일반적인 것으로 변경 --%>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
+    
+    <%-- 
+        CSS 파일은 따로 관리하신다고 하셨으므로,
+        여기서는 공통 CSS만 로드하고, 각 폼에 필요한 고유 스타일은
+        별도의 CSS 파일에서 해당 클래스나 ID에 맞춰 정의해주세요.
+        예: teamwriteform.css, makevote.css, teampriwriteform.css 등의 내용을
+            각각 필요한 요소에 직접 적용하거나, 하나의 통합 CSS에 모두 포함시키는 방식.
+    --%>
+    
+        <%-- ▼▼▼▼▼ 글 종류에 따라 다른 CSS 파일 로드 (이 부분을 다시 넣어주세요!) ▼▼▼▼▼ --%>
+    <c:choose>
+        <c:when test="${param.teamPostType == '일반공지'}">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/teamwriteform.css">
+        </c:when>
+        <c:when test="${param.teamPostType == '투표'}">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/makevote.css">
+        </c:when>
+        <c:when test="${param.teamPostType == '팀자랑'}">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/teampriwriteform.css">
+        </c:when>
+        <c:otherwise>
+             <%-- 기본 CSS 또는 에러 처리 (필요하다면 기본 폼을 위한 CSS를 여기에 추가할 수 있습니다) --%>
+        </c:otherwise>
+    </c:choose>
+    <%-- ▲▲▲▲▲ 여기까지 다시 넣어주시면 됩니다 ▲▲▲▲▲ --%>
+    
+</head>
+
+<body>
+    <div id="wrap">
+        <!-- 헤더 영역------------------------------------------------ -->
+        <header>
+            <div class="container">
+                <div class="header-inner">
+                    <h1 class="logo"><a href="#">원 스페이스</a></h1>
+                    <div class="header-right">
+                        <nav class="nav">
+                            <ul>
+                                <li><a class="click" href="#">팀페이지</a></li>
+                                <li><a href="#">연습실찜하기</a></li>
+                                <li><a href="#">공연 및 대회 정보</a></li>
+                                <li><a href="#">팀자랑</a></li>
+                            </ul>
+                        </nav>
+                        <div class="header-buttons">
+                            <span class="username">강수빈 님</span>
+                            <div class="host-signup-group">
+                                <a href="#" class="btn-outline host-btn">호스트센터</a>
+                                <a href="#" class="btn-outline signup-btn">로그아웃</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- /헤더 영역------------------------------------------------ -->
+
+        <!-- 컨텐츠 영역---------------------------------------------- -->
+        <main>
+            <div class="container">
+                <div id="content">
+                    <div id="team-aside">
+                        <h2>팀페이지</h2>
+                        <div class="team-list-section">
+                            <%-- <h3>우리팀 목록</h3> --%>
+                            <a href="#" class="btn-outline3 teamlist-btn">팀 원밀리언</a>
+                            <a href="#" class="btn-outline3 teamlist-btn">팀 저스트절크</a>
+                        </div>
+                        <a href="#" class="btn-outline2 teamadd-btn">팀 등록하기</a>
+                    </div>
+
+                    <div id="main-content">
+                        <%-- ▼▼▼▼▼ 글 종류에 따라 제목 변경 ▼▼▼▼▼ --%>
+                        <h2 class="post-type-title">
+                            <c:choose>
+                                <c:when test="${param.teamPostType == '일반공지'}">일반공지등록</c:when>
+                                <c:when test="${param.teamPostType == '팀자랑'}">팀자랑 등록</c:when>
+                                <c:when test="${param.teamPostType == '투표'}">투표만들기</c:when>
+                                <c:otherwise>게시글 등록 실패</c:otherwise> <%-- 기본값 또는 에러 메시지 --%>
+                            </c:choose>
+                        </h2>
+                        <%-- ▲▲▲▲▲ 여기까지 ▼▼▼▼▼ --%>
+
+                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   main container 안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+                        <div class="post-register-wrap">
+                            <%-- ▼▼▼▼▼ form action과 method 변경 및 숨겨진 필드 추가 ▼▼▼▼▼ --%>
+                            <form action="${pageContext.request.contextPath}/onespace/teamwriteadd" method="get">
+                                <input type="hidden" name="teamPostType" value="${param.teamPostType}"> <%-- 글 종류 전달 --%>
+                                <input type="hidden" name="teamNo" value="${teamNo}"> 
+                                <%-- 
+                                    여기에 teamNo도 숨겨서 전달하거나, URL PathVariable로 받거나 해야 합니다.
+                                    예: <input type="hidden" name="teamNo" value="${param.teamNo}"> 
+                                --%>
+
+                                <!-- 제목 입력 영역 (공통) -->
+                                <div class="form-group title-group">
+                                    <label for="post-title">제목</label>
+                                    <input type="text" id="post-title" name="teamPostTitle" placeholder="제목을 입력하세요">
+                                </div>
+
+
+                                <%-- ▼▼▼▼▼ 글 종류에 따라 다른 내용 추가 ▼▼▼▼▼ --%>
+                                <c:if test="${param.teamPostType == '팀자랑'}">
+                                    <div class="form-group instagram-group">
+                                        <label>인스타계정</label>
+                                        <span class="instagram-id">@1milliondance</span>
+                                        <%-- 실제 값을 입력받으려면 input 태그를 사용해야 합니다. span은 보여주기만 함 --%>
+                                        <%-- <input type="text" name="instagramAccount" placeholder="인스타 계정 입력"> --%>
+                                    </div>
+                                </c:if>
+
+
+                                <c:if test="${param.teamPostType == '투표'}">
+                                    <div class="form-group vote-list-group">
+                                        <label>투표목록</label>
+                                        <ol class="vote-items-container">
+                                            <%-- 
+                                                투표 항목은 DB에서 가져오거나, 투표 생성 폼에서 추가하는 로직이 필요합니다.
+                                                현재는 하드코딩된 예시입니다.
+                                            --%>
+                                            <li>
+                                                <a href="#" class="vote-item-card">
+                                                    <img src="../../assets/images/연습실사진01.jpg" alt="네스트 연습실">
+                                                    <div class="card-content-wrapper">
+                                                        <div class="card-main-info">
+                                                            <div class="info-left">
+                                                                <p class="item-title">네스트 연습실 101호</p>
+                                                                <p class="item-datetime">8/4(월) 15:00-17:00</p> 
+                                                            </div>
+                                                            <div class="info-right">
+                                                                <p class="item-price">10,000 원</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-sub-info">
+                                                            <p class="item-info">실외화 가능/주차/최대7인</p>
+                                                            <p class="item-location">
+                                                                <img src="../../assets/images/위치아이콘.jpg" class="map-icon"> 강동구
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <%-- ... 나머지 투표 카드들 ... --%>
+                                            <li>
+                                                <a href="#" class="vote-item-card">
+                                                    <img src="../../assets/images/연습실사진02.jpg" alt="네스트 연습실">
+                                                    <div class="card-content-wrapper">
+                                                        <div class="card-main-info">
+                                                            <div class="info-left">
+                                                                <p class="item-title">네스트 연습실 101호</p>
+                                                                <p class="item-datetime">8/4(월) 15:00-17:00</p> 
+                                                            </div>
+                                                            <div class="info-right">
+                                                                <p class="item-price">20,000 원</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-sub-info">
+                                                            <p class="item-info">실외화 가능/주차/최대7인</p>
+                                                            <p class="item-location">
+                                                                <img src="../../assets/images/위치아이콘.jpg" class="map-icon"> 강동구
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="vote-item-card">
+                                                    <img src="../../assets/images/연습실사진03.jpg" alt="네스트 연습실">
+                                                    <div class="card-content-wrapper">
+                                                        <div class="card-main-info">
+                                                            <div class="info-left">
+                                                                <p class="item-title">네스트 연습실 101호</p>
+                                                                <p class="item-datetime">8/4(월) 15:00-17:00</p> 
+                                                            </div>
+                                                            <div class="info-right">
+                                                                <p class="item-price">25,000 원</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-sub-info">
+                                                            <p class="item-info">실외화 가능/주차/최대7인</p>
+                                                            <p class="item-location">
+                                                                <img src="../../assets/images/위치아이콘.jpg" class="map-icon"> 강동구
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </c:if>
+                                <%-- ▲▲▲▲▲ 여기까지 ▼▼▼▼▼ --%>
+
+                                <!-- 글 내용 및 파일 첨부 영역 (공통) -->
+                                <div class="form-group content-group">
+                                    <div class="content-header">
+                                        <label for="post-content">글내용</label>
+                                        <div class="file-attach-section">
+                                            <label for="file-upload" class="btn-file-attach">파일첨부</label>
+                                            <input type="file" id="file-upload" multiple>
+                                        </div>
+                                    </div>
+                                    <div class="content-box">
+                                        <textarea id="post-content" name="teamContent" placeholder="내용을 입력하세요"></textarea>
+                                        <div id="file-preview-zone"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 하단 버튼 영역 (공통) -->
+                                <div class="form-actions">
+                                    <a href="${pageContext.request.contextPath}/onespace/list" class="btn-cancel">취소</a>
+                                    <button type="submit" class="btn-submit">등록</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- /컨텐츠 영역---------------------------------------------- -->
+
+        <!-- 푸터 영역------------------------------------------------ -->
+        <footer>
+            <div class="container">
+                <div class="footer-top">
+                    <span class="footer-logo">원 스페이스</span>
+                    <span class="footer-links">
+                    배너광고 문의 | 이용약관 | 개인정보처리방침 | 운영정책 | 콘텐츠산업진흥법에 의한 표시 | 고객 문의
+                    </span>
+                </div>
+                <div class="footer-info">
+                    상호명: 주식회사 춤사위 | 대표: 홍길동 | 사업자등록번호: 230-81-10313 | 통신판매업신고번호: 2025-서울영등포-1093<br>
+                    영업소재지: 서울특별시 강동구 천호대로 1027 5층 501호 | 이메일: [cheonho@onespace.kr](mailto:cheonho@onespace.kr) | 제휴문의: marketing@onespace.kr<br>
+                    대표전화: 1599-1234(평일 오후 2시 ~ 오후 6시) | 온라인 1:1 문의 바로가기(평일 오전 10시 ~ 오후 6시)<br>
+                </div>
+                <div class="footer-warning">
+                    원스페이스는 통신판매중개자이며 통신판매의 당사자가 아닙니다. 따라서 원스페이스는 공간 거래정보 및 거래에 대해 책임지지 않습니다.
+                </div>
+                <div class="footer-copy">
+                    Copyright 춤사위 Corp.All Rights Reserved.
+                </div>
+            </div>
+        </footer>
+        <!-- /푸터 영역------------------------------------------------ -->
+    </div>
+</body>
+</html>

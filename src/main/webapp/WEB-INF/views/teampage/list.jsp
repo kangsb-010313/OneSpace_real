@@ -68,7 +68,7 @@
                             <h2>팀페이지</h2>
                             
                             <div class="team-list-section">
-                                <!-- <h3>우리팀 목록</h3> -->
+
                                 <a href="#" class="btn-outline3 teamlist-btn">팀 원밀리언</a>
                                 <a href="#" class="btn-outline3 teamlist-btn">팀 저스트절크</a>
                             </div>
@@ -84,8 +84,8 @@
                             </div>
                             <!-- 일반공지/팀자랑 등록 링크 -->
                             <div class="registration-links">
-                                <a href="${pageContext.request.contextPath}/onespace/teamwriteform">일반공지등록</a>
-                                <a href="#">팀자랑 등록하기</a>
+                                <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/writeform?teamPostType=일반공지">일반공지등록</a>
+                                <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/writeform?teamPostType=팀자랑">팀자랑 등록하기</a>
                             </div>
 
                             <div id="team-search-voting">
@@ -97,7 +97,7 @@
                                 </div>
 
                                 <div class="btn-area">
-                                    <button type="submit" class="btn-make">투표만들기</button>
+                                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/writeform?teamPostType=투표" class="btn-make">투표만들기</a>
                                 </div>
                             </div>
 
@@ -117,31 +117,14 @@
                                             <th>작성일</th>
                                         </tr>
                                     </thead>
-                                        <tr>
-                                            <td>팀자랑</td>
-                                            <td>팀 원밀리언 연습 후기</td>
-                                            <td>2025-07-30</td>
-                                        </tr>
-                                        <tr>
-                                            <td>일반공지</td>
-                                            <td>팀 원밀리언 새벽연습 관련 공지글입니다.</td>
-                                            <td>2025-07-30</td>
-                                        </tr>
-                                        <tr>
-                                            <td>일반공지</td>
-                                            <td>팀 원밀리언 연습일정 확인</td>
-                                            <td>2025-07-30</td>
-                                        </tr>
-                                        <tr>
-                                            <td>투표</td>
-                                            <td>팀 원밀리언 연습일정 투표</td>
-                                            <td>2025-07-30</td>
-                                        </tr>
-                                        <tr>
-                                            <td>일반공지</td>
-                                            <td>팀 원밀리언 등록되었습니다.</td>
-                                            <td>2025-07-30</td>
-                                        </tr>
+                                    <tbody>
+	                                    <c:forEach items="${teamPostList}" var="teamPostVO">
+	                                        <tr>
+	                                            <td>${teamPostVO.teamPostType}</td> <%-- 글 종류 (카테고리) --%>
+	                                            <td>${teamPostVO.teamPostTitle}</td> <%-- 제목 --%>
+	                                            <td>${teamPostVO.teamWriteDate}</td> <%-- 작성일 --%>
+	                                        </tr>
+	                                    </c:forEach>
                                     </tbody>
 
                                 </table>
