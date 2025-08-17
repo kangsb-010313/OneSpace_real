@@ -41,126 +41,60 @@
                     <div class="space-manage-container">
                         <h2 class="main-title">내 공간 관리</h2>
 
-                        <!-- 공간 카드 1 -->
-                        <div class="space-item">
-                            <!-- 이미지 -->
-                            <img
-                              class="space-thumb"
-                              src="../../../assets/images/room1.jpg"
-                              alt="공간 사진"
-                            />
-                          
-                            <!-- 정보 + 버튼 -->
-                            <div class="space-contents">
-                              <!-- 정보 -->
-                              <div class="space-info">
-                                <div class="row">
-                                  <div class="label">공간명</div>
-                                  <div class="value">연습실 1</div>
-                                </div>
-                                <div class="row">
-                                  <div class="label">주소</div>
-                                  <div class="value">서울특별시 강남구 87번길 6 B1 102호</div>
-                                </div>
-                                <div class="row">
-                                  <div class="label">공간 면적</div>
-                                  <div class="value">165㎡</div>
-                                </div>
-                                <div class="row">
-                                  <div class="label">시설 안내</div>
-                                  <div class="value">주차, 실외화, 실내 화장실, 스피커</div>
-                                </div>
-                              </div>
-                          
-                              <!-- 수정 버튼 -->
-                              <div class="space-edit">
-                                <button class="btn-edit">수정하기</button>
-                              </div>
+                        <%-- [변경] 빈/목록 분기 --%>
+                        <c:choose>
+                          <%-- [변경] 빈 상태: spaces가 비었을 때 버튼만 노출 --%>
+                          <c:when test="${empty spaces}">
+                            <div class="btn-wrapper">
+                              <a href="${pageContext.request.contextPath}/onespace/hostcenter/info" class="btn-host-manage">새 공간 등록하기</a>
                             </div>
-                          </div>
+                          </c:when>
 
-                        <!-- 공간 카드 2 -->
-                        <div class="space-item">
-                            <!-- 이미지 -->
-                            <img
-                              class="space-thumb"
-                              src="../../../assets/images/room1.jpg"
-                              alt="공간 사진"
-                            />
+                          <%-- [변경] 목록 상태: spaces가 있을 때 카드 반복 렌더링 --%>
+                          <c:otherwise>
+                            <c:forEach var="space" items="${spaces}">
+                              <div class="space-item">
+                                <!-- 이미지: 임시 고정 이미지 (대표이미지 붙이면 교체) -->
+                                <img
+                                  class="space-thumb"
+                                  src="../../../assets/images/room1.jpg"
+                                  alt="공간 사진"
+                                />
 
-                            <!-- 정보 + 버튼 -->
-                            <div class="space-contents">
-                              <!-- 정보 -->
-                              <div class="space-info">
-                                <div class="row">
-                                  <div class="label">공간명</div>
-                                  <div class="value">연습실 2</div>
-                                </div>
-                                <div class="row">
-                                  <div class="label">주소</div>
-                                  <div class="value">서울특별시 강남구 87번길 6 B1 102호</div>
-                                </div>
-                                <div class="row">
-                                  <div class="label">공간 면적</div>
-                                  <div class="value">165㎡</div>
-                                </div>
-                                <div class="row">
-                                  <div class="label">시설 안내</div>
-                                  <div class="value">주차, 실외화, 실내 화장실, 스피커</div>
+                                <!-- 정보 + 버튼 -->
+                                <div class="space-contents">
+                                  <!-- 정보 -->
+                                  <div class="space-info">
+                                    <div class="row">
+                                      <div class="label">공간명</div>
+                                      <div class="value"><c:out value="${space.spacename}" default="(이름 없음)"/></div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="label">주소</div>
+                                      <div class="value"><c:out value="${space.address}" default=""/></div>
+                                    </div>
+                                    <%-- 면적/시설 안내는 컬럼 생기면 추가 --%>
+                                  </div>
+
+                                  <!-- 수정 버튼: info로 이동 (spacesno 전달) -->
+                                  <div class="space-edit">
+                                    <button class="btn-edit" type="button"
+                                      onclick="location.href='${pageContext.request.contextPath}/onespace/hostcenter/info?spacesno=${space.spacesno}'">
+                                      수정하기
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
-                          
-                              <!-- 수정 버튼 -->
-                              <div class="space-edit">
-                                <button class="btn-edit">수정하기</button>
-                              </div>
+                            </c:forEach>
+
+                            <!-- 하단: 새 공간 추가 버튼 유지 -->
+                            <div class="btn-wrapper">
+                              <a href="${pageContext.request.contextPath}/onespace/hostcenter/info" class="btn-host-manage">새 공간 등록하기</a>
                             </div>
-                          </div>
-
-                        <!-- 공간 카드 3 -->
-                        <div class="space-item">
-                          <!-- 이미지 -->
-                          <img
-                            class="space-thumb"
-                            src="../../../assets/images/room1.jpg"
-                            alt="공간 사진"
-                          />
-                        
-                          <!-- 정보 + 버튼 -->
-                          <div class="space-contents">
-                            <!-- 정보 -->
-                            <div class="space-info">
-                              <div class="row">
-                                <div class="label">공간명</div>
-                                <div class="value">연습실 3</div>
-                              </div>
-                              <div class="row">
-                                <div class="label">주소</div>
-                                <div class="value">서울특별시 강남구 87번길 6 B1 102호</div>
-                              </div>
-                              <div class="row">
-                                <div class="label">공간 면적</div>
-                                <div class="value">165㎡</div>
-                              </div>
-                              <div class="row">
-                                <div class="label">시설 안내</div>
-                                <div class="value">주차, 실외화, 실내 화장실, 스피커</div>
-                              </div>
-                            </div>
-                        
-                            <!-- 수정 버튼 -->
-                            <div class="space-edit">
-                              <button class="btn-edit">수정하기</button>
-                            </div>
-                          </div>
-                        </div>
-                        
-
-                        <!-- 버튼 -->
-                        <div class="btn-wrapper">
-                        <a href="${pageContext.request.contextPath}/onespace/hostcenter/info" class="btn-host-manage">새 공간 등록하기</a>
-                        </div>
-                    </div>     
+                          </c:otherwise>
+                        </c:choose>
+                    </div>
+    
 
 
 
