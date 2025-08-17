@@ -112,7 +112,7 @@
                                                         <div class="card-sub-info">
                                                             <p class="item-info">실외화 가능/주차/최대7인</p>
                                                             <p class="item-location">
-                                                                <img src="../../assets/images/위치아이콘.jpg" class="map-icon"> 강동구
+                                                                <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon"> 강동구
                                                             </p>
                                                         </div>
                                                     </div>
@@ -135,7 +135,7 @@
                                                         <div class="card-sub-info">
                                                             <p class="item-info">실외화 가능/주차/최대7인</p>
                                                             <p class="item-location">
-                                                                <img src="../../assets/images/위치아이콘.jpg" class="map-icon"> 강동구
+                                                                <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon"> 강동구
                                                             </p>
                                                         </div>
                                                     </div>
@@ -157,7 +157,7 @@
                                                         <div class="card-sub-info">
                                                             <p class="item-info">실외화 가능/주차/최대7인</p>
                                                             <p class="item-location">
-                                                                <img src="../../assets/images/위치아이콘.jpg" class="map-icon"> 강동구
+                                                                <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon"> 강동구
                                                             </p>
                                                         </div>
                                                     </div>

@@ -86,6 +86,22 @@ public class TeampageService {
         int count = teampageRepository.teampageUpdate(teamPostVO);
         return count;
     }
+    
+    // -- 게시글 삭제
+    public int exeDelete(int teamPostNo, int authUserNo) {
+        System.out.println("TeampageService.exeDelete()");
+        
+        // (선택적 보안 강화) 삭제하려는 게시글 정보를 가져와서 작성자가 맞는지 한번 더 확인
+        TeamPostVO post = teampageRepository.teampageSelectPostByNo(teamPostNo);
+        if (post != null && post.getUserNo() == authUserNo) {
+            // 작성자가 일치하면 삭제 진행
+            return teampageRepository.teampageDelete(teamPostNo);
+        } else {
+            // 작성자가 아니거나 게시글이 없으면 0을 반환 (삭제 실패)
+            return 0; 
+        }
+    }
+
 	
 	
 }

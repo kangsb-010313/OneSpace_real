@@ -88,5 +88,13 @@ public class TeampageRepository {
         return count;
     }
     
+    // -- 게시글 삭제
+    public int teampageDelete(int teamPostNo) {
+        System.out.println("TeampageRepository.teampageDelete()");
+        int count = sqlSession.delete("teampage.delete", teamPostNo);
+        return count;
+    }
+
+    
 	
 }

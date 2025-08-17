@@ -58,7 +58,8 @@
                     date_format(p.teamWriteDate, '%Y-%m-%d') as teamWriteDate,
                     date_format(p.teamUpdateDate, '%Y-%m-%d') as teamUpdateDate,
                     u.userName,
-                    t.teamName
+                    t.teamName,
+                    t.instaAccount
             from posts p
             join users u ON p.userNo = u.userNo
             join teams t ON p.teamNo = t.teamNo
@@ -91,9 +92,15 @@
     <!-- 게시글 삭제 -->
     <delete id="delete" parameterType="int">
         <![CDATA[
-            DELETE FROM posts
-            WHERE teamPostNo = #{teamPostNo}
+            delete from posts
+            where teamPostNo = #{teamPostNo}
         ]]>
     </delete>
+    
+    
+    
+    
+    
+    
 
 </mapper>

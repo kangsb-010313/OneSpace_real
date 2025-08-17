@@ -210,8 +210,6 @@
                                         </c:when>
                                         <c:when test="${post.teamPostType == '팀자랑'}">
                                             <a href="#" id="btn-pride" class="btn-action">팀자랑 가서보기</a>
-                                            <button class="btn-action">삭제</button>
-                                            <a href="#" class="btn-action">수정</a>
                                         </c:when>
                                         <c:when test="${post.teamPostType == '투표'}">
                                             <button type="submit" id="btn-share" class="btn-action">공유하기</button>
@@ -222,7 +220,10 @@
                                     <%-- 작성자만 수정/삭제 버튼 보이도록 (공통) --%>
                                     <c:if test="${sessionScope.authUser.userNo == post.userNo && post.teamPostType != '투표'}">
                                         <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/modifyform" class="btn-action">수정</a>
-                                        <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/delete" class="btn-action">삭제</a>
+										<a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/delete" 
+										   onclick="return confirm('정말로 이 게시글을 삭제하시겠습니까?');" 
+										   class="btn-action">삭제</a>
+
                                     </c:if>
                                 </div>
                             </div>

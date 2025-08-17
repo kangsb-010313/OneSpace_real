@@ -45,7 +45,6 @@ public class TeampageController {
 //	}
 	
     // --팀페이지 전체 리스트 (특정 팀의 리스트)
-    // URL을 /onespace/teams/{teamNo}/posts/list 와 같이 변경하는 것이 RESTful합니다.
     @RequestMapping(value="/teams/{teamNo}/posts/list", method= {RequestMethod.GET, RequestMethod.POST})
     public String list(@PathVariable("teamNo") int teamNo, Model model) {
         System.out.println("TeampageController.list() for teamNo: " + teamNo);
@@ -238,7 +237,30 @@ public class TeampageController {
     }
     
 	
-	
+    // -- 팀페이지 등록글 삭제
+    // URL: /onespace/teams/{teamNo}/posts/{teamPostNo}/delete
+    @RequestMapping(value="/teams/{teamNo}/posts/{teamPostNo}/delete", method= {RequestMethod.GET, RequestMethod.POST})
+    public String delete(@PathVariable("teamNo") int teamNo,
+                         @PathVariable("teamPostNo") int teamPostNo,
+                         HttpSession session) {
+        
+        System.out.println("TeampageController.delete()");
+        
+        // 로그인한 사용자인지 확인
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if(authUser == null) {
+            return "redirect:/onespace/loginForm"; // 로그인 안 했으면 로그인 페이지로
+        }
+        
+        // 서비스에 삭제 요청 (작성자 본인인지 확인하는 로직은 서비스나 컨트롤러에 추가할 수 있습니다)
+        // 여기서는 본인 글만 삭제 버튼이 보이므로 바로 삭제를 진행합니다.
+        int userNo = authUser.getUserNo();
+        teampageService.exeDelete(teamPostNo, userNo);
+
+        // 삭제 후 해당 팀의 게시글 리스트로 리다이렉트
+        return "redirect:/onespace/teams/" + teamNo + "/posts/list";
+    }
+
 	
 	
 	
