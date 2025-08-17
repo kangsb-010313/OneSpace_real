@@ -3,26 +3,24 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="host">
 
+  <!-- 공통 컬럼 매핑: 존재 확실한 컬럼만 -->
   <sql id="space_cols">
     s.spacesNo       AS spacesno,
     s.userNo         AS userno,
     s.spaceName      AS spacename,
     s.spaceSummary   AS spacesummary,
     s.spaceInfo      AS spaceinfo,
-    s.spaceArea      AS spacearea,
     s.email          AS email,
     s.phone          AS phone,
     s.tel            AS tel,
+    s.spaceLink      AS spacelink,
+    s.postCode       AS postcode,
     s.address        AS address,
-    s.addressDetail  AS addressdetail,
-    s.facility_csv   AS facility_csv,
-    s.refund_agreed  AS refund_agreed,
-    s.rep_image_url  AS rep_image_url,
-    s.hidden_in_search AS hidden_in_search
+    s.addressDetail  AS addressdetail
   </sql>
 
   <!-- 로그인 유저의 최신 1건 -->
-  <select id="select_host_by_userno" parameterType="long" resultType="com.javaex.vo.HostVO">
+  <select id="select_host_by_userno" parameterType="map" resultType="com.javaex.vo.HostVO">
     SELECT
       <include refid="space_cols"/>
     FROM spaces s
@@ -32,7 +30,7 @@
   </select>
 
   <!-- 내 공간 리스트 -->
-  <select id="select_spaces_by_userno" parameterType="long" resultType="com.javaex.vo.HostVO">
+  <select id="select_spaces_by_userno" parameterType="map" resultType="com.javaex.vo.HostVO">
     SELECT
       <include refid="space_cols"/>
     FROM spaces s
@@ -40,48 +38,40 @@
     ORDER BY s.spacesNo DESC
   </select>
 
-  <!-- 신규 등록 -->
-  <insert id="insert_space" parameterType="com.javaex.vo.HostVO" useGeneratedKeys="true" keyProperty="spacesno">
-    INSERT INTO spaces
-    (
-      userNo, spaceName, spaceSummary, spaceInfo, spaceArea,
+  <!-- 신규 등록: 최소 컬럼만 INSERT -->
+  <insert id="insert_space"
+          parameterType="com.javaex.vo.HostVO"
+          useGeneratedKeys="true"
+          keyProperty="spacesno"
+          keyColumn="spacesNo">
+    INSERT INTO spaces (
+      userNo, spaceName, spaceSummary, spaceInfo,
       email, phone, tel,
-      address, addressDetail,
-      facility_csv, refund_agreed, rep_image_url, hidden_in_search
-    )
-    VALUES
-    (
-      #{userno}, #{spacename}, #{spacesummary}, #{spaceinfo}, #{spacearea},
+      spaceLink, postCode,
+      address, addressDetail
+    ) VALUES (
+      #{userno}, #{spacename}, #{spacesummary}, #{spaceinfo},
       #{email}, #{phone}, #{tel},
-      #{address}, #{addressdetail},
-      #{facility_csv}, #{refund_agreed}, #{rep_image_url}, #{hidden_in_search}
+      #{spacelink}, #{postcode},
+      #{address}, #{addressdetail}
     )
   </insert>
 
-  <!-- 수정 -->
+  <!-- 수정: 최소 컬럼만 UPDATE -->
   <update id="update_space" parameterType="com.javaex.vo.HostVO">
     UPDATE spaces
-    SET spaceName       = #{spacename},
-        spaceSummary    = #{spacesummary},
-        spaceInfo       = #{spaceinfo},
-        spaceArea       = #{spacearea},
-        email           = #{email},
-        phone           = #{phone},
-        tel             = #{tel},
-        address         = #{address},
-        addressDetail   = #{addressdetail},
-        facility_csv    = #{facility_csv},
-        refund_agreed   = #{refund_agreed},
-        hidden_in_search= #{hidden_in_search}
+    SET spaceName      = #{spacename},
+        spaceSummary   = #{spacesummary},
+        spaceInfo      = #{spaceinfo},
+        email          = #{email},
+        phone          = #{phone},
+        tel            = #{tel},
+        spaceLink      = #{spacelink},
+        postCode       = #{postcode},
+        address        = #{address},
+        addressDetail  = #{addressdetail}
     WHERE spacesNo = #{spacesno}
       AND userNo   = #{userno}
-  </update>
-
-  <!-- 대표 이미지 URL만 갱신 -->
-  <update id="update_rep_image_url" parameterType="map">
-    UPDATE spaces
-    SET rep_image_url = #{rep_image_url}
-    WHERE spacesNo = #{spacesno}
   </update>
 
 </mapper>

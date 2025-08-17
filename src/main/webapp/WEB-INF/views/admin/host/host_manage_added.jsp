@@ -158,7 +158,7 @@
 
                         <!-- 버튼 -->
                         <div class="btn-wrapper">
-                        <a href="#" class="btn-host-manage">새 공간 등록하기</a>
+                        <a href="${pageContext.request.contextPath}/onespace/hostcenter/info" class="btn-host-manage">새 공간 등록하기</a>
                         </div>
                     </div>     
 
