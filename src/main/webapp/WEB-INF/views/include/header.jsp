@@ -26,7 +26,7 @@
             <div class="header-buttons">
               <span class="username">${sessionScope.authUser.userName} 님</span>
               <div class="host-signup-group">
-                <a href="#" class="btn-outline host-btn">호스트센터</a>
+                <a href="${pageContext.request.contextPath}/onespace/hostcenter" class="btn-outline host-btn">호스트센터</a>
                 <a href="${pageContext.request.contextPath}/onespace/logout" class="btn-outline login-btn">로그아웃</a>
               </div>
             </div>

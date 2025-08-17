@@ -31,9 +31,11 @@
 
                     <!-- 탭 -->
                     <div class="tab-btns">
-                        <button class="tab active">기본 정보 관리</button>
-                        <button class="tab">내 공간 관리</button>
-                    </div>
+					  <button class="tab active" type="button"
+					          onclick="location.href='${pageContext.request.contextPath}/onespace/hostcenter/info'">기본 정보 관리</button>
+					  <button class="tab" type="button"
+					          onclick="location.href='${pageContext.request.contextPath}/onespace/hostcenter/spaces'">내 공간 관리</button>
+					</div>
 
                     <!-- 공간 카드 전체 -->
                     <div class="space-manage-container">

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="host">
+
+  <sql id="space_cols">
+    s.spacesNo       AS spacesno,
+    s.userNo         AS userno,
+    s.spaceName      AS spacename,
+    s.spaceSummary   AS spacesummary,
+    s.spaceInfo      AS spaceinfo,
+    s.spaceArea      AS spacearea,
+    s.email          AS email,
+    s.phone          AS phone,
+    s.tel            AS tel,
+    s.address        AS address,
+    s.addressDetail  AS addressdetail,
+    s.facility_csv   AS facility_csv,
+    s.refund_agreed  AS refund_agreed,
+    s.rep_image_url  AS rep_image_url,
+    s.hidden_in_search AS hidden_in_search
+  </sql>
+
+  <!-- 로그인 유저의 최신 1건 -->
+  <select id="select_host_by_userno" parameterType="long" resultType="com.javaex.vo.HostVO">
+    SELECT
+      <include refid="space_cols"/>
+    FROM spaces s
+    WHERE s.userNo = #{userno}
+    ORDER BY s.spacesNo DESC
+    LIMIT 1
+  </select>
+
+  <!-- 내 공간 리스트 -->
+  <select id="select_spaces_by_userno" parameterType="long" resultType="com.javaex.vo.HostVO">
+    SELECT
+      <include refid="space_cols"/>
+    FROM spaces s
+    WHERE s.userNo = #{userno}
+    ORDER BY s.spacesNo DESC
+  </select>
+
+  <!-- 신규 등록 -->
+  <insert id="insert_space" parameterType="com.javaex.vo.HostVO" useGeneratedKeys="true" keyProperty="spacesno">
+    INSERT INTO spaces
+    (
+      userNo, spaceName, spaceSummary, spaceInfo, spaceArea,
+      email, phone, tel,
+      address, addressDetail,
+      facility_csv, refund_agreed, rep_image_url, hidden_in_search
+    )
+    VALUES
+    (
+      #{userno}, #{spacename}, #{spacesummary}, #{spaceinfo}, #{spacearea},
+      #{email}, #{phone}, #{tel},
+      #{address}, #{addressdetail},
+      #{facility_csv}, #{refund_agreed}, #{rep_image_url}, #{hidden_in_search}
+    )
+  </insert>
+
+  <!-- 수정 -->
+  <update id="update_space" parameterType="com.javaex.vo.HostVO">
+    UPDATE spaces
+    SET spaceName       = #{spacename},
+        spaceSummary    = #{spacesummary},
+        spaceInfo       = #{spaceinfo},
+        spaceArea       = #{spacearea},
+        email           = #{email},
+        phone           = #{phone},
+        tel             = #{tel},
+        address         = #{address},
+        addressDetail   = #{addressdetail},
+        facility_csv    = #{facility_csv},
+        refund_agreed   = #{refund_agreed},
+        hidden_in_search= #{hidden_in_search}
+    WHERE spacesNo = #{spacesno}
+      AND userNo   = #{userno}
+  </update>
+
+  <!-- 대표 이미지 URL만 갱신 -->
+  <update id="update_rep_image_url" parameterType="map">
+    UPDATE spaces
+    SET rep_image_url = #{rep_image_url}
+    WHERE spacesNo = #{spacesno}
+  </update>
+
+</mapper>
