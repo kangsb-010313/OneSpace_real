@@ -31,18 +31,33 @@ public class TeampageController {
 	//메소드 gs
 	
 	//메소드 일반
-	//--팀페이지 전체 리스트
-//	@RequestMapping(value="/list", method= {RequestMethod.GET, RequestMethod.POST})
-//	public String list(Model model) {
-//		System.out.println("TeampageController.list()");
-//		
-//		List<TeamPostVO> teamPostList = teampageService.exeList();
-//		System.out.println(teamPostList);
-//		
-//		model.addAttribute("teamPostList", teamPostList);
-//		
-//		return "teampage/teammain"; 
-//	}
+    // --팀페이지 메인 (팀 선택 전, 모든 팀의 게시글 리스트)
+    @RequestMapping(value="/teammain", method= {RequestMethod.GET, RequestMethod.POST})
+    public String teamMain(HttpSession session, Model model) {
+        System.out.println("TeampageController.teamMain()");
+        
+        // 1. 로그인 체크
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if(authUser == null) {
+            return "redirect:/onespace/loginForm";
+        }
+        
+        int userNo = authUser.getUserNo();
+        
+        // 2. 서비스로부터 데이터 가져오기
+        //   - 로그인한 유저가 속한 모든 팀 리스트 (for Aside)
+        //   - 해당 팀들의 모든 게시글 리스트 (for Main Content)
+        List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
+        List<TeamPostVO> allPostsList = teampageService.exeGetAllUserPosts(userNo);
+        
+        // 3. 모델에 데이터 담기
+        model.addAttribute("allTeams", userTeamList); 
+        model.addAttribute("allPostsList", allPostsList);
+        
+        return "teampage/teammain";
+    }
+    
+    
 	
     // --팀페이지 전체 리스트 (특정 팀의 리스트)
     @RequestMapping(value="/teams/{teamNo}/posts/list", method= {RequestMethod.GET, RequestMethod.POST})

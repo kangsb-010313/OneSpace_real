@@ -5,6 +5,44 @@
 <mapper namespace="teampage">
 
 <!-- 쿼리문 작성 -->
+
+    <!-- 유저 번호로 소속된 팀 목록 조회 (teammain aside용) -->
+    <!-- team_members 테이블은 user와 team의 관계를 정의하는 테이블로 가정합니다. -->
+	<select id="selectTeamsByUserNo" parameterType="int" resultType="com.javaex.vo.TeamVO">
+	    <![CDATA[
+	        select  t.teamNo,
+	                t.teamName
+	        from teams t, teamMembers tm 
+	        where t.teamNo = tm.teamNo
+	        and tm.userNo = #{userNo}
+	        order by t.teamName asc
+	    ]]>
+	</select>
+
+
+    <!-- 유저가 소속된 모든 팀의 게시글 조회 (teammain content용) -->
+	<select id="selectPostsByUserTeams" parameterType="int" resultType="com.javaex.vo.TeamPostVO">
+	    <![CDATA[
+	        select  p.teamPostNo,
+	                p.teamNo,
+	                p.userNo,
+	                p.teamPostType,
+	                p.teamPostTitle,
+	                date_format(p.teamWriteDate, '%Y-%m-%d') as teamWriteDate,
+	                t.teamName
+	        from posts p
+	        join teams t on p.teamNo = t.teamNo
+	        where p.teamNo in (select teamNo 
+	                           from teamMembers   
+	                           where userNo = #{userNo})
+	        order by p.teamWriteDate desc, p.teamPostNo desc
+	    ]]>
+	</select>
+
+
+
+
+
 	<!-- 팀페이지 리스트(팀선택시) -->
 	<select id="selectListByTeamNo" parameterType="int" resultType="com.javaex.vo.TeamPostVO">
 		<![CDATA[

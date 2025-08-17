@@ -24,14 +24,19 @@ public class TeampageService {
 	
 	
 	//메소드일반
-//	//--팀페이지 전체 리스트
-//	public List<TeamPostVO> exeList(){
-//		System.out.println("TeampageService.exeList()");
-//		
-//		List<TeamPostVO> teamPostList = teampageRepository.teampageSelectList();
-//		
-//		return teamPostList;
-//	}
+    // -- 로그인 유저가 속한 팀 리스트 가져오기 (for teammain aside)
+    public List<TeamVO> exeGetUserTeams(int userNo) {
+        System.out.println("TeampageService.exeGetUserTeams()");
+        return teampageRepository.selectTeamsByUserNo(userNo);
+    }
+    
+    // -- 로그인 유저가 속한 모든 팀의 게시글 가져오기 (for teammain content)
+    public List<TeamPostVO> exeGetAllUserPosts(int userNo) {
+        System.out.println("TeampageService.exeGetAllUserPosts()");
+        return teampageRepository.selectPostsByUserTeams(userNo);
+    }
+    
+    
 	
     // -- 특정 팀의 게시글 리스트 조회
     public List<TeamPostVO> exeListByTeam(int teamNo){

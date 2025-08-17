@@ -23,14 +23,19 @@ public class TeampageRepository {
 	
 	
 	//메소드 일반
-//	// --팀페이지 전체 리스트
-//	public List<TeamPostVO> teampageSelectList(){
-//		System.out.println("TeampageRepository.teampageSelectList()");
-//		
-//		List<TeamPostVO> teamPostList = sqlSession.selectList("teampage.selectListByTeamNo");
-//		
-//		return teamPostList;
-//	}
+    // -- 유저 번호로 해당 유저가 속한 팀 목록 조회
+    public List<TeamVO> selectTeamsByUserNo(int userNo) {
+        System.out.println("TeampageRepository.selectTeamsByUserNo()");
+        return sqlSession.selectList("teampage.selectTeamsByUserNo", userNo);
+    }
+    
+    // -- 유저 번호로 해당 유저가 속한 모든 팀의 게시물 조회
+    public List<TeamPostVO> selectPostsByUserTeams(int userNo) {
+        System.out.println("TeampageRepository.selectPostsByUserTeams()");
+        return sqlSession.selectList("teampage.selectPostsByUserTeams", userNo);
+    }
+    
+    
 	
     // -- 특정 팀의 게시글 리스트 조회
     public List<TeamPostVO> teampageSelectListByTeamNo(int teamNo){
