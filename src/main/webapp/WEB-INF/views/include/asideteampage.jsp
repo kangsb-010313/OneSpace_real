@@ -7,7 +7,7 @@
     <div class="team-list-section">
         <%-- ▼▼▼▼▼ 모든 팀 목록을 동적으로 출력 ▼▼▼▼▼ --%>
         <c:forEach var="team" items="${allTeams}">
-            <a href="${pageContext.request.contextPath}/onespace/teams/${team.teamNo}/posts/list" class="btn-outline3 teamlist-btn">${team.teamName}</a>
+            <a href="${pageContext.request.contextPath}/onespace/teams/${team.teamNo}/posts/list" class="btn-outline3 teamlist-btn">팀 ${team.teamName}</a>
         </c:forEach>
     </div>
     <a href="#" class="btn-outline2 teamadd-btn">팀 등록하기</a>

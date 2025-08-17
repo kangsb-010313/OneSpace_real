@@ -37,7 +37,7 @@ public class TeampageRepository {
     
     
 	
-    // -- 특정 팀의 게시글 리스트 조회
+    // --팀페이지 전체 리스트 (특정 팀의 리스트)
     public List<TeamPostVO> teampageSelectListByTeamNo(int teamNo){
     	
         System.out.println("TeampageRepository.teampageSelectListByTeamNo()");
@@ -49,7 +49,7 @@ public class TeampageRepository {
     }
 	
 	
-	//--일반공지 글 등록하기
+	//--팀페이지 글 등록
 	public int teampageInsert(TeamPostVO teamPostVO) {
 		System.out.println("TeampageRepository.teampageInsert()");
 		
@@ -86,14 +86,14 @@ public class TeampageRepository {
         return teamInfo;
     }
     
-    // -- 게시글 수정
+    // -- 팀페이지 등록글 수정 처리
     public int teampageUpdate(TeamPostVO teamPostVO) {
         System.out.println("TeampageRepository.teampageUpdate()");
         int count = sqlSession.update("teampage.update", teamPostVO);
         return count;
     }
     
-    // -- 게시글 삭제
+    // -- 팀페이지 등록글 삭제
     public int teampageDelete(int teamPostNo) {
         System.out.println("TeampageRepository.teampageDelete()");
         int count = sqlSession.delete("teampage.delete", teamPostNo);
