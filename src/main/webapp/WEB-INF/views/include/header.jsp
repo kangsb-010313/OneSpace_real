@@ -11,9 +11,7 @@
       <div class="header-right">
         <nav class="nav">
 		    <ul>
-		        <li>
-		        	<a class="click" href="${pageContext.request.contextPath}/onespace/teams/1/posts/list">팀페이지</a>
-		        </li>
+		        <li><a href="${pageContext.request.contextPath}/onespace/teammain">팀페이지</a></li>>
 		        <li><a href="#">연습실찜하기</a></li>
 		        <li><a href="#">공연 및 대회 정보</a></li>
 		        <li><a href="#">팀자랑</a></li>
