@@ -213,7 +213,9 @@
                                         </c:when>
                                         <c:when test="${post.teamPostType == '투표'}">
                                             <button type="submit" id="btn-share" class="btn-action">공유하기</button>
-                                            <a href="#" class="btn-action">바로 예약하기</a>
+                                                <c:if test="${sessionScope.authUser.userNo == post.userNo}">
+											        <a href="#" class="btn-action">바로 예약하기</a>
+											    </c:if>
                                         </c:when>
                                     </c:choose>
 
