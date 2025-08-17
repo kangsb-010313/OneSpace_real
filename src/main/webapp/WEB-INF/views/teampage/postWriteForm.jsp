@@ -81,7 +81,7 @@
                                 <c:if test="${param.teamPostType == '팀자랑'}">
                                     <div class="form-group instagram-group">
                                         <label>인스타계정</label>
-                                        <span class="instagram-id">@1milliondance</span>
+                                        <span>${currentTeam.instaAccount}</span> 
                                         <%-- 실제 값을 입력받으려면 input 태그를 사용해야 합니다. span은 보여주기만 함 --%>
                                         <%-- <input type="text" name="instagramAccount" placeholder="인스타 계정 입력"> --%>
                                     </div>

@@ -128,3 +128,7 @@
     color: #704CE4;
     border: 1px solid #704CE4;
 }
+#btn-pride:hover {
+    background-color: #704CE4;
+    color: #fff;
+}

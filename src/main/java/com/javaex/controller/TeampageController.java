@@ -97,6 +97,7 @@ public class TeampageController {
         model.addAttribute("allTeams", allTeams);
 
         TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
+        model.addAttribute("currentTeam", currentTeam); // instaAccount를 포함한 팀 정보 전체를 전달
         
         if (currentTeam != null) {
             model.addAttribute("teamName", currentTeam.getTeamName());

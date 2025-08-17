@@ -68,7 +68,7 @@
                                 <c:if test="${post.teamPostType == '팀자랑'}">
                                     <div class="form-group instagram-group">
                                         <label>인스타계정</label>
-                                        <input type="text" name="instaAccount" value="${post.instaAccount}" placeholder="인스타 계정 입력">
+										<span>${post.instaAccount}</span> 
                                     </div>
                                 </c:if>
 

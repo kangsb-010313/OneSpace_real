@@ -38,7 +38,7 @@
                     
 
                         <div id="main-content">
-                            <h2>팀 원밀리언</h2>
+                            <h2>팀 ${teamName}</h2>
 
                             <div class="team-management-links">
                                 <a href="#"><img src="${pageContext.request.contextPath}/assets/images/톱니바퀴아이콘.jpg" class="team-setting">팀관리</a>

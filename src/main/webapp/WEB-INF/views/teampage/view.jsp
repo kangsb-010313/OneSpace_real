@@ -67,7 +67,7 @@
                                     <%-- 팀자랑 글 내용 시작 --%>
                                     <c:if test="${post.teamPostType == '팀자랑'}">
                                         <div class="post-author-info">
-                                            <strong>${post.teamName}</strong>
+                                            <strong>팀 ${post.teamName}</strong>
                                             <span>${post.instaAccount}</span> <%-- teamPostVO에 instaAccount 필드가 있어야 합니다 --%>
                                         </div>
                                         <div class="post-text-content">
