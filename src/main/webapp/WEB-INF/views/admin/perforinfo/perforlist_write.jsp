@@ -2,111 +2,106 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
-
 <html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <title>원스페이스 | 공연 및 대회 정보</title>
+    <link rel="stylesheet" href="../../../assets/css/reset.css">
+    <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
+    <link rel="stylesheet" href="../../../assets/css/perforlist_write.css">
+  </head>
 
-    <head>
-        <meta charset="UTF-8">
-        <title>원스페이스 | 공연 및 대회 정보</title>
-        <link rel="stylesheet" href="../../../assets/css/reset.css">
-        <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
-        <link rel="stylesheet" href="../../../assets/css/perforlist_write.css">
-    </head>
+  <body>
+    <div id="wrap">
 
-    <body>
-        <div id="wrap">
+      <!-- 헤더 영역 (c:import → jsp:include 로 교체) -->
+      <jsp:include page="/WEB-INF/views/include/header.jsp" />
+      <!-- /헤더 영역 -->
 
-            <!-- 헤더 영역------------------------------------------------ -->
-            <c:import url="/WEB-INF/views/include/header.jsp" />
-            <!-- /헤더 영역------------------------------------------------ -->
+      <!-- 컨텐츠 영역 -->
+      <main>
+        <div class="container">
+          <section class="write-container">
+            <div class="write-inner">
 
+              <form id="perforinfo-write-form"
+                    method="post"
+                    action="<c:url value='/onespace/perforinfo/write'/>"
+                    enctype="multipart/form-data">
 
+                <!-- CSRF (있으면 사용) -->
+                <c:if test="${not empty _csrf}">
+                  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                </c:if>
 
+                <!-- ❌ userNo / agencyName hidden 제거 (컨트롤러가 세션에서 주입) -->
 
+                <!-- 제목 -->
+                <input type="text" class="title" name="infoPostTitle" placeholder="제목" maxlength="500" required>
 
-            <!-- 컨텐츠 영역---------------------------------------------- -->
-            <main>
-                <div class="container">
+                <!-- URL -->
+                <input type="url" class="url-box" name="infoOutUrl" placeholder="첨부 url을 입력해 주세요.">
 
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   여기(main container)안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+                <div class="filter-row">
+                  <!-- 카테고리 -->
+                  <div class="select-wrap">
+                    <select class="select" name="infoPostType" required>
+                      <option value="">카테고리</option>
+                      <option value="공연">공연</option>
+                      <option value="대회">대회</option>
+                    </select>
+                  </div>
 
+                  <!-- 마감 날짜 -->
+                  <label class="date-wrap">
+                    <input type="date" class="date-input" name="deadlineDate" required onclick="this.showPicker()">
+                    <span class="date-ph">마감 날짜 ▾</span>
+                  </label>
 
-<!-- 글쓰기 본문 -->
-<section class="write-container">
-    <div class="write-inner">
-  
-      <!-- 제목 -->
-      <input type="text" class="title" placeholder="제목">
-  
-      <!-- URL -->
-      <input type="url" class="url-box" placeholder="첨부 url을 입력해 주세요.">
-  
-      <!-- 옵션 -->
-      <div class="filter-row">
-  
-        <!-- 카테고리 -->
-        <div class="select-wrap">
-          <select class="select">
-            <option value="">카테고리</option>
-            <option>공연</option>
-            <option>대회</option>
-          </select>
-        </div>
-  
-        <!-- 마감 날짜: '마감 날짜' 텍스트 보이다가 클릭 시 달력 -->
-        <label class="date-wrap">
-          <input
-            type="date"
-            class="date-input"
-            required
-            onclick="this.showPicker()"
-          >
-          <span class="date-ph">마감 날짜 ▾</span>
-        </label>
-  
-        <!-- 공연 지역 -->
-        <input type="text" class="inp-region-pill" placeholder="공연 지역">
-      </div>
-  
-      <div class="textarea-wrap">
-        <textarea class="inp-textarea-line" 
-          placeholder="전하고 싶은 내용을 입력해 주세요!"></textarea>
-      
-        <label class="btn-solid attach-btn">
-          파일첨부
-          <input type="file" hidden>
-        </label>
-      </div>
-  
-      <div class="actions">
-        <button type="button" class="btn btn-solid submit-btn">등록하기</button>
-      </div>
-  
-    </div>
-  </section>
-  
-  
-  
-
-  
-
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-
+                  <!-- 지역 -->
+                  <input type="text" class="inp-region-pill" name="infoArea" placeholder="공연 지역" maxlength="100">
                 </div>
-                <!-- container -->
 
-            </main>
-            <!-- /컨텐츠 영역---------------------------------------------- -->
+                <div class="textarea-wrap">
+                  <textarea class="inp-textarea-line" name="infoContent" placeholder="전하고 싶은 내용을 입력해 주세요!" rows="12" required></textarea>
 
+                  <label class="btn-solid attach-btn">
+                    파일첨부
+                    <input type="file" name="perforImg" hidden>
+                  </label>
+                </div>
 
+                <div class="actions">
+                  <button type="submit" class="btn btn-solid submit-btn">등록하기</button>
+                </div>
+              </form>
 
- 			 <!-- 푸터 영역------------------------------------------------ -->
-              <c:import url="/WEB-INF/views/include/footer.jsp" />
-             <!-- /푸터 영역------------------------------------------------ -->
-
-
+            </div>
+          </section>
         </div>
-        <!-- wrap -->
-    </body>
+      </main>
 
+      <!-- 푸터 영역 -->
+      <jsp:include page="/WEB-INF/views/include/footer.jsp" />
+      <!-- /푸터 영역 -->
+
+    </div>
+
+    <script>
+      (function () {
+        var dateInput = document.querySelector('.date-input');
+        var datePh = document.querySelector('.date-ph');
+        function togglePh() {
+          if (!dateInput || !datePh) return;
+          datePh.style.display = dateInput.value ? 'none' : 'inline';
+        }
+        if (dateInput) {
+          dateInput.addEventListener('change', togglePh);
+          dateInput.addEventListener('input', togglePh);
+          dateInput.addEventListener('blur', togglePh);
+          togglePh();
+        }
+      })();
+    </script>
+  </body>
 </html>

@@ -20,85 +20,77 @@
             <c:import url="/WEB-INF/views/include/header.jsp" />
             <!-- /헤더 영역------------------------------------------------ -->
 
-
-
-
-
             <!-- 컨텐츠 영역---------------------------------------------- -->
             <main>
                 <div class="container">
 
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   여기(main container)안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-
-
 <h2 class="infoview-title">공연 및 대회 정보</h2>
 
 <div class="infoview-meta">
   <div class="meta-title">
     <span class="meta-label-title">제목</span>
-    <span class="meta-value-title">한림예고 실용무용과 정기공연 안내</span>
+    <span class="meta-value-title"><c:out value="${vo.infoPostTitle}"/></span>
     <span></span>
   </div>
   <div class="meta-row">
     <span class="meta-label">작성일</span>
-    <span class="meta-value">2025-07-31</span>
+    <span class="meta-value"><c:out value="${vo.infoWriteDate}"/></span>
     <span></span>
   </div>
   <div class="meta-row">
     <span class="meta-label">작성자</span>
-    <span class="meta-value">한림예고 실무과</span>
-    <a href="#" class="btn-edit">수정하기</a>
+    <span class="meta-value"><c:out value="${vo.agencyName}"/></span>
+
+    <!-- 작성자에게만 수정하기 노출 -->
+    <c:if test="${
+        (not empty sessionScope.authUser and sessionScope.authUser.userNo == vo.userNo)
+        or
+        (not empty sessionScope.authUserNo and sessionScope.authUserNo == vo.userNo)
+    }">
+      <a href="#" class="btn-edit">수정하기</a>
+    </c:if>
   </div>
 </div>
 
 <div class="infoview-main">
-  <div class="infoview-image">
-    <img src="../../../assets/images/instagram.jpg" alt="공연 포스터">
-  </div>
+  <!-- 이미지: 값 있을 때만 블록 표시 -->
+  <c:if test="${not empty vo.perforImg}">
+    <div class="infoview-image">
+      <img src="${vo.perforImg}" alt="공연 포스터">
+    </div>
+  </c:if>
 
   <div class="infoview-right">
     <div class="infoview-details">
-      <div class="detail-row">마감 날짜: 6/30</div>
-      <div class="detail-row">위치: 서울특별시 광진구</div>
-      <div class="detail-row">
-        <a href="https://www.instagram.com/p/DDGn17z25tb/" target="_blank">
-          https://www.instagram.com/p/DDGn17z25tb/
-        </a>
-      </div>
+      <div class="detail-row">마감 날짜: <c:out value="${vo.deadlineDate}"/></div>
+      <div class="detail-row">위치: <c:out value="${vo.infoArea}"/></div>
+      <c:if test="${not empty vo.infoOutUrl}">
+        <div class="detail-row">
+          <a href="${vo.infoOutUrl}" target="_blank" rel="noopener noreferrer">
+            <c:out value="${vo.infoOutUrl}"/>
+          </a>
+        </div>
+      </c:if>
     </div>
 
     <div class="infoview-content">
-      한림예고 실용무용과 정기공연 &lt;TAKE MY HAND (WE ARE FAMILY)&gt; 안내입니다.
+      <c:out value="${vo.infoContent}"/>
     </div>
   </div>
 </div>
-
-
-
-
-  
-  
-  
-
-
-
-  
 
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
                 </div>
                 <!-- container -->
-
             </main>
             <!-- /컨텐츠 영역---------------------------------------------- -->
 
-
-
-             <!-- 푸터 영역------------------------------------------------ -->
-              <c:import url="/WEB-INF/views/include/footer.jsp" />
-             <!-- /푸터 영역------------------------------------------------ -->
-
+            <!-- 푸터 영역------------------------------------------------ -->
+            <c:import url="/WEB-INF/views/include/footer.jsp" />
+            <!-- /푸터 영역------------------------------------------------ -->
 
         </div>
         <!-- wrap -->

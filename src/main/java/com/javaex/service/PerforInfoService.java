@@ -1,10 +1,8 @@
 package com.javaex.service;
 
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.javaex.repository.PerforInfoRepository;
 import com.javaex.vo.PerforInfoVO;
 
@@ -17,23 +15,21 @@ public class PerforInfoService {
         this.repository = repository;
     }
 
-    // 목록
-    public List<PerforInfoVO> list() {
-        return repository.list();
+    public long count() {
+        return repository.count();
     }
 
-    // 단건 조회
+    public List<PerforInfoVO> list_paged(int offset, int size) {
+        return repository.listPaged(offset, size);
+    }
+
     public PerforInfoVO get(Long no) {
         return repository.get(no);
     }
 
-    // 글 등록
     @Transactional
     public Long add(PerforInfoVO vo) {
         repository.insert(vo);
-        if (vo.getInfoPostNo() == null) {
-            throw new IllegalStateException("auto-increment key not returned");
-        }
-        return vo.getInfoPostNo();
+        return vo.getInfoPostNo(); // selectKey로 PK 주입됨
     }
 }

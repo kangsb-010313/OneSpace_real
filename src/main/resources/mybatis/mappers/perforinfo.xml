@@ -4,34 +4,39 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="perforinfo">
 
-  <!-- infoWrite 테이블 매핑 -->
   <resultMap id="PerforInfoMap" type="com.javaex.vo.PerforInfoVO">
     <id     column="infoPostNo"      property="infoPostNo"/>
-    <result column="userNo"          property="userNo"          jdbcType="BIGINT"/>
-    <result column="infoPostTitle"   property="infoPostTitle"   jdbcType="VARCHAR"/>
-    <result column="agencyName"      property="agencyName"      jdbcType="VARCHAR"/>
-    <result column="infoContent"     property="infoContent"     jdbcType="LONGVARCHAR"/>
-    <result column="infoOutUrl"      property="infoOutUrl"      jdbcType="VARCHAR"/>
-    <result column="infoPostType"    property="infoPostType"    jdbcType="VARCHAR"/>
+    <result column="userNo"          property="userNo"/>
+    <result column="infoPostTitle"   property="infoPostTitle"/>
+    <result column="agencyName"      property="agencyName"/>
+    <result column="infoContent"     property="infoContent"/>
+    <result column="infoOutUrl"      property="infoOutUrl"/>
+    <result column="infoPostType"    property="infoPostType"/>
     <result column="deadlineDate"    property="deadlineDate"    jdbcType="DATE"/>
-    <result column="infoArea"        property="infoArea"        jdbcType="VARCHAR"/>
-    <result column="perforImg"       property="perforImg"       jdbcType="VARCHAR"/>
-    <result column="infoWriteDate"   property="infoWriteDate"   jdbcType="TIMESTAMP"/>
-    <result column="infoUpdateDate"  property="infoUpdateDate"  jdbcType="TIMESTAMP"/>
-    <result column="infoImg"         property="infoImg"         jdbcType="VARCHAR"/>
+    <result column="infoArea"        property="infoArea"/>
+    <result column="perforImg"       property="perforImg"/>
+    <result column="infoWriteDate"   property="infoWriteDate"/>
+    <result column="infoUpdateDate"  property="infoUpdateDate"/>
+    <result column="infoImg"         property="infoImg"/>
   </resultMap>
 
-  <!-- 목록 -->
-  <select id="list" resultMap="PerforInfoMap">
+  <!-- 총 건수 -->
+  <select id="count" resultType="long">
+    select count(*) from `infoWrite`
+  </select>
+
+  <!-- 페이징 목록 -->
+  <select id="list_paged" resultMap="PerforInfoMap">
     select
       infoPostNo, userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
       infoPostType, deadlineDate, infoArea, perforImg, infoWriteDate, infoUpdateDate, infoImg
     from `infoWrite`
     order by infoWriteDate desc, infoPostNo desc
+    limit #{offset}, #{size}
   </select>
 
-  <!-- 단건 조회 -->
-  <select id="get" parameterType="long" resultMap="PerforInfoMap">
+  <!-- 단건 조회: parameterType=map 으로 받고 #{no} 사용 -->
+  <select id="get" parameterType="map" resultMap="PerforInfoMap">
     select
       infoPostNo, userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
       infoPostType, deadlineDate, infoArea, perforImg, infoWriteDate, infoUpdateDate, infoImg
@@ -39,10 +44,9 @@
     where infoPostNo = #{no}
   </select>
 
-  <!-- 글쓰기 -->
+  <!-- 글쓰기: selectKey AFTER 로 PK 회수, COALESCE로 NOT NULL 방지 -->
   <insert id="insert"
           parameterType="com.javaex.vo.PerforInfoVO"
-          useGeneratedKeys="true"
           keyProperty="infoPostNo"
           keyColumn="infoPostNo">
     insert into `infoWrite`
@@ -50,17 +54,20 @@
        infoPostType, deadlineDate, infoArea, perforImg, infoWriteDate, infoUpdateDate, infoImg)
     values
       (#{userNo},
-       #{infoPostTitle},
-       #{agencyName},
-       #{infoContent},
-       #{infoOutUrl},
+       COALESCE(#{infoPostTitle}, ''),
+       COALESCE(#{agencyName}, ''),
+       COALESCE(#{infoContent}, ''),
+       COALESCE(#{infoOutUrl}, ''),
        #{infoPostType},
        #{deadlineDate,jdbcType=DATE},
-       #{infoArea},
-       #{perforImg},
+       COALESCE(#{infoArea}, ''),
+       COALESCE(#{perforImg}, ''),
        now(),
        now(),
-       #{infoImg})
+       COALESCE(#{infoImg}, ''));
+    <selectKey keyProperty="infoPostNo" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
   </insert>
 
 </mapper>
