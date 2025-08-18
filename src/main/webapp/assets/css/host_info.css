@@ -481,6 +481,26 @@
   color: #111;
 }
 
+.img-box {
+  position: relative;   /* 파일명을 절대 위치 시키기 위해 필요 */
+  min-height: 140px;    /* 안내문이 사라져도 높이 유지 */
+}
+
+/* 파일명: 박스 왼쪽 위 */
+.file-name-inbox {
+  position: absolute;
+  left: 16px;
+  top: 12px;            /* bottom 대신 top으로 바꿔서 위로 */
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 32px);
+}
+
+
 ::-webkit-input-placeholder { color: #b3b3b3; }
 ::-moz-placeholder { color: #b3b3b3; }
 :-ms-input-placeholder { color: #b3b3b3; }

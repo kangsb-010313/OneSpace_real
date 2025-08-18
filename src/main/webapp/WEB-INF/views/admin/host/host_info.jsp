@@ -108,30 +108,36 @@
                     </div>
                   </section>
                   <!-- 대표 이미지 -->
-                  <section class="form-section img-section">
-                    <div class="img-header">
-                      <div class="section-title">대표 이미지</div>
-                      <span class="img-guide">2048 * 1158 권장, 최대 3MB <br>이미지 파일(JPG, PNG, JPEG)</span>
-                    </div>
-                    <div class="img-box">
-                      <b>대표 이미지 등록 불가 유형</b>
-                      <ul>
-                        <li>- 텍스트, 로고, 도형이 합성된 이미지</li>
-                        <li>- 여러 이미지를 합성한 콜라주 이미지</li>
-                        <li>- 홍보물, 포스터 이미지</li>
-                        <li>- 지도 이미지</li>
-                        <li>- 노출 등 제 3자에게 수치심을 주는 이미지</li>
-                      </ul>
-                    </div>
-                    
-                   <div class="attach-btn-wrap">
-                    <label class="btn-solid attach-btn">
-                      파일첨부
-                      <input type="file" hidden>
-                    </label>
-                  </div>
-                  
-                  </section>
+<section class="form-section img-section">
+  <div class="img-header">
+    <div class="section-title">대표 이미지</div>
+    <span class="img-guide">2048 * 1158 권장, 최대 3MB <br>이미지 파일(JPG, PNG, JPEG)</span>
+  </div>
+
+  <div class="img-box">
+    <!-- 안내문: 처음엔 보이고 파일 첨부하면 숨김 -->
+    <div id="imgGuideText">
+      <b>대표 이미지 등록 불가 유형</b>
+      <ul>
+        <li>- 텍스트, 로고, 도형이 합성된 이미지</li>
+        <li>- 여러 이미지를 합성한 콜라주 이미지</li>
+        <li>- 홍보물, 포스터 이미지</li>
+        <li>- 지도 이미지</li>
+        <li>- 노출 등 제 3자에게 수치심을 주는 이미지</li>
+      </ul>
+    </div>
+
+			    <!-- 파일명 표시 -->
+			    <span id="repImageName" class="file-name-inbox"></span>
+				  </div>
+				
+				  <div class="attach-btn-wrap">
+				    <label class="btn-solid attach-btn">
+				      파일첨부
+				      <input type="file" id="repImage" hidden>
+				    </label>
+				  </div>
+				</section>
                   <!-- 주소 -->
                   <section class="form-section">
                     <div class="section-title">주소(위치)</div>
@@ -225,6 +231,22 @@
 
         </div>
         <!-- wrap -->
+        <script>
+		  const input = document.getElementById('repImage');
+		  const nameSpan = document.getElementById('repImageName');
+		  const guideText = document.getElementById('imgGuideText');
+		
+		  input.addEventListener('change', function () {
+		    if (this.files && this.files.length > 0) {
+		      nameSpan.textContent = this.files[0].name;  // 파일명 표시
+		      guideText.style.display = 'none';           // 안내문 숨김
+		    } else {
+		      nameSpan.textContent = '';                  // 파일명 제거
+		      guideText.style.display = 'block';          // 안내문 복구
+		    }
+		  });
+		</script>
+
     </body>
 
 </html>
