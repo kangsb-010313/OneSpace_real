@@ -4,48 +4,63 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="perforinfo">
 
+  <!-- infoWrite 테이블 매핑 -->
   <resultMap id="PerforInfoMap" type="com.javaex.vo.PerforInfoVO">
-    <id     column="no"        property="no"/>
-    <result column="category"  property="category"/>
-    <result column="title"     property="title"/>
-    <result column="url"       property="url"/>
-    <result column="region"    property="region"/>
-    <result column="content"   property="content"/>
-    <result column="closedate" property="closedate"  javaType="java.time.LocalDate"      jdbcType="DATE"/>
-    <result column="regdate"   property="regdate"    javaType="java.time.LocalDateTime"  jdbcType="TIMESTAMP"/>
-    <result column="userno"    property="userno"/>
-    <result column="username"  property="username"/>
+    <id     column="infoPostNo"      property="infoPostNo"/>
+    <result column="userNo"          property="userNo"          jdbcType="BIGINT"/>
+    <result column="infoPostTitle"   property="infoPostTitle"   jdbcType="VARCHAR"/>
+    <result column="agencyName"      property="agencyName"      jdbcType="VARCHAR"/>
+    <result column="infoContent"     property="infoContent"     jdbcType="LONGVARCHAR"/>
+    <result column="infoOutUrl"      property="infoOutUrl"      jdbcType="VARCHAR"/>
+    <result column="infoPostType"    property="infoPostType"    jdbcType="VARCHAR"/>
+    <result column="deadlineDate"    property="deadlineDate"    jdbcType="DATE"/>
+    <result column="infoArea"        property="infoArea"        jdbcType="VARCHAR"/>
+    <result column="perforImg"       property="perforImg"       jdbcType="VARCHAR"/>
+    <result column="infoWriteDate"   property="infoWriteDate"   jdbcType="TIMESTAMP"/>
+    <result column="infoUpdateDate"  property="infoUpdateDate"  jdbcType="TIMESTAMP"/>
+    <result column="infoImg"         property="infoImg"         jdbcType="VARCHAR"/>
   </resultMap>
 
+  <!-- 목록 -->
   <select id="list" resultMap="PerforInfoMap">
     select
-      no, category, title, url, region, content, closedate, regdate, userno, username
-    from performance_info
-    order by regdate desc, no desc
+      infoPostNo, userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
+      infoPostType, deadlineDate, infoArea, perforImg, infoWriteDate, infoUpdateDate, infoImg
+    from `infoWrite`
+    order by infoWriteDate desc, infoPostNo desc
   </select>
 
+  <!-- 단건 조회 -->
   <select id="get" parameterType="long" resultMap="PerforInfoMap">
     select
-      no, category, title, url, region, content, closedate, regdate, userno, username
-    from performance_info
-    where no = #{no}
+      infoPostNo, userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
+      infoPostType, deadlineDate, infoArea, perforImg, infoWriteDate, infoUpdateDate, infoImg
+    from `infoWrite`
+    where infoPostNo = #{no}
   </select>
 
+  <!-- 글쓰기 -->
   <insert id="insert"
           parameterType="com.javaex.vo.PerforInfoVO"
-          useGeneratedKeys="true" keyProperty="no">
-    insert into performance_info
-      (category, title, url, region, content, closedate, regdate, userno, username)
+          useGeneratedKeys="true"
+          keyProperty="infoPostNo"
+          keyColumn="infoPostNo">
+    insert into `infoWrite`
+      (userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
+       infoPostType, deadlineDate, infoArea, perforImg, infoWriteDate, infoUpdateDate, infoImg)
     values
-      (#{category},
-       #{title},
-       #{url},
-       #{region},
-       #{content},
-       #{closedate,jdbcType=DATE},
+      (#{userNo},
+       #{infoPostTitle},
+       #{agencyName},
+       #{infoContent},
+       #{infoOutUrl},
+       #{infoPostType},
+       #{deadlineDate,jdbcType=DATE},
+       #{infoArea},
+       #{perforImg},
        now(),
-       #{userno},
-       #{username})
+       now(),
+       #{infoImg})
   </insert>
 
 </mapper>

@@ -5,46 +5,58 @@ import java.time.LocalDateTime;
 
 public class PerforInfoVO {
 
-    private Long no;             // pk
-    private String category;     // "공연" | "대회"
-    private String title;
-    private String url;
-    private String region;
-    private String content;
-    private LocalDate closedate;     // 마감 날짜
-    private LocalDateTime regdate;   // 작성일(등록일)
+    // === infowrite 테이블 컬럼 ===
+    private Long infoPostNo;          // PK (auto_increment)
+    private Long userNo;              // 작성자 번호
+    private String infoPostTitle;     // 제목
+    private String agencyName;        // 주최/주관
+    private String infoContent;       // 내용
+    private String infoOutUrl;        // 외부 링크
+    private String infoPostType;      // 분류(공연/대회 등)
+    private LocalDate deadlineDate;   // 마감일
+    private String infoArea;          // 지역
+    private String perforImg;         // 공연 이미지(선택)
+    private LocalDateTime infoWriteDate;   // 작성일
+    private LocalDateTime infoUpdateDate;  // 수정일
+    private String infoImg;           // 썸네일/기타 이미지(선택)
 
-    private Long userno;         // 작성자 번호(선택)
-    private String username;     // 작성자 이름(선택)
+    // ===== getter/setter =====
+    public Long getInfoPostNo() { return infoPostNo; }
+    public void setInfoPostNo(Long infoPostNo) { this.infoPostNo = infoPostNo; }
 
-    // === getter/setter (java beans 규칙) ===
-    public Long getNo() { return no; }
-    public void setNo(Long no) { this.no = no; }
+    public Long getUserNo() { return userNo; }
+    public void setUserNo(Long userNo) { this.userNo = userNo; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public String getInfoPostTitle() { return infoPostTitle; }
+    public void setInfoPostTitle(String infoPostTitle) { this.infoPostTitle = infoPostTitle; }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getAgencyName() { return agencyName; }
+    public void setAgencyName(String agencyName) { this.agencyName = agencyName; }
 
-    public String getUrl() { return url; }
-    public void setUrl(String url) { this.url = url; }
+    public String getInfoContent() { return infoContent; }
+    public void setInfoContent(String infoContent) { this.infoContent = infoContent; }
 
-    public String getRegion() { return region; }
-    public void setRegion(String region) { this.region = region; }
+    public String getInfoOutUrl() { return infoOutUrl; }
+    public void setInfoOutUrl(String infoOutUrl) { this.infoOutUrl = infoOutUrl; }
 
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public String getInfoPostType() { return infoPostType; }
+    public void setInfoPostType(String infoPostType) { this.infoPostType = infoPostType; }
 
-    public LocalDate getClosedate() { return closedate; }
-    public void setClosedate(LocalDate closedate) { this.closedate = closedate; }
+    public LocalDate getDeadlineDate() { return deadlineDate; }
+    public void setDeadlineDate(LocalDate deadlineDate) { this.deadlineDate = deadlineDate; }
 
-    public LocalDateTime getRegdate() { return regdate; }
-    public void setRegdate(LocalDateTime regdate) { this.regdate = regdate; }
+    public String getInfoArea() { return infoArea; }
+    public void setInfoArea(String infoArea) { this.infoArea = infoArea; }
 
-    public Long getUserno() { return userno; }
-    public void setUserno(Long userno) { this.userno = userno; }
+    public String getPerforImg() { return perforImg; }
+    public void setPerforImg(String perforImg) { this.perforImg = perforImg; }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public LocalDateTime getInfoWriteDate() { return infoWriteDate; }
+    public void setInfoWriteDate(LocalDateTime infoWriteDate) { this.infoWriteDate = infoWriteDate; }
+
+    public LocalDateTime getInfoUpdateDate() { return infoUpdateDate; }
+    public void setInfoUpdateDate(LocalDateTime infoUpdateDate) { this.infoUpdateDate = infoUpdateDate; }
+
+    public String getInfoImg() { return infoImg; }
+    public void setInfoImg(String infoImg) { this.infoImg = infoImg; }
 }

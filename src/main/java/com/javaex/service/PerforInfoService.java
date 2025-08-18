@@ -17,17 +17,23 @@ public class PerforInfoService {
         this.repository = repository;
     }
 
+    // 목록
     public List<PerforInfoVO> list() {
         return repository.list();
     }
 
+    // 단건 조회
     public PerforInfoVO get(Long no) {
         return repository.get(no);
     }
 
+    // 글 등록
     @Transactional
     public Long add(PerforInfoVO vo) {
         repository.insert(vo);
-        return vo.getNo();
+        if (vo.getInfoPostNo() == null) {
+            throw new IllegalStateException("auto-increment key not returned");
+        }
+        return vo.getInfoPostNo();
     }
 }

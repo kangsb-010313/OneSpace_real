@@ -25,10 +25,7 @@
       select
         userNo,
         userId,
-        password,
-        userName,
-        email,
-        createdDate
+        userName
       from users
       where userId = #{userId}
         and password = #{password}
