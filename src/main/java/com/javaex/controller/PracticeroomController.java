@@ -23,7 +23,7 @@ public class PracticeroomController {
 	@RequestMapping(value="/practice1_main", method={RequestMethod.GET, RequestMethod.POST})
 	public String main() {
         System.out.println("PracticeroomController.main()");
-        practiceroomService.doSomethingForMain(); // 필요 시 서비스 호출
+        practiceroomService.doSomethingForMain();
         return "practiceroom/practice1_main";
     }
 }
