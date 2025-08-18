@@ -61,9 +61,14 @@ public class TeampageController {
 	
     // --팀페이지 전체 리스트 (특정 팀의 리스트)
     @RequestMapping(value="/teams/{teamNo}/posts/list", method= {RequestMethod.GET, RequestMethod.POST})
-    public String list(@PathVariable("teamNo") int teamNo, Model model) {
+    public String list(@PathVariable("teamNo") int teamNo, HttpSession session, Model model) {
         System.out.println("TeampageController.list() for teamNo: " + teamNo);
         
+        //로그인 체크
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if(authUser == null) {
+            return "redirect:/onespace/loginForm";
+        }
        
         List<TeamPostVO> teamPostList = teampageService.exeListByTeam(teamNo);	//특정 팀의 게시글만 가져옴
 //        System.out.println(teamPostList);
@@ -75,16 +80,17 @@ public class TeampageController {
         if (currentTeam != null) {
             model.addAttribute("teamName", currentTeam.getTeamName());
         } else {
-            model.addAttribute("teamName", "팀 정보 없음"); // 팀 정보가 없을 경우 대비
+            model.addAttribute("teamName", "알 수 없는 팀"); // 팀 정보가 없을 경우 대비
         }
         
         // 2. 현재 보고 있는 팀의 teamNo를 JSP로 전달
 
         model.addAttribute("teamNo", teamNo); // 현재 보고 있는 팀의 teamNo를 JSP로 전달
         
-        // 3. aside에 뿌려줄 모든 팀 목록 가져오기
-        List<TeamVO> allTeams = teampageService.exeGetAllTeams();
-        model.addAttribute("allTeams", allTeams);
+        // 3. aside에 뿌려줄 *로그인 유저의* 팀 목록 가져오기 [수정]
+        int userNo = authUser.getUserNo();
+        List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
+        model.addAttribute("allTeams", userTeamList); // aside.jsp가 사용하는 모델 이름 'allTeams'로 전달
 
         return "teampage/list"; 
     }
@@ -104,12 +110,15 @@ public class TeampageController {
 			return "redirect:/onespace/loginForm";
 		}
 		
+	    int userNo = authUser.getUserNo(); // userNo 가져오기
+		
 		model.addAttribute("authUser", authUser);
 		model.addAttribute("teamPostType", teamPostType); // 글 종류 JSP 전달용
         model.addAttribute("teamNo", teamNo); // teamNo도 JSP로 전달 (hidden input에 사용)
 		
-        List<TeamVO> allTeams = teampageService.exeGetAllTeams();
-        model.addAttribute("allTeams", allTeams);
+        //exeGetAllTeams() 대신 exeGetUserTeams() 사용
+        List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
+        model.addAttribute("allTeams", userTeamList);
 
         TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
         model.addAttribute("currentTeam", currentTeam); // instaAccount를 포함한 팀 정보 전체를 전달
@@ -146,8 +155,7 @@ public class TeampageController {
 		
 		teampageService.exeAdd(teamPostVO);
 		
-//		return "redirect:/onespace/list";
-		return "redirect:/onespace/teams/" + teamNo + "/posts/list"; // 예시 URL, 실제 리스트 URL에 맞춰야 함
+		return "redirect:/onespace/teams/" + teamNo + "/posts/list";
 	}
 	
 	//--팀페이지 등록 글 보기
@@ -155,8 +163,17 @@ public class TeampageController {
     @RequestMapping(value="/teams/{teamNo}/posts/{teamPostNo}", method= {RequestMethod.GET, RequestMethod.POST})
     public String viewPost(@PathVariable("teamNo") int teamNo, // 리스트로 돌아갈 때 필요할 수 있음
                            @PathVariable("teamPostNo") int teamPostNo,
+                           HttpSession session,
                            Model model) {
         System.out.println("TeampageController.viewPost() for teamPostNo: " + teamPostNo);
+        
+        //로그인 체크 추가
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if(authUser == null) {
+            return "redirect:/onespace/loginForm";
+        }
+        
+        int userNo = authUser.getUserNo();
 
         TeamPostVO post = teampageService.exeGetPost(teamPostNo);
         model.addAttribute("post", post); // 게시글 정보를 "post"라는 이름으로 JSP에 전달
@@ -164,8 +181,8 @@ public class TeampageController {
         // JSP에서 '목록으로' 돌아갈 때 현재 팀 번호가 필요할 수 있으므로 전달
         model.addAttribute("teamNo", teamNo); 
         
-        List<TeamVO> allTeams = teampageService.exeGetAllTeams();
-        model.addAttribute("allTeams", allTeams);
+        List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
+        model.addAttribute("allTeams", userTeamList);
 
         TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
         if (currentTeam != null) {
@@ -204,10 +221,11 @@ public class TeampageController {
         model.addAttribute("post", post); // 수정할 게시글 정보
         model.addAttribute("teamNo", teamNo); // 현재 팀 번호
         
-
-        // aside 데이터를 위한 모든 팀 목록 및 현재 팀 이름 추가 (list, viewPost와 동일)
-        List<TeamVO> allTeams = teampageService.exeGetAllTeams();
-        model.addAttribute("allTeams", allTeams);
+        int userNo = authUser.getUserNo();
+        List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
+        model.addAttribute("allTeams", userTeamList);
+        
+        
         TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
         
         if (currentTeam != null) {
@@ -238,13 +256,6 @@ public class TeampageController {
         
         // teamNo 설정
         teamPostVO.setTeamNo(teamNo);
-
-        // 줄바꿈 처리 (선택 사항: DB 저장 전에 처리하려면 여기에 추가)
-        // String content = teamPostVO.getTeamContent();
-        // if (content != null) {
-        //     content = content.replace("\n", "<br/>");
-        //     teamPostVO.setTeamContent(content);
-        // }
 
         teampageService.exeModify(teamPostVO); // 서비스 호출하여 DB 업데이트
 
