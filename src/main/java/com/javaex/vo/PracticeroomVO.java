@@ -1,5 +1,179 @@
 package com.javaex.vo;
 
-public class PracticeroomVO {
+import java.time.LocalDateTime;
 
+public class PracticeroomVO {
+	
+	//필드
+    private int spacesNo;
+    private int userNo;
+    private String spaceName;
+    private String spaceSummary;
+    private String spaceInfo;
+    private String email;
+    private String phone;
+    private String tel;
+    private String spaceLink;
+    private String postCode;
+    private String address;
+    private String addressDetail;
+    private LocalDateTime instDtm;
+    private LocalDateTime updtDtm;
+    
+    //생성자
+    public PracticeroomVO() {
+    }
+    
+    public PracticeroomVO(int spacesNo, int userNo, String spaceName, String spaceSummary, String spaceInfo,
+                    	String email, String phone, String tel, String spaceLink, String postCode,
+                    	String address, String addressDetail, LocalDateTime instDtm, LocalDateTime updtDtm) {
+        this.spacesNo = spacesNo;
+        this.userNo = userNo;
+        this.spaceName = spaceName;
+        this.spaceSummary = spaceSummary;
+        this.spaceInfo = spaceInfo;
+        this.email = email;
+        this.phone = phone;
+        this.tel = tel;
+        this.spaceLink = spaceLink;
+        this.postCode = postCode;
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.instDtm = instDtm;
+        this.updtDtm = updtDtm;
+    }
+    
+    //메소드gs
+    public int getSpacesNo() {
+        return spacesNo;
+    }
+
+    public void setSpacesNo(int spacesNo) {
+        this.spacesNo = spacesNo;
+    }
+
+    public int getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(int userNo) {
+        this.userNo = userNo;
+    }
+
+    public String getSpaceName() {
+        return spaceName;
+    }
+
+    public void setSpaceName(String spaceName) {
+        this.spaceName = spaceName;
+    }
+
+    public String getSpaceSummary() {
+        return spaceSummary;
+    }
+
+    public void setSpaceSummary(String spaceSummary) {
+        this.spaceSummary = spaceSummary;
+    }
+
+    public String getSpaceInfo() {
+        return spaceInfo;
+    }
+
+    public void setSpaceInfo(String spaceInfo) {
+        this.spaceInfo = spaceInfo;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getSpaceLink() {
+        return spaceLink;
+    }
+
+    public void setSpaceLink(String spaceLink) {
+        this.spaceLink = spaceLink;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddressDetail() {
+        return addressDetail;
+    }
+
+    public void setAddressDetail(String addressDetail) {
+        this.addressDetail = addressDetail;
+    }
+
+    public LocalDateTime getInstDtm() {
+        return instDtm;
+    }
+
+    public void setInstDtm(LocalDateTime instDtm) {
+        this.instDtm = instDtm;
+    }
+
+    public LocalDateTime getUpdtDtm() {
+        return updtDtm;
+    }
+
+    public void setUpdtDtm(LocalDateTime updtDtm) {
+        this.updtDtm = updtDtm;
+    }
+    
+    //메소드일반
+    @Override
+    public String toString() {
+        return "PracticeroomVO{" +
+                "spacesNo=" + spacesNo +
+                ", userNo=" + userNo +
+                ", spaceName='" + spaceName + '\'' +
+                ", spaceSummary='" + spaceSummary + '\'' +
+                ", spaceInfo='" + spaceInfo + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", tel='" + tel + '\'' +
+                ", spaceLink='" + spaceLink + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", address='" + address + '\'' +
+                ", addressDetail='" + addressDetail + '\'' +
+                ", instDtm=" + instDtm +
+                ", updtDtm=" + updtDtm +
+                '}';
+    }
 }

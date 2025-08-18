@@ -9,12 +9,15 @@ import com.javaex.service.PracticeroomService;
 @Controller
 @RequestMapping(value="/onespace")
 public class PracticeroomController {
+	
 	//필드
 	private final PracticeroomService practiceroomService;
+	
 	//생성자
 	public PracticeroomController(PracticeroomService practiceroomService) {
         this.practiceroomService = practiceroomService;
     }
+	
 	//메소드 gs
 	
 	//메소드 일반
