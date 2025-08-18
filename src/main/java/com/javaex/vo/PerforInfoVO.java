@@ -1,5 +1,7 @@
 package com.javaex.vo;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class PerforInfoVO {
 
     private long infoPostNo;
@@ -11,110 +13,60 @@ public class PerforInfoVO {
     private String infoPostType;
     private String deadlineDate;
     private String infoArea;
-    private String perforImg;
+    private String perforImgName; // 🔥 DB에 저장될 파일명
     private String infoWriteDate;
     private String infoUpdateDate;
     private String infoImg;
-    private String username; // JOIN users.name
+    private String username;
 
-    // getter/setter
-    public long getInfoPostNo() {
-        return infoPostNo;
-    }
-    public void setInfoPostNo(long infoPostNo) {
-        this.infoPostNo = infoPostNo;
-    }
+    private MultipartFile perforImg; // 🔥 파일 업로드 받을 용도
 
-    public long getUserNo() {
-        return userNo;
-    }
-    public void setUserNo(long userNo) {
-        this.userNo = userNo;
-    }
+    // === getter/setter ===
 
-    public String getInfoPostTitle() {
-        return infoPostTitle;
-    }
-    public void setInfoPostTitle(String infoPostTitle) {
-        this.infoPostTitle = infoPostTitle;
-    }
+    public long getInfoPostNo() { return infoPostNo; }
+    public void setInfoPostNo(long infoPostNo) { this.infoPostNo = infoPostNo; }
 
-    public String getAgencyName() {
-        return agencyName;
-    }
-    public void setAgencyName(String agencyName) {
-        this.agencyName = agencyName;
-    }
+    public long getUserNo() { return userNo; }
+    public void setUserNo(long userNo) { this.userNo = userNo; }
 
-    public String getInfoContent() {
-        return infoContent;
-    }
-    public void setInfoContent(String infoContent) {
-        this.infoContent = infoContent;
-    }
+    public String getInfoPostTitle() { return infoPostTitle; }
+    public void setInfoPostTitle(String infoPostTitle) { this.infoPostTitle = infoPostTitle; }
 
-    public String getInfoOutUrl() {
-        return infoOutUrl;
-    }
-    public void setInfoOutUrl(String infoOutUrl) {
-        this.infoOutUrl = infoOutUrl;
-    }
+    public String getAgencyName() { return agencyName; }
+    public void setAgencyName(String agencyName) { this.agencyName = agencyName; }
 
-    public String getInfoPostType() {
-        return infoPostType;
-    }
-    public void setInfoPostType(String infoPostType) {
-        this.infoPostType = infoPostType;
-    }
+    public String getInfoContent() { return infoContent; }
+    public void setInfoContent(String infoContent) { this.infoContent = infoContent; }
 
-    public String getDeadlineDate() {
-        return deadlineDate;
-    }
-    public void setDeadlineDate(String deadlineDate) {
-        this.deadlineDate = deadlineDate;
-    }
+    public String getInfoOutUrl() { return infoOutUrl; }
+    public void setInfoOutUrl(String infoOutUrl) { this.infoOutUrl = infoOutUrl; }
 
-    public String getInfoArea() {
-        return infoArea;
-    }
-    public void setInfoArea(String infoArea) {
-        this.infoArea = infoArea;
-    }
+    public String getInfoPostType() { return infoPostType; }
+    public void setInfoPostType(String infoPostType) { this.infoPostType = infoPostType; }
 
-    public String getPerforImg() {
-        return perforImg;
-    }
-    public void setPerforImg(String perforImg) {
-        this.perforImg = perforImg;
-    }
+    public String getDeadlineDate() { return deadlineDate; }
+    public void setDeadlineDate(String deadlineDate) { this.deadlineDate = deadlineDate; }
 
-    public String getInfoWriteDate() {
-        return infoWriteDate;
-    }
-    public void setInfoWriteDate(String infoWriteDate) {
-        this.infoWriteDate = infoWriteDate;
-    }
+    public String getInfoArea() { return infoArea; }
+    public void setInfoArea(String infoArea) { this.infoArea = infoArea; }
 
-    public String getInfoUpdateDate() {
-        return infoUpdateDate;
-    }
-    public void setInfoUpdateDate(String infoUpdateDate) {
-        this.infoUpdateDate = infoUpdateDate;
-    }
+    public String getPerforImgName() { return perforImgName; }
+    public void setPerforImgName(String perforImgName) { this.perforImgName = perforImgName; }
 
-    public String getInfoImg() {
-        return infoImg;
-    }
-    public void setInfoImg(String infoImg) {
-        this.infoImg = infoImg;
-    }
+    public String getInfoWriteDate() { return infoWriteDate; }
+    public void setInfoWriteDate(String infoWriteDate) { this.infoWriteDate = infoWriteDate; }
 
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getInfoUpdateDate() { return infoUpdateDate; }
+    public void setInfoUpdateDate(String infoUpdateDate) { this.infoUpdateDate = infoUpdateDate; }
+
+    public String getInfoImg() { return infoImg; }
+    public void setInfoImg(String infoImg) { this.infoImg = infoImg; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public MultipartFile getPerforImg() { return perforImg; }
+    public void setPerforImg(MultipartFile perforImg) { this.perforImg = perforImg; }
 
     @Override
     public String toString() {
@@ -128,7 +80,7 @@ public class PerforInfoVO {
                 ", infoPostType='" + infoPostType + '\'' +
                 ", deadlineDate='" + deadlineDate + '\'' +
                 ", infoArea='" + infoArea + '\'' +
-                ", perforImg='" + perforImg + '\'' +
+                ", perforImgName='" + perforImgName + '\'' +
                 ", infoWriteDate='" + infoWriteDate + '\'' +
                 ", infoUpdateDate='" + infoUpdateDate + '\'' +
                 ", infoImg='" + infoImg + '\'' +

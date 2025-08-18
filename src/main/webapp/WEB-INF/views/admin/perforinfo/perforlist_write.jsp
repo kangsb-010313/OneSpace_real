@@ -14,11 +14,10 @@
   <body>
     <div id="wrap">
 
-      <!-- 헤더 영역 (c:import → jsp:include 로 교체) -->
-      <jsp:include page="/WEB-INF/views/include/header.jsp" />
-      <!-- /헤더 영역 -->
+      <!-- 헤더 -->
+      <c:import url="/WEB-INF/views/include/header.jsp" />
 
-      <!-- 컨텐츠 영역 -->
+      <!-- 컨텐츠 -->
       <main>
         <div class="container">
           <section class="write-container">
@@ -29,18 +28,16 @@
                     action="<c:url value='/onespace/perforinfo/write'/>"
                     enctype="multipart/form-data">
 
-                <!-- CSRF (있으면 사용) -->
+                <!-- CSRF -->
                 <c:if test="${not empty _csrf}">
                   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 </c:if>
-
-                <!-- ❌ userNo / agencyName hidden 제거 (컨트롤러가 세션에서 주입) -->
 
                 <!-- 제목 -->
                 <input type="text" class="title" name="infoPostTitle" placeholder="제목" maxlength="500" required>
 
                 <!-- URL -->
-                <input type="url" class="url-box" name="infoOutUrl" placeholder="첨부 url을 입력해 주세요.">
+                <input type="url" class="url-box" name="infoOutUrl" placeholder="첨부 URL을 입력해 주세요.">
 
                 <div class="filter-row">
                   <!-- 카테고리 -->
@@ -62,6 +59,7 @@
                   <input type="text" class="inp-region-pill" name="infoArea" placeholder="공연 지역" maxlength="100">
                 </div>
 
+                <!-- 내용 + 이미지 -->
                 <div class="textarea-wrap">
                   <textarea class="inp-textarea-line" name="infoContent" placeholder="전하고 싶은 내용을 입력해 주세요!" rows="12" required></textarea>
 
@@ -81,10 +79,8 @@
         </div>
       </main>
 
-      <!-- 푸터 영역 -->
-      <jsp:include page="/WEB-INF/views/include/footer.jsp" />
-      <!-- /푸터 영역 -->
-
+      <!-- 푸터 -->
+      <c:import url="/WEB-INF/views/include/footer.jsp" />
     </div>
 
     <script>

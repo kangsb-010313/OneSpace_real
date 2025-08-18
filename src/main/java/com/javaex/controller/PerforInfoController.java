@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.javaex.service.PerforInfoService;
 import com.javaex.vo.PerforInfoVO;
 
@@ -62,6 +64,7 @@ public class PerforInfoController {
     // 작성 처리
     @PostMapping("/write")
     public String write(@ModelAttribute PerforInfoVO vo, HttpSession session) {
+
         Long userno = get_userno(session);
         String username = get_username(session);
 
@@ -71,11 +74,19 @@ public class PerforInfoController {
 
         vo.setUserNo(userno);
         vo.setUsername(username);
-        Long postNo = service.insert(vo);
+        vo.setAgencyName(username);
 
+        MultipartFile file = vo.getPerforImg();
+        if (file != null && !file.isEmpty()) {
+            String filename = file.getOriginalFilename();
+            vo.setPerforImgName(filename); // 🔥 DB에 저장할 파일명만 따로 저장
+            // Optional: file.transferTo(new File(savePath));
+        }
+
+        Long postNo = service.insert(vo);
         return "redirect:/onespace/perforinfo/view?no=" + postNo;
     }
-
+    
     // 상세보기
     @GetMapping("/view")
     public String view(@RequestParam("no") long no, Model model, HttpSession session) {

@@ -7,8 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.service.UserService;
 import com.javaex.vo.UserVO;
@@ -30,7 +28,7 @@ public class UserController {
         return "admin/auth/signup"; // 뷰 경로: 프로젝트에 맞게 유지
     }
 
-    // --회원가입 (GET/POST 허용: 수업 스타일 유지)
+    // --회원가입
     @RequestMapping(value = "/signup", method = { RequestMethod.GET, RequestMethod.POST })
     public String join(@ModelAttribute UserVO userVO) {
         System.out.println("UserController.join()  param=" + userVO);
@@ -42,7 +40,7 @@ public class UserController {
 
         } catch (DuplicateKeyException e) {
             System.out.println("중복아이디: " + e.getMessage());
-            return "redirect:/onespace/signup?error=dup"; // 폼으로 리다이렉트 + 에러표시
+            return "redirect:/onespace/signup?error=dup";
 
         } catch (Exception e) {
             System.out.println("회원가입 예외: " + e);
@@ -68,27 +66,26 @@ public class UserController {
 
         if (authUser == null) {
             // 아이디/비번 불일치 → 폼으로
-        	return "redirect:/onespace/loginForm?error=1";
+            return "redirect:/onespace/loginForm?error=1";
         }
 
-        // 세션 로그인
-        session.setAttribute("authUser", authUser);
+        // 세션 로그인 (통째로도 저장 + 필요한 값 따로 저장)
+        session.setAttribute("authUser", authUser); // 객체 전체
+        session.setAttribute("authUserNo", authUser.getUserNo());     // 로그인 유저 번호
+        session.setAttribute("authUserName", authUser.getUserName()); // 로그인 유저 이름
 
-        // 로그인 성공 후 이동 (원하면 /onespace/home 등으로 변경)
+        // 로그인 성공 후 이동
         return "redirect:/onespace/main";
     }
     
-    
-	 // --로그아웃
-	    @RequestMapping(value = "/logout", method = { RequestMethod.GET, RequestMethod.POST })
-	    public String logout(HttpSession session) {
-	        System.out.println("UserController.logout()");
-	        if (session != null) {
-	            session.invalidate(); // 세션 전체 종료
-	        }
-	        // 로그인 폼으로 안내(원하면 "/" 로 바꿔도 됨)
-	        return "redirect:/onespace/main";
-	    }
+    // --로그아웃
+    @RequestMapping(value = "/logout", method = { RequestMethod.GET, RequestMethod.POST })
+    public String logout(HttpSession session) {
+        System.out.println("UserController.logout()");
+        if (session != null) {
+            session.invalidate(); // 세션 전체 종료
+        }
+        return "redirect:/onespace/main";
+    }
 
- 
 }
