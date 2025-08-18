@@ -12,6 +12,7 @@
         <mapper resource="mybatis/mappers/teampage.xml" />
         <mapper resource="mybatis/mappers/host.xml" />
         <mapper resource="mybatis/mappers/perforinfo.xml" />
+        <mapper resource="mybatis/mappers/practiceroom.xml" />
         
     </mappers>
     
