@@ -16,7 +16,7 @@ public class PracticeroomRepository {
 	private SqlSession sqlSession;
 	
 	//메소드일반
-	//--전체리스트 가져오기(게시판리스트)
+	//--전체리스트 가져오기
 	public List<PracticeroomVO> practiceroomSelectList() {
 		System.out.println("PracticeroomRepository.practiceroomSelectList()");
 		
