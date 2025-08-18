@@ -78,7 +78,7 @@
               <div class="card">
                 <a href="file:///C:/javaStudy/onespace_front/views/practiceroom/practice2_zone.html">
                   <div class="card-img-wrap">
-                    <img class="card-img" src="C:\javaStudy\onespace_front\assets\images\연습실찜하기사진01.jpg" alt="네스트 연습실">
+                    <img class="card-img" src="../../assets/images/연습실찜하기사진01.jpg" alt="네스트 연습실">
                   </div>
                   <div class="card-content">
                     <div class="card-title">네스트 연습실</div>
@@ -92,7 +92,7 @@
               <div class="card">
                 <a href="file:///C:/javaStudy/onespace_front/views/practiceroom/practice2_zone.html">
                   <div class="card-img-wrap">
-                    <img class="card-img" src="C:\javaStudy\onespace_front\assets\images\연습실찜하기사진02.jpg" alt="드론스튜디오">
+                    <img class="card-img" src="../../assets/images/연습실찜하기사진02.jpg" alt="드론스튜디오">
                   </div>
                   <div class="card-content">
                     <div class="card-title">드론스튜디오</div>
@@ -106,7 +106,7 @@
               <div class="card">
                 <a href="file:///C:/javaStudy/onespace_front/views/practiceroom/practice2_zone.html">
                   <div class="card-img-wrap">
-                    <img class="card-img" src="C:\javaStudy\onespace_front\assets\images\연습실찜하기사진03.jpg" alt="픽스튜디오">
+                    <img class="card-img" src="../../assets/images/연습실찜하기사진03.jpg" alt="픽스튜디오">
                   </div>
                   <div class="card-content">
                     <div class="card-title">픽스튜디오</div>
@@ -120,7 +120,7 @@
               <div class="card">
                 <a href="file:///C:/javaStudy/onespace_front/views/practiceroom/practice2_zone.html">
                   <div class="card-img-wrap">
-                    <img class="card-img" src="C:\javaStudy\onespace_front\assets\images\연습실찜하기사진04.jpeg" alt="네스트 연습실">
+                    <img class="card-img" src="../../assets/images/연습실찜하기사진04.jpeg" alt="네스트 연습실">
                   </div>
                   <div class="card-content">
                     <div class="card-title">네스트 연습실</div>
@@ -134,7 +134,7 @@
               <div class="card">
                 <a href="file:///C:/javaStudy/onespace_front/views/practiceroom/practice2_zone.html">
                   <div class="card-img-wrap">
-                    <img class="card-img" src="C:\javaStudy\onespace_front\assets\images\연습실찜하기사진05.jpg" alt="드론스튜디오">
+                    <img class="card-img" src="../../assets/images/연습실찜하기사진05.jpg" alt="드론스튜디오">
                   </div>
                   <div class="card-content">
                     <div class="card-title">드론스튜디오</div>
@@ -148,7 +148,7 @@
               <div class="card">
                 <a href="file:///C:/javaStudy/onespace_front/views/practiceroom/practice2_zone.html">
                   <div class="card-img-wrap">
-                    <img class="card-img" src="C:\javaStudy\onespace_front\assets\images\연습실찜하기사진06.jpg" alt="픽스튜디오">
+                    <img class="card-img" src="../../assets/images/연습실찜하기사진06.jpg" alt="픽스튜디오">
                   </div>
                   <div class="card-content">
                     <div class="card-title">픽스튜디오</div>
@@ -162,7 +162,7 @@
               <div class="card">
                 <a href="file:///C:/javaStudy/onespace_front/views/practiceroom/practice2_zone.html">
                   <div class="card-img-wrap">
-                    <img class="card-img" src="C:\javaStudy\onespace_front\assets\images\연습실찜하기사진06.jpg" alt="픽스튜디오">
+                    <img class="card-img" src="../../assets/images/연습실찜하기사진06.jpg" alt="픽스튜디오">
                   </div>
                   <div class="card-content">
                     <div class="card-title">픽스튜디오</div>
@@ -176,7 +176,7 @@
               <div class="card">
                 <a href="file:///C:/javaStudy/onespace_front/views/practiceroom/practice2_zone.html">
                   <div class="card-img-wrap">
-                    <img class="card-img" src="C:\javaStudy\onespace_front\assets\images\연습실찜하기사진06.jpg" alt="픽스튜디오">
+                    <img class="card-img" src="../../assets/images/연습실찜하기사진06.jpg" alt="픽스튜디오">
                   </div>
                   <div class="card-content">
                     <div class="card-title">픽스튜디오</div>
@@ -199,25 +199,25 @@
           title: "네스트 연습실",
           price: "10,000 원 ~ 17,000원/시간",
           meta: "최대15인",
-          img: "C:/javaStudy/onespace_front/assets/images/연습실찜하기사진01.jpg"
+          img: "../../assets/images/연습실찜하기사진06.jpg"
         },
         {
           title: "드론스튜디오",
           price: "<span style='color:#222;'>3,000 원 ~</span> <span style='color:#7a4eff;'>7,000원/시간</span>",
           meta: "선택불가/최대7인",
-          img: "C:/javaStudy/onespace_front/assets/images/연습실찜하기사진02.jpg"
+          img: "../../assets/images/연습실찜하기사진06.jpg"
         },
         {
           title: "픽스튜디오",
           price: "7,000 원/시간",
           meta: "최대7인/추가인원7인",
-          img: "C:/javaStudy/onespace_front/assets/images/연습실찜하기사진03.jpg"
+          img: "../../assets/images/연습실찜하기사진06.jpg"
         },
         {
           title: "픽스튜디오",
           price: "7,000 원/시간",
           meta: "최대7인/추가인원7인",
-          img: "C:/javaStudy/onespace_front/assets/images/연습실찜하기사진04.jpeg"
+          img: "../../assets/images/연습실찜하기사진06.jpg"
         }
       ];
 
