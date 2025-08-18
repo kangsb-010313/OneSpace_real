@@ -389,11 +389,16 @@ body {
     margin-left: 30px;
     margin-top: -8px;
 }
+
 html, body {
-  height: 100%;
-  margin: 0;
+  /*height: 100%;*/
+  /*margin: 0;*/
   /*padding: 0;*/
+  height: auto; overflow-y: auto;
 }
+
+.main-section, .content-area { overflow: visible; }
+
 .main-section {
   flex: 1 0 auto;
 }

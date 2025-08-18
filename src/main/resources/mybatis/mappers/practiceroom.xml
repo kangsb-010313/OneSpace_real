@@ -26,4 +26,15 @@
 	    ]]>
     </select>
     
+    <select id="selectPaged" parameterType="map" resultType="com.javaex.vo.PracticeroomVO">
+	  SELECT
+	    spacesNo, userNo, spaceName, spaceSummary, spaceInfo,
+	    email, phone, tel, spaceLink, postCode, address, addressDetail,
+	    instDtm, updtDtm
+	  FROM spaces
+	  ORDER BY spacesNo
+	  LIMIT #{offset,jdbcType=INTEGER}, #{size,jdbcType=INTEGER}
+	</select>
+    
+    
 </mapper>

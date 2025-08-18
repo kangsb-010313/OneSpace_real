@@ -1,6 +1,8 @@
 package com.javaex.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,4 +27,10 @@ public class PracticeroomRepository {
 		return practiceroomSelectList;
 	}
 	
+	public List<PracticeroomVO> practiceroomSelectPaged(int offset, int size) {
+        Map<String, Object> p = new HashMap<>();
+        p.put("offset", offset);
+        p.put("size", size);
+        return sqlSession.selectList("practiceroom.selectPaged", p);
+    }
 }

@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 public class PracticeroomVO {
 	
 	//필드
-    private int spacesNo;
-    private int userNo;
+    private Long spacesNo;
+    private Long userNo;
     private String spaceName;
     private String spaceSummary;
     private String spaceInfo;
@@ -24,7 +24,7 @@ public class PracticeroomVO {
     public PracticeroomVO() {
     }
     
-    public PracticeroomVO(int spacesNo, int userNo, String spaceName, String spaceSummary, String spaceInfo,
+    public PracticeroomVO(Long spacesNo, Long userNo, String spaceName, String spaceSummary, String spaceInfo,
                     	String email, String phone, String tel, String spaceLink, String postCode,
                     	String address, String addressDetail, LocalDateTime instDtm, LocalDateTime updtDtm) {
         this.spacesNo = spacesNo;
@@ -44,19 +44,19 @@ public class PracticeroomVO {
     }
     
     //메소드gs
-    public int getSpacesNo() {
+    public Long getSpacesNo() {
         return spacesNo;
     }
 
-    public void setSpacesNo(int spacesNo) {
+    public void setSpacesNo(Long spacesNo) {
         this.spacesNo = spacesNo;
     }
 
-    public int getUserNo() {
+    public Long getUserNo() {
         return userNo;
     }
 
-    public void setUserNo(int userNo) {
+    public void setUserNo(Long userNo) {
         this.userNo = userNo;
     }
 

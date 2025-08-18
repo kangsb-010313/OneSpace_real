@@ -85,96 +85,83 @@
 
               <!-- rooms가 비었을 때 안내 -->
               <c:if test="${empty rooms}">
-			    <div style="padding:24px;color:#777;">등록된 연습실이 없습니다.</div>
-			  </c:if>
-			</div>
-			<div id="sentinel" style="height:1px;"></div>
+                <div style="padding:24px;color:#777;">등록된 연습실이 없습니다.</div>
+              </c:if>
+            </div>
           </div>
         </div>
       </div>
     </main>
     <!-- /컨텐츠 영역---------------------------------------------- -->
 
-  <script>
-  const ctx = '${pageContext.request.contextPath}';
-  const size = 4; // ★ 스크롤마다 4장
-  let page = Math.ceil(document.querySelectorAll('#cardList .card').length / size);
-  let loading = false, done = false;
+    <script>
+      // 더미 데이터(카드 4개씩 추가용)
+      const cardData = [
+        {
+          title: "네스트 연습실",
+          price: "10,000 원 ~ 17,000원/시간",
+          meta: "최대15인",
+          img: "../../assets/images/연습실찜하기사진06.jpg"
+        },
+        {
+          title: "드론스튜디오",
+          price: "<span style='color:#222;'>3,000 원 ~</span> <span style='color:#7a4eff;'>7,000원/시간</span>",
+          meta: "선택불가/최대7인",
+          img: "../../assets/images/연습실찜하기사진06.jpg"
+        },
+        {
+          title: "픽스튜디오",
+          price: "7,000 원/시간",
+          meta: "최대7인/추가인원7인",
+          img: "../../assets/images/연습실찜하기사진06.jpg"
+        },
+        {
+          title: "픽스튜디오",
+          price: "7,000 원/시간",
+          meta: "최대7인/추가인원7인",
+          img: "../../assets/images/연습실찜하기사진06.jpg"
+        }
+      ];
 
-  function resolveImg(raw) {
-    if (!raw) return ctx + '/assets/images/placeholder.jpg';
-    if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/')) return raw;
-    return ctx + '/assets/images/' + encodeURIComponent(raw);
-  }
-
-  function appendCards(arr) {
-    const list = document.getElementById('cardList');
-    const placeholder = ctx + '/assets/images/placeholder.jpg';
-    arr.forEach(function(r) {
-      const src = resolveImg(r.spaceLink || '');
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML =
-        '<a href="#">' +
-          '<div class="card-img-wrap">' +
-            '<img class="card-img" src="' + src + '" alt="' + (r.spaceName || '') + '"' +
-                 ' onerror="this.src=\'' + placeholder + '\'">' +
-          '</div>' +
-          '<div class="card-content">' +
-            '<div class="card-title">' + (r.spaceName || '') + '</div>' +
-            '<div class="card-meta">' + (r.spaceSummary || '') + '</div>' +
-          '</div>' +
-        '</a>';
-      list.appendChild(card);
-    });
-  }
-
-  async function loadMore() {
-    if (loading || done) return;
-    loading = true;
-
-    const url = ctx + '/onespace/api/practicerooms?page=' + page + '&size=' + size;
-    console.log('[loadMore] page=', page, 'GET', url);
-
-    try {
-      const res = await fetch(url, { headers: { 'Accept':'application/json' } });
-      console.log('[loadMore] status=', res.status);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
-      console.log('[loadMore] data.length=', Array.isArray(data) ? data.length : 'N/A');
-
-      if (!Array.isArray(data) || data.length === 0) {
-        done = true;
-        return;
+      // 한 번에 4개 카드 추가
+      function addCards() {
+        const cardList = document.getElementById('cardList');
+        for (let i = 0; i < 4; i++) {
+          const d = cardData[i % 4];
+          const card = document.createElement('div');
+          card.className = "card";
+          card.innerHTML = `
+            <a href="file:///C:/javaStudy/onespace_front/views/practiceroom/practice2_zone.html"
+              style="display:block; width:100%; height:100%; text-decoration:none; color:inherit;">
+              <div class="card-img-wrap">
+                <img class="card-img" src="${d.img}" alt="${d.title}">
+              </div>
+              <div class="card-content">
+                <div class="card-title">${d.title}</div>
+                <div class="card-price">${d.price}</div>
+                <div class="card-meta">${d.meta}</div>
+              </div>
+            </a>
+          `;
+          cardList.appendChild(card);
+        }
       }
 
-      appendCards(data);
+      addCards();
 
-      if (data.length < size) {
-        // 마지막 페이지
-        done = true;
-      } else {
-        page++;
-      }
-    } catch (e) {
-      console.error('[loadMore] error', e);
-      done = true;
-    } finally {
-      loading = false;
-    }
-  }
-
-  // 초기 1회 로드(원하면 주석 처리 가능)
-  document.addEventListener('DOMContentLoaded', loadMore);
-
-  // 스크롤 바닥 근접 시 추가 로드
-  window.addEventListener('scroll', function () {
-    if (loading || done) return;
-    const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 120;
-    if (nearBottom) loadMore();
-  });
-  </script>
-  
+      // 무한 스크롤 이벤트
+      let loading = false;
+      window.addEventListener('scroll', function () {
+        if (loading) return;
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+          loading = true;
+          setTimeout(() => {
+            addCards();
+            loading = false;
+          }, 350);
+        }
+      });
+    </script>
   </div>
   
   <!-- 푸터 영역------------------------------------------------ -->
