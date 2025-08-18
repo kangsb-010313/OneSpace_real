@@ -4,7 +4,6 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="perforinfo">
 
-  <!-- VO 매핑: 자바시간타입/DB타입 명시 (핸들러 이슈 예방) -->
   <resultMap id="PerforInfoMap" type="com.javaex.vo.PerforInfoVO">
     <id     column="no"        property="no"/>
     <result column="category"  property="category"/>
@@ -18,7 +17,6 @@
     <result column="username"  property="username"/>
   </resultMap>
 
-  <!-- 목록 -->
   <select id="list" resultMap="PerforInfoMap">
     select
       no, category, title, url, region, content, closedate, regdate, userno, username
@@ -26,7 +24,6 @@
     order by regdate desc, no desc
   </select>
 
-  <!-- 단건 -->
   <select id="get" parameterType="long" resultMap="PerforInfoMap">
     select
       no, category, title, url, region, content, closedate, regdate, userno, username
@@ -34,7 +31,6 @@
     where no = #{no}
   </select>
 
-  <!-- 등록: AUTO_INCREMENT + useGeneratedKeys -->
   <insert id="insert"
           parameterType="com.javaex.vo.PerforInfoVO"
           useGeneratedKeys="true" keyProperty="no">
@@ -46,8 +42,8 @@
        #{url},
        #{region},
        #{content},
-       #{closedate,jdbcType=DATE},    <!-- null 안전 -->
-       now(),                         <!-- DB에서 등록시각 -->
+       #{closedate,jdbcType=DATE},
+       now(),
        #{userno},
        #{username})
   </insert>

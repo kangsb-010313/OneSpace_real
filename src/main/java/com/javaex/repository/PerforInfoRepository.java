@@ -12,7 +12,7 @@ public class PerforInfoRepository {
     private final SqlSession sqlSession;
     private static final String NS = "perforinfo.";
 
-    // ✅ 생성자 주입
+    
     public PerforInfoRepository(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }
