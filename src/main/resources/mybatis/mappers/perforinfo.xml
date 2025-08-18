@@ -2,72 +2,48 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="perforinfo">
 
-  <resultMap id="PerforInfoMap" type="com.javaex.vo.PerforInfoVO">
-    <id     column="infoPostNo"      property="infoPostNo"/>
-    <result column="userNo"          property="userNo"/>
-    <result column="infoPostTitle"   property="infoPostTitle"/>
-    <result column="agencyName"      property="agencyName"/>
-    <result column="infoContent"     property="infoContent"/>
-    <result column="infoOutUrl"      property="infoOutUrl"/>
-    <result column="infoPostType"    property="infoPostType"/>
-    <result column="deadlineDate"    property="deadlineDate"    jdbcType="DATE"/>
-    <result column="infoArea"        property="infoArea"/>
-    <result column="perforImg"       property="perforImg"/>
-    <result column="infoWriteDate"   property="infoWriteDate"/>
-    <result column="infoUpdateDate"  property="infoUpdateDate"/>
-    <result column="infoImg"         property="infoImg"/>
-  </resultMap>
-
-  <!-- 총 건수 -->
+  <!-- 전체 개수 -->
   <select id="count" resultType="long">
-    select count(*) from `infoWrite`
+    select count(*) from infoWrite
   </select>
 
-  <!-- 페이징 목록 -->
-  <select id="list_paged" resultMap="PerforInfoMap">
-    select
-      infoPostNo, userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
+  <!-- 페이징 리스트 -->
+ <select id="list_paged" resultType="com.javaex.vo.PerforInfoVO">
+  select 
+    iw.infoPostNo, iw.userNo, iw.infoPostTitle, iw.agencyName, iw.infoContent, iw.infoOutUrl,
+    iw.infoPostType, iw.deadlineDate, iw.infoArea, iw.perforImg, 
+    iw.infoWriteDate, iw.infoUpdateDate, iw.infoImg,
+    u.userName as username
+  from infoWrite iw
+  left join users u on iw.userNo = u.userNo
+  order by iw.infoWriteDate desc, iw.infoPostNo desc
+  limit #{offset}, #{size}
+</select>
+
+<select id="get" parameterType="long" resultType="com.javaex.vo.PerforInfoVO">
+  select 
+    iw.infoPostNo, iw.userNo, iw.infoPostTitle, iw.agencyName, iw.infoContent, iw.infoOutUrl,
+    iw.infoPostType, iw.deadlineDate, iw.infoArea, iw.perforImg, 
+    iw.infoWriteDate, iw.infoUpdateDate, iw.infoImg,
+    u.userName as username
+  from infoWrite iw
+  left join users u on iw.userNo = u.userNo
+  where iw.infoPostNo = #{no}
+</select>
+
+
+  <!-- 삽입 -->
+  <insert id="insert" parameterType="com.javaex.vo.PerforInfoVO" useGeneratedKeys="true" keyProperty="infoPostNo">
+    insert into infoWrite (
+      userNo, infoPostTitle, agencyName, infoContent, infoOutUrl, 
       infoPostType, deadlineDate, infoArea, perforImg, infoWriteDate, infoUpdateDate, infoImg
-    from `infoWrite`
-    order by infoWriteDate desc, infoPostNo desc
-    limit #{offset}, #{size}
-  </select>
-
-  <!-- 단건 조회: parameterType=map 으로 받고 #{no} 사용 -->
-  <select id="get" parameterType="map" resultMap="PerforInfoMap">
-    select
-      infoPostNo, userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
-      infoPostType, deadlineDate, infoArea, perforImg, infoWriteDate, infoUpdateDate, infoImg
-    from `infoWrite`
-    where infoPostNo = #{no}
-  </select>
-
-  <!-- 글쓰기: selectKey AFTER 로 PK 회수, COALESCE로 NOT NULL 방지 -->
-  <insert id="insert"
-          parameterType="com.javaex.vo.PerforInfoVO"
-          keyProperty="infoPostNo"
-          keyColumn="infoPostNo">
-    insert into `infoWrite`
-      (userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
-       infoPostType, deadlineDate, infoArea, perforImg, infoWriteDate, infoUpdateDate, infoImg)
-    values
-      (#{userNo},
-       COALESCE(#{infoPostTitle}, ''),
-       COALESCE(#{agencyName}, ''),
-       COALESCE(#{infoContent}, ''),
-       COALESCE(#{infoOutUrl}, ''),
-       #{infoPostType},
-       #{deadlineDate,jdbcType=DATE},
-       COALESCE(#{infoArea}, ''),
-       COALESCE(#{perforImg}, ''),
-       now(),
-       now(),
-       COALESCE(#{infoImg}, ''));
-    <selectKey keyProperty="infoPostNo" resultType="long" order="AFTER">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
+    ) values (
+      #{userNo}, #{infoPostTitle}, #{agencyName}, #{infoContent}, #{infoOutUrl}, 
+      #{infoPostType}, #{deadlineDate}, #{infoArea}, #{perforImg}, now(), now(), #{infoImg}
+    )
   </insert>
 
 </mapper>

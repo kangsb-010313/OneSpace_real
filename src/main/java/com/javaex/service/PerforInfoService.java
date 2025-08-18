@@ -19,7 +19,7 @@ public class PerforInfoService {
         return repository.count();
     }
 
-    public List<PerforInfoVO> list_paged(int offset, int size) {
+    public List<PerforInfoVO> listPaged(int offset, int size) {
         return repository.listPaged(offset, size);
     }
 
@@ -28,8 +28,8 @@ public class PerforInfoService {
     }
 
     @Transactional
-    public Long add(PerforInfoVO vo) {
+    public Long insert(PerforInfoVO vo) {
         repository.insert(vo);
-        return vo.getInfoPostNo(); // selectKey로 PK 주입됨
+        return vo.getInfoPostNo(); // PK 반환
     }
 }
