@@ -23,7 +23,8 @@
       <c:import url="/WEB-INF/views/include/header.jsp" />
     </header>
     <!-- /헤더 영역----------------------------------------------- -->
-
+	
+	
     <!-- 본문 -->
     <!-- 컨텐츠 영역---------------------------------------------- -->
     <main>
@@ -35,21 +36,23 @@
               <button class="btn-list" onclick="location.href='file:///C:/javaStudy/onespace_front/views/practiceroom/practice4_list.html'">
                 찜리스트<span style="color:#ff3333;">❤</span>
               </button>
-              <div class="search-row">
-                <input class="search-hash" type="text" placeholder="#찾는 공간이 있나요?" />
-                <div class="filter-select-group">
-                  <select class="custom-select">
-                    <option>지역</option>
-                    <option>서울</option>
-                    <option>경기</option>
-                    <option>부산</option>
-                  </select>
-                  <select class="custom-select">
-                    <option>인원</option>
-                    <option>1~5명</option>
-                    <option>6~10명</option>
-                  </select>
-                </div>
+            </div>
+            <h2 class="page-title">연습실찜하기</h2>
+            <div style="width: 90%; border-bottom: 1px solid #e4e2ef; margin-left: 50px;"></div>
+            <div class="search-row">
+              <input class="search-hash" type="text" placeholder="#찾는 공간이 있나요?" />
+              <div class="filter-select-group">
+                <select class="custom-select">
+                  <option>지역</option>
+                  <option>서울</option>
+                  <option>경기</option>
+                  <option>부산</option>
+                </select>
+                <select class="custom-select">
+                  <option>인원</option>
+                  <option>1~5명</option>
+                  <option>6~10명</option>
+                </select>
               </div>
             </div>
 
@@ -69,7 +72,7 @@
                         <c:when test="${fn:startsWith(raw, '/')}">
                           <img class="card-img" src="${raw}" alt="${r.spaceName}">
                         </c:when>
-                        <%-- 3) 그 외(파일명 등)는 /assets/images/ 밑으로 가정 --%>
+                        <%-- 3) 그 외는 /assets/images/ --%>
                         <c:otherwise>
                           <img class="card-img" src="${ctx}/assets/images/${raw}" alt="${r.spaceName}">
                         </c:otherwise>
@@ -99,7 +102,8 @@
   <script>
   const ctx = '${pageContext.request.contextPath}';
   const size = 4; // ★ 스크롤마다 4장
-  let page = Math.ceil(document.querySelectorAll('#cardList .card').length / size);
+  let page = 2;
+  //let page = Math.ceil(document.querySelectorAll('#cardList .card').length / size);
   let loading = false, done = false;
 
   function resolveImg(raw) {
@@ -109,72 +113,72 @@
   }
 
   function appendCards(arr) {
-    const list = document.getElementById('cardList');
-    const placeholder = ctx + '/assets/images/placeholder.jpg';
-    arr.forEach(function(r) {
-      const src = resolveImg(r.spaceLink || '');
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML =
-        '<a href="#">' +
-          '<div class="card-img-wrap">' +
-            '<img class="card-img" src="' + src + '" alt="' + (r.spaceName || '') + '"' +
-                 ' onerror="this.src=\'' + placeholder + '\'">' +
-          '</div>' +
-          '<div class="card-content">' +
-            '<div class="card-title">' + (r.spaceName || '') + '</div>' +
-            '<div class="card-meta">' + (r.spaceSummary || '') + '</div>' +
-            '<div class="card-meta">' + (r.spaceInfo || '') + '</div>' +
-          '</div>' +
-        '</a>';
-      list.appendChild(card);
-    });
-  }
+	  const list = document.getElementById('cardList');
+	  const placeholder = ctx + '/assets/images/placeholder.jpg';
+	  
+	  arr.forEach(function(r) {
+	    const src = resolveImg(r.spaceLink || '');
+	    const card = document.createElement('div');
+	    card.className = 'card';
+	    card.innerHTML =
+	      '<a href="#">' +
+	        '<div class="card-img-wrap">' +
+	          '<img class="card-img" src="' + src + '" alt="' + (r.spaceName || '') + '"' +
+	               ' onerror="this.src=\'' + placeholder + '\'">' +
+	        '</div>' +
+	        '<div class="card-content">' +
+	          '<div class="card-title">' + (r.spaceName || '') + '</div>' +
+	          '<div class="card-meta">' + (r.spaceSummary || '') + '</div>' +
+	          '<div class="card-meta">' + (r.spaceInfo || '') + '</div>' +
+	        '</div>' +
+	      '</a>';
+	    list.appendChild(card);
+	  });
+	}
 
   async function loadMore() {
-    if (loading || done) return;
-    loading = true;
+	  if (loading || done) return;
+	  loading = true;
 
-    const url = ctx + '/onespace/api/practicerooms?page=' + page + '&size=' + size;
-    console.log('[loadMore] page=', page, 'GET', url);
+	  const url = ctx + '/onespace/api/practicerooms?page=' + page + '&size=' + size;
+	  console.log('[loadMore] page=', page, 'GET', url);
 
-    try {
-      const res = await fetch(url, { headers: { 'Accept':'application/json' } });
-      console.log('[loadMore] status=', res.status);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
-      console.log('[loadMore] data.length=', Array.isArray(data) ? data.length : 'N/A');
+	  try {
+	    const res = await fetch(url, { headers: { 'Accept':'application/json' } });
+	    if (!res.ok) throw new Error('HTTP ' + res.status);
+	    const data = await res.json();
 
-      if (!Array.isArray(data) || data.length === 0) {
-        done = true;
-        return;
-      }
+	    if (!Array.isArray(data) || data.length === 0) {
+	      done = true;
+	      return;
+	    }
 
-      appendCards(data);
+	    appendCards(data);
 
-      if (data.length < size) {
-        // 마지막 페이지
-        done = true;
-      } else {
-        page++;
-      }
-    } catch (e) {
-      console.error('[loadMore] error', e);
-      done = true;
-    } finally {
-      loading = false;
-    }
-  }
+	    if (data.length < size) {
+	      done = true; // 마지막 페이지
+	    } else {
+	      page++; // 다음 페이지 준비
+	    }
+	  } catch (e) {
+	    console.error('[loadMore] error', e);
+	    done = true;
+	  } finally {
+	    loading = false;
+	  }
+	}
 
   // 초기 1회 로드(원하면 주석 처리 가능)
   document.addEventListener('DOMContentLoaded', loadMore);
 
   // 스크롤 바닥 근접 시 추가 로드
-  window.addEventListener('scroll', function () {
-    if (loading || done) return;
-    const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 120;
-    if (nearBottom) loadMore();
+  const sentinel = document.getElementById('sentinel');
+  const observer = new IntersectionObserver(entries => {
+	if (entries[0].isIntersecting && !loading && !done) {
+	  loadMore();
+	}
   });
+  observer.observe(sentinel);
   </script>
   
   </div>

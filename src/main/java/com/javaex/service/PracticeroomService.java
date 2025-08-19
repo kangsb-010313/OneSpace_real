@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.javaex.repository.PracticeroomRepository;
-import com.javaex.vo.PracticeroomVO;
+import com.javaex.vo.RoomsVO;
+import com.javaex.vo.SpacesVO;
 
 @Service
 public class PracticeroomService {
@@ -16,11 +17,19 @@ public class PracticeroomService {
         this.practiceroomRepository = practiceroomRepository;
     }
 
-    public List<PracticeroomVO> getList() {
+    public List<SpacesVO> getList() {
         return practiceroomRepository.practiceroomSelectList();
     }
     
-    public List<PracticeroomVO> getPagedList(int offset, int size) {
+    public List<SpacesVO> getPagedList(int offset, int size) {
         return practiceroomRepository.practiceroomSelectPaged(offset, size);
+    }
+    
+    public SpacesVO getZoneDetail(Long spacesNo) {
+        return practiceroomRepository.selectZoneDetail(spacesNo);
+    }
+
+    public List<RoomsVO> getRoomsBySpace(Long spacesNo) {
+        return practiceroomRepository.selectRoomsBySpace(spacesNo);
     }
 }

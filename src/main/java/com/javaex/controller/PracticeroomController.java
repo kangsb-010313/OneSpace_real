@@ -3,6 +3,7 @@ package com.javaex.controller;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.service.PracticeroomService;
-import com.javaex.vo.PracticeroomVO;
+import com.javaex.vo.RoomsVO;
+import com.javaex.vo.SpacesVO;
 
 @Controller
 @RequestMapping("/onespace")
@@ -34,9 +36,22 @@ public class PracticeroomController {
     // 무한 스크롤용 API
     @GetMapping("/api/practicerooms")
     @ResponseBody
-    public List<PracticeroomVO> listApi(@RequestParam(defaultValue="0") int page,
+    public List<SpacesVO> listApi(@RequestParam(defaultValue="0") int page,
                                         @RequestParam(defaultValue="4") int size) { // 추가 4장씩
         int offset = page * size;
         return practiceroomService.getPagedList(offset, size);
     }
+    
+    // zone 페이지 (연습실 상세)
+    @GetMapping("/practice2_zone")
+    public String zone(@RequestParam("spacesNo") Long spacesNo, Model model) {
+        SpacesVO zoneDetail = practiceroomService.getZoneDetail(spacesNo);
+        List<RoomsVO> roomList = practiceroomService.getRoomsBySpace(spacesNo);
+
+        model.addAttribute("zone", zoneDetail);
+        model.addAttribute("rooms", roomList);
+
+        return "practiceroom/practice2_zone";
+    }
+    
 }

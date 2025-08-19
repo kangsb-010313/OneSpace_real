@@ -165,7 +165,7 @@
     }
   }
 
-  // 초기 1회 로드(원하면 주석 처리 가능)
+  // 초기 1회 로드
   document.addEventListener('DOMContentLoaded', loadMore);
 
   // 스크롤 바닥 근접 시 추가 로드

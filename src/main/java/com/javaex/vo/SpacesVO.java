@@ -2,7 +2,7 @@ package com.javaex.vo;
 
 import java.time.LocalDateTime;
 
-public class PracticeroomVO {
+public class SpacesVO {
 	
 	//필드
     private Long spacesNo;
@@ -21,10 +21,10 @@ public class PracticeroomVO {
     private LocalDateTime updtDtm;
     
     //생성자
-    public PracticeroomVO() {
+    public SpacesVO() {
     }
     
-    public PracticeroomVO(Long spacesNo, Long userNo, String spaceName, String spaceSummary, String spaceInfo,
+    public SpacesVO(Long spacesNo, Long userNo, String spaceName, String spaceSummary, String spaceInfo,
                     	String email, String phone, String tel, String spaceLink, String postCode,
                     	String address, String addressDetail, LocalDateTime instDtm, LocalDateTime updtDtm) {
         this.spacesNo = spacesNo;
