@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.service.PerforInfoService;
 import com.javaex.vo.PerforInfoVO;
@@ -28,13 +27,7 @@ public class PerforInfoController {
     @Autowired
     private PerforInfoService service;
 
-    // ---- 업로드 루트 (OS별 분기)
-    private final String uploadRoot =
-            System.getProperty("os.name").toLowerCase().contains("win")
-                    ? "C:/javaStudy/upload/"
-                    : "/data/upload/";
-
-    // ---- 세션 유틸
+    /** ----- 세션 유틸 ----- */
     private Long get_userno(HttpSession session) {
         Object v = session.getAttribute("authUserNo");
         if (v instanceof Long) return (Long) v;
@@ -47,21 +40,18 @@ public class PerforInfoController {
         return (v != null) ? String.valueOf(v) : null;
     }
 
-    // ---- 작성 폼
-    @RequestMapping(value = "/writeForm", method = {RequestMethod.GET, RequestMethod.POST})
+    /** 작성 폼 */
+    @GetMapping("/writeForm")
     public String writeForm(HttpSession session) {
-        System.out.println("PerforInfoController.writeForm()");
         if (get_userno(session) == null) {
             return "redirect:/onespace/loginForm";
         }
         return "admin/perforinfo/perforlist_write";
     }
 
-    // ---- 작성 처리 (업로드 폴더 자동 생성 + OS별 분기)
-    @RequestMapping(value = "/write", method = {RequestMethod.GET, RequestMethod.POST})
-    public String write(@ModelAttribute PerforInfoVO vo, HttpSession session) {
-        System.out.println("PerforInfoController.write()");
-
+    /** 작성 처리 (업로드 포함: DB에는 파일명만 저장) */
+    @PostMapping("/write")
+    public String write(PerforInfoVO vo, HttpSession session) {
         Long userno = get_userno(session);
         String username = get_username(session);
         if (userno == null) {
@@ -72,37 +62,20 @@ public class PerforInfoController {
         vo.setUsername(username);
         vo.setAgencyName(username);
 
-        MultipartFile file = vo.getInfoImgFile();
-        if (file != null && !file.isEmpty()) {
-            String savedName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            vo.setInfoImg(savedName); // DB에는 파일명만 저장
-
-            // 폴더 없으면 생성
-            File dir = new File(uploadRoot);
-            if (!dir.exists()) {
-                boolean mk = dir.mkdirs();
-                System.out.println("upload dir created? " + mk + " : " + dir.getAbsolutePath());
-            }
-
-            try {
-                File dest = new File(dir, savedName);
-                file.transferTo(dest);
-                System.out.println("saved file: " + dest.getAbsolutePath());
-            } catch (IOException e) {
-                System.err.println("File save failed: " + e.getMessage());
-            }
+        if (vo.getInfoImgFile() != null && !vo.getInfoImgFile().isEmpty()) {
+            String savedName = service.exeUpload(vo.getInfoImgFile());
+            if (savedName != null) vo.setInfoImg(savedName);
         }
 
         Long postNo = service.insert(vo);
         return "redirect:/onespace/perforinfo/view?no=" + postNo;
     }
 
-    // ---- 목록 보기
-    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST})
+    /** 목록 */
+    @GetMapping("/list")
     public String list(@RequestParam(defaultValue = "1") int page,
                        @RequestParam(defaultValue = "10") int size,
                        Model model, HttpSession session) {
-        System.out.println("PerforInfoController.list()");
 
         long total = service.count();
         int offset = (page - 1) * size;
@@ -118,11 +91,9 @@ public class PerforInfoController {
         return "admin/perforinfo/perforlist";
     }
 
-    // ---- 상세 보기
-    @RequestMapping(value = "/view", method = {RequestMethod.GET, RequestMethod.POST})
+    /** 상세 */
+    @GetMapping("/view")
     public String view(@RequestParam("no") long no, Model model, HttpSession session) {
-        System.out.println("PerforInfoController.view()");
-
         PerforInfoVO vo = service.get(no);
         if (vo == null) {
             return "redirect:/onespace/perforinfo/list";
@@ -138,29 +109,27 @@ public class PerforInfoController {
         return "admin/perforinfo/perforlist_view";
     }
 
-    // ---- 정적 매핑 없이 파일 서빙: /upload/{filename} 와 /onespace/perforinfo/upload/{filename} 둘 다 지원
-    @GetMapping(path = {"/upload/{filename:.+}", "/../upload/{filename:.+}", "/../../upload/{filename:.+}"})
+    /** 업로드 파일 서빙 (경로 탈출 방지 + 서비스와 동일 루트 사용) */
+    @GetMapping("/upload/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> serveFromNested(@PathVariable String filename) {
-        // 위 해킹은 안전치 않음 — 대신 아래와 같이 절대 경로 매핑을 추가:
-        return serve(filename);
-    }
-
-    @GetMapping(path = {"/onespace/perforinfo/upload/{filename:.+}", "/upload/{filename:.+}"})
-    @ResponseBody
-    public ResponseEntity<Resource> serve(@PathVariable String filename) {
-        File file = new File(uploadRoot, filename);
-        FileSystemResource resource = new FileSystemResource(file);
-
-        if (!resource.exists() || !resource.isReadable()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Resource> serve(@PathVariable String filename) throws IOException {
+        // filename에 경로 요소 금지
+        if (filename.contains("..") || filename.contains("/") || filename.contains("\\")) {
+            return ResponseEntity.badRequest().build();
         }
 
-        MediaType mediaType = MediaTypeFactory.getMediaType(filename)
-                .orElse(MediaType.APPLICATION_OCTET_STREAM);
+        File file = new File(PerforInfoService.UPLOAD_ROOT, filename).getAbsoluteFile();
+        boolean exists = file.exists() && file.canRead();
 
+        System.out.println("[IMG] request='" + filename + "'");
+        System.out.println("      path='" + file.getAbsolutePath() + "', exists=" + exists);
+
+        if (!exists) return ResponseEntity.notFound().build();
+
+        FileSystemResource resource = new FileSystemResource(file);
         return ResponseEntity.ok()
-                .contentType(mediaType)
+                .contentType(MediaTypeFactory.getMediaType(filename)
+                        .orElse(MediaType.APPLICATION_OCTET_STREAM))
                 .cacheControl(CacheControl.noCache())
                 .body(resource);
     }

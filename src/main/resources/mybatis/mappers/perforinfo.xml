@@ -2,7 +2,6 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="perforinfo">
 
   <!-- 전체 개수 -->
@@ -11,41 +10,59 @@
   </select>
 
   <!-- 페이징 리스트 -->
-  <select id="list_paged" resultType="com.javaex.vo.PerforInfoVO">
-    select 
-      iw.infoPostNo, iw.userNo, iw.infoPostTitle, iw.agencyName, iw.infoContent, iw.infoOutUrl,
-      iw.infoPostType, iw.deadlineDate, iw.infoArea, iw.perforImg as perforImgName,
-      iw.infoWriteDate, iw.infoUpdateDate, iw.infoImg,
-      u.userName as username
+  <select id="list_paged" parameterType="map" resultType="com.javaex.vo.PerforInfoVO">
+    select
+      iw.infoPostNo     as infoPostNo,
+      iw.userNo         as userNo,
+      iw.infoPostTitle  as infoPostTitle,
+      iw.agencyName     as agencyName,
+      iw.infoContent    as infoContent,
+      iw.infoOutUrl     as infoOutUrl,
+      iw.infoPostType   as infoPostType,
+      iw.deadlineDate   as deadlineDate,
+      iw.infoArea       as infoArea,
+      iw.infoImg        as infoImg,
+      iw.infoWriteDate  as infoWriteDate,
+      iw.infoUpdateDate as infoUpdateDate,
+      u.userName        as username
     from infoWrite iw
-    left join users u on iw.userNo = u.userNo
+    left join users u on u.userNo = iw.userNo
     order by iw.infoWriteDate desc, iw.infoPostNo desc
-    limit #{offset}, #{size}
+    limit #{size} offset #{offset}
   </select>
 
-  <!-- 단일 조회 -->
+  <!-- 단건 조회 -->
   <select id="get" parameterType="long" resultType="com.javaex.vo.PerforInfoVO">
-    select 
-      iw.infoPostNo, iw.userNo, iw.infoPostTitle, iw.agencyName, iw.infoContent, iw.infoOutUrl,
-      iw.infoPostType, iw.deadlineDate, iw.infoArea, iw.perforImg as perforImgName,
-      iw.infoWriteDate, iw.infoUpdateDate, iw.infoImg,
-      u.userName as username
+    select
+      iw.infoPostNo     as infoPostNo,
+      iw.userNo         as userNo,
+      iw.infoPostTitle  as infoPostTitle,
+      iw.agencyName     as agencyName,
+      iw.infoContent    as infoContent,
+      iw.infoOutUrl     as infoOutUrl,
+      iw.infoPostType   as infoPostType,
+      iw.deadlineDate   as deadlineDate,
+      iw.infoArea       as infoArea,
+      iw.infoImg        as infoImg,
+      iw.infoWriteDate  as infoWriteDate,
+      iw.infoUpdateDate as infoUpdateDate,
+      u.userName        as username
     from infoWrite iw
-    left join users u on iw.userNo = u.userNo
+    left join users u on u.userNo = iw.userNo
     where iw.infoPostNo = #{no}
   </select>
 
-  <!-- 삽입 -->
-<insert id="insert" parameterType="com.javaex.vo.PerforInfoVO" useGeneratedKeys="true" keyProperty="infoPostNo">
-  insert into infoWrite (
-    userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
-    infoPostType, deadlineDate, infoArea, infoImg, infoWriteDate, infoUpdateDate
-  ) values (
-    #{userNo}, #{infoPostTitle}, #{agencyName}, #{infoContent}, #{infoOutUrl},
-    #{infoPostType}, #{deadlineDate}, #{infoArea}, #{infoImg}, now(), now()
-  )
-</insert>
-
-
+  <!-- 등록 (auto_increment 키 반환) -->
+  <!-- KST로 고정 저장: 서버가 UTC라면 CONVERT_TZ로 서울시간 저장 -->
+  <insert id="insert" parameterType="com.javaex.vo.PerforInfoVO" useGeneratedKeys="true" keyProperty="infoPostNo">
+    insert into infoWrite
+      (userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
+       infoPostType, deadlineDate, infoArea, infoImg, infoWriteDate, infoUpdateDate)
+    values
+      (#{userNo}, #{infoPostTitle}, #{agencyName}, #{infoContent}, #{infoOutUrl},
+       #{infoPostType}, #{deadlineDate}, #{infoArea}, #{infoImg},
+       CONVERT_TZ(UTC_TIMESTAMP(),'UTC','Asia/Seoul'),
+       CONVERT_TZ(UTC_TIMESTAMP(),'UTC','Asia/Seoul'))
+  </insert>
 
 </mapper>

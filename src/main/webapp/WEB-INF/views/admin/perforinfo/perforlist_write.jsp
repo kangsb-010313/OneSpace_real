@@ -72,7 +72,7 @@
 </div>
 
 <script>
-  // 날짜 placeholder 처리 (기존)
+  // 날짜 placeholder 처리
   (function () {
     var dateInput = document.querySelector('.date-input');
     var datePh = document.querySelector('.date-ph');

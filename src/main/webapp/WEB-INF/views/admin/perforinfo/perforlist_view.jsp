@@ -38,11 +38,12 @@
       </div>
 
       <div class="infoview-main">
-        <c:if test="${not empty vo.infoImg}">
-          <div class="infoview-image">
-            <img src="${pageContext.request.contextPath}/upload/${vo.infoImg}" alt="공연 포스터">
-          </div>
-        </c:if>
+       <c:if test="${not empty vo.infoImg}">
+  <c:url var="imgUrl" value="/onespace/perforinfo/upload/${vo.infoImg}"/>
+  <div class="infoview-image">
+    <img src="${imgUrl}" alt="공연 포스터" />
+  </div>
+</c:if>
 
         <div class="infoview-right">
           <div class="infoview-details">
