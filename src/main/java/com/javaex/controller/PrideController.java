@@ -23,10 +23,10 @@ public class PrideController {
         return service.page(page, size);
     }
 
-    @GetMapping("/writeForm")
+    @GetMapping("/teampage/postWriteForm")
     public String writeForm(Model model){
         model.addAttribute("pride", new PrideVO());
-        return "pride/writeForm";
+        return "teampage/postWriteForm";
     }
 
     @PostMapping("/write")
