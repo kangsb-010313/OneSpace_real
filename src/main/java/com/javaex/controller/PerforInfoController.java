@@ -131,6 +131,6 @@ public class PerforInfoController {
                 .contentType(MediaTypeFactory.getMediaType(filename)
                         .orElse(MediaType.APPLICATION_OCTET_STREAM))
                 .cacheControl(CacheControl.noCache())
-                .body(resource);
+                .body(resource); 
     }
 }

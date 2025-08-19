@@ -29,6 +29,14 @@ public class HostRepository {
         return sqlsession.selectList(NS + "select_spaces_by_userno", p);
     }
 
+    // ★ 추가: 소유자 검증 포함 단건 조회
+    public HostVO select_space_one(Long userno, Long spacesno) {
+        Map<String,Object> p = new HashMap<>();
+        p.put("userno", userno);
+        p.put("spacesno", spacesno);
+        return sqlsession.selectOne(NS + "select_space_one", p);
+    }
+
     public int insert_space(HostVO vo) {
         return sqlsession.insert(NS + "insert_space", vo);
     }

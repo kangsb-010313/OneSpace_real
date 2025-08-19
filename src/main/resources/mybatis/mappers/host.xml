@@ -38,6 +38,16 @@
     ORDER BY s.spacesNo DESC
   </select>
 
+  <!-- ★ 소유자 검증 포함 단건 조회 -->
+  <select id="select_space_one" parameterType="map" resultType="com.javaex.vo.HostVO">
+    SELECT
+      <include refid="space_cols"/>
+    FROM spaces s
+    WHERE s.spacesNo = #{spacesno}
+      AND s.userNo   = #{userno}
+    LIMIT 1
+  </select>
+
   <!-- 신규 등록: 최소 컬럼만 INSERT -->
   <insert id="insert_space"
           parameterType="com.javaex.vo.HostVO"
