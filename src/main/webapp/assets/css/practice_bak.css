@@ -22,6 +22,7 @@ body {
     margin-bottom: 15px;
     width: 100%;
 }
+/*
 .logo {
     font-size: 35px;
     font-weight: bold;
@@ -29,6 +30,7 @@ body {
     letter-spacing: -2px;
     white-space: nowrap;
 }
+*/
 .gnb {
     display: flex;
     align-items: flex-end;
@@ -389,11 +391,16 @@ body {
     margin-left: 30px;
     margin-top: -8px;
 }
+
 html, body {
-  height: 100%;
-  margin: 0;
+  /*height: 100%;*/
+  /*margin: 0;*/
   /*padding: 0;*/
+  height: auto; overflow-y: auto;
 }
+
+.main-section, .content-area { overflow: visible; }
+
 .main-section {
   flex: 1 0 auto;
 }
@@ -1112,12 +1119,17 @@ footer {
   padding: 10px 0;
   height: 36px;
 }
+
+/*
 .wrap header .nav {
   margin-left: -30px;
 }
+
 .wrap header .logo {
     transform: translateX(-30px);
 }
+*/
+
 .page-practice4 .filter-bar > .btn-list,
 .page-practice4 .filter-bar > .btn-list:hover {
   background: #5f3ccc;
@@ -1129,4 +1141,26 @@ footer {
 body, main {
   font-size: 16px;
 }
+
+/* ===== [헤더 보호 - 기본 헤더와 100% 일치] ===== */
+header .logo { 
+  transform: none !important;
+  margin-left: 0 !important;
+  margin-right: 30px !important;
+}
+header .nav {
+  margin-left: 0 !important;
+}
+
+/* 혹시 practice.css 어딘가에 전역 .logo 규칙이 있다면, 헤더에선 무시되도록 */
+header .logo,
+header .logo a {
+  font-size: 40px !important;        /* basicdefault.css 값 */
+  color: #704CE4 !important;
+  font-weight: bold !important;
+  letter-spacing: -1px !important;
+}
+
+
+
 

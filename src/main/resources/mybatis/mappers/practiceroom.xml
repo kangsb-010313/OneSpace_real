@@ -21,6 +21,7 @@
             ,addressDetail
             ,instDtm
             ,updtDtm
+            ,roomInfo
 		FROM spaces
 		ORDER BY spacesNo
 	    ]]>

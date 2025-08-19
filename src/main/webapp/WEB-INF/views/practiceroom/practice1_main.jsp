@@ -10,12 +10,13 @@
   <!-- 주석 단축키 Ctrl+K, Ctrl+U 두 키 연속으로 눌러야 주석 처리되고 주석 제거 됨 -->
   <c:set var="ctx" value="${pageContext.request.contextPath}" />
   <link rel="stylesheet" href="${ctx}/assets/css/reset.css">
+  <link rel="stylesheet" href="${ctx}/assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${ctx}/assets/css/main.css">
   <link rel="stylesheet" href="${ctx}/assets/css/practice.css">
   <link rel="stylesheet" href="${ctx}/assets/css/asidedefault.css">
-  <link rel="stylesheet" href="${ctx}/assets/css/basicdefault.css">
 </head>
 <body>
-  <div class="wrap">
+  <div id="wrap" class="wrap page-practice">
     
     <!-- 헤더 영역------------------------------------------------ -->
     <header>
@@ -76,8 +77,8 @@
                     </div>
                     <div class="card-content">
                       <div class="card-title">${r.spaceName}</div>
-                      <div class="card-price"><!-- 가격 정보 없으면 요약으로 대체 --></div>
                       <div class="card-meta">${r.spaceSummary}</div>
+                      <div class="card-meta">${r.spaceInfo}</div>
                     </div>
                   </a>
                 </div>
@@ -123,6 +124,7 @@
           '<div class="card-content">' +
             '<div class="card-title">' + (r.spaceName || '') + '</div>' +
             '<div class="card-meta">' + (r.spaceSummary || '') + '</div>' +
+            '<div class="card-meta">' + (r.spaceInfo || '') + '</div>' +
           '</div>' +
         '</a>';
       list.appendChild(card);
