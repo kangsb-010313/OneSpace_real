@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaex.repository.PrideRepository">
+
+  <!-- 게시글 목록 -->
+  <select id="selectPage" resultType="com.javaex.vo.PrideVO">
+    SELECT id, title, tags_csv, tags, instagram_handle, content
+    FROM pride
+    ORDER BY id DESC
+    LIMIT #{size} OFFSET #{offset}
+  </select>
+
+  <!-- 전체 글 수 (long 반환) -->
+  <select id="countAll" resultType="long">
+    SELECT COUNT(*) FROM pride
+  </select>
+
+  <!-- 게시글 상세 -->
+  <select id="selectOne" resultType="com.javaex.vo.PrideVO">
+    SELECT id, title, tags_csv, tags, instagram_handle, content
+    FROM pride
+    WHERE id = #{id}
+  </select>
+
+  <!-- 게시글 등록 -->
+  <insert id="insert" parameterType="com.javaex.vo.PrideVO" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO pride (title, tags_csv, tags, instagram_handle, content)
+    VALUES (#{title}, #{tagsCsv}, #{tags}, #{instagramHandle}, #{content})
+  </insert>
+
+</mapper>
