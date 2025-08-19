@@ -86,16 +86,38 @@
                                         <%-- <input type="text" name="instagramAccount" placeholder="인스타 계정 입력"> --%>
                                     </div>
                                 </c:if>
+                                
+                                <%-- ▼▼▼▼▼ 글 종류가 '투표'일 때만 이 부분이 보이도록 수정 ▼▼▼▼▼ --%>
+<%-- 								<c:if test="${param.teamPostType == '투표'}">
+								    <div class="form-group vote-list-group">
+								        <label>투표 목록</label>
+								
+								        컨트롤러에서 받은 찜 목록(voteOptions)을 반복문으로 출력
+								        <div class="wishlist-container">
+								            <c:choose>
+								                <c:when test="${not empty voteOptions}">
+								                    <ul>
+								                        <c:forEach items="${voteOptions}" var="option">
+								                            <li>
+								                                <strong>[${option.spaceName}]</strong> ${option.roomName} 
+								                                (${option.address})
+								                            </li>
+								                        </c:forEach>
+								                    </ul>
+								                </c:when>
+								                <c:otherwise>
+								                    <p>찜한 연습실이 없습니다. 먼저 연습실을 찜해주세요.</p>
+								                </c:otherwise>
+								            </c:choose>
+								        </div>
+								    </div>
+								</c:if> --%>
 
 
-                                <c:if test="${param.teamPostType == '투표'}">
+                                 <c:if test="${param.teamPostType == '투표'}">
                                     <div class="form-group vote-list-group">
                                         <label>투표목록</label>
                                         <ol class="vote-items-container">
-                                            <%-- 
-                                                투표 항목은 DB에서 가져오거나, 투표 생성 폼에서 추가하는 로직이 필요합니다.
-                                                현재는 하드코딩된 예시입니다.
-                                            --%>
                                             <li>
                                                 <a href="#" class="vote-item-card">
                                                     <img src="${pageContext.request.contextPath}/assets/images/연습실사진01.jpg" alt="네스트 연습실">
@@ -118,7 +140,7 @@
                                                     </div>
                                                 </a>
                                             </li>
-                                            <%-- ... 나머지 투표 카드들 ... --%>
+                                            <!-- ... 나머지 투표 카드들 ... -->
                                             <li>
                                                 <a href="#" class="vote-item-card">
                                                     <img src="${pageContext.request.contextPath}/assets/images/연습실사진02.jpg" alt="네스트 연습실">
@@ -165,7 +187,7 @@
                                             </li>
                                         </ol>
                                     </div>
-                                </c:if>
+                                </c:if> 
                                 <%-- ▲▲▲▲▲ 여기까지 ▼▼▼▼▼ --%>
 
                                 <!-- 글 내용 및 파일 첨부 영역 (공통) -->

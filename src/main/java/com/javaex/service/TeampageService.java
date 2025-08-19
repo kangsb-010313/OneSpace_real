@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.javaex.repository.TeampageRepository;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
+import com.javaex.vo.TeamVoteOptionVO;
 
 @Service
 public class TeampageService {
@@ -107,6 +108,11 @@ public class TeampageService {
         }
     }
 
-	
+	 // 사용자의 찜 목록을 투표 후보로 가져오기
+	    public List<TeamVoteOptionVO> exeGetWishlistForVote(int userNo) {
+	        System.out.println("TeampageService.exeGetWishlistForVote()");
+	        return teampageRepository.selectWishlistForVote(userNo);
+	    }
+
 	
 }

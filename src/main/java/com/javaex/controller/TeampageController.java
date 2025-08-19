@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.javaex.service.TeampageService;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
+import com.javaex.vo.TeamVoteOptionVO;
 import com.javaex.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -111,6 +112,14 @@ public class TeampageController {
 		}
 		
 	    int userNo = authUser.getUserNo(); // userNo 가져오기
+	    
+	    // 글쓰기 종류가 '투표'일 경우에만
+	    if ("투표".equals(teamPostType)) {
+	        // exeGetVoteOptions 대신 exeGetWishlistForVote 호출
+	        List<TeamVoteOptionVO> voteOptions = teampageService.exeGetWishlistForVote(userNo); 
+	        model.addAttribute("voteOptions", voteOptions);
+	        System.out.println("불러온 찜 목록: " + voteOptions);
+	    }
 		
 		model.addAttribute("authUser", authUser);
 		model.addAttribute("teamPostType", teamPostType); // 글 종류 JSP 전달용

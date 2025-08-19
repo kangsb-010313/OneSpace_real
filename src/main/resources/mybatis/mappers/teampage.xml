@@ -135,7 +135,31 @@
         ]]>
     </delete>
     
-    
+	<!-- 투표 만들기를 위해 사용자의 '찜 목록'에 있는 연습실 정보 가져오기 -->
+	<select id="selectWishlistForVote" parameterType="int" resultType="com.javaex.vo.TeamVoteOptionVO">
+	    <![CDATA[
+	        SELECT
+	            s.spacesNo,
+	            s.spaceName,
+	            s.address,
+	            r.roomNo,
+	            r.roomName,
+	            r.area,
+	            r.capacity
+	        FROM
+	            studioWishlist w  -- 찜 목록 테이블에서 시작
+	        JOIN
+	            rooms r ON w.roomNo = r.roomNo
+	        JOIN
+	            spaces s ON r.spacesNo = s.spacesNo
+	        WHERE
+	            w.userNo = #{userNo} -- 로그인한 사용자의 찜 목록만 조회
+	        ORDER BY
+	            w.studioWishlistNo DESC -- 가장 최근에 찜한 순서대로
+	    ]]>
+	</select>
+
+
     
     
     

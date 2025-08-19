@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
+import com.javaex.vo.TeamVoteOptionVO;
 
 @Repository
 public class TeampageRepository {
@@ -89,17 +90,32 @@ public class TeampageRepository {
     // -- 팀페이지 등록글 수정 처리
     public int teampageUpdate(TeamPostVO teamPostVO) {
         System.out.println("TeampageRepository.teampageUpdate()");
+        
         int count = sqlSession.update("teampage.update", teamPostVO);
+        
         return count;
     }
     
     // -- 팀페이지 등록글 삭제
     public int teampageDelete(int teamPostNo) {
         System.out.println("TeampageRepository.teampageDelete()");
+        
         int count = sqlSession.delete("teampage.delete", teamPostNo);
+        
         return count;
     }
-
     
+
+
+	 // 사용자의 찜 목록을 투표 후보로 가져오기
+	 public List<TeamVoteOptionVO> selectWishlistForVote(int userNo) {
+	     System.out.println("TeampageRepository.selectWishlistForVote()");
+	     // 호출하는 SQL 아이디를 새로운 쿼리 아이디로 변경
+	     return sqlSession.selectList("teampage.selectWishlistForVote", userNo);
+	 }
+
+
+
+
 	
 }
