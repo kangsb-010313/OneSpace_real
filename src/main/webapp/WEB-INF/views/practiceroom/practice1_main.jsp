@@ -60,7 +60,7 @@
             <div class="card-list" id="cardList">
               <c:forEach var="r" items="${rooms}">
                 <div class="card">
-                  <a href="#">
+                  <a href="${pageContext.request.contextPath}/onespace/practice2_zone?spacesNo=${r.spacesNo}">
                     <div class="card-img-wrap">
                       <c:set var="raw" value="${r.spaceLink}" />
                       <c:choose>
@@ -79,7 +79,9 @@
                       </c:choose>
                     </div>
                     <div class="card-content">
+                      <a href="${pageContext.request.contextPath}/onespace/practice2_zone?spacesNo=${r.spacesNo}">
                       <div class="card-title">${r.spaceName}</div>
+                      </a>
                       <div class="card-meta">${r.spaceSummary}</div>
                       <div class="card-meta">${r.spaceInfo}</div>
                     </div>
