@@ -245,13 +245,13 @@
     padding: 20px 0;
 }
 
-#btn-share {
+.post-actions .btn-action.btn-share {
     background-color: #fff;
     border: 1px solid #704CE4;
     color: #704CE4;
 }
 
-#btn-share:hover{
+.post-actions .btn-action.btn-share:hover{
     background-color: #704CE4;
     color: #fff;
 }
