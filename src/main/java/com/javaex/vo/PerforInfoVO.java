@@ -13,16 +13,15 @@ public class PerforInfoVO {
     private String infoPostType;
     private String deadlineDate;
     private String infoArea;
-    private String perforImgName; // 🔥 DB에 저장될 파일명
+
+    private String infoImg;                // DB 저장용 파일명
+    private MultipartFile infoImgFile;     // 업로드 받은 파일
+
     private String infoWriteDate;
     private String infoUpdateDate;
-    private String infoImg;
     private String username;
 
-    private MultipartFile perforImg; // 🔥 파일 업로드 받을 용도
-
-    // === getter/setter ===
-
+    // Getter/Setter
     public long getInfoPostNo() { return infoPostNo; }
     public void setInfoPostNo(long infoPostNo) { this.infoPostNo = infoPostNo; }
 
@@ -50,8 +49,11 @@ public class PerforInfoVO {
     public String getInfoArea() { return infoArea; }
     public void setInfoArea(String infoArea) { this.infoArea = infoArea; }
 
-    public String getPerforImgName() { return perforImgName; }
-    public void setPerforImgName(String perforImgName) { this.perforImgName = perforImgName; }
+    public String getInfoImg() { return infoImg; }
+    public void setInfoImg(String infoImg) { this.infoImg = infoImg; }
+
+    public MultipartFile getInfoImgFile() { return infoImgFile; }
+    public void setInfoImgFile(MultipartFile infoImgFile) { this.infoImgFile = infoImgFile; }
 
     public String getInfoWriteDate() { return infoWriteDate; }
     public void setInfoWriteDate(String infoWriteDate) { this.infoWriteDate = infoWriteDate; }
@@ -59,32 +61,6 @@ public class PerforInfoVO {
     public String getInfoUpdateDate() { return infoUpdateDate; }
     public void setInfoUpdateDate(String infoUpdateDate) { this.infoUpdateDate = infoUpdateDate; }
 
-    public String getInfoImg() { return infoImg; }
-    public void setInfoImg(String infoImg) { this.infoImg = infoImg; }
-
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
-
-    public MultipartFile getPerforImg() { return perforImg; }
-    public void setPerforImg(MultipartFile perforImg) { this.perforImg = perforImg; }
-
-    @Override
-    public String toString() {
-        return "PerforInfoVO{" +
-                "infoPostNo=" + infoPostNo +
-                ", userNo=" + userNo +
-                ", infoPostTitle='" + infoPostTitle + '\'' +
-                ", agencyName='" + agencyName + '\'' +
-                ", infoContent='" + infoContent + '\'' +
-                ", infoOutUrl='" + infoOutUrl + '\'' +
-                ", infoPostType='" + infoPostType + '\'' +
-                ", deadlineDate='" + deadlineDate + '\'' +
-                ", infoArea='" + infoArea + '\'' +
-                ", perforImgName='" + perforImgName + '\'' +
-                ", infoWriteDate='" + infoWriteDate + '\'' +
-                ", infoUpdateDate='" + infoUpdateDate + '\'' +
-                ", infoImg='" + infoImg + '\'' +
-                ", username='" + username + '\'' +
-                '}';
-    }
 }

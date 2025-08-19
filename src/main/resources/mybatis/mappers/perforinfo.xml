@@ -36,14 +36,16 @@
   </select>
 
   <!-- 삽입 -->
-  <insert id="insert" parameterType="com.javaex.vo.PerforInfoVO" useGeneratedKeys="true" keyProperty="infoPostNo">
-    insert into infoWrite (
-      userNo, infoPostTitle, agencyName, infoContent, infoOutUrl, 
-      infoPostType, deadlineDate, infoArea, perforImg, infoWriteDate, infoUpdateDate, infoImg
-    ) values (
-      #{userNo}, #{infoPostTitle}, #{agencyName}, #{infoContent}, #{infoOutUrl}, 
-      #{infoPostType}, #{deadlineDate}, #{infoArea}, #{perforImgName}, now(), now(), #{infoImg}
-    )
-  </insert>
+<insert id="insert" parameterType="com.javaex.vo.PerforInfoVO" useGeneratedKeys="true" keyProperty="infoPostNo">
+  insert into infoWrite (
+    userNo, infoPostTitle, agencyName, infoContent, infoOutUrl,
+    infoPostType, deadlineDate, infoArea, infoImg, infoWriteDate, infoUpdateDate
+  ) values (
+    #{userNo}, #{infoPostTitle}, #{agencyName}, #{infoContent}, #{infoOutUrl},
+    #{infoPostType}, #{deadlineDate}, #{infoArea}, #{infoImg}, now(), now()
+  )
+</insert>
+
+
 
 </mapper>
