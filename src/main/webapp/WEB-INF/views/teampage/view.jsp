@@ -205,14 +205,14 @@
                                     <%-- 버튼 종류에 따른 분기 (예시) --%>
                                     <c:choose>
                                         <c:when test="${post.teamPostType == '일반공지'}">
-                                            <button type="submit" class="btn-action btn-share">공유하기</button>
+                                            <button type="button" id="kakao-share-btn" class="btn-action btn-share">공유하기</button>
                                             <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-action">목록</a>
                                         </c:when>
                                         <c:when test="${post.teamPostType == '팀자랑'}">
                                             <a href="#" id="btn-pride" class="btn-action">팀자랑 가서보기</a>
                                         </c:when>
                                         <c:when test="${post.teamPostType == '투표'}">
-                                            <button type="submit" id="btn-share" class="btn-action">공유하기</button>
+                                            <button type="button" id="kakao-share-btn" class="btn-action btn-share">공유하기</button>
                                                 <c:if test="${sessionScope.authUser.userNo == post.userNo}">
 											        <a href="#" class="btn-action">바로 예약하기</a>
 											    </c:if>
@@ -239,5 +239,61 @@
 		<c:import url="/WEB-INF/views/include/footer.jsp" />
         <!-- /푸터 영역------------------------------------------------ -->
         </div>
+        
+    <!-- ▼▼▼▼▼ 카카오 공유 기능 스크립트 추가 ▼▼▼▼▼ -->
+    <!-- 1. 카카오 SDK 불러오기 -->
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.1/kakao.min.js"
+            integrity="sha384-kDljxUXHaJ9xAb2AzRd59KxjrFjzHa5TAoFQ6GbYTCAG0bjM55XohjjDT7tDDC01" 
+            crossorigin="anonymous"></script>
+
+    <!-- 2. 카카오 SDK 초기화 및 공유 기능 구현 -->
+    <script>
+        try {
+            Kakao.init('2ea5d5cfa151794faf308425365c73cd');
+            console.log("Kakao SDK Initialized:", Kakao.isInitialized());
+        } catch(e) {
+            console.error("Kakao SDK 초기화 실패:", e);
+        }
+        
+        // id로 공유하기 버튼을 찾습니다.
+        const shareButton = document.getElementById('kakao-share-btn');
+        
+        // 공유하기 버튼이 페이지에 있을 때만 클릭 이벤트를 추가합니다.
+        if (shareButton) {
+            shareButton.addEventListener('click', function() {
+                // 현재 페이지의 URL을 가져옵니다.
+                const postUrl = window.location.href;
+
+                // Kakao.Share.sendDefault() 함수로 공유 메시지를 보냅니다.
+                Kakao.Share.sendDefault({
+                    objectType: 'feed',
+                    content: {
+                        // JSTL 변수를 사용해 게시글 제목을 동적으로 설정합니다.
+                        title: "[${post.teamName}] ${post.teamPostTitle}",
+                        
+                        // JSTL 변수를 사용해 게시글 내용을 설정합니다.
+                        description: "${post.teamContent}",
+
+                        link: {
+                            mobileWebUrl: postUrl,
+                            webUrl: postUrl,
+                        },
+                    },
+                    buttons: [
+                        {
+                            title: '게시글 보러가기',
+                            link: {
+                                mobileWebUrl: postUrl,
+                                webUrl: postUrl,
+                            },
+                        },
+                    ],
+                });
+            });
+        }
+    </script>
+        
+        
+        
     </body>
 </html>
