@@ -10,5 +10,5 @@
             <a href="${pageContext.request.contextPath}/onespace/teams/${team.teamNo}/posts/list" class="btn-outline3 teamlist-btn">팀 ${team.teamName}</a>
         </c:forEach>
     </div>
-    <a href="#" class="btn-outline2 teamadd-btn">팀 등록하기</a>
+    <a href="${pageContext.request.contextPath}/onespace/teamaddform" class="btn-outline2 teamadd-btn">팀 등록하기</a>
 </div>

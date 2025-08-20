@@ -6,6 +6,44 @@
 
 <!-- 쿼리문 작성 -->
 
+	<!-- 팀 생성 (TEAMS 테이블) - <selectKey> 없는 순수 INSERT 구문 -->
+    <insert id="insertTeam" parameterType="com.javaex.vo.TeamVO">
+        insert into teams (
+            teamName, 
+            instaAccount, 
+            teamCreatedDate,
+            userNo        
+        )
+        values (
+            #{teamName}, 
+            #{instaAccount}, 
+            now(),
+            #{userNo}     
+        )
+    </insert>
+
+    <!-- 특정 사용자가 가장 마지막에 만든 팀의 ID(teamNo)를 조회하는 쿼리 -->
+    <select id="selectNewTeamNo" parameterType="int" resultType="int">
+        select max(teamNo)
+        from teams
+        where userNo = #{userNo}
+    </select>
+    
+    <!-- 팀원 등록 (TEAM_MEMBERS 테이블) - 이 쿼리는 그대로 유지 -->
+    <insert id="insertTeamMember" parameterType="map">
+        insert into teamMembers (
+            teamNo, 
+            userNo, 
+            joinedDate
+        )
+        values (
+            #{teamNo}, 
+            #{userNo}, 
+            now()
+        )
+    </insert>
+    
+
     <!-- 유저 번호로 소속된 팀 목록 조회 (teammain aside용) -->
     <!-- team_members 테이블은 user와 team의 관계를 정의하는 테이블로 가정합니다. -->
 	<select id="selectTeamsByUserNo" parameterType="int" resultType="com.javaex.vo.TeamVO">

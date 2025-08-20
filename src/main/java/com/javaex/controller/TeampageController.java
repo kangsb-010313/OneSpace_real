@@ -32,6 +32,7 @@ public class TeampageController {
 	//메소드 gs
 	
 	//메소드 일반
+	
     // --팀페이지 메인 (팀 선택 전, 모든 팀의 게시글 리스트)
     @RequestMapping(value="/teammain", method= {RequestMethod.GET, RequestMethod.POST})
     public String teamMain(HttpSession session, Model model) {
@@ -58,6 +59,46 @@ public class TeampageController {
         return "teampage/teammain";
     }
     
+	
+	// -- 팀페이지 팀 등록 폼
+	@RequestMapping(value="/teamaddform", method= {RequestMethod.GET, RequestMethod.POST})
+	public String teamAddForm(HttpSession session, Model model) {
+		System.out.println("TeampageController.teamAddForm()");
+		
+	    // aside에 팀 목록을 표시하기 위해 현재 로그인한 유저의 팀 리스트를 전달합니다.
+	    UserVO authUser = (UserVO)session.getAttribute("authUser");
+	    if(authUser == null) {
+	        return "redirect:/onespace/loginForm";
+	    }
+	    
+	    int userNo = authUser.getUserNo();
+	    List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
+	    model.addAttribute("allTeams", userTeamList);
+		
+		return "teampage/teamadd";
+	}
+	
+	
+	//팀페이지 팀 등록
+	@RequestMapping(value="/teamadd", method= {RequestMethod.GET, RequestMethod.POST})
+	public String teamAdd(TeamVO teamVO, HttpSession session) { // 폼 데이터를 TeamVO로 바로 받습니다.
+	    System.out.println("TeampageController.teamAdd()");
+	    
+	    // 로그인한 사용자 정보를 가져옵니다.
+	    UserVO authUser = (UserVO)session.getAttribute("authUser");
+	    if(authUser == null) {
+	        return "redirect:/onespace/loginForm"; // 로그인 안했으면 로그인폼으로
+	    }
+	    
+	    int userNo = authUser.getUserNo();
+	    
+	    // 서비스에 팀 생성 로직을 위임합니다.
+	    // 팀 생성 + 생성자를 팀원으로 등록하는 작업이 한번에 이루어집니다.
+	    int newTeamNo = teampageService.exeAddTeam(teamVO, userNo);
+	    
+	    // 팀 생성이 완료되면, 방금 만든 팀의 게시글 리스트 페이지로 이동합니다.
+	    return "redirect:/onespace/teams/" + newTeamNo + "/posts/list";
+	}
     
 	
     // --팀페이지 전체 리스트 (특정 팀의 리스트)

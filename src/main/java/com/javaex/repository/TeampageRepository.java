@@ -1,6 +1,8 @@
 package com.javaex.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,32 @@ public class TeampageRepository {
 	
 	
 	//메소드 일반
+	
+	//-- 팀페이지 팀 등록
+    // teams 테이블에 팀 정보 추가
+    public void insertTeam(TeamVO teamVO) {
+        System.out.println("TeampageRepository.insertTeam()");
+        // XML의 insertTeam 쿼리를 호출합니다. teamVO에는 userNo도 들어있습니다.
+        sqlSession.insert("teampage.insertTeam", teamVO);
+    }
+    
+    // 특정 사용자가 가장 최근에 만든 팀의 번호를 조회
+    public int selectNewTeamNo(int userNo) {
+        System.out.println("TeampageRepository.selectNewTeamNo()");
+        int teamNo = sqlSession.selectOne("teampage.selectNewTeamNo", userNo);
+        return teamNo;
+    }
+    
+    // team_members 테이블에 팀원 정보 추가
+    public void insertTeamMember(int teamNo, int userNo) {
+        System.out.println("TeampageRepository.insertTeamMember()");
+        Map<String, Integer> params = new HashMap<>();
+        params.put("teamNo", teamNo);
+        params.put("userNo", userNo);
+        sqlSession.insert("teampage.insertTeamMember", params);
+    }
+    
+	
     // -- 유저 번호로 해당 유저가 속한 팀 목록 조회
     public List<TeamVO> selectTeamsByUserNo(int userNo) {
         System.out.println("TeampageRepository.selectTeamsByUserNo()");

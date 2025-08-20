@@ -25,6 +25,30 @@ public class TeampageService {
 	
 	
 	//메소드일반
+	
+	//-- 팀페이지 팀 등록 (가장 기본 방식)
+	public int exeAddTeam(TeamVO teamVO, int userNo) {
+		System.out.println("TeampageService.exeAddTeam()");
+		
+		// 1. 팀을 만들기 전, 누가 만드는지 userNo를 teamVO에 설정
+		teamVO.setUserNo(userNo);
+		
+		// 2. Repository를 호출하여 teams 테이블에 팀 정보 INSERT
+		teampageRepository.insertTeam(teamVO);
+		
+		// 3. 방금 내가(userNo) 만든 팀의 teamNo를 다시 DB에서 SELECT로 가져오기
+		int newTeamNo = teampageRepository.selectNewTeamNo(userNo);
+		
+		// 4. 가져온 teamNo와 userNo를 이용해 team_members 테이블에 팀원 정보 INSERT
+		teampageRepository.insertTeamMember(newTeamNo, userNo);
+		
+		// 5. Controller에게 새로 생성된 teamNo를 반환
+		return newTeamNo;
+	}
+	
+	
+	
+	
     // -- 로그인 유저가 속한 팀 리스트 가져오기 (for teammain aside)
     public List<TeamVO> exeGetUserTeams(int userNo) {
         System.out.println("TeampageService.exeGetUserTeams()");
