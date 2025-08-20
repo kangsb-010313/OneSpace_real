@@ -209,52 +209,28 @@
 								            <c:choose>
 								                <%-- 1-1: '팀자랑' 글일 때 --%>
 								                <c:when test="${post.teamPostType == '팀자랑'}">
-								                    <button type="button" class="btn-primary">팀자랑 가서보기</button>
-								                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-outline">목록</a>
+								                    <button type="button" class="btn-action" id="btn-pride">팀자랑 가서보기</button>
+								                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-action">목록</a>
 								                </c:when>
 								                
 								                <%-- 1-2: '투표' 글일 때 --%>
 								                <c:when test="${post.teamPostType == '투표'}">
-								                    <button type="button" class="btn-outline" id="kakao-share-btn">공유하기</button>
-								                    <button type="button" class="btn-primary">바로 예약하기</button>
+								                    <button type="button" class="btn-action btn-share" id="kakao-share-btn">공유하기</button>
+								                    <button type="button" class="btn-action">바로 예약하기</button>
 								                </c:when>
 								
 								                <%-- 1-3: '일반 공지' 또는 그 외 모든 글일 때 --%>
 								                <c:otherwise>
-								                    <button type="button" class="btn-outline" id="kakao-share-btn">공유하기</button>
-								                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-primary">목록</a>
+								                    <button type="button" class="btn-action btn-share" id="kakao-share-btn">공유하기</button>
+								                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-action">목록</a>
 								                </c:otherwise>
 								            </c:choose>
 								        </c:when>
 								
 								        <%-- Case 2: 팀 멤버가 아닌 경우 --%>
+								        <%-- 학생분 말씀대로, 이 경우는 '팀원 가입 신청' 버튼 하나만 있으면 됩니다. --%>
 								        <c:otherwise>
-								            <c:choose>
-								                <%-- 2-1: '환영 게시글'을 보고 있을 때 --%>
-								                <c:when test="${isWelcomePost}">
-								                    <button type="button" class="btn-primary" id="joinButton">팀원 가입 신청</button>
-								                </c:when>
-								                
-								                <%-- 2-2: 환영 게시글이 아닌 다른 글을 보고 있을 때 --%>
-								                <c:otherwise>
-								                    <c:choose>
-								                        <%-- '팀자랑' 글일 때 --%>
-								                        <c:when test="${post.teamPostType == '팀자랑'}">
-								                            <button type="button" class="btn-primary">팀자랑 가서보기</button>
-								                            <a href="${pageContext.request.contextPath}/onespace/teammain" class="btn-outline">다른 팀 보기</a>
-								                        </c:when>
-								                        <%-- '투표' 글일 때 (예약하기 버튼 없음) --%>
-								                        <c:when test="${post.teamPostType == '투표'}">
-								                            <button type="button" class="btn-outline" id="kakao-share-btn">공유하기</button>
-								                            <a href="${pageContext.request.contextPath}/onespace/teammain" class="btn-outline">다른 팀 보기</a>
-								                        </c:when>
-								                         <%-- '일반 공지' 글일 때 (목록 버튼과 유사한 디자인) --%>
-								                        <c:otherwise>
-								                            <a href="${pageContext.request.contextPath}/onespace/teammain" class="btn-outline">다른 팀 보기</a>
-								                        </c:otherwise>
-								                    </c:choose>
-								                </c:otherwise>
-								            </c:choose>
+								            <button type="button" class="btn-action" id="joinButton">팀원 가입 신청</button>
 								        </c:otherwise>
 								    </c:choose>
 
@@ -279,58 +255,70 @@
         <!-- /푸터 영역------------------------------------------------ -->
         </div>
         
+        
+        
     <!-- ▼▼▼▼▼ 카카오 공유 기능 스크립트 추가 ▼▼▼▼▼ -->
     <!-- 1. 카카오 SDK 불러오기 -->
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.1/kakao.min.js"
             integrity="sha384-kDljxUXHaJ9xAb2AzRd59KxjrFjzHa5TAoFQ6GbYTCAG0bjM55XohjjDT7tDDC01" 
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous">
+    </script>
 
     <!-- 2. 카카오 SDK 초기화 및 공유 기능 구현 -->
-    <script>
-        try {
-            Kakao.init('2ea5d5cfa151794faf308425365c73cd');
-            console.log("Kakao SDK Initialized:", Kakao.isInitialized());
-        } catch(e) {
-            console.error("Kakao SDK 초기화 실패:", e);
-        }
-        
-        // id로 공유하기 버튼을 찾습니다.
-        const shareButton = document.getElementById('kakao-share-btn');
-        
-        // 공유하기 버튼이 페이지에 있을 때만 클릭 이벤트를 추가합니다.
-        if (shareButton) {
-            shareButton.addEventListener('click', function() {
-                // 현재 페이지의 URL을 가져옵니다.
-                const postUrl = window.location.href;
-
-                // Kakao.Share.sendDefault() 함수로 공유 메시지를 보냅니다.
-                Kakao.Share.sendDefault({
-                    objectType: 'feed',
-                    content: {
-                        // JSTL 변수를 사용해 게시글 제목을 동적으로 설정합니다.
-                        title: "[${post.teamName}] ${post.teamPostTitle}",
-                        
-                        // JSTL 변수를 사용해 게시글 내용을 설정합니다.
-                        description: "${post.teamContent}",
-
-                        link: {
-                            mobileWebUrl: postUrl,
-                            webUrl: postUrl,
-                        },
-                    },
-                    buttons: [
-                        {
-                            title: '게시글 보러가기',
-                            link: {
-                                mobileWebUrl: postUrl,
-                                webUrl: postUrl,
-                            },
-                        },
-                    ],
-                });
-            });
-        }
-    </script>
+	<!-- 2. 모든 버튼 기능을 이 하나의 script 태그 안에서 관리합니다. -->
+	<script>
+	    // 페이지의 모든 HTML 요소가 완전히 로드된 후에 이 안의 코드가 실행되도록 보장합니다.
+	    document.addEventListener('DOMContentLoaded', function() {
+	    
+	        // 기능 (1): 카카오 SDK 초기화
+	        try {
+	            // 여기에 본인의 카카오 자바스크립트 키를 넣습니다.
+	            Kakao.init('2ea5d5cfa151794faf308425365c73cd');
+	            console.log("Kakao SDK가 성공적으로 초기화되었습니다.");
+	        } catch(e) {
+	            console.error("Kakao SDK 초기화 중 오류가 발생했습니다:", e);
+	        }
+	        
+	        // 기능 (2): 카카오 공유하기 버튼
+	        // id가 'kakao-share-btn'인 버튼을 찾아서 기능을 연결합니다.
+	        const kakaoShareButton = document.getElementById('kakao-share-btn');
+	        if (kakaoShareButton) {
+	            kakaoShareButton.addEventListener('click', function() {
+	                const postUrl = window.location.href; // 현재 페이지 주소
+	
+	                Kakao.Share.sendDefault({
+	                    objectType: 'feed',
+	                    content: {
+	                        title: `[${post.teamName}] ${post.teamPostTitle}`,
+	                        description: "${post.teamContent}", // EL 표현식은 따옴표 안에 있어도 잘 작동합니다.
+	                        imageUrl: "", // 여기에 대표 이미지가 있다면 URL을 넣어주세요.
+	                        link: { mobileWebUrl: postUrl, webUrl: postUrl },
+	                    },
+	                    buttons: [
+	                        {
+	                            title: '게시글 보러가기',
+	                            link: { mobileWebUrl: postUrl, webUrl: postUrl },
+	                        },
+	                    ],
+	                });
+	            });
+	        }
+	        
+	        // 기능 (3): 팀원 가입 신청 버튼
+	        // id가 'joinButton'인 버튼을 찾아서 기능을 연결합니다.
+		    const joinButton = document.getElementById('joinButton');
+		    if (joinButton) {
+		        joinButton.addEventListener('click', function() {
+		            if(confirm("이 팀에 가입을 신청하시겠습니까?")) {
+		                // 추후 팀원 가입 신청 로직을 여기에 연결합니다.
+		                // 예시: location.href = '${pageContext.request.contextPath}/onespace/teams/${teamNo}/join';
+		                alert('팀원 가입 신청 기능은 구현 예정입니다.');
+		            }
+		        });
+		    }
+	    
+	    });
+	</script>
     
     
         
