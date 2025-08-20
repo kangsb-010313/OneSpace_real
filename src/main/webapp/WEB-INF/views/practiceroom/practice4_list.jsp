@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/practice.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+  <c:set var="CTX" value="${pageContext.request.contextPath}" />
 </head>
 <body class="page-practice4">
   <div class="wrap">
@@ -40,7 +41,8 @@
                     <div class="practice-card-list">
                       <c:forEach var="space" items="${favoriteSpaces}">
                         <div class="practice-card card-bordered">
-                          <img src="${space.spaceLink}" alt="${space.spaceName}" class="practice-card-img">
+                          <img src="${fn:startsWith(space.imageUrl,'http') ? space.imageUrl : CTX.concat(space.imageUrl)}"
+     							alt="${space.spaceName}" class="practice-card-img" />
                           <div class="practice-card-body">
                             <div class="practice-card-title">${space.spaceName}</div>
                             <div class="practice-card-meta">${space.address}</div>
@@ -55,6 +57,7 @@
                           </div>
                         </div>
                       </c:forEach>
+                      
                       <c:if test="${empty favoriteSpaces}">
                         <div style="padding:16px;color:#888;">찜한 연습실이 없습니다.</div>
                       </c:if>

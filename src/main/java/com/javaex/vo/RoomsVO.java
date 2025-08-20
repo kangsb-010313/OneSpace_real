@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class RoomsVO {
+	
+	//필드
     private Long roomNo;
     private Long spacesNo;
     private String roomName;
@@ -15,7 +17,8 @@ public class RoomsVO {
     
     private List<RoomPrices> prices;
     private List<RoomAttachment> photos;
-
+    
+    //생성자
     public RoomsVO() {}
 
     public RoomsVO(Long roomNo, Long spacesNo, String roomName, String roomInfo,

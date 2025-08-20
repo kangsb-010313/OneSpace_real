@@ -7,20 +7,20 @@
 	<select id="selectList" resultType="com.javaex.vo.SpacesVO">
 		<![CDATA[
         SELECT
-            spacesNo
-            ,userNo
-            ,spaceName
-            ,spaceSummary
-            ,spaceInfo
-            ,email
-            ,phone
-            ,tel
-            ,spaceLink
-            ,postCode
-            ,address
-            ,addressDetail
-            ,instDtm
-            ,updtDtm
+          spacesNo,
+          userNo,
+          spaceName,
+          spaceSummary,
+          spaceInfo,
+          email,
+          phone,
+          tel,
+          spaceLink,
+          postCode,
+          address,
+          addressDetail,
+          instDtm,
+          updtDtm
 		FROM spaces
 		ORDER BY spacesNo
 	    ]]>
@@ -28,9 +28,20 @@
     
     <select id="selectPaged" parameterType="map" resultType="com.javaex.vo.SpacesVO">
 	  SELECT
-	    spacesNo, userNo, spaceName, spaceSummary, spaceInfo,
-	    email, phone, tel, spaceLink, postCode, address, addressDetail,
-	    instDtm, updtDtm
+	    spacesNo,
+        userNo,
+        spaceName,
+        spaceSummary,
+        spaceInfo,
+	    email,
+        phone,
+        tel,
+        spaceLink,
+        postCode,
+        address,
+        addressDetail,
+	    instDtm,
+        updtDtm
 	  FROM spaces
 	  ORDER BY spacesNo
 	  LIMIT #{offset,jdbcType=INTEGER}, #{size,jdbcType=INTEGER}
@@ -39,9 +50,20 @@
     <!-- 특정 공간 상세 -->
     <select id="selectZoneDetail" parameterType="long" resultType="com.javaex.vo.SpacesVO">
         SELECT
-            spacesNo, userNo, spaceName, spaceSummary, spaceInfo,
-            email, phone, tel, spaceLink, postCode,
-            address, addressDetail, instDtm, updtDtm
+          spacesNo,
+          userNo,
+          spaceName,
+          spaceSummary,
+          spaceInfo,
+          email,
+          phone,
+          tel,
+          spaceLink,
+          postCode,
+          address,
+          addressDetail,
+          instDtm,
+          updtDtm
         FROM spaces
         WHERE spacesNo = #{spacesNo}
     </select>
@@ -49,29 +71,58 @@
     <!-- 특정 공간의 방 리스트 -->
     <select id="selectRoomsBySpace" parameterType="long" resultType="com.javaex.vo.RoomsVO">
         SELECT
-            roomNo,
-            spacesNo,
-            roomName,
-            roomInfo,
-            area,
-            capacity,
-            instDtm,
-            updtDtm
+          roomNo,
+          spacesNo,
+          roomName,
+          roomInfo,
+          area,
+          capacity,
+          instDtm,
+          updtDtm
         FROM rooms
         WHERE spacesNo = #{spacesNo}
         ORDER BY roomNo
     </select>
     
     <select id="selectFavoriteSpaces" parameterType="long" resultType="com.javaex.vo.SpacesVO">
-	    SELECT DISTINCT
-	        s.spacesNo, s.userNo, s.spaceName, s.spaceSummary, s.spaceInfo,
-	        s.email, s.phone, s.tel, s.spaceLink, s.postCode, s.address, s.addressDetail,
-	        s.instDtm, s.updtDtm
-	    FROM spaces s
-	    JOIN rooms r ON s.spacesNo = r.spacesNo
-	    JOIN studioWishlist sw ON r.roomNo = sw.roomNo
-	    WHERE sw.userNo = #{userNo}
-	    ORDER BY s.spacesNo ASC
+	  SELECT
+	      s.spacesNo,
+	      s.userNo,
+	      s.spaceName,
+	      s.spaceSummary,
+	      s.spaceInfo,
+	      s.email,
+	      s.phone,
+	      s.tel,
+	      s.spaceLink,
+	      s.postCode,
+	      s.address,
+	      s.addressDetail,
+	      s.instDtm,
+	      s.updtDtm,
+	      COALESCE(
+	        CONCAT(ra.filePath, ra.storedFileName),
+	        CASE
+	          WHEN REGEXP_LIKE(LOWER(s.spaceLink), '^(https?://).*(\\.(jpg|jpeg|png|gif|webp))(\\?.*)?$')
+	            THEN s.spaceLink
+	          WHEN REGEXP_LIKE(LOWER(s.spaceLink), '(\\.(jpg|jpeg|png|gif|webp))$')
+	            THEN CONCAT('/assets/images/', s.spaceLink)
+	          ELSE '/assets/images/연습실찜하기사진01.jpg'
+	        END
+	      ) AS imageUrl
+	  FROM spaces s
+	  JOIN rooms r           ON r.spacesNo = s.spacesNo
+	  JOIN studioWishlist sw ON sw.roomNo  = r.roomNo
+	  LEFT JOIN (
+	      SELECT r2.spacesNo, MIN(ra2.pictureSno) AS minPic
+	      FROM rooms r2
+	      JOIN roomAttachments ra2 ON ra2.roomNo = r2.roomNo
+	      GROUP BY r2.spacesNo
+	  ) pick ON pick.spacesNo = s.spacesNo
+	  LEFT JOIN roomAttachments ra ON ra.pictureSno = pick.minPic
+	  WHERE sw.userNo = #{userNo}
+	  GROUP BY s.spacesNo
+	  ORDER BY s.spacesNo ASC
 	</select>
-    
+	
 </mapper>

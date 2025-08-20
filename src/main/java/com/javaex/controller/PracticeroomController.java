@@ -54,6 +54,7 @@ public class PracticeroomController {
         return "practiceroom/practice2_zone";
     }
     
+    //찜리스트
     @GetMapping("/practice4_list")
     public String favoritesList(Model model) {
         Long userNo = 1L; // 실제 인증 로직으로 userNo를 가져와야 함
