@@ -1,21 +1,24 @@
 package com.javaex.service;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.javaex.repository.HostRepository;
-import com.javaex.vo.SpacesVO;
+import com.javaex.vo.HostVO;
 
 @Service
 public class HostService {
 
-    @Autowired
-    private HostRepository hostRepository;
+    private final HostRepository hostRepository;
 
-    // user별 공간 목록
-    public List<SpacesVO> getSpacesByUser(Long userno) {
+    public HostService(HostRepository hostRepository) {
+        this.hostRepository = hostRepository;
+    }
+
+    public List<HostVO> getSpacesByUser(Long userno) {
         return hostRepository.findSpacesByUser(userno);
+    }
+
+    public HostVO getSpace(Long spacesNo) {
+        return hostRepository.findSpaceByNo(spacesNo);
     }
 }

@@ -1,11 +1,9 @@
 package com.javaex.repository;
 
 import java.util.List;
-
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
-
-import com.javaex.vo.SpacesVO;
+import com.javaex.vo.HostVO;
 
 @Repository
 public class HostRepository {
@@ -17,7 +15,11 @@ public class HostRepository {
         this.sqlSession = sqlSession;
     }
 
-    public List<SpacesVO> findSpacesByUser(Long userno) {
+    public List<HostVO> findSpacesByUser(Long userno) {
         return sqlSession.selectList(NS + "spaces_by_user", userno);
+    }
+
+    public HostVO findSpaceByNo(Long spacesNo) {
+        return sqlSession.selectOne(NS + "space_by_no", spacesNo);
     }
 }
