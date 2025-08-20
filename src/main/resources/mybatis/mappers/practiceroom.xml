@@ -62,4 +62,16 @@
         ORDER BY roomNo
     </select>
     
+    <select id="selectFavoriteSpaces" parameterType="long" resultType="com.javaex.vo.SpacesVO">
+	    SELECT DISTINCT
+	        s.spacesNo, s.userNo, s.spaceName, s.spaceSummary, s.spaceInfo,
+	        s.email, s.phone, s.tel, s.spaceLink, s.postCode, s.address, s.addressDetail,
+	        s.instDtm, s.updtDtm
+	    FROM spaces s
+	    JOIN rooms r ON s.spacesNo = r.spacesNo
+	    JOIN studioWishlist sw ON r.roomNo = sw.roomNo
+	    WHERE sw.userNo = #{userNo}
+	    ORDER BY s.spacesNo ASC
+	</select>
+    
 </mapper>

@@ -27,10 +27,10 @@
 
             <!-- 상단 버튼 -->
             <div class="filter-bar">
-              <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/practiceroom/practice4_list.jsp'">
-                찜리스트<span style="color:#ff3333;">❤</span>
-              </button>
-            </div>
+			  <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
+			    찜리스트<span style="color:#ff3333;">❤</span>
+			  </button>
+			</div>
 
             <main class="main">
               <h2 class="page-title">${zone.spaceName}</h2>

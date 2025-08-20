@@ -46,4 +46,9 @@ public class PracticeroomRepository {
     public List<RoomsVO> selectRoomsBySpace(Long spacesNo) {
         return sqlSession.selectList("practiceroom.selectRoomsBySpace", spacesNo);
     }
+    
+    public List<SpacesVO> selectFavoriteSpaces(Long userNo) {
+        return sqlSession.selectList("practiceroom.selectFavoriteSpaces", userNo);
+    }
+    
 }

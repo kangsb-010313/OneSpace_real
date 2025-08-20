@@ -54,4 +54,12 @@ public class PracticeroomController {
         return "practiceroom/practice2_zone";
     }
     
+    @GetMapping("/practice4_list")
+    public String favoritesList(Model model) {
+        Long userNo = 1L; // 실제 인증 로직으로 userNo를 가져와야 함
+        List<SpacesVO> favoriteSpaces = practiceroomService.getFavoriteSpaces(userNo);
+        model.addAttribute("favoriteSpaces", favoriteSpaces);
+        return "practiceroom/practice4_list";
+    }
+    
 }

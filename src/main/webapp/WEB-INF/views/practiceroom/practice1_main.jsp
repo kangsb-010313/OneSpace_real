@@ -33,9 +33,9 @@
           <!-- 컨텐츠 -->
           <div class="content-area">
             <div class="filter-bar">
-              <button class="btn-list" onclick="location.href='file:///C:/javaStudy/onespace_front/views/practiceroom/practice4_list.html'">
-                찜리스트<span style="color:#ff3333;">❤</span>
-              </button>
+              <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
+			    찜리스트<span style="color:#ff3333;">❤</span>
+			  </button>
             </div>
             <h2 class="page-title">연습실찜하기</h2>
             <div style="width: 90%; border-bottom: 1px solid #e4e2ef; margin-left: 50px;"></div>

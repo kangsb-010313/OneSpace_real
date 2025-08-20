@@ -32,4 +32,8 @@ public class PracticeroomService {
     public List<RoomsVO> getRoomsBySpace(Long spacesNo) {
         return practiceroomRepository.selectRoomsBySpace(spacesNo);
     }
+    
+    public List<SpacesVO> getFavoriteSpaces(Long userNo) {
+        return practiceroomRepository.selectFavoriteSpaces(userNo);
+    }
 }
