@@ -13,11 +13,10 @@ public class HostVO {
     private String postcode;
     private String address;
     private String addressdetail;
-    private String inst_dt;   // datetime
-    private String updt_dt;   // datetime
+    private String facilities;  // 하드코딩 체크박스 선택값 콤마 저장
+    private String inst_dt;
+    private String updt_dt;
 
-
-    // ----- gs -----
     public Long getSpacesno() { return spacesno; }
     public void setSpacesno(Long spacesno) { this.spacesno = spacesno; }
     public Long getUserno() { return userno; }
@@ -42,6 +41,8 @@ public class HostVO {
     public void setAddress(String address) { this.address = address; }
     public String getAddressdetail() { return addressdetail; }
     public void setAddressdetail(String addressdetail) { this.addressdetail = addressdetail; }
+    public String getFacilities() { return facilities; }
+    public void setFacilities(String facilities) { this.facilities = facilities; }
     public String getInst_dt() { return inst_dt; }
     public void setInst_dt(String inst_dt) { this.inst_dt = inst_dt; }
     public String getUpdt_dt() { return updt_dt; }

@@ -89,8 +89,10 @@
 
                             <!-- 하단: 새 공간 추가 버튼 유지 -->
                             <div class="btn-wrapper">
-                              <a href="${pageContext.request.contextPath}/onespace/hostcenter/info" class="btn-host-manage">새 공간 등록하기</a>
-                            </div>
+							  <a href="${pageContext.request.contextPath}/onespace/hostcenter/spaces/new" class="btn-host-manage">
+							    새 공간 등록하기
+							  </a>
+							</div>
                           </c:otherwise>
                         </c:choose>
                     </div>

@@ -1,87 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="host">
 
-  <!-- 공통 컬럼 매핑: 존재 확실한 컬럼만 -->
-  <sql id="space_cols">
-    s.spacesNo       AS spacesno,
-    s.userNo         AS userno,
-    s.spaceName      AS spacename,
-    s.spaceSummary   AS spacesummary,
-    s.spaceInfo      AS spaceinfo,
-    s.email          AS email,
-    s.phone          AS phone,
-    s.tel            AS tel,
-    s.spaceLink      AS spacelink,
-    s.postCode       AS postcode,
-    s.address        AS address,
-    s.addressDetail  AS addressdetail
-  </sql>
-
-  <!-- 로그인 유저의 최신 1건 -->
-  <select id="select_host_by_userno" parameterType="map" resultType="com.javaex.vo.HostVO">
-    SELECT
-      <include refid="space_cols"/>
-    FROM spaces s
-    WHERE s.userNo = #{userno}
-    ORDER BY s.spacesNo DESC
-    LIMIT 1
+  <!--
+    spaces 목록: 로그인 사용자(userNo) 기준
+    - DB 컬럼이 camelCase 라서 그대로 사용 (snake_case 아님)
+    - 필요 시 resultType 은 실제 VO 경로로 맞춰줘
+      (예: com.javaex.vo.HostVO 또는 com.javaex.vo.SpacesVO)
+  -->
+  <select id="spaces_by_user" parameterType="long" resultType="com.javaex.vo.HostVO">
+    select
+      spacesNo       as spacesNo,
+      userNo         as userNo,
+      spaceName      as spaceName,
+      spaceSummary   as spaceSummary,
+      spaceInfo      as spaceInfo,
+      email          as email,
+      phone          as phone,
+      tel            as tel,
+      spaceLink      as spaceLink,
+      postCode       as postCode,
+      address        as address,
+      addressDetail  as addressDetail,
+      instDtm        as instDtm,
+      updtDtm        as updtDtm
+    from spaces
+    where userNo = #{userNo}
+    order by instDtm desc, spacesNo desc
   </select>
-
-  <!-- 내 공간 리스트 -->
-  <select id="select_spaces_by_userno" parameterType="map" resultType="com.javaex.vo.HostVO">
-    SELECT
-      <include refid="space_cols"/>
-    FROM spaces s
-    WHERE s.userNo = #{userno}
-    ORDER BY s.spacesNo DESC
-  </select>
-
-  <!-- ★ 소유자 검증 포함 단건 조회 -->
-  <select id="select_space_one" parameterType="map" resultType="com.javaex.vo.HostVO">
-    SELECT
-      <include refid="space_cols"/>
-    FROM spaces s
-    WHERE s.spacesNo = #{spacesno}
-      AND s.userNo   = #{userno}
-    LIMIT 1
-  </select>
-
-  <!-- 신규 등록: 최소 컬럼만 INSERT -->
-  <insert id="insert_space"
-          parameterType="com.javaex.vo.HostVO"
-          useGeneratedKeys="true"
-          keyProperty="spacesno"
-          keyColumn="spacesNo">
-    INSERT INTO spaces (
-      userNo, spaceName, spaceSummary, spaceInfo,
-      email, phone, tel,
-      spaceLink, postCode,
-      address, addressDetail
-    ) VALUES (
-      #{userno}, #{spacename}, #{spacesummary}, #{spaceinfo},
-      #{email}, #{phone}, #{tel},
-      #{spacelink}, #{postcode},
-      #{address}, #{addressdetail}
-    )
-  </insert>
-
-  <!-- 수정: 최소 컬럼만 UPDATE -->
-  <update id="update_space" parameterType="com.javaex.vo.HostVO">
-    UPDATE spaces
-    SET spaceName      = #{spacename},
-        spaceSummary   = #{spacesummary},
-        spaceInfo      = #{spaceinfo},
-        email          = #{email},
-        phone          = #{phone},
-        tel            = #{tel},
-        spaceLink      = #{spacelink},
-        postCode       = #{postcode},
-        address        = #{address},
-        addressDetail  = #{addressdetail}
-    WHERE spacesNo = #{spacesno}
-      AND userNo   = #{userno}
-  </update>
 
 </mapper>
