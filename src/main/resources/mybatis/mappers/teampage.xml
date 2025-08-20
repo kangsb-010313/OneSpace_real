@@ -29,17 +29,21 @@
         where userNo = #{userNo}
     </select>
     
-    <!-- 팀원 등록 (TEAM_MEMBERS 테이블) - 이 쿼리는 그대로 유지 -->
+    <!-- [수정] 팀원 등록 (TEAM_MEMBERS 테이블) - position, status 컬럼 추가 -->
     <insert id="insertTeamMember" parameterType="map">
         insert into teamMembers (
             teamNo, 
             userNo, 
-            joinedDate
+            joinedDate,
+            position,
+            status
         )
         values (
             #{teamNo}, 
             #{userNo}, 
-            now()
+            now(),
+            #{position},
+            #{status}
         )
     </insert>
     
@@ -197,10 +201,21 @@
 	    ]]>
 	</select>
 
-
+	<!-- [추가] 특정 팀(teamNo)에 특정 유저(userNo)가 속해있는지 확인 -->
+	<select id="selectMemberCount" parameterType="map" resultType="int">
+		select count(*)
+		from teamMembers
+		where userNo = #{userNo}
+		  and teamNo = #{teamNo}
+	</select>
     
     
-    
+    <!-- [추가] 특정 팀의 첫 게시글 번호(teamPostNo의 최소값)를 조회 -->
+	<select id="selectFirstPostNo" parameterType="int" resultType="java.lang.Integer">
+	    SELECT MIN(teamPostNo)
+	    FROM posts
+	    WHERE teamNo = #{teamNo}
+	</select>
     
 
 </mapper>

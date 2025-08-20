@@ -224,6 +224,14 @@ public class TeampageController {
         }
         
         int userNo = authUser.getUserNo();
+        
+        // [추가] 현재 로그인한 유저가 이 팀의 멤버인지 확인하는 로직
+        boolean isMember = teampageService.isUserMember(userNo, teamNo);
+        model.addAttribute("isMember", isMember); // 결과를 모델에 담아 JSP로 전달
+        
+        // 2. [추가] 현재 보고 있는 글이 '환영 게시글'인지 확인
+        boolean isWelcomePost = teampageService.isWelcomePost(teamPostNo, teamNo);
+        model.addAttribute("isWelcomePost", isWelcomePost);
 
         TeamPostVO post = teampageService.exeGetPost(teamPostNo);
         model.addAttribute("post", post); // 게시글 정보를 "post"라는 이름으로 JSP에 전달

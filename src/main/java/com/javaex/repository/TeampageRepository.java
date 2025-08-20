@@ -42,13 +42,27 @@ public class TeampageRepository {
         return teamNo;
     }
     
-    // team_members 테이블에 팀원 정보 추가
-    public void insertTeamMember(int teamNo, int userNo) {
-        System.out.println("TeampageRepository.insertTeamMember()");
-        Map<String, Integer> params = new HashMap<>();
+    // [수정] team_members 테이블에 팀원 정보 추가 (position, status 포함)
+    public void insertTeamMember(int teamNo, int userNo, String position, String status) {
+        System.out.println("TeampageRepository.insertTeamMember() - position: " + position + ", status: " + status);
+        
+        // 파라미터를 Map에 담아서 전달 (String도 담아야 하므로 Object 타입 사용)
+        Map<String, Object> params = new HashMap<>();
         params.put("teamNo", teamNo);
         params.put("userNo", userNo);
+        params.put("position", position);
+        params.put("status", status);
+        
         sqlSession.insert("teampage.insertTeamMember", params);
+    }
+    
+    // [추가] 특정 팀에 특정 유저가 몇 명 있는지 카운트 (0 또는 1이 나옴)
+    public int selectMemberCount(int userNo, int teamNo) {
+        System.out.println("TeampageRepository.selectMemberCount()");
+        Map<String, Integer> params = new HashMap<>();
+        params.put("userNo", userNo);
+        params.put("teamNo", teamNo);
+        return sqlSession.selectOne("teampage.selectMemberCount", params);
     }
     
 	
@@ -143,6 +157,11 @@ public class TeampageRepository {
 	 }
 
 
+	// [추가] 특정 팀의 첫 번째 게시글(가장 작은 teamPostNo) 번호를 조회
+	 public Integer selectFirstPostNo(int teamNo) {
+	     System.out.println("TeampageRepository.selectFirstPostNo()");
+	     return sqlSession.selectOne("teampage.selectFirstPostNo", teamNo);
+	 }
 
 
 	

@@ -203,21 +203,60 @@
                                 
                                 <div class="post-actions">
                                     <%-- 버튼 종류에 따른 분기 (예시) --%>
-                                    <c:choose>
-                                        <c:when test="${post.teamPostType == '일반공지'}">
-                                            <button type="button" id="kakao-share-btn" class="btn-action btn-share">공유하기</button>
-                                            <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-action">목록</a>
-                                        </c:when>
-                                        <c:when test="${post.teamPostType == '팀자랑'}">
-                                            <a href="#" id="btn-pride" class="btn-action">팀자랑 가서보기</a>
-                                        </c:when>
-                                        <c:when test="${post.teamPostType == '투표'}">
-                                            <button type="button" id="kakao-share-btn" class="btn-action btn-share">공유하기</button>
-                                                <c:if test="${sessionScope.authUser.userNo == post.userNo}">
-											        <a href="#" class="btn-action">바로 예약하기</a>
-											    </c:if>
-                                        </c:when>
-                                    </c:choose>
+								    <c:choose>
+								        <%-- Case 1: 팀 멤버인 경우 --%>
+								        <c:when test="${isMember}">
+								            <c:choose>
+								                <%-- 1-1: '팀자랑' 글일 때 --%>
+								                <c:when test="${post.teamPostType == '팀자랑'}">
+								                    <button type="button" class="btn-primary">팀자랑 가서보기</button>
+								                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-outline">목록</a>
+								                </c:when>
+								                
+								                <%-- 1-2: '투표' 글일 때 --%>
+								                <c:when test="${post.teamPostType == '투표'}">
+								                    <button type="button" class="btn-outline" id="kakao-share-btn">공유하기</button>
+								                    <button type="button" class="btn-primary">바로 예약하기</button>
+								                </c:when>
+								
+								                <%-- 1-3: '일반 공지' 또는 그 외 모든 글일 때 --%>
+								                <c:otherwise>
+								                    <button type="button" class="btn-outline" id="kakao-share-btn">공유하기</button>
+								                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-primary">목록</a>
+								                </c:otherwise>
+								            </c:choose>
+								        </c:when>
+								
+								        <%-- Case 2: 팀 멤버가 아닌 경우 --%>
+								        <c:otherwise>
+								            <c:choose>
+								                <%-- 2-1: '환영 게시글'을 보고 있을 때 --%>
+								                <c:when test="${isWelcomePost}">
+								                    <button type="button" class="btn-primary" id="joinButton">팀원 가입 신청</button>
+								                </c:when>
+								                
+								                <%-- 2-2: 환영 게시글이 아닌 다른 글을 보고 있을 때 --%>
+								                <c:otherwise>
+								                    <c:choose>
+								                        <%-- '팀자랑' 글일 때 --%>
+								                        <c:when test="${post.teamPostType == '팀자랑'}">
+								                            <button type="button" class="btn-primary">팀자랑 가서보기</button>
+								                            <a href="${pageContext.request.contextPath}/onespace/teammain" class="btn-outline">다른 팀 보기</a>
+								                        </c:when>
+								                        <%-- '투표' 글일 때 (예약하기 버튼 없음) --%>
+								                        <c:when test="${post.teamPostType == '투표'}">
+								                            <button type="button" class="btn-outline" id="kakao-share-btn">공유하기</button>
+								                            <a href="${pageContext.request.contextPath}/onespace/teammain" class="btn-outline">다른 팀 보기</a>
+								                        </c:when>
+								                         <%-- '일반 공지' 글일 때 (목록 버튼과 유사한 디자인) --%>
+								                        <c:otherwise>
+								                            <a href="${pageContext.request.contextPath}/onespace/teammain" class="btn-outline">다른 팀 보기</a>
+								                        </c:otherwise>
+								                    </c:choose>
+								                </c:otherwise>
+								            </c:choose>
+								        </c:otherwise>
+								    </c:choose>
 
                                     <%-- 작성자만 수정/삭제 버튼 보이도록 (공통) --%>
                                     <c:if test="${sessionScope.authUser.userNo == post.userNo && post.teamPostType != '투표'}">
@@ -292,6 +331,8 @@
             });
         }
     </script>
+    
+    
         
         
         

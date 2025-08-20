@@ -18,12 +18,6 @@ public class TeampageService {
 	private TeampageRepository teampageRepository;
 	
 	
-	//생성자
-	
-	
-	//메소드gs
-	
-	
 	//메소드일반
 	
 	//-- 팀페이지 팀 등록 (가장 기본 방식)
@@ -39,10 +33,22 @@ public class TeampageService {
 		// 3. 방금 내가(userNo) 만든 팀의 teamNo를 다시 DB에서 SELECT로 가져오기
 		int newTeamNo = teampageRepository.selectNewTeamNo(userNo);
 		
-		// 4. 가져온 teamNo와 userNo를 이용해 team_members 테이블에 팀원 정보 INSERT
-		teampageRepository.insertTeamMember(newTeamNo, userNo);
+		// 4. [수정] 팀 생성자를 'LEADER'/'ACTIVE' 상태로 팀원에 추가
+		teampageRepository.insertTeamMember(newTeamNo, userNo, "팀장", "승인");
 		
-		// 5. Controller에게 새로 생성된 teamNo를 반환
+		// 5. [추가] 환영 게시글 자동 생성 로직
+		// 5-1. 게시글 정보를 담을 TeamPostVO 객체 생성
+		TeamPostVO welcomePost = new TeamPostVO();
+		welcomePost.setTeamNo(newTeamNo); // 방금 만든 팀 번호
+		welcomePost.setUserNo(userNo);    // 팀 리더(생성자)의 번호
+		welcomePost.setTeamPostType("일반공지"); // 게시글 타입
+		welcomePost.setTeamPostTitle("팀 " + teamVO.getTeamName() + " 등록되었습니다.");
+		welcomePost.setTeamContent("팀 " + teamVO.getTeamName() + " 정상적으로 등록되었습니다. 연습일정부터 연습실 예약까지 손쉽게 사용해보세요.");
+		
+		// 5-2. 게시글 등록을 위해 기존의 글쓰기 Repository 메소드 재사용
+		teampageRepository.teampageInsert(welcomePost);
+		
+		// 6. Controller에게 새로 생성된 teamNo를 반환
 		return newTeamNo;
 	}
 	
@@ -137,6 +143,34 @@ public class TeampageService {
 	        System.out.println("TeampageService.exeGetWishlistForVote()");
 	        return teampageRepository.selectWishlistForVote(userNo);
 	    }
+	    
+	// [추가] 특정 유저가 특정 팀의 멤버인지 확인하는 메소드
+	public boolean isUserMember(int userNo, int teamNo) {
+	    System.out.println("TeampageService.isUserMember()");
+	    // 멤버 수가 0보다 크면 true(멤버임), 아니면 false(멤버 아님)를 반환
+	    int count = teampageRepository.selectMemberCount(userNo, teamNo);
+	    return count > 0;
+	}
+	
+	// TeampageService.java
+
+
+	// [추가] 특정 게시글이 해당 팀의 첫 환영 게시글인지 확인하는 메소드
+	public boolean isWelcomePost(int teamPostNo, int teamNo) {
+	    System.out.println("TeampageService.isWelcomePost()");
+	    
+	    // Repository를 통해 해당 팀의 첫 게시글 번호를 가져온다.
+	    // Integer는 null을 담을 수 있어, 게시글이 하나도 없을 때의 오류를 방지합니다.
+	    Integer firstPostNo = teampageRepository.selectFirstPostNo(teamNo);
+	    
+	    // 첫 게시글이 존재하고, 현재 게시글 번호와 일치하는지 확인
+	    if (firstPostNo != null && firstPostNo.intValue() == teamPostNo) {
+	        return true;
+	    }
+	    
+	    return false;
+	}
+
 
 	
 }
