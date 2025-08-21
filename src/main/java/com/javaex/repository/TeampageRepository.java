@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.javaex.vo.TeamMemberVO;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVoteOptionVO;
@@ -42,7 +43,7 @@ public class TeampageRepository {
         return teamNo;
     }
     
-    // [수정] team_members 테이블에 팀원 정보 추가 (position, status 포함)
+    //team_members 테이블에 팀원 정보 추가 (position, status 포함)
     public void insertTeamMember(int teamNo, int userNo, String position, String status) {
         System.out.println("TeampageRepository.insertTeamMember() - position: " + position + ", status: " + status);
         
@@ -56,7 +57,7 @@ public class TeampageRepository {
         sqlSession.insert("teampage.insertTeamMember", params);
     }
     
-    // [추가] 특정 팀에 특정 유저가 몇 명 있는지 카운트 (0 또는 1이 나옴)
+    // 특정 팀에 특정 유저가 몇 명 있는지 카운트 (0 또는 1이 나옴)
     public int selectMemberCount(int userNo, int teamNo) {
         System.out.println("TeampageRepository.selectMemberCount()");
         Map<String, Integer> params = new HashMap<>();
@@ -157,12 +158,39 @@ public class TeampageRepository {
 	 }
 
 
-	// [추가] 특정 팀의 첫 번째 게시글(가장 작은 teamPostNo) 번호를 조회
+	// 특정 팀의 첫 번째 게시글(가장 작은 teamPostNo) 번호를 조회
 	 public Integer selectFirstPostNo(int teamNo) {
 	     System.out.println("TeampageRepository.selectFirstPostNo()");
 	     return sqlSession.selectOne("teampage.selectFirstPostNo", teamNo);
 	 }
 
 
+	// 팀원 관리 페이지에 필요한 멤버 목록 가져오기
+	 public List<TeamMemberVO> selectMembersByTeamNo(int teamNo) {
+	     System.out.println("TeampageRepository.selectMembersByTeamNo()");
+	     return sqlSession.selectList("teampage.selectMembersByTeamNo", teamNo);
+	 }
+	 
+	// 유저가 팀의 리더인지 확인
+	 public int isUserTeamLeader(int userNo, int teamNo) {
+	     System.out.println("TeampageRepository.isUserTeamLeader()");
+	     Map<String, Object> params = new HashMap<>();
+	     params.put("userNo", userNo);
+	     params.put("teamNo", teamNo);
+	     return sqlSession.selectOne("teampage.isUserTeamLeader", params);
+	 }
+
+
+	 // 팀원 상태 업데이트 (승인 시 사용)
+	 public int updateMemberStatus(Map<String, Object> params) {
+	     System.out.println("TeampageRepository.updateMemberStatus()");
+	     return sqlSession.update("teampage.updateMemberStatus", params);
+	 }
+
+	 // 팀원 삭제 (거부, 강퇴 시 사용)
+	 public int deleteMember(Map<String, Object> params) {
+	     System.out.println("TeampageRepository.deleteMember()");
+	     return sqlSession.delete("teampage.deleteMember", params);
+	 }
 	
 }

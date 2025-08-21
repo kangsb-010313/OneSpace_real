@@ -29,7 +29,7 @@
         where userNo = #{userNo}
     </select>
     
-    <!-- [수정] 팀원 등록 (TEAM_MEMBERS 테이블) - position, status 컬럼 추가 -->
+    <!-- 팀원 등록 (TEAM_MEMBERS 테이블) - position, status 컬럼 추가 -->
     <insert id="insertTeamMember" parameterType="map">
         insert into teamMembers (
             teamNo, 
@@ -57,6 +57,7 @@
 	        from teams t, teamMembers tm 
 	        where t.teamNo = tm.teamNo
 	        and tm.userNo = #{userNo}
+	        and tm.status = '승인'
 	        order by t.teamName asc
 	    ]]>
 	</select>
@@ -76,7 +77,8 @@
 	        join teams t on p.teamNo = t.teamNo
 	        where p.teamNo in (select teamNo 
 	                           from teamMembers   
-	                           where userNo = #{userNo})
+	                           where userNo = #{userNo}
+	                           and status = '승인')
 	        order by p.teamWriteDate desc, p.teamPostNo desc
 	    ]]>
 	</select>
@@ -180,7 +182,7 @@
 	<!-- 투표 만들기를 위해 사용자의 '찜 목록'에 있는 연습실 정보 가져오기 -->
 	<select id="selectWishlistForVote" parameterType="int" resultType="com.javaex.vo.TeamVoteOptionVO">
 	    <![CDATA[
-	        SELECT
+	        select
 	            s.spacesNo,
 	            s.spaceName,
 	            s.address,
@@ -188,34 +190,84 @@
 	            r.roomName,
 	            r.area,
 	            r.capacity
-	        FROM
+	        from
 	            studioWishlist w  -- 찜 목록 테이블에서 시작
-	        JOIN
+	        join
 	            rooms r ON w.roomNo = r.roomNo
-	        JOIN
+	        join
 	            spaces s ON r.spacesNo = s.spacesNo
-	        WHERE
+	        where
 	            w.userNo = #{userNo} -- 로그인한 사용자의 찜 목록만 조회
-	        ORDER BY
+	        order by
 	            w.studioWishlistNo DESC -- 가장 최근에 찜한 순서대로
 	    ]]>
 	</select>
 
-	<!-- [추가] 특정 팀(teamNo)에 특정 유저(userNo)가 속해있는지 확인 -->
+	<!-- 특정 팀(teamNo)에 특정 유저(userNo)가 속해있는지 확인 -->
 	<select id="selectMemberCount" parameterType="map" resultType="int">
 		select count(*)
 		from teamMembers
 		where userNo = #{userNo}
 		  and teamNo = #{teamNo}
+		  and status = '승인'
 	</select>
     
     
-    <!-- [추가] 특정 팀의 첫 게시글 번호(teamPostNo의 최소값)를 조회 -->
+    <!-- 특정 팀의 첫 게시글 번호(teamPostNo의 최소값)를 조회 -->
 	<select id="selectFirstPostNo" parameterType="int" resultType="java.lang.Integer">
-	    SELECT MIN(teamPostNo)
-	    FROM posts
-	    WHERE teamNo = #{teamNo}
+	    select MIN(teamPostNo)
+	    from posts
+	    where teamNo = #{teamNo}
 	</select>
+	
+	
+	<!-- 팀원 관리: 특정 팀의 모든 멤버 정보 조회 (users 테이블과 JOIN) -->
+	<select id="selectMembersByTeamNo" parameterType="int" resultType="com.javaex.vo.TeamMemberVO">
+	    select
+	        tm.teamMemberNo,
+	        tm.teamNo,
+	        tm.userNo,
+	        u.userName,  -- users 테이블에서 이름 가져오기
+	        tm.position,
+	        tm.status,
+	        DATE_FORMAT(tm.joinedDate, '%Y-%m-%d') as joinedDate -- 날짜 형식을 YYYY-MM-DD로 지정
+	    from teamMembers tm
+	    join users u on tm.userNo = u.userNo
+	    where tm.teamNo = #{teamNo}
+	    order by
+	        CASE
+	            WHEN tm.position = '팀장' THEN 1
+	            WHEN tm.status = '승인' THEN 2
+	            ELSE 3
+	        END,
+	        tm.joinedDate asc,
+	        u.userName asc
+	</select>
+	
+	<!-- 특정 유저가 특정 팀의 '팀장'인지 확인하는 쿼리 -->
+	<select id="isUserTeamLeader" parameterType="map" resultType="int">
+	    select count(*)
+	    from teamMembers
+	    where userNo = #{userNo}
+	      and teamNo = #{teamNo}
+	      and position = '팀장'
+	</select>
+	
+	<!-- 팀원 관리: 가입 신청 승인 (상태를 '승인'으로, 가입일을 오늘 날짜로 변경) -->
+	<update id="updateMemberStatus" parameterType="map">
+	    update teamMembers
+	    set status = #{status},
+	        joinedDate = CURDATE() 
+	    where userNo = #{userNo}
+	      and teamNo = #{teamNo}
+	</update>
+	
+	<!-- 팀원 관리: 가입 거부 또는 멤버 삭제 -->
+	<delete id="deleteMember" parameterType="map">
+	    delete FROM teamMembers
+	    where userNo = #{userNo}
+	      and teamNo = #{teamNo}
+	</delete>
     
 
 </mapper>

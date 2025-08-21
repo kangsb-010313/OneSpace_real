@@ -228,10 +228,12 @@
 								        </c:when>
 								
 								        <%-- Case 2: 팀 멤버가 아닌 경우 --%>
-								        <%-- 학생분 말씀대로, 이 경우는 '팀원 가입 신청' 버튼 하나만 있으면 됩니다. --%>
-								        <c:otherwise>
-								            <button type="button" class="btn-action" id="joinButton">팀원 가입 신청</button>
-								        </c:otherwise>
+										<c:otherwise>
+										   
+										    <form action="${pageContext.request.contextPath}/onespace/teams/${teamNo}/join" method="post">
+										        <button type="submit" class="btn-action" onclick="return confirm('이 팀에 가입을 신청하시겠습니까?');">팀원 가입 신청</button>
+										    </form>
+										</c:otherwise>
 								    </c:choose>
 
                                     <%-- 작성자만 수정/삭제 버튼 보이도록 (공통) --%>

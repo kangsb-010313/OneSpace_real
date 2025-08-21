@@ -1,11 +1,14 @@
 package com.javaex.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.javaex.repository.TeampageRepository;
+import com.javaex.vo.TeamMemberVO;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVoteOptionVO;
@@ -33,10 +36,10 @@ public class TeampageService {
 		// 3. 방금 내가(userNo) 만든 팀의 teamNo를 다시 DB에서 SELECT로 가져오기
 		int newTeamNo = teampageRepository.selectNewTeamNo(userNo);
 		
-		// 4. [수정] 팀 생성자를 'LEADER'/'ACTIVE' 상태로 팀원에 추가
+		// 4. 팀 생성자를 'LEADER'/'ACTIVE' 상태로 팀원에 추가
 		teampageRepository.insertTeamMember(newTeamNo, userNo, "팀장", "승인");
 		
-		// 5. [추가] 환영 게시글 자동 생성 로직
+		// 5. 환영 게시글 자동 생성 로직
 		// 5-1. 게시글 정보를 담을 TeamPostVO 객체 생성
 		TeamPostVO welcomePost = new TeamPostVO();
 		welcomePost.setTeamNo(newTeamNo); // 방금 만든 팀 번호
@@ -144,7 +147,7 @@ public class TeampageService {
 	        return teampageRepository.selectWishlistForVote(userNo);
 	    }
 	    
-	// [추가] 특정 유저가 특정 팀의 멤버인지 확인하는 메소드
+	// 특정 유저가 특정 팀의 멤버인지 확인하는 메소드
 	public boolean isUserMember(int userNo, int teamNo) {
 	    System.out.println("TeampageService.isUserMember()");
 	    // 멤버 수가 0보다 크면 true(멤버임), 아니면 false(멤버 아님)를 반환
@@ -155,7 +158,7 @@ public class TeampageService {
 	// TeampageService.java
 
 
-	// [추가] 특정 게시글이 해당 팀의 첫 환영 게시글인지 확인하는 메소드
+	// 특정 게시글이 해당 팀의 첫 환영 게시글인지 확인하는 메소드
 	public boolean isWelcomePost(int teamPostNo, int teamNo) {
 	    System.out.println("TeampageService.isWelcomePost()");
 	    
@@ -170,7 +173,62 @@ public class TeampageService {
 	    
 	    return false;
 	}
+	
+	
+
+	// 팀원 관리 페이지 데이터 가져오기
+	public Map<String, Object> exeGetMemberInfo(int teamNo) {
+	    System.out.println("TeampageService.exeGetMemberInfo()");
+	    
+	    Map<String, Object> resultMap = new HashMap<>();
+	    
+	    // 1. 팀 정보 가져오기 (페이지 제목 등에 사용)
+	    TeamVO teamInfo = teampageRepository.selectTeamInfoByNo(teamNo);
+	    resultMap.put("teamInfo", teamInfo);
+	    
+	    // 2. 팀 멤버 목록 가져오기
+	    List<TeamMemberVO> memberList = teampageRepository.selectMembersByTeamNo(teamNo);
+	    resultMap.put("memberList", memberList);
+	    
+	    return resultMap;
+	}
+	
+	// 유저가 팀의 리더인지 확인하는 서비스 로직
+	public boolean isUserTeamLeader(int userNo, int teamNo) {
+	    System.out.println("TeampageService.isUserTeamLeader()");
+	    return teampageRepository.isUserTeamLeader(userNo, teamNo) > 0;
+	}
 
 
+	// 멤버 상태 변경 (가입 승인)
+	public void exeApproveMember(int teamNo, int userNo) {
+	    System.out.println("TeampageService.exeApproveMember()");
+	    
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("teamNo", teamNo);
+	    params.put("userNo", userNo);
+	    params.put("status", "승인");
+	    
+	    teampageRepository.updateMemberStatus(params);
+	}
+
+	// 멤버 삭제 (가입 거부, 팀원 내보내기)
+	public void exeRemoveMember(int teamNo, int userNo) {
+	    System.out.println("TeampageService.exeRemoveMember()");
+	    
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("teamNo", teamNo);
+	    params.put("userNo", userNo);
+	    
+	    teampageRepository.deleteMember(params);
+	}
+
+	// 팀원 가입 신청 처리
+	public void exeRequestJoin(int teamNo, int userNo) {
+	    System.out.println("TeampageService.exeRequestJoin()");
+	    
+	    // 기존의 insertTeamMember 메소드를 재사용하여 '보류' 상태의 팀원을 추가합니다.
+	    teampageRepository.insertTeamMember(teamNo, userNo, "팀원", "보류");
+	}
 	
 }

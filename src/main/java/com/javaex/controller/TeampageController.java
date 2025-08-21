@@ -1,6 +1,7 @@
 package com.javaex.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -103,7 +104,9 @@ public class TeampageController {
 	
     // --팀페이지 전체 리스트 (특정 팀의 리스트)
     @RequestMapping(value="/teams/{teamNo}/posts/list", method= {RequestMethod.GET, RequestMethod.POST})
-    public String list(@PathVariable("teamNo") int teamNo, HttpSession session, Model model) {
+    public String list(@PathVariable("teamNo") int teamNo, 
+    				   HttpSession session, 
+    				   Model model) {
         System.out.println("TeampageController.list() for teamNo: " + teamNo);
         
         //로그인 체크
@@ -117,7 +120,7 @@ public class TeampageController {
         model.addAttribute("teamPostList", teamPostList);
         
         
-        // 1. 특정 팀 정보 가져오기 (팀 이름 등)
+        // 특정 팀 정보 가져오기 (팀 이름 등)
         TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
         if (currentTeam != null) {
             model.addAttribute("teamName", currentTeam.getTeamName());
@@ -125,11 +128,11 @@ public class TeampageController {
             model.addAttribute("teamName", "알 수 없는 팀"); // 팀 정보가 없을 경우 대비
         }
         
-        // 2. 현재 보고 있는 팀의 teamNo를 JSP로 전달
+        // 현재 보고 있는 팀의 teamNo를 JSP로 전달
 
         model.addAttribute("teamNo", teamNo); // 현재 보고 있는 팀의 teamNo를 JSP로 전달
         
-        // 3. aside에 뿌려줄 *로그인 유저의* 팀 목록 가져오기 [수정]
+        // aside에 뿌려줄 *로그인 유저의* 팀 목록 가져오기 [수정]
         int userNo = authUser.getUserNo();
         List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
         model.addAttribute("allTeams", userTeamList); // aside.jsp가 사용하는 모델 이름 'allTeams'로 전달
@@ -225,11 +228,11 @@ public class TeampageController {
         
         int userNo = authUser.getUserNo();
         
-        // [추가] 현재 로그인한 유저가 이 팀의 멤버인지 확인하는 로직
+        // 현재 로그인한 유저가 이 팀의 멤버인지 확인하는 로직
         boolean isMember = teampageService.isUserMember(userNo, teamNo);
         model.addAttribute("isMember", isMember); // 결과를 모델에 담아 JSP로 전달
         
-        // 2. [추가] 현재 보고 있는 글이 '환영 게시글'인지 확인
+        //  현재 보고 있는 글이 '환영 게시글'인지 확인
         boolean isWelcomePost = teampageService.isWelcomePost(teamPostNo, teamNo);
         model.addAttribute("isWelcomePost", isWelcomePost);
 
@@ -347,9 +350,89 @@ public class TeampageController {
     }
 
 	
+    // -- 팀원 관리 페이지 보여주기
+    @RequestMapping(value="/teams/{teamNo}/manage", method=RequestMethod.GET)
+    public String memberManage(@PathVariable("teamNo") int teamNo, 
+    						   Model model, 
+    						   HttpSession session) {
+        System.out.println("TeampageController.memberManage() for team: " + teamNo);
+
+        // 로그인한 유저가 이 팀의 '팀장'인지 확인
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if(authUser == null || !teampageService.isUserTeamLeader(authUser.getUserNo(), teamNo)) {
+            // 팀장이 아니면, 해당 팀 게시글 목록으로 돌려보냄
+            return "redirect:/onespace/teams/" + teamNo + "/posts/list";
+        }
+        
+        Map<String, Object> manageInfo = teampageService.exeGetMemberInfo(teamNo);
+        
+        model.addAttribute("teamInfo", manageInfo.get("teamInfo"));
+        model.addAttribute("memberList", manageInfo.get("memberList"));
+        
+        // aside에 필요한 팀 목록도 추가
+        List<TeamVO> userTeamList = teampageService.exeGetUserTeams(authUser.getUserNo());
+        model.addAttribute("allTeams", userTeamList);
+        
+        return "teampage/teammember";
+    }
+
+    // -- 가입 신청 승인 처리
+    @RequestMapping(value="/teams/{teamNo}/approve/{userNo}", method=RequestMethod.POST)
+    public String approveMember(@PathVariable("teamNo") int teamNo, 
+    							@PathVariable("userNo") int userNo, 
+    							HttpSession session) {
+        System.out.println("TeampageController.approveMember()");
+        
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if(authUser == null || !teampageService.isUserTeamLeader(authUser.getUserNo(), teamNo)) {
+            return "redirect:/onespace/teams/" + teamNo + "/posts/list";
+        }
+        
+        teampageService.exeApproveMember(teamNo, userNo);
+        
+        return "redirect:/onespace/teams/" + teamNo + "/manage";
+    }
+
+    // -- 가입 신청 거부 또는 팀원 삭제 처리
+    @RequestMapping(value="/teams/{teamNo}/remove/{userNo}", method=RequestMethod.POST)
+    public String removeMember(@PathVariable("teamNo") int teamNo, 
+    						   @PathVariable("userNo") int userNo, 
+    						   HttpSession session) {
+        System.out.println("TeampageController.removeMember()");
+        
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if(authUser == null || !teampageService.isUserTeamLeader(authUser.getUserNo(), teamNo)) {
+            return "redirect:/onespace/teams/" + teamNo + "/posts/list";
+        }
+        
+        teampageService.exeRemoveMember(teamNo, userNo);
+        
+        return "redirect:/onespace/teams/" + teamNo + "/manage";
+    }
 	
-	
-	
+
+    // -- 팀원 가입 신청 처리
+    @RequestMapping(value="/teams/{teamNo}/join", method=RequestMethod.POST)
+    public String requestJoin(@PathVariable("teamNo") int teamNo, HttpSession session) {
+        System.out.println("TeampageController.requestJoin() for team: " + teamNo);
+        
+        // 1. 로그인 정보 가져오기
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if (authUser == null) {
+            // 로그인 안 했으면 로그인 페이지로 (보통은 여기까지 올 수 없음)
+            return "redirect:/onespace/loginForm";
+        }
+        int userNo = authUser.getUserNo();
+        
+        // 2. 서비스에 가입 신청 로직 위임
+        teampageService.exeRequestJoin(teamNo, userNo);
+        
+        // 3. 신청 완료 후, 사용자에게 알림을 주고 메인 페이지나 다른 적절한 페이지로 이동
+        // TODO: "가입 신청이 완료되었습니다. 팀장의 승인을 기다려주세요." 같은 알림 페이지를 만들어주면 더 좋습니다.
+        //       우선은 팀 메인 페이지로 리다이렉트합니다.
+        return "redirect:/onespace/teammain";
+    }
+
 	
 	
 	
