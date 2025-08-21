@@ -92,7 +92,7 @@
                   </div>
                   <br><br>
                   <div class="cta-row">
-                    <button class="btn-outline btn-primary">투표 만들기</button>
+                    <button class="btn-outline btn-primary" onclick="location.href='${pageContext.request.contextPath}/onespace/teams/1/posts/5'">투표 만들기</button>
                     <button class="btn-outline btn-pill" onclick="location.href='${pageContext.request.contextPath}/onespace/practice1_main'">취소</button>
                   </div>
                 </div>
