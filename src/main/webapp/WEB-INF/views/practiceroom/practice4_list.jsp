@@ -53,7 +53,7 @@
                             </div>
                           </div>
                           <div class="card-actions">
-                            <button class="btn-outline btn-pill-sm open-schedule" data-spaces-no="${space.spacesNo}">날짜 시간 추가</button>
+                            <button class="btn-outline btn-pill-sm open-schedule" data-spaces-no="${space.spacesNo}" data-room-no="${space.roomNo}">날짜 시간 추가</button>
                             <button class="btn-like btn-pill-sm" data-spaces-no="${space.spacesNo}">찜해제</button>
                           </div>
                         </div>
@@ -159,153 +159,167 @@
     </div>
     <footer><c:import url="/WEB-INF/views/include/footer.jsp" /></footer>
   </div>
+  
   <script>
-    const schedTitle = document.getElementById('schedTitle');
-    const schedDays = document.getElementById('schedDays');
-    const navBtns = document.querySelectorAll('.sched-nav');
-    let selectedDate = new Date(2025, 7, 20); // 2025-08-20
-    let currentDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+  const schedTitle = document.getElementById('schedTitle');
+  const schedDays  = document.getElementById('schedDays');
+  const navBtns    = document.querySelectorAll('.sched-nav');
 
-    const WEEKDAY_KR = ['일', '월', '화', '수', '목', '금', '토'];
-    const pad = n => n.toString().padStart(2, '0'); // JavaScript에서만 사용
-    const formatTitle = d => (d.getFullYear() + '.' + pad(d.getMonth()+1));
-    const formatSummaryDate = d => {
-    	const y = d.getFullYear(), m = pad(d.getMonth()+1), day = pad(d.getDate()), w = WEEKDAY_KR[d.getDay()];
-    	return y + '/' + m + '/' + day + '(' + w + ')';
-    };
-    
-    function renderCalendar() {
-      schedTitle.textContent = formatTitle(currentDate); // JavaScript로 처리
-      schedDays.innerHTML = '';
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth();
-      const first = new Date(year, month, 1);
-      const last = new Date(year, month + 1, 0);
-      const leading = first.getDay();
-      const prevLast = new Date(year, month, 0).getDate();
-      const totalCells = 42;
-      const thisCount = last.getDate();
+  let selectedDate = new Date(2025, 7, 20); // 2025-08-20
+  let currentDate  = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
 
-      for (let i = leading - 1; i >= 0; i--) {
-        const day = document.createElement('span');
-        day.className = 'muted';
-        day.textContent = prevLast - i;
-        schedDays.appendChild(day);
-      }
-      for (let d = 1; d <= thisCount; d++) {
-        const day = document.createElement('span');
-        day.textContent = d;
-        const today = new Date();
-        if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) day.classList.add('today');
-        if (year === selectedDate.getFullYear() && month === selectedDate.getMonth() && d === selectedDate.getDate()) day.classList.add('picked');
-        day.style.cursor = 'pointer';
-        day.addEventListener('click', () => {
-          selectedDate = new Date(year, month, d);
-          renderCalendar();
-          document.getElementById('schedDate').textContent = formatSummaryDate(selectedDate); // JavaScript로 처리
-        });
-        schedDays.appendChild(day);
-      }
-      const used = schedDays.children.length;
-      for (let k = 1; k <= totalCells - used; k++) {
-        const day = document.createElement('span');
-        day.className = 'muted';
-        day.textContent = k;
-        schedDays.appendChild(day);
-      }
+  const WEEKDAY_KR = ['일','월','화','수','목','금','토'];
+  const pad = n => n.toString().padStart(2, '0');
+  const formatTitle = d => (d.getFullYear() + '.' + pad(d.getMonth()+1));
+  const formatSummaryDate = d => {
+    const y = d.getFullYear(), m = pad(d.getMonth()+1), day = pad(d.getDate()), w = WEEKDAY_KR[d.getDay()];
+    return y + '/' + m + '/' + day + '(' + w + ')';
+  };
+
+  function renderCalendar() {
+    schedTitle.textContent = formatTitle(currentDate);
+    schedDays.innerHTML = '';
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const first = new Date(year, month, 1);
+    const last  = new Date(year, month + 1, 0);
+    const leading  = first.getDay();
+    const prevLast = new Date(year, month, 0).getDate();
+    const totalCells = 42;
+    const thisCount  = last.getDate();
+
+    // 앞부분(이전 달)
+    for (let i = leading - 1; i >= 0; i--) {
+      const day = document.createElement('span');
+      day.className = 'muted';
+      day.textContent = prevLast - i;
+      schedDays.appendChild(day);
     }
 
-    navBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const dir = btn.dataset.dir === 'prev' ? -1 : 1;
-        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + dir, 1);
+    // 이번 달 날짜
+    for (let d = 1; d <= thisCount; d++) {
+      const day = document.createElement('span');
+      day.textContent = d;
+
+      const today = new Date();
+      if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) day.classList.add('today');
+      if (year === selectedDate.getFullYear() && month === selectedDate.getMonth() && d === selectedDate.getDate()) day.classList.add('picked');
+
+      day.style.cursor = 'pointer';
+      day.addEventListener('click', () => {
+        selectedDate = new Date(year, month, d);
         renderCalendar();
+        document.getElementById('schedDate').textContent = formatSummaryDate(selectedDate);
+        // 서버 재조회 없음 — 단순 표시만 업데이트
       });
-    });
 
-    function initCalendarOnOpen() {
-      document.getElementById('schedDate').textContent = formatSummaryDate(selectedDate); // JavaScript로 처리
-      currentDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+      schedDays.appendChild(day);
+    }
+
+    // 뒷부분(다음 달)
+    const used = schedDays.children.length;
+    for (let k = 1; k <= totalCells - used; k++) {
+      const day = document.createElement('span');
+      day.className = 'muted';
+      day.textContent = k;
+      schedDays.appendChild(day);
+    }
+  }
+
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dir = btn.dataset.dir === 'prev' ? -1 : 1;
+      currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + dir, 1);
       renderCalendar();
-    }
-
-    const overlay = document.getElementById('scheduleModal');
-    const openBtns = document.querySelectorAll('.open-schedule');
-    const closeBtn = document.getElementById('schedClose');
-    const submitBtn = document.getElementById('schedSubmit');
-
-    openBtns.forEach(b => b.addEventListener('click', () => {
-      overlay.style.display = 'flex';
-      initCalendarOnOpen();
-      updateSubmitState();
-    }));
-    overlay.addEventListener('click', () => { overlay.style.display = 'none'; });
-    closeBtn.addEventListener('click', () => { overlay.style.display = 'none'; });
-
-    const slots = Array.from(document.querySelectorAll('#schedSlots .slot:not(.disabled)'));
-    const dateEl = document.getElementById('schedDate');
-    const timeEl = document.getElementById('schedTime');
-    const priceEl = document.getElementById('schedPrice');
-
-    const getSelected = () => slots.filter(s => s.classList.contains('selected'));
-    const toStarts = arr => arr.map(s => +s.dataset.start).sort((a, b) => a - b);
-    const isContiguous = starts => {
-      if (starts.length === 0) return true;
-      const min = starts[0], max = starts[starts.length - 1];
-      return (max - min + 1) === starts.length;
-    };
-
-    function updateSummary() {
-      const selected = getSelected();
-      if (selected.length === 0) {
-        timeEl.textContent = '-';
-        priceEl.textContent = '0 원';
-        return;
-      }
-      const sorted = selected.sort((a, b) => +a.dataset.start - +b.dataset.start);
-      const start = +sorted[0].dataset.start;
-      const end = +sorted[sorted.length - 1].dataset.end;
-      const total = sorted.reduce((sum, s) => sum + (+s.dataset.price || 0), 0);
-
-      timeEl.textContent = (start + '시~' + end + '시');
-      priceEl.textContent = total.toLocaleString() + ' 원';
-    }
-
-    function updateSubmitState() {
-      const selStarts = toStarts(getSelected());
-      const ok = selStarts.length === 2 && isContiguous(selStarts);
-      submitBtn.disabled = !ok;
-    }
-
-    slots.forEach(s => {
-      s.addEventListener('click', () => {
-        const was = s.classList.contains('selected');
-        s.classList.toggle('selected');
-
-        const sel = getSelected();
-        const starts = toStarts(sel);
-
-        const withinLimit = starts.length <= 3;
-        const contiguous = isContiguous(starts);
-
-        if (!(withinLimit && contiguous)) {
-          s.classList.toggle('selected');
-          if (!withinLimit) alert('최대 3시간까지 선택할 수 있습니다.');
-          else alert('선택은 연속된 시간만 가능합니다.');
-        }
-
-        updateSummary();
-        updateSubmitState();
-      });
     });
+  });
 
-    updateSummary();
+  function initCalendarOnOpen() {
+    document.getElementById('schedDate').textContent = formatSummaryDate(selectedDate);
+    currentDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+    renderCalendar();
+  }
+
+  // 모달 열고/닫기
+  const overlay   = document.getElementById('scheduleModal');
+  const openBtns  = document.querySelectorAll('.open-schedule');
+  const closeBtn  = document.getElementById('schedClose');
+  const submitBtn = document.getElementById('schedSubmit');
+
+  openBtns.forEach(b => b.addEventListener('click', () => {
+    overlay.style.display = 'flex';
+    initCalendarOnOpen();
     updateSubmitState();
+  }));
+  overlay.addEventListener('click', () => { overlay.style.display = 'none'; });
+  closeBtn.addEventListener('click', () => { overlay.style.display = 'none'; });
 
-    submitBtn.addEventListener('click', () => {
-      alert(dateEl.textContent + ' ' + timeEl.textContent + ' / ' + priceEl.textContent + ' 선택되었습니다.');
-      overlay.style.display = 'none';
+  // 슬롯 선택(연속 + 최대 3칸)
+  const slots   = Array.from(document.querySelectorAll('#schedSlots .slot:not(.disabled)'));
+  const dateEl  = document.getElementById('schedDate');
+  const timeEl  = document.getElementById('schedTime');
+  const priceEl = document.getElementById('schedPrice');
+
+  const getSelected = () => slots.filter(s => s.classList.contains('selected'));
+  const toStarts    = arr => arr.map(s => +s.dataset.start).sort((a,b) => a - b);
+  const isContiguous = starts => {
+    if (starts.length === 0) return true;
+    const min = starts[0], max = starts[starts.length - 1];
+    return (max - min + 1) === starts.length;
+  };
+
+  function updateSummary() {
+    const selected = getSelected();
+    if (selected.length === 0) {
+      timeEl.textContent  = '-';
+      priceEl.textContent = '0 원';
+      return;
+    }
+    const sorted = selected.sort((a,b) => +a.dataset.start - +b.dataset.start);
+    const start  = +sorted[0].dataset.start;
+    const end    = +sorted[sorted.length - 1].dataset.end;
+    const total  = sorted.reduce((sum, s) => sum + (+s.dataset.price || 0), 0);
+
+    timeEl.textContent  = (start + '시~' + end + '시');
+    priceEl.textContent = total.toLocaleString() + ' 원';
+  }
+
+  // 1~3칸, 연속이면 “선택” 버튼 활성화
+  function updateSubmitState() {
+    const selStarts = toStarts(getSelected());
+    const ok = selStarts.length >= 1 && selStarts.length <= 3 && isContiguous(selStarts);
+    submitBtn.disabled = !ok;
+  }
+
+  slots.forEach(s => {
+    s.addEventListener('click', () => {
+      s.classList.toggle('selected');
+
+      const sel    = getSelected();
+      const starts = toStarts(sel);
+      const withinLimit = starts.length <= 3;
+      const contiguous  = isContiguous(starts);
+
+      if (!(withinLimit && contiguous)) {
+        s.classList.toggle('selected');
+        if (!withinLimit) alert('최대 3시간까지 선택할 수 있습니다.');
+        else alert('선택은 연속된 시간만 가능합니다.');
+      }
+
+      updateSummary();
+      updateSubmitState();
     });
-  </script>
+  });
+
+  updateSummary();
+  updateSubmitState();
+
+  submitBtn.addEventListener('click', () => {
+    alert(dateEl.textContent + ' ' + timeEl.textContent + ' / ' + priceEl.textContent + ' 선택되었습니다.');
+    overlay.style.display = 'none';
+  });
+</script>
+  
 </body>
 </html>
