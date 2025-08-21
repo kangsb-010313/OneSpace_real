@@ -8,9 +8,7 @@
 .pride {
   max-width: 1200px;
   margin: 36px auto 0;
-
 }
-
 
 .pride .main-head {
   display: flex;
@@ -60,6 +58,7 @@
   min-width: 0;
   transition: box-shadow .15s;
   width: 275px;   
+  position: relative; /* 카드 기준으로 링크 위치 고정 */
 }
 .pride .team-card:hover {
   box-shadow: 0 6px 20px rgba(112,76,228,0.08);
@@ -72,7 +71,6 @@
   background: #eee;
 }
 .pride .team-info {
-  /*padding: 14px 15px 13px 15px;*/
   text-align: left;
 }
 .pride .team-title {
@@ -95,3 +93,15 @@
   text-overflow: ellipsis;
 }
 
+/* 카드 전체를 클릭 가능하게 하는 링크 */
+.pride .team-card .card-link {
+  position: absolute;
+  inset: 0; /* 카드 전체 덮음 */
+  z-index: 10;
+}
+
+.pride .team-card .card-link:link,
+.pride .team-card .card-link:visited {
+  text-decoration: none;
+  color: inherit;
+}
