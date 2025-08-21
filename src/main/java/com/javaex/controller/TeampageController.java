@@ -48,8 +48,8 @@ public class TeampageController {
         int userNo = authUser.getUserNo();
         
         // 2. 서비스로부터 데이터 가져오기
-        //   - 로그인한 유저가 속한 모든 팀 리스트 (for Aside)
-        //   - 해당 팀들의 모든 게시글 리스트 (for Main Content)
+        //   - 로그인한 유저가 속한 모든 팀 리스트 (Aside)
+        //   - 해당 팀들의 모든 게시글 리스트 (Main Content)
         List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
         List<TeamPostVO> allPostsList = teampageService.exeGetAllUserPosts(userNo);
         
@@ -66,7 +66,7 @@ public class TeampageController {
 	public String teamAddForm(HttpSession session, Model model) {
 		System.out.println("TeampageController.teamAddForm()");
 		
-	    // aside에 팀 목록을 표시하기 위해 현재 로그인한 유저의 팀 리스트를 전달합니다.
+	    // aside에 팀 목록을 표시하기 위해 현재 로그인한 유저의 팀 리스트를 전달
 	    UserVO authUser = (UserVO)session.getAttribute("authUser");
 	    if(authUser == null) {
 	        return "redirect:/onespace/loginForm";
@@ -85,7 +85,7 @@ public class TeampageController {
 	public String teamAdd(TeamVO teamVO, HttpSession session) { // 폼 데이터를 TeamVO로 바로 받습니다.
 	    System.out.println("TeampageController.teamAdd()");
 	    
-	    // 로그인한 사용자 정보를 가져옵니다.
+
 	    UserVO authUser = (UserVO)session.getAttribute("authUser");
 	    if(authUser == null) {
 	        return "redirect:/onespace/loginForm"; // 로그인 안했으면 로그인폼으로
@@ -93,8 +93,7 @@ public class TeampageController {
 	    
 	    int userNo = authUser.getUserNo();
 	    
-	    // 서비스에 팀 생성 로직을 위임합니다.
-	    // 팀 생성 + 생성자를 팀원으로 등록하는 작업이 한번에 이루어집니다.
+	    // 팀 생성 + 생성자를 팀원으로 등록
 	    int newTeamNo = teampageService.exeAddTeam(teamVO, userNo);
 	    
 	    // 팀 생성이 완료되면, 방금 만든 팀의 게시글 리스트 페이지로 이동합니다.
@@ -128,14 +127,11 @@ public class TeampageController {
             model.addAttribute("teamName", "알 수 없는 팀"); // 팀 정보가 없을 경우 대비
         }
         
-        // 현재 보고 있는 팀의 teamNo를 JSP로 전달
-
         model.addAttribute("teamNo", teamNo); // 현재 보고 있는 팀의 teamNo를 JSP로 전달
         
-        // aside에 뿌려줄 *로그인 유저의* 팀 목록 가져오기 [수정]
         int userNo = authUser.getUserNo();
         List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
-        model.addAttribute("allTeams", userTeamList); // aside.jsp가 사용하는 모델 이름 'allTeams'로 전달
+        model.addAttribute("allTeams", userTeamList); 
 
         return "teampage/list"; 
     }
@@ -204,7 +200,7 @@ public class TeampageController {
 		int userNo = authUser.getUserNo();
 		
 		teamPostVO.setUserNo(userNo); // 작성자 userNo 설정
-        teamPostVO.setTeamNo(teamNo); // URL에서 받은 teamNo 설정!
+        teamPostVO.setTeamNo(teamNo); // URL에서 받은 teamNo 설정
 		
 		teampageService.exeAdd(teamPostVO);
 		
@@ -212,15 +208,15 @@ public class TeampageController {
 	}
 	
 	//--팀페이지 등록 글 보기
-	// URL: /onespace/teams/{teamNo}/posts/{teamPostNo} (또는 /onespace/posts/{teamPostNo}로 단순화도 가능)
+	// URL: /onespace/teams/{teamNo}/posts/{teamPostNo}
     @RequestMapping(value="/teams/{teamNo}/posts/{teamPostNo}", method= {RequestMethod.GET, RequestMethod.POST})
-    public String viewPost(@PathVariable("teamNo") int teamNo, // 리스트로 돌아갈 때 필요할 수 있음
+    public String viewPost(@PathVariable("teamNo") int teamNo, 
                            @PathVariable("teamPostNo") int teamPostNo,
                            HttpSession session,
                            Model model) {
         System.out.println("TeampageController.viewPost() for teamPostNo: " + teamPostNo);
         
-        //로그인 체크 추가
+        //로그인 체크
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null) {
             return "redirect:/onespace/loginForm";
@@ -228,18 +224,18 @@ public class TeampageController {
         
         int userNo = authUser.getUserNo();
         
-        // 현재 로그인한 유저가 이 팀의 멤버인지 확인하는 로직
+        // 현재 로그인한 유저가 이 팀의 멤버인지 확인
         boolean isMember = teampageService.isUserMember(userNo, teamNo);
         model.addAttribute("isMember", isMember); // 결과를 모델에 담아 JSP로 전달
         
-        //  현재 보고 있는 글이 '환영 게시글'인지 확인
+        //  현재 보고 있는 글이 '환영(등록) 게시글'인지 확인
         boolean isWelcomePost = teampageService.isWelcomePost(teamPostNo, teamNo);
         model.addAttribute("isWelcomePost", isWelcomePost);
 
         TeamPostVO post = teampageService.exeGetPost(teamPostNo);
         model.addAttribute("post", post); // 게시글 정보를 "post"라는 이름으로 JSP에 전달
 
-        // JSP에서 '목록으로' 돌아갈 때 현재 팀 번호가 필요할 수 있으므로 전달
+        // JSP에서 '목록으로' 돌아갈 때 현재 팀 번호가 필요할 수 있으므로 일단 전달
         model.addAttribute("teamNo", teamNo); 
         
         List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
@@ -252,7 +248,7 @@ public class TeampageController {
             model.addAttribute("teamName", "알 수 없는 팀");
         }
 
-        return "teampage/view"; // 게시글 상세 보기를 위한 JSP 파일 이름 (예: view.jsp)
+        return "teampage/view";
     }
 	
     // -- 팀페이지 등록글 수정 폼
@@ -264,7 +260,7 @@ public class TeampageController {
                              Model model) {
         System.out.println("TeampageController.modifyForm()");
         
-        // 로그인 체크 (필수)
+        // 로그인 체크 (필수) 등록자만 수정 가능
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null) {
             return "redirect:/onespace/loginForm";
@@ -275,7 +271,6 @@ public class TeampageController {
 
         // 작성자 본인인지 확인 (보안 강화)
         if (post == null || post.getUserNo() != authUser.getUserNo()) {
-            // TODO: 권한 없음 페이지 또는 에러 처리
             return "redirect:/onespace/teams/" + teamNo + "/posts/" + teamPostNo; // 상세 페이지로 돌려보냄
         }
         
@@ -295,7 +290,7 @@ public class TeampageController {
             model.addAttribute("teamName", "알 수 없는 팀");
         }
         
-        return "teampage/postModifyForm"; // 글쓰기 폼이랑 같이 사용
+        return "teampage/postModifyForm"; 
     }
 
     // -- 팀페이지 등록글 수정 처리
@@ -340,8 +335,8 @@ public class TeampageController {
             return "redirect:/onespace/loginForm"; // 로그인 안 했으면 로그인 페이지로
         }
         
-        // 서비스에 삭제 요청 (작성자 본인인지 확인하는 로직은 서비스나 컨트롤러에 추가할 수 있습니다)
-        // 여기서는 본인 글만 삭제 버튼이 보이므로 바로 삭제를 진행합니다.
+        // 서비스에 삭제 요청
+        // 본인 글만 삭제 버튼이 보이므로 바로 삭제
         int userNo = authUser.getUserNo();
         teampageService.exeDelete(teamPostNo, userNo);
 
@@ -360,7 +355,7 @@ public class TeampageController {
         // 로그인한 유저가 이 팀의 '팀장'인지 확인
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null || !teampageService.isUserTeamLeader(authUser.getUserNo(), teamNo)) {
-            // 팀장이 아니면, 해당 팀 게시글 목록으로 돌려보냄
+            // 팀장이 아니면, 해당 팀 게시글 목록으로 돌려보냄 -> 어느 페이지로 보내는가 나을까.. 
             return "redirect:/onespace/teams/" + teamNo + "/posts/list";
         }
         
@@ -393,7 +388,7 @@ public class TeampageController {
         return "redirect:/onespace/teams/" + teamNo + "/manage";
     }
 
-    // -- 가입 신청 거부 또는 팀원 삭제 처리
+    // -- 가입 신청 거부, 팀원 삭제 처리 -> 거부, 삭제 같은 개념
     @RequestMapping(value="/teams/{teamNo}/remove/{userNo}", method=RequestMethod.POST)
     public String removeMember(@PathVariable("teamNo") int teamNo, 
     						   @PathVariable("userNo") int userNo, 
@@ -419,7 +414,7 @@ public class TeampageController {
         // 1. 로그인 정보 가져오기
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if (authUser == null) {
-            // 로그인 안 했으면 로그인 페이지로 (보통은 여기까지 올 수 없음)
+            // 로그인 안 했으면 로그인 페이지로 (보통은 여기까지 못 옴)
             return "redirect:/onespace/loginForm";
         }
         int userNo = authUser.getUserNo();
@@ -427,9 +422,7 @@ public class TeampageController {
         // 2. 서비스에 가입 신청 로직 위임
         teampageService.exeRequestJoin(teamNo, userNo);
         
-        // 3. 신청 완료 후, 사용자에게 알림을 주고 메인 페이지나 다른 적절한 페이지로 이동
-        // TODO: "가입 신청이 완료되었습니다. 팀장의 승인을 기다려주세요." 같은 알림 페이지를 만들어주면 더 좋습니다.
-        //       우선은 팀 메인 페이지로 리다이렉트합니다.
+        // 3. 신청 완료 후 메인 페이지로 이동(팀이 없으면 아무 리스트도 안 보임)
         return "redirect:/onespace/teammain";
     }
 

@@ -215,7 +215,7 @@
     
     <!-- 특정 팀의 첫 게시글 번호(teamPostNo의 최소값)를 조회 -->
 	<select id="selectFirstPostNo" parameterType="int" resultType="java.lang.Integer">
-	    select MIN(teamPostNo)
+	    select min(teamPostNo)
 	    from posts
 	    where teamNo = #{teamNo}
 	</select>
