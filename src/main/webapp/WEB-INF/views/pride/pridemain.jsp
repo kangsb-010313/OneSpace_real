@@ -8,9 +8,9 @@
     <head>
         <meta charset="UTF-8">
         <title>원스페이스-팀자랑</title>
-        <link rel="stylesheet" href="../../assets/css/reset.css">
-        <link rel="stylesheet" href="../../assets/css/basicdefault.css">
-        <link rel="stylesheet" href="../../assets/css/pride.css">
+        <link rel="stylesheet" href="<c:url value='/assets/css/reset.css'/>">
+		<link rel="stylesheet" href="<c:url value='/assets/css/basicdefault.css'/>">
+		<link rel="stylesheet" href="<c:url value='/assets/css/pride.css'/>">
     </head>
 
     <body>
@@ -37,6 +37,7 @@
                     <div class="team-grid">
             <!-- 카드 1 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/댄스팀 연습 사진01.jpg" alt="팀 원밀리언 프로필 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 원밀리언</h2>
@@ -47,6 +48,7 @@
 
             <!-- 카드 2 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/댄스팀연습사진02.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 아우라</h2>
@@ -57,6 +59,7 @@
 
             <!-- 카드 3 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/댄스팀연습사진03.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 네오스</h2>
@@ -67,6 +70,7 @@
 
             <!-- 카드 4 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/댄스팀연습사진04.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 비전</h2>
@@ -77,6 +81,7 @@
 
             <!-- 카드 5 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/댄스팀연습사진05.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 모션</h2>
@@ -87,6 +92,7 @@
 
             <!-- 카드 6 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/댄스팀연습사진06.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 플레인</h2>
@@ -97,6 +103,7 @@
 
             <!-- 카드 7 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/댄스팀연습사진07.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 하이드</h2>
@@ -107,6 +114,7 @@
 
             <!-- 카드 8 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/댄스팀연습사진08.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 코브라</h2>
@@ -117,6 +125,7 @@
 
             <!-- 카드 9 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/팀자랑사진04.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 다이아몬드</h2>
@@ -127,6 +136,7 @@
 
             <!-- 카드 10 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/팀자랑사진02.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 플라워</h2>
@@ -137,6 +147,7 @@
 
             <!-- 카드 11 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/팀자랑사진03.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 JP</h2>
@@ -147,6 +158,7 @@
 
             <!-- 카드 12 -->
             <article class="team-card">
+            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
               <img src="../../assets/images/팀자랑사진01.jpg" alt="팀 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 엘레강스</h2>

@@ -38,11 +38,11 @@ public class PracticeroomRepository {
 	public PracticeroomRepository(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }
-
+	
     public SpacesVO selectZoneDetail(Long spacesNo) {
         return sqlSession.selectOne("practiceroom.selectZoneDetail", spacesNo);
     }
-
+    
     public List<RoomsVO> selectRoomsBySpace(Long spacesNo) {
         return sqlSession.selectList("practiceroom.selectRoomsBySpace", spacesNo);
     }
@@ -51,4 +51,7 @@ public class PracticeroomRepository {
         return sqlSession.selectList("practiceroom.selectFavoriteSpaces", userNo);
     }
     
+    public List<Map<String, Object>> selectFavoriteCandidates(Long userNo) {
+        return sqlSession.selectList("practiceroom.selectFavoriteCandidates", userNo);
+    }
 }

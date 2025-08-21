@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -65,18 +66,27 @@
                     <section class="fav-panel">
                       <div class="fav-title">#내가 찜한 연습실 후보</div>
                       <ol class="fav-list">
-                        <c:forEach var="space" items="${favoriteSpaces}" varStatus="loop">
-                          <li class="fav-item">
-                            <div>
-                              <div class="fav-item-title">${loop.count}. ${space.spaceName}</div>
-                              <div class="fav-item-meta">8/20(수) <span class="fav-time">14:00~16:00</span> <span class="fav-duration">2시간</span></div>
-                            </div>
-                            <div class="fav-right">
-                              <div class="fav-hot">🔥 <b>5</b></div>
-                              <div class="fav-price">가격: 12,000</div>
-                            </div>
-                          </li>
-                        </c:forEach>
+                        <c:forEach var="c" items="${favoriteCandidates}" varStatus="loop">
+						  <li class="fav-item">
+						    <div>
+						      <div class="fav-item-title">${loop.count}. ${c.spaceName}</div>
+						      <div class="fav-item-meta">
+						        <fmt:formatDate value="${c.voteDate}" pattern="yyyy/MM/dd"/>
+						        <span class="fav-time">${c.startHour}:00~${c.endHour}:00</span>
+						        <span class="fav-duration">${c.durationHours}시간</span>
+						      </div>
+						    </div>
+						    <div class="fav-right">
+						      <div class="fav-hot">🔥 <b>${c.hotCount}</b></div>
+						      <div class="fav-price">가격:
+						        <fmt:formatNumber value="${c.totalPrice}" type="number"/>
+						      </div>
+						    </div>
+						  </li>
+						</c:forEach>
+						<c:if test="${empty favoriteCandidates}">
+						  <li class="fav-item" style="color:#888;">선택한 후보가 없습니다.</li>
+						</c:if>
                       </ol>
                     </section>
                   </div>

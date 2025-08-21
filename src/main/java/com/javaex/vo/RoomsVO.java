@@ -109,36 +109,83 @@ public class RoomsVO {
             + updtDtm + "]";
    }
    
-// -------- 묶음: 요금 --------
+// -------- 요금 --------
 public static class RoomPrices {
     private Long pricesNo;
     private Long roomNo;
-    private String dayType;     // "평일"/"주말"
-    private String startTime;   // "09:00"
-    private String endTime;     // "18:00"
-    private String hourlyPrice; // 문자열 저장
+    private String dayType; // "평일"/"주말"
+    private String startTime;
+    private String endTime;
+    private String hourlyPrice;
     private String instDt;
     private String updtDt;
 
-    public Long getPricesNo() { return pricesNo; }
-    public void setPricesNo(Long pricesNo) { this.pricesNo = pricesNo; }
-    public Long getRoomNo() { return roomNo; }
-    public void setRoomNo(Long roomNo) { this.roomNo = roomNo; }
-    public String getDayType() { return dayType; }
-    public void setDayType(String dayType) { this.dayType = dayType; }
-    public String getStartTime() { return startTime; }
-    public void setStartTime(String startTime) { this.startTime = startTime; }
-    public String getEndTime() { return endTime; }
-    public void setEndTime(String endTime) { this.endTime = endTime; }
-    public String getHourlyPrice() { return hourlyPrice; }
-    public void setHourlyPrice(String hourlyPrice) { this.hourlyPrice = hourlyPrice; }
-    public String getInstDt() { return instDt; }
-    public void setInstDt(String instDt) { this.instDt = instDt; }
-    public String getUpdtDt() { return updtDt; }
-    public void setUpdtDt(String updtDt) { this.updtDt = updtDt; }
+    public Long getPricesNo() {
+    	return pricesNo;
+    }
+    
+    public void setPricesNo(Long pricesNo) {
+    	this.pricesNo = pricesNo;
+    }
+    
+    public Long getRoomNo() {
+    	return roomNo;
+    }
+    
+    public void setRoomNo(Long roomNo) {
+    	this.roomNo = roomNo;
+    }
+    
+    public String getDayType() {
+    	return dayType;
+    }
+    
+    public void setDayType(String dayType) {
+    	this.dayType = dayType;
+    }
+    
+    public String getStartTime() {
+    	return startTime;
+    }
+    
+    public void setStartTime(String startTime) {
+    	this.startTime = startTime;
+    }
+    
+    public String getEndTime() {
+    	return endTime;
+    }
+    
+    public void setEndTime(String endTime) {
+    	this.endTime = endTime;
+    }
+    
+    public String getHourlyPrice() {
+    	return hourlyPrice;
+    }
+    
+    public void setHourlyPrice(String hourlyPrice) {
+    	this.hourlyPrice = hourlyPrice;
+    }
+    
+    public String getInstDt() {
+    	return instDt;
+    }
+    
+    public void setInstDt(String instDt) {
+    	this.instDt = instDt;
+    }
+    
+    public String getUpdtDt() {
+    	return updtDt;
+    }
+    
+    public void setUpdtDt(String updtDt) {
+    	this.updtDt = updtDt;
+    }
 }
 
-// -------- 묶음: 사진 --------
+// -------- 사진 --------
 public static class RoomAttachment {
     private Long pictureSno;
     private Long roomNo;
@@ -148,20 +195,61 @@ public static class RoomAttachment {
     private String instDt;
     private String updtDt;
 
-    public Long getPictureSno() { return pictureSno; }
-    public void setPictureSno(Long pictureSno) { this.pictureSno = pictureSno; }
-    public Long getRoomNo() { return roomNo; }
-    public void setRoomNo(Long roomNo) { this.roomNo = roomNo; }
-    public String getStoredFileName() { return storedFileName; }
-    public void setStoredFileName(String storedFileName) { this.storedFileName = storedFileName; }
-    public String getOriginFileName() { return originFileName; }
-    public void setOriginFileName(String originFileName) { this.originFileName = originFileName; }
-    public String getFilePath() { return filePath; }
-    public void setFilePath(String filePath) { this.filePath = filePath; }
-    public String getInstDt() { return instDt; }
-    public void setInstDt(String instDt) { this.instDt = instDt; }
-    public String getUpdtDt() { return updtDt; }
-    public void setUpdtDt(String updtDt) { this.updtDt = updtDt; }
+    public Long getPictureSno() {
+    	return pictureSno;
+    }
+    
+    public void setPictureSno(Long pictureSno) {
+    	this.pictureSno = pictureSno;
+    }
+    
+    public Long getRoomNo() {
+    	return roomNo;
+    }
+    
+    public void setRoomNo(Long roomNo) {
+    	this.roomNo = roomNo;
+    }
+    
+    public String getStoredFileName() {
+    	return storedFileName;
+    }
+    
+    public void setStoredFileName(String storedFileName) {
+    	this.storedFileName = storedFileName;
+    }
+    
+    public String getOriginFileName() {
+    	return originFileName;
+    }
+    
+    public void setOriginFileName(String originFileName) {
+    	this.originFileName = originFileName;
+    }
+    
+    public String getFilePath() {
+    	return filePath;
+    }
+    
+    public void setFilePath(String filePath) {
+    	this.filePath = filePath;
+    }
+    
+    public String getInstDt() {
+    	return instDt;
+    }
+    
+    public void setInstDt(String instDt) {
+    	this.instDt = instDt;
+    }
+    
+    public String getUpdtDt() {
+    	return updtDt;
+    }
+    
+    public void setUpdtDt(String updtDt) {
+    	this.updtDt = updtDt;
+    }
 }
     
 }

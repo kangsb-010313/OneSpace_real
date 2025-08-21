@@ -100,29 +100,70 @@
 	      s.addressDetail,
 	      s.instDtm,
 	      s.updtDtm,
+	      /* roomNo 기준 대표 이미지(있으면 그거, 없으면 대체) */
 	      COALESCE(
 	        CONCAT(ra.filePath, ra.storedFileName),
 	        CASE
-	          WHEN REGEXP_LIKE(LOWER(s.spaceLink), '^(https?://).*(\\.(jpg|jpeg|png|gif|webp))(\\?.*)?$')
+	          WHEN LOWER(s.spaceLink) REGEXP '^(https?://).*(\\.(jpg|jpeg|png|gif|webp))(\\?.*)?$'
 	            THEN s.spaceLink
-	          WHEN REGEXP_LIKE(LOWER(s.spaceLink), '(\\.(jpg|jpeg|png|gif|webp))$')
+	          WHEN LOWER(s.spaceLink) REGEXP '(\\.(jpg|jpeg|png|gif|webp))$'
 	            THEN CONCAT('/assets/images/', s.spaceLink)
 	          ELSE '/assets/images/연습실찜하기사진01.jpg'
 	        END
 	      ) AS imageUrl
-	  FROM spaces s
-	  JOIN rooms r           ON r.spacesNo = s.spacesNo
-	  JOIN studioWishlist sw ON sw.roomNo  = r.roomNo
+	  FROM studioWishlist sw
+	  JOIN rooms r ON r.roomNo = sw.roomNo
+	  JOIN spaces s ON s.spacesNo = r.spacesNo
 	  LEFT JOIN (
-	      SELECT r2.spacesNo, MIN(ra2.pictureSno) AS minPic
-	      FROM rooms r2
-	      JOIN roomAttachments ra2 ON ra2.roomNo = r2.roomNo
-	      GROUP BY r2.spacesNo
-	  ) pick ON pick.spacesNo = s.spacesNo
+	      SELECT roomNo, MIN(pictureSno) AS minPic
+	      FROM roomAttachments
+	      GROUP BY roomNo
+	  ) pick ON pick.roomNo = r.roomNo
 	  LEFT JOIN roomAttachments ra ON ra.pictureSno = pick.minPic
 	  WHERE sw.userNo = #{userNo}
-	  GROUP BY s.spacesNo
-	  ORDER BY s.spacesNo ASC
+	  ORDER BY sw.studioWishlistNo DESC
+	</select>
+	
+	<!-- 후보 리스트(오른쪽 패널) -->
+	<select id="selectFavoriteCandidates" parameterType="long" resultType="java.util.Map">
+	  <![CDATA[
+	  SELECT
+	    s.spaceName,
+	    r.roomNo,
+	    v.voteDate,
+	    CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~', 1), ':', 1) AS UNSIGNED) AS startHour,
+	    CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~',-1), ':', 1) AS UNSIGNED) AS endHour,
+	    (
+	      CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~',-1), ':', 1) AS UNSIGNED) -
+	      CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~', 1), ':', 1) AS UNSIGNED)
+	    ) AS durationHours,
+	    CASE WHEN DAYOFWEEK(v.voteDate) IN (1,7) THEN '주말' ELSE '평일' END AS dayType,
+	    (
+	      (
+	        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~',-1), ':', 1) AS UNSIGNED) -
+	        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~', 1), ':', 1) AS UNSIGNED)
+	      ) * COALESCE(CAST(rp.hourlyPrice AS UNSIGNED), 0)
+	    ) AS totalPrice,
+	    (
+	      SELECT COUNT(*)
+	      FROM voteOptions vv
+	      WHERE vv.roomNo   = v.roomNo
+	        AND vv.voteDate = v.voteDate
+	        AND vv.voteTime = v.voteTime
+	    ) AS hotCount
+	  FROM voteOptions v
+	  JOIN rooms  r ON r.roomNo   = v.roomNo
+	  JOIN spaces s ON s.spacesNo = r.spacesNo
+	  LEFT JOIN roomPrices rp
+	         ON rp.roomNo  = r.roomNo
+	        AND rp.dayType = (CASE WHEN DAYOFWEEK(v.voteDate) IN (1,7) THEN '주말' ELSE '평일' END)
+	        AND rp.startTime <= MAKETIME(
+	              CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~', 1), ':', 1) AS UNSIGNED),0,0)
+	        AND rp.endTime   >= MAKETIME(
+	              CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~',-1), ':', 1) AS UNSIGNED),0,0)
+	  WHERE v.userNo = #{userNo}
+	  ORDER BY v.voteDate, startHour, s.spacesNo
+	  ]]>
 	</select>
 	
 </mapper>

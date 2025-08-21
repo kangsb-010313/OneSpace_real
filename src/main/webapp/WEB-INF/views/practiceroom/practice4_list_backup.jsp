@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -10,26 +11,17 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/practice.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
-
+  <c:set var="CTX" value="${pageContext.request.contextPath}" />
 </head>
 <body class="page-practice4">
   <div class="wrap">
-    
-    <!-- 헤더 영역------------------------------------------------ -->
-    <header>
-      <c:import url="/WEB-INF/views/include/header.jsp" />
-    </header>
-    <!-- /헤더 영역------------------------------------------------ -->
-
-    <!-- 본문 -->
+    <header><c:import url="/WEB-INF/views/include/header.jsp" /></header>
     <main>
       <div class="container">
         <div class="main-section">
           <div class="content-area">
             <div class="filter-bar">
-              <button class="btn-list" onclick="location.href='file:///C:/javaStudy/onespace_front/views/practiceroom/practice4_list.html'">
-                찜리스트<span style="color:#ff3333;">❤</span>
-              </button>
+              <button class="btn-list" disabled>찜리스트<span style="color:#ff3333;">❤</span></button>
             </div>
             <div class="container">
               <div id="content">
@@ -41,244 +33,171 @@
                   </div>
                   <a href="#" class="btn-outline2 teamadd-btn">팀 등록하기</a>
                 </div>
-
-                <!-- 우측: 본문 -->
                 <div id="main-content">
                   <div class="page-title">찜리스트</div>
                   <div style="width: 90%; border-bottom: 1px solid #e4e2ef; margin-left: 30px;"></div>
                   <br>
-
-                  <!-- 본문 2열 -->
                   <div class="two-col">
-                    <!-- 왼쪽: 카드들 -->
                     <div class="practice-card-list">
-                      <!-- 카드 1 -->
-                      <div class="practice-card card-bordered">
-                        <img src="../../assets/images/연습실찜하기사진03.jpg" alt="픽스튜디오" class="practice-card-img">
-                        <div class="practice-card-body">
-                          <div class="practice-card-title">네스트 연습실 101호</div>
-                          <div class="practice-card-meta">강동구</div>
-                          <div class="practice-card-price">
-                            <span class="price-highlight">7,000~12,000</span> 원/시간
-                            <span class="price-sub">&nbsp; 실외화 가능/주차/최대7인</span>
+                      <c:forEach var="space" items="${favoriteSpaces}">
+                        <div class="practice-card card-bordered">
+                          <img src="${fn:startsWith(space.imageUrl,'http') ? space.imageUrl : CTX.concat(space.imageUrl)}"
+     							alt="${space.spaceName}" class="practice-card-img" />
+                          <div class="practice-card-body">
+                            <div class="practice-card-title">${space.spaceName}</div>
+                            <div class="practice-card-meta">${space.address}</div>
+                            <div class="practice-card-price">
+                              <span class="price-highlight">7,000~12,000</span> 원/시간
+                              <span class="price-sub">&nbsp; 실외화 가능/주차/최대7인</span>
+                            </div>
+                          </div>
+                          <div class="card-actions">
+                            <button class="btn-outline btn-pill-sm open-schedule" data-spaces-no="${space.spacesNo}">날짜 시간 추가</button>
+                            <button class="btn-like btn-pill-sm" data-spaces-no="${space.spacesNo}">찜해제</button>
                           </div>
                         </div>
-                        <div class="card-actions">
-                          <button class="btn-outline btn-pill-sm open-schedule">날짜 시간 추가</button>
-                          <button class="btn-like btn-pill-sm">찜해제</button>
-                        </div>
-                      </div>
-
-                      <!-- 카드 2 -->
-                      <div class="practice-card card-bordered">
-                        <img src="../../assets/images/연습실찜하기사진03.jpg" alt="픽스튜디오" class="practice-card-img">
-                        <div class="practice-card-body">
-                          <div class="practice-card-title">네스트 연습실 102호</div>
-                          <div class="practice-card-meta">강동구</div>
-                          <div class="practice-card-price">
-                            <span class="price-highlight">7,000~12,000</span> 원/시간
-                            <span class="price-sub">&nbsp; 실외화 가능/주차/최대7인</span>
-                          </div>
-                        </div>
-                        <div class="card-actions">
-                          <button class="btn-outline btn-pill-sm open-schedule">날짜 시간 추가</button>
-                          <button class="btn-like btn-pill-sm">찜해제</button>
-                        </div>
-                      </div>
+                      </c:forEach>
+                      
+                      <c:if test="${empty favoriteSpaces}">
+                        <div style="padding:16px;color:#888;">찜한 연습실이 없습니다.</div>
+                      </c:if>
                     </div>
-
-                    <!-- 오른쪽: 찜 후보 리스트 -->
                     <section class="fav-panel">
                       <div class="fav-title">#내가 찜한 연습실 후보</div>
                       <ol class="fav-list">
-                        <li class="fav-item">
-                          <div>
-                            <div class="fav-item-title">1. 네스트 연습실 101호</div>
-                            <div class="fav-item-meta">
-                              8/5(월)
-                              <span class="fav-time">15:00~17:00</span>
-                              <span class="fav-duration">2시간</span>
+                        <c:forEach var="space" items="${favoriteSpaces}" varStatus="loop">
+                          <li class="fav-item">
+                            <div>
+                              <div class="fav-item-title">${loop.count}. ${space.spaceName}</div>
+                              <div class="fav-item-meta">8/20(수) <span class="fav-time">14:00~16:00</span> <span class="fav-duration">2시간</span></div>
                             </div>
-                          </div>
-                          <div class="fav-right">
-                            <div class="fav-hot">🔥 <b>5</b></div>
-                            <div class="fav-price">가격: 16,000</div>
-                          </div>
-                        </li>
-                        <li class="fav-item">
-                          <div>
-                            <div class="fav-item-title">2. 네스트 연습실 101호</div>
-                            <div class="fav-item-meta">
-                              8/5(월)
-                              <span class="fav-time">18:00~20:00</span>
-                              <span class="fav-duration">2시간</span>
+                            <div class="fav-right">
+                              <div class="fav-hot">🔥 <b>5</b></div>
+                              <div class="fav-price">가격: 12,000</div>
                             </div>
-                          </div>
-                          <div class="fav-right">
-                            <div class="fav-hot">🔥 <b>3</b></div>
-                            <div class="fav-price">가격: 16,000</div>
-                          </div>
-                        </li>
-                        <li class="fav-item">
-                          <div>
-                            <div class="fav-item-title">3. 네스트 연습실 102호</div>
-                            <div class="fav-item-meta">
-                              8/6(화)
-                              <span class="fav-time">15:00~17:00</span>
-                              <span class="fav-duration">2시간</span>
-                            </div>
-                          </div>
-                          <div class="fav-right">
-                            <div class="fav-hot">🔥 <b>3</b></div>
-                            <div class="fav-price">가격: 16,000</div>
-                          </div>
-                        </li>
+                          </li>
+                        </c:forEach>
                       </ol>
                     </section>
                   </div>
                   <br><br>
-
-                  <!-- 하단 액션 -->
                   <div class="cta-row">
                     <button class="btn-outline btn-primary">투표 만들기</button>
-                    <button class="btn-outline btn-pill" onclick="location.href='../../views/practiceroom/practice1_main.html'">취소</button>
+                    <button class="btn-outline btn-pill" onclick="location.href='${pageContext.request.contextPath}/onespace/practice1_main'">취소</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- /content-area -->
         </div>
-        <!-- /main-section -->
       </div>
     </main>
-  </div>
+    <div id="scheduleModal" class="sched-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="sched-modal" onclick="event.stopPropagation()">
+        <div class="sched-month">
+          <button class="sched-nav" data-dir="prev" aria-label="이전 달">‹</button>
+          <div class="sched-title" id="schedTitle">2025.08</div>
+          <button class="sched-nav" data-dir="next" aria-label="다음 달">›</button>
+        </div>
+        <div class="sched-week"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+        <div class="sched-days" id="schedDays"></div>
+        <br>
+        <ul class="sched-slots" id="schedSlots">
+          <li class="slot" data-start="0"  data-end="1"  data-price="4000">00~01<span>(4,000)</span></li>
+          <li class="slot" data-start="1"  data-end="2"  data-price="4000">01~02<span>(4,000)</span></li>
+          <li class="slot" data-start="2"  data-end="3"  data-price="4000">02~03<span>(4,000)</span></li>
+          <li class="slot" data-start="3"  data-end="4"  data-price="4000">03~04<span>(4,000)</span></li>
 
-  <!-- 일정 선택 모달 -->
-  <div id="scheduleModal" class="sched-overlay" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="sched-modal" onclick="event.stopPropagation()">
-      <div class="sched-month">
-        <button class="sched-nav" data-dir="prev" aria-label="이전 달">‹</button>
-        <div class="sched-title" id="schedTitle">2025.08</div>
-        <button class="sched-nav" data-dir="next" aria-label="다음 달">›</button>
-      </div>
-      <div class="sched-week">
-        <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
-      </div>
-      <div class="sched-days" id="schedDays"></div>
-      <br>
-      <ul class="sched-slots" id="schedSlots">
-        <li class="slot" data-start="0"  data-end="1"  data-price="4000">00~01<span>(4,000)</span></li>
-        <li class="slot" data-start="1"  data-end="2"  data-price="4000">01~02<span>(4,000)</span></li>
-        <li class="slot" data-start="2"  data-end="3"  data-price="4000">02~03<span>(4,000)</span></li>
-        <li class="slot" data-start="3"  data-end="4"  data-price="4000">03~04<span>(4,000)</span></li>
+          <li class="slot" data-start="4"  data-end="5"  data-price="4000">04~05<span>(4,000)</span></li>
+          <li class="slot" data-start="5"  data-end="6"  data-price="4000">05~06<span>(4,000)</span></li>
+          <li class="slot" data-start="6"  data-end="7"  data-price="4000">06~07<span>(4,000)</span></li>
+          <li class="slot" data-start="7"  data-end="8"  data-price="4000">07~08<span>(4,000)</span></li>
 
-        <li class="slot" data-start="4"  data-end="5"  data-price="4000">04~05<span>(4,000)</span></li>
-        <li class="slot" data-start="5"  data-end="6"  data-price="4000">05~06<span>(4,000)</span></li>
-        <li class="slot" data-start="6"  data-end="7"  data-price="4000">06~07<span>(4,000)</span></li>
-        <li class="slot" data-start="7"  data-end="8"  data-price="4000">07~08<span>(4,000)</span></li>
+          <li class="slot" data-start="8"  data-end="9"  data-price="6000">08~09<span>(6,000)</span></li>
+          <li class="slot" data-start="9"  data-end="10" data-price="6000">09~10<span>(6,000)</span></li>
+          <li class="slot" data-start="10" data-end="11" data-price="6000">10~11<span>(6,000)</span></li>
+          <li class="slot" data-start="11" data-end="12" data-price="6000">11~12<span>(6,000)</span></li>
 
-        <li class="slot" data-start="8"  data-end="9"  data-price="6000">08~09<span>(6,000)</span></li>
-        <li class="slot" data-start="9"  data-end="10" data-price="6000">09~10<span>(6,000)</span></li>
-        <li class="slot" data-start="10" data-end="11" data-price="6000">10~11<span>(6,000)</span></li>
-        <li class="slot" data-start="11" data-end="12" data-price="6000">11~12<span>(6,000)</span></li>
+          <li class="slot" data-start="12" data-end="13" data-price="6000">12~13<span>(6,000)</span></li>
+          <li class="slot" data-start="13" data-end="14" data-price="6000">13~14<span>(6,000)</span></li>
+          <li class="slot" data-start="14" data-end="15" data-price="6000">14~15<span>(6,000)</span></li>
+          <li class="slot" data-start="15" data-end="16" data-price="6000">15~16<span>(6,000)</span></li>
 
-        <li class="slot" data-start="12" data-end="13" data-price="6000">12~13<span>(6,000)</span></li>
-        <li class="slot" data-start="13" data-end="14" data-price="6000">13~14<span>(6,000)</span></li>
-        <li class="slot" data-start="14" data-end="15" data-price="6000">14~15<span>(6,000)</span></li>
-        <li class="slot" data-start="15" data-end="16" data-price="6000">15~16<span>(6,000)</span></li>
+          <li class="slot" data-start="16" data-end="17" data-price="6000">16~17<span>(6,000)</span></li>
+          <li class="slot" data-start="17" data-end="18" data-price="6000">17~18<span>(6,000)</span></li>
+          <li class="slot" data-start="18" data-end="19" data-price="6000">18~19<span>(6,000)</span></li>
+          <li class="slot" data-start="19" data-end="20" data-price="6000">19~20<span>(6,000)</span></li>
 
-        <li class="slot" data-start="16" data-end="17" data-price="6000">16~17<span>(6,000)</span></li>
-        <li class="slot" data-start="17" data-end="18" data-price="6000">17~18<span>(6,000)</span></li>
-        <li class="slot" data-start="18" data-end="19" data-price="6000">18~19<span>(6,000)</span></li>
-        <li class="slot" data-start="19" data-end="20" data-price="6000">19~20<span>(6,000)</span></li>
-
-        <li class="slot" data-start="20" data-end="21" data-price="6000">20~21<span>(6,000)</span></li>
-        <li class="slot" data-start="21" data-end="22" data-price="6000">21~22<span>(6,000)</span></li>
-        <li class="slot" data-start="22" data-end="23" data-price="6000">22~23<span>(6,000)</span></li>
-        <li class="slot" data-start="23" data-end="24" data-price="6000">23~24<span>(6,000)</span></li>
-      </ul>
-
-      <div class="sched-summary">
-        <div class="label">#선택 일정</div>
-        <div class="rows">
-          <div id="schedDate">2025/08/05(화)</div>
-          <div id="schedTime">14시~16시</div>
-          <div id="schedPrice">12,000 원</div>
+          <li class="slot" data-start="20" data-end="21" data-price="6000">20~21<span>(6,000)</span></li>
+          <li class="slot" data-start="21" data-end="22" data-price="6000">21~22<span>(6,000)</span></li>
+          <li class="slot" data-start="22" data-end="23" data-price="6000">22~23<span>(6,000)</span></li>
+          <li class="slot" data-start="23" data-end="24" data-price="6000">23~24<span>(6,000)</span></li>
+        </ul>
+        <div class="sched-summary">
+          <div class="label">#선택 일정</div>
+          <div class="rows">
+            <div id="schedDate">2025/08/20(수)</div>
+            <div id="schedTime">14시~16시</div>
+            <div id="schedPrice">12,000 원</div>
+          </div>
+        </div>
+        <div class="sched-actions">
+          <button class="btn primary" id="schedSubmit">선택</button>
+          <button class="btn" id="schedClose">닫기</button>
         </div>
       </div>
-
-      <div class="sched-actions">
-        <button class="btn primary" id="schedSubmit">선택</button>
-        <button class="btn" id="schedClose">닫기</button>
-      </div>
     </div>
+    <footer><c:import url="/WEB-INF/views/include/footer.jsp" /></footer>
   </div>
-
   <script>
-    // ----- 달력 상태 -----
     const schedTitle = document.getElementById('schedTitle');
-    const schedDays  = document.getElementById('schedDays');
-    const navBtns    = document.querySelectorAll('.sched-nav');
+    const schedDays = document.getElementById('schedDays');
+    const navBtns = document.querySelectorAll('.sched-nav');
+    let selectedDate = new Date(2025, 7, 20); // 2025-08-20
+    let currentDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
 
-    let selectedDate = new Date();
-    let currentDate  = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-
-    const WEEKDAY_KR = ['일','월','화','수','목','금','토'];
-    const pad = n => n.toString().padStart(2,'0');
-    const formatTitle = d => `${d.getFullYear()}.${pad(d.getMonth()+1)}`;
+    const WEEKDAY_KR = ['일', '월', '화', '수', '목', '금', '토'];
+    const pad = n => n.toString().padStart(2, '0'); // JavaScript에서만 사용
+    const formatTitle = d => (d.getFullYear() + '.' + pad(d.getMonth()+1));
     const formatSummaryDate = d => {
-      const y = d.getFullYear(), m = pad(d.getMonth()+1), day = pad(d.getDate()), w = WEEKDAY_KR[d.getDay()];
-      return `${y}/${m}/${day}(${w})`;
+    	const y = d.getFullYear(), m = pad(d.getMonth()+1), day = pad(d.getDate()), w = WEEKDAY_KR[d.getDay()];
+    	return y + '/' + m + '/' + day + '(' + w + ')';
     };
-
-    function renderCalendar(){
-      schedTitle.textContent = formatTitle(currentDate);
+    
+    function renderCalendar() {
+      schedTitle.textContent = formatTitle(currentDate); // JavaScript로 처리
       schedDays.innerHTML = '';
-
-      const year  = currentDate.getFullYear();
+      const year = currentDate.getFullYear();
       const month = currentDate.getMonth();
-
       const first = new Date(year, month, 1);
-      const last  = new Date(year, month+1, 0);
-
-      const leading  = first.getDay();
+      const last = new Date(year, month + 1, 0);
+      const leading = first.getDay();
       const prevLast = new Date(year, month, 0).getDate();
-
       const totalCells = 42;
-      const thisCount  = last.getDate();
+      const thisCount = last.getDate();
 
-      for(let i=leading-1; i>=0; i--){
+      for (let i = leading - 1; i >= 0; i--) {
         const day = document.createElement('span');
         day.className = 'muted';
         day.textContent = prevLast - i;
         schedDays.appendChild(day);
       }
-
-      for(let d=1; d<=thisCount; d++){
+      for (let d = 1; d <= thisCount; d++) {
         const day = document.createElement('span');
         day.textContent = d;
-
         const today = new Date();
-        if (year===today.getFullYear() && month===today.getMonth() && d===today.getDate()){
-          day.classList.add('today');
-        }
-        if (year===selectedDate.getFullYear() && month===selectedDate.getMonth() && d===selectedDate.getDate()){
-          day.classList.add('picked');
-        }
-
+        if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) day.classList.add('today');
+        if (year === selectedDate.getFullYear() && month === selectedDate.getMonth() && d === selectedDate.getDate()) day.classList.add('picked');
         day.style.cursor = 'pointer';
-        day.addEventListener('click', ()=>{
+        day.addEventListener('click', () => {
           selectedDate = new Date(year, month, d);
           renderCalendar();
-          document.getElementById('schedDate').textContent = formatSummaryDate(selectedDate);
+          document.getElementById('schedDate').textContent = formatSummaryDate(selectedDate); // JavaScript로 처리
         });
-
         schedDays.appendChild(day);
       }
-
       const used = schedDays.children.length;
-      for(let k=1; k<=totalCells-used; k++){
+      for (let k = 1; k <= totalCells - used; k++) {
         const day = document.createElement('span');
         day.className = 'muted';
         day.textContent = k;
@@ -286,70 +205,70 @@
       }
     }
 
-    navBtns.forEach(btn=>{
-      btn.addEventListener('click', ()=>{
+    navBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
         const dir = btn.dataset.dir === 'prev' ? -1 : 1;
-        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth()+dir, 1);
+        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + dir, 1);
         renderCalendar();
       });
     });
 
-    function initCalendarOnOpen(){
-      document.getElementById('schedDate').textContent = formatSummaryDate(selectedDate);
+    function initCalendarOnOpen() {
+      document.getElementById('schedDate').textContent = formatSummaryDate(selectedDate); // JavaScript로 처리
       currentDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
       renderCalendar();
     }
 
-    const overlay   = document.getElementById('scheduleModal');
-    const openBtns  = document.querySelectorAll('.open-schedule');
-    const closeBtn  = document.getElementById('schedClose');
+    const overlay = document.getElementById('scheduleModal');
+    const openBtns = document.querySelectorAll('.open-schedule');
+    const closeBtn = document.getElementById('schedClose');
     const submitBtn = document.getElementById('schedSubmit');
 
-    openBtns.forEach(b=>b.addEventListener('click',()=>{
-      overlay.style.display='flex';
+    openBtns.forEach(b => b.addEventListener('click', () => {
+      overlay.style.display = 'flex';
       initCalendarOnOpen();
       updateSubmitState();
     }));
-    overlay.addEventListener('click',()=>{ overlay.style.display='none'; });
-    closeBtn.addEventListener('click',()=>{ overlay.style.display='none'; });
+    overlay.addEventListener('click', () => { overlay.style.display = 'none'; });
+    closeBtn.addEventListener('click', () => { overlay.style.display = 'none'; });
 
-    const slots  = Array.from(document.querySelectorAll('#schedSlots .slot:not(.disabled)'));
+    const slots = Array.from(document.querySelectorAll('#schedSlots .slot:not(.disabled)'));
     const dateEl = document.getElementById('schedDate');
     const timeEl = document.getElementById('schedTime');
-    const priceEl= document.getElementById('schedPrice');
+    const priceEl = document.getElementById('schedPrice');
 
-    const getSelected = () => slots.filter(s=>s.classList.contains('selected'));
-    const toStarts    = arr => arr.map(s=>+s.dataset.start).sort((a,b)=>a-b);
-    const isContiguous= starts => {
-      if(starts.length===0) return true;
-      const min=starts[0], max=starts[starts.length-1];
-      return (max-min+1)===starts.length;
+    const getSelected = () => slots.filter(s => s.classList.contains('selected'));
+    const toStarts = arr => arr.map(s => +s.dataset.start).sort((a, b) => a - b);
+    const isContiguous = starts => {
+      if (starts.length === 0) return true;
+      const min = starts[0], max = starts[starts.length - 1];
+      return (max - min + 1) === starts.length;
     };
 
-    function updateSummary(){
+    function updateSummary() {
       const selected = getSelected();
-      if(selected.length===0){
+      if (selected.length === 0) {
         timeEl.textContent = '-';
         priceEl.textContent = '0 원';
         return;
       }
-      const sorted = selected.sort((a,b)=>+a.dataset.start - +b.dataset.start);
-      const start  = +sorted[0].dataset.start;
-      const end    = +sorted[sorted.length-1].dataset.end;
-      const total  = sorted.reduce((sum,s)=>sum+(+s.dataset.price||0),0);
+      const sorted = selected.sort((a, b) => +a.dataset.start - +b.dataset.start);
+      const start = +sorted[0].dataset.start;
+      const end = +sorted[sorted.length - 1].dataset.end;
+      const total = sorted.reduce((sum, s) => sum + (+s.dataset.price || 0), 0);
 
-      timeEl.textContent = `${start}시~${end}시`;
-      priceEl.textContent = total.toLocaleString()+' 원';
+      timeEl.textContent = (start + '시~' + end + '시');
+      priceEl.textContent = total.toLocaleString() + ' 원';
     }
 
-    function updateSubmitState(){
+    function updateSubmitState() {
       const selStarts = toStarts(getSelected());
-      const ok = selStarts.length === 3 && isContiguous(selStarts);
+      const ok = selStarts.length === 2 && isContiguous(selStarts);
       submitBtn.disabled = !ok;
     }
 
-    slots.forEach(s=>{
-      s.addEventListener('click',()=>{
+    slots.forEach(s => {
+      s.addEventListener('click', () => {
         const was = s.classList.contains('selected');
         s.classList.toggle('selected');
 
@@ -357,12 +276,11 @@
         const starts = toStarts(sel);
 
         const withinLimit = starts.length <= 3;
-        const contiguous  = isContiguous(starts);
+        const contiguous = isContiguous(starts);
 
-        if(!(withinLimit && contiguous)){
-          // 되돌리기
+        if (!(withinLimit && contiguous)) {
           s.classList.toggle('selected');
-          if(!withinLimit) alert('최대 3시간까지 선택할 수 있습니다.');
+          if (!withinLimit) alert('최대 3시간까지 선택할 수 있습니다.');
           else alert('선택은 연속된 시간만 가능합니다.');
         }
 
@@ -374,17 +292,10 @@
     updateSummary();
     updateSubmitState();
 
-    submitBtn.addEventListener('click',()=>{
-      alert(`${dateEl.textContent} ${timeEl.textContent} / ${priceEl.textContent} 선택되었습니다.`);
-      overlay.style.display='none';
+    submitBtn.addEventListener('click', () => {
+      alert(dateEl.textContent + ' ' + timeEl.textContent + ' / ' + priceEl.textContent + ' 선택되었습니다.');
+      overlay.style.display = 'none';
     });
   </script>
-
-  <!-- 푸터 영역------------------------------------------------ -->
-  <footer>
-    <c:import url="/WEB-INF/views/include/footer.jsp" />
-  </footer>
-  <!-- /푸터 영역------------------------------------------------ -->
-  
 </body>
 </html>
