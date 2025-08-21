@@ -47,20 +47,23 @@ public class PracticeroomController {
     public String zone(@RequestParam("spacesNo") Long spacesNo, Model model) {
         SpacesVO zoneDetail = practiceroomService.getZoneDetail(spacesNo);
         List<RoomsVO> roomList = practiceroomService.getRoomsBySpace(spacesNo);
-
+        
         model.addAttribute("zone", zoneDetail);
         model.addAttribute("rooms", roomList);
-
+        
         return "practiceroom/practice2_zone";
     }
     
     //찜리스트
     @GetMapping("/practice4_list")
     public String favoritesList(Model model) {
-        Long userNo = 1L; // 실제 인증 로직으로 userNo를 가져와야 함
+        Long userNo = 1L;
+        
         List<SpacesVO> favoriteSpaces = practiceroomService.getFavoriteSpaces(userNo);
         model.addAttribute("favoriteSpaces", favoriteSpaces);
+        
+        model.addAttribute("favoriteCandidates", practiceroomService.getFavoriteCandidates(userNo));
+        
         return "practiceroom/practice4_list";
     }
-    
 }
