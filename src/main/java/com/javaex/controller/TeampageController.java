@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -186,11 +187,16 @@ public class TeampageController {
 	// URL: /onespace/teams/{teamNo}/posts/teamwriteadd
 	@RequestMapping(value="teams/{teamNo}/posts/teamwriteadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String write(@PathVariable("teamNo") int teamNo,
-						TeamPostVO teamPostVO, 
+						@ModelAttribute TeamPostVO teamPostVO, 
 						HttpSession session) {
 		
 		System.out.println("TeampageController.write()");
 		
+		
+		System.out.println(teamPostVO.getFiles()[0].getOriginalFilename());
+		System.out.println(teamPostVO.getFiles()[1].getOriginalFilename());
+		System.out.println(teamPostVO.getFiles()[2].getOriginalFilename());
+	
 		UserVO authUser = (UserVO)session.getAttribute("authUser");
 		
         if(authUser == null) {

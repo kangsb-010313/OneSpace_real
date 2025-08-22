@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
     
-    <%-- ▼▼▼▼▼ 글 종류에 따라 다른 CSS 파일 로드 (공통은 위에서, 개별은 여기서) ▼▼▼▼▼ --%>
+    <%-- 글 종류에 따라 다른 CSS 파일 로드 (공통은 위에서, 개별은 여기서) --%>
     <c:choose>
         <c:when test="${post.teamPostType == '일반공지'}">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/teamwrote.css">
@@ -43,7 +43,7 @@
 					<!-- 팀페이지 aside ---------------------------------------------->
 
                     <div id="main-content">
-                        <%-- ▼▼▼▼▼ 글 종류에 따른 메인 제목 변경 ▼▼▼▼▼ --%>
+                        <%--  글 종류에 따른 메인 제목 변경 --%>
                         <h2 class="main-content-title">
                             <c:choose>
                                 <c:when test="${post.teamPostType == '일반공지'}">일반 공지</c:when>
@@ -52,7 +52,6 @@
                                 <c:otherwise>게시글</c:otherwise>
                             </c:choose>
                         </h2>
-                        <%-- ▲▲▲▲▲ 여기까지 ▲▲▲▲▲ --%>
 
                         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   main container 안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
                         <div class="team-wrote-wrap">
@@ -62,7 +61,7 @@
                                 </div>
                                 <span class="post-date">${post.teamWriteDate}</span>
                                 
-                                <%-- ▼▼▼▼▼ 글 종류에 따른 내용 표시 (조건부) ▼▼▼▼▼ --%>
+                                <%-- 글 종류에 따른 내용 표시 (조건부) --%>
                                 <div class="post-content">
                                     <%-- 팀자랑 글 내용 시작 --%>
                                     <c:if test="${post.teamPostType == '팀자랑'}">
@@ -73,7 +72,7 @@
                                         <div class="post-text-content">
                                             <p>${post.teamContent}</p>
                                         </div>
-                                        <!-- 첨부 이미지 표시 영역 (예시) -->
+                                        <!-- 첨부 이미지 표시 영역 -->
                                         <div class="post-image-gallery">
                                             <!-- 실제로는 DB에 저장된 이미지 경로를 반복문으로 출력합니다 -->
                                             <img src="${pageContext.request.contextPath}/assets/images/댄스팀 연습 사진01.jpg" alt="팀 연습 사진 1" class="attached-image">
@@ -199,10 +198,10 @@
                                     </c:if>
                                     <%-- 투표 전용 섹션 끝 --%>
                                 </div>
-                                <%-- ▲▲▲▲▲ 글 종류에 따른 내용 표시 끝 ▲▲▲▲▲ --%>
+                                <%-- 글 종류에 따른 내용 표시 끝 --%>
                                 
                                 <div class="post-actions">
-                                    <%-- 버튼 종류에 따른 분기 (예시) --%>
+                                    <%-- 버튼 종류에 따른 분기 --%>
 								    <c:choose>
 								        <%-- Case 1: 팀 멤버인 경우 --%>
 								        <c:when test="${isMember}">
@@ -267,7 +266,6 @@
     </script>
 
     <!-- 2. 카카오 SDK 초기화 및 공유 기능 구현 -->
-	<!-- 2. 모든 버튼 기능을 이 하나의 script 태그 안에서 관리합니다. -->
 	<script>
 	    // 페이지의 모든 HTML 요소가 완전히 로드된 후에 이 안의 코드가 실행되도록 보장합니다.
 	    document.addEventListener('DOMContentLoaded', function() {
@@ -292,8 +290,8 @@
 	                    objectType: 'feed',
 	                    content: {
 	                        title: `[${post.teamName}] ${post.teamPostTitle}`,
-	                        description: "${post.teamContent}", // EL 표현식은 따옴표 안에 있어도 잘 작동합니다.
-	                        imageUrl: "", // 여기에 대표 이미지가 있다면 URL을 넣어주세요.
+	                        description: "${post.teamContent}",
+	                        imageUrl: "", //대표 이미지 url
 	                        link: { mobileWebUrl: postUrl, webUrl: postUrl },
 	                    },
 	                    buttons: [
@@ -306,18 +304,6 @@
 	            });
 	        }
 	        
-	        // 기능 (3): 팀원 가입 신청 버튼
-	        // id가 'joinButton'인 버튼을 찾아서 기능을 연결합니다.
-		    const joinButton = document.getElementById('joinButton');
-		    if (joinButton) {
-		        joinButton.addEventListener('click', function() {
-		            if(confirm("이 팀에 가입을 신청하시겠습니까?")) {
-		                // 추후 팀원 가입 신청 로직을 여기에 연결합니다.
-		                // 예시: location.href = '${pageContext.request.contextPath}/onespace/teams/${teamNo}/join';
-		                alert('팀원 가입 신청 기능은 구현 예정입니다.');
-		            }
-		        });
-		    }
 	    
 	    });
 	</script>

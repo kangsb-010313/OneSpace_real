@@ -62,7 +62,7 @@
                         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   main container 안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
                         <div class="post-register-wrap">
                             <%-- ▼▼▼▼▼ form action과 method 변경 및 숨겨진 필드 추가 ▼▼▼▼▼ --%>
-                            <form action="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/teamwriteadd" method="post">
+                            <form action="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/teamwriteadd" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="teamPostType" value="${param.teamPostType}"> <%-- 글 종류 전달 --%>
                                 <input type="hidden" name="teamNo" value="${teamNo}"> 
                                 <%-- 
@@ -196,7 +196,7 @@
                                         <label for="post-content">글내용</label>
                                         <div class="file-attach-section">
                                             <label for="file-upload" class="btn-file-attach">파일첨부</label>
-                                            <input type="file" id="file-upload" multiple>
+                                            <input type="file" id="file-upload" name="files" multiple="multiple" >
                                         </div>
                                     </div>
                                     <div class="content-box">

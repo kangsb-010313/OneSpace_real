@@ -8,10 +8,10 @@
     <head>
         <meta charset="UTF-8">
         <title>팀페이지-팀등록</title>
-        <link rel="stylesheet" href="../../assets/css/reset.css">
-        <link rel="stylesheet" href="../../assets/css/basicdefault.css">
-        <link rel="stylesheet" href="../../assets/css/asidedefault.css">
-        <link rel="stylesheet" href="../../assets/css/teamadd.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/teamadd.css">
     </head>
 
     <body>
