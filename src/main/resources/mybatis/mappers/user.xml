@@ -1,35 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="user">
 
-<!-- 쿼리문 작성 -->
-
-
-  <!-- 회원가입 -->
-  <insert id="insert" parameterType="com.javaex.vo.UserVO">
-    <![CDATA[
-      insert into users
-        (userId, password, userName, email, createdDate)
-      values
-        (#{userId}, #{password}, #{userName}, #{email}, now())
-    ]]>
+  <!-- 회원가입: PK 자동 채움 -->
+  <insert id="insert"
+          parameterType="com.javaex.vo.UserVO"
+          useGeneratedKeys="true" keyProperty="userNo">
+    insert into users
+      (userId, password, userName, email, createdDate)
+    values
+      (#{userId}, #{password}, #{userName}, #{email}, now())
   </insert>
 
-  <!-- 로그인 -->
+  <!-- 로그인: 필요한 컬럼 최소 셋(세션에 쓰는 값) -->
   <select id="selectOneByIdPw"
           parameterType="com.javaex.vo.UserVO"
           resultType="com.javaex.vo.UserVO">
-    <![CDATA[
-      select
-        userNo,
-        userId,
-        userName
-      from users
-      where userId = #{userId}
-        and password = #{password}
-    ]]>
+    select
+      userNo,
+      userId,
+      userName,
+      email,
+      createdDate
+    from users
+    where userId = #{userId}
+      and password = #{password}
+    limit 1
   </select>
 
 </mapper>

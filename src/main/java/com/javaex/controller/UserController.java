@@ -28,25 +28,25 @@ public class UserController {
         return "admin/auth/signup"; // 뷰 경로: 프로젝트에 맞게 유지
     }
 
-    // --회원가입
+ // --회원가입
     @RequestMapping(value = "/signup", method = { RequestMethod.GET, RequestMethod.POST })
     public String join(@ModelAttribute UserVO userVO) {
         System.out.println("UserController.join()  param=" + userVO);
 
         try {
             userService.exeJoin(userVO);
-            // 가입 성공 페이지
-            return "onespace/signupCompleted"; 
+            System.out.println("가입 성공");
+            return "admin/auth/signup_complete";  
 
         } catch (DuplicateKeyException e) {
             System.out.println("중복아이디: " + e.getMessage());
-            return "redirect:/onespace/signup?error=dup";
-
+            return "redirect:/onespace/signupForm";
         } catch (Exception e) {
             System.out.println("회원가입 예외: " + e);
-            return "redirect:/onespace/signup?error=fail";
+            return "admin/auth/signup";
         }
     }
+
 
     // --로그인폼 
     @RequestMapping(value = {"/loginForm"}, method = { RequestMethod.GET, RequestMethod.POST })
