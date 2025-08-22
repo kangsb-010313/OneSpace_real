@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -13,6 +14,10 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
   <c:set var="CTX" value="${pageContext.request.contextPath}" />
+  
+  <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+  
+  
 </head>
 <body class="page-practice4">
   <div class="wrap">
@@ -113,35 +118,37 @@
         <div class="sched-days" id="schedDays"></div>
         <br>
         <ul class="sched-slots" id="schedSlots">
-          <li class="slot" data-start="0"  data-end="1"  data-price="4000">00~01<span>(4,000)</span></li>
-          <li class="slot" data-start="1"  data-end="2"  data-price="4000">01~02<span>(4,000)</span></li>
-          <li class="slot" data-start="2"  data-end="3"  data-price="4000">02~03<span>(4,000)</span></li>
-          <li class="slot" data-start="3"  data-end="4"  data-price="4000">03~04<span>(4,000)</span></li>
+		 <!--        
+          <li id="" class="slot" data-start="0"  data-end="1"  data-price="4000">00~01<span>(4,000)</span></li>
+          <li id="" class="slot" data-start="1"  data-end="2"  data-price="4000">01~02<span>(4,000)</span></li>
+          <li id=""  class="slot" data-start="2"  data-end="3"  data-price="4000">02~03<span>(4,000)</span></li>
+          <li id=""  class="slot" data-start="3"  data-end="4"  data-price="4000">03~04<span>(4,000)</span></li>
 
-          <li class="slot" data-start="4"  data-end="5"  data-price="4000">04~05<span>(4,000)</span></li>
-          <li class="slot" data-start="5"  data-end="6"  data-price="4000">05~06<span>(4,000)</span></li>
-          <li class="slot" data-start="6"  data-end="7"  data-price="4000">06~07<span>(4,000)</span></li>
-          <li class="slot" data-start="7"  data-end="8"  data-price="4000">07~08<span>(4,000)</span></li>
+          <li id=""  class="slot" data-start="4"  data-end="5"  data-price="4000">04~05<span>(4,000)</span></li>
+          <li id=""  class="slot" data-start="5"  data-end="6"  data-price="4000">05~06<span>(4,000)</span></li>
+          <li id=""  class="slot" data-start="6"  data-end="7"  data-price="4000">06~07<span>(4,000)</span></li>
+          <li id=""  class="slot" data-start="7"  data-end="8"  data-price="4000">07~08<span>(4,000)</span></li>
 
-          <li class="slot" data-start="8"  data-end="9"  data-price="6000">08~09<span>(6,000)</span></li>
-          <li class="slot" data-start="9"  data-end="10" data-price="6000">09~10<span>(6,000)</span></li>
-          <li class="slot" data-start="10" data-end="11" data-price="6000">10~11<span>(6,000)</span></li>
-          <li class="slot" data-start="11" data-end="12" data-price="6000">11~12<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="8"  data-end="9"  data-price="6000">08~09<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="9"  data-end="10" data-price="6000">09~10<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="10" data-end="11" data-price="6000">10~11<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="11" data-end="12" data-price="6000">11~12<span>(6,000)</span></li>
 
-          <li class="slot" data-start="12" data-end="13" data-price="6000">12~13<span>(6,000)</span></li>
-          <li class="slot" data-start="13" data-end="14" data-price="6000">13~14<span>(6,000)</span></li>
-          <li class="slot" data-start="14" data-end="15" data-price="6000">14~15<span>(6,000)</span></li>
-          <li class="slot" data-start="15" data-end="16" data-price="6000">15~16<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="12" data-end="13" data-price="6000">12~13<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="13" data-end="14" data-price="6000">13~14<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="14" data-end="15" data-price="6000">14~15<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="15" data-end="16" data-price="6000">15~16<span>(6,000)</span></li>
 
-          <li class="slot" data-start="16" data-end="17" data-price="6000">16~17<span>(6,000)</span></li>
-          <li class="slot" data-start="17" data-end="18" data-price="6000">17~18<span>(6,000)</span></li>
-          <li class="slot" data-start="18" data-end="19" data-price="6000">18~19<span>(6,000)</span></li>
-          <li class="slot" data-start="19" data-end="20" data-price="6000">19~20<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="16" data-end="17" data-price="6000">16~17<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="17" data-end="18" data-price="6000">17~18<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="18" data-end="19" data-price="6000">18~19<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="19" data-end="20" data-price="6000">19~20<span>(6,000)</span></li>
 
-          <li class="slot" data-start="20" data-end="21" data-price="6000">20~21<span>(6,000)</span></li>
-          <li class="slot" data-start="21" data-end="22" data-price="6000">21~22<span>(6,000)</span></li>
-          <li class="slot" data-start="22" data-end="23" data-price="6000">22~23<span>(6,000)</span></li>
-          <li class="slot" data-start="23" data-end="24" data-price="6000">23~24<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="20" data-end="21" data-price="6000">20~21<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="21" data-end="22" data-price="6000">21~22<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="22" data-end="23" data-price="6000">22~23<span>(6,000)</span></li>
+          <li id=""  class="slot" data-start="23" data-end="24" data-price="6000">23~24<span>(6,000)</span></li>
+         -->
         </ul>
         <div class="sched-summary">
           <div class="label">#선택 일정</div>
@@ -165,7 +172,7 @@
   const schedDays  = document.getElementById('schedDays');
   const navBtns    = document.querySelectorAll('.sched-nav');
 
-  let selectedDate = new Date(2025, 7, 20); // 2025-08-20
+  let selectedDate = new Date();
   let currentDate  = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
 
   const WEEKDAY_KR = ['일','월','화','수','목','금','토'];
@@ -176,6 +183,93 @@
     return y + '/' + m + '/' + day + '(' + w + ')';
   };
 
+  //////////////////////////////////////////////////////////
+  // 이벤트
+  //////////////////////////////////////////////////////////
+  
+  //돔트리가 완료되었을때
+  $(document).ready(function(){
+	  console.log('aaaa');
+  });
+  
+  // 모달 열고/닫기
+  $('.open-schedule').on('click', function(){
+	  console.log('모달창 열기 클릭');
+	  const overlay   = document.getElementById('scheduleModal');
+	  overlay.style.display = 'flex';
+	  initCalendarOnOpen();
+	  updateSubmitState();
+	  
+	  //날짜
+	  let targetDate = $("#schedTitle").text() +'.'+ $(".today").text();
+	  let roomNo = $(this).data('room-no');
+	  
+	  let reserveInfoVO = {
+	    targetDate: targetDate,
+	    roomNo: roomNo
+	  };
+	  
+	  //룸번호
+	  $.ajax({
+	    url : '${pageContext.request.contextPath}/onespace/api/room-slots',		
+		type : 'post',
+		/* contentType : 'application/json', */
+		data : reserveInfoVO,
+
+		dataType : 'json',
+		success : function(slotList){
+		    /*성공시 처리해야될 코드 작성*/
+		    console.log(slotList);
+		    //슬롯을 그린다
+		    for(let i=0; i<slotList.length; i++){
+		    	renderSlot(slotList[i]);
+		    }
+		    //
+		},
+		error : function(XHR, status, error) {
+			console.error(status + ' : ' + error);
+		}
+	  });
+
+	  
+  });
+  
+  
+  function renderSlot(slotVO){
+	  
+	  /*
+	  startNo
+	  end
+	  */
+	  
+	  let htmlStr = '';
+	  htmlStr += '<li id="" class="slot">00~01<span>('+slotVO.price+')</span></li>';
+	  
+	  $('#schedSlots').append(htmlStr);
+	  
+  }
+  
+  
+  
+  
+  
+  const overlay   = document.getElementById('scheduleModal');
+  const openBtns  = document.querySelectorAll('.open-schedule');
+  const closeBtn  = document.getElementById('schedClose');
+  const submitBtn = document.getElementById('schedSubmit');
+/*
+  openBtns.forEach(b => b.addEventListener('click', () => {
+    overlay.style.display = 'flex';
+    initCalendarOnOpen();
+    updateSubmitState();
+  }));
+  overlay.addEventListener('click', () => { overlay.style.display = 'none'; });
+  closeBtn.addEventListener('click', () => { overlay.style.display = 'none'; });
+  */
+  
+  
+  
+  
   function renderCalendar() {
     schedTitle.textContent = formatTitle(currentDate);
     schedDays.innerHTML = '';
@@ -236,24 +330,13 @@
   });
 
   function initCalendarOnOpen() {
-    document.getElementById('schedDate').textContent = formatSummaryDate(selectedDate);
-    currentDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-    renderCalendar();
+	selectedDate = new Date();
+	dateEl.textContent = formatSummaryDate(selectedDate);
+	calendarCursor = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+	renderCalendar();
   }
 
-  // 모달 열고/닫기
-  const overlay   = document.getElementById('scheduleModal');
-  const openBtns  = document.querySelectorAll('.open-schedule');
-  const closeBtn  = document.getElementById('schedClose');
-  const submitBtn = document.getElementById('schedSubmit');
 
-  openBtns.forEach(b => b.addEventListener('click', () => {
-    overlay.style.display = 'flex';
-    initCalendarOnOpen();
-    updateSubmitState();
-  }));
-  overlay.addEventListener('click', () => { overlay.style.display = 'none'; });
-  closeBtn.addEventListener('click', () => { overlay.style.display = 'none'; });
 
   // 슬롯 선택(연속 + 최대 3칸)
   const slots   = Array.from(document.querySelectorAll('#schedSlots .slot:not(.disabled)'));

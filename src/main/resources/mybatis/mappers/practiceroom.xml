@@ -166,4 +166,22 @@
 	  ]]>
 	</select>
 	
+	<!-- 시간대/요일별 요금 조회 -->
+	<select id="selectRoomPricesByDate" parameterType="com.javaex.vo.ReserveInfoVO" resultType="com.javaex.vo.RoomPriceVO">
+	  SELECT
+	    pricesNo,
+	    roomNo,
+	    dayType,
+	    startTime,
+	    endTime,
+	    hourlyPrice
+	  FROM roomPrices
+	  WHERE roomNo = #{roomNo}
+	    AND dayType = CASE
+	      WHEN DAYOFWEEK(#{targetDate}) IN (1, 7) THEN '주말'
+	      ELSE '평일'
+	    END
+	  ORDER BY startTime
+	</select>
+
 </mapper>

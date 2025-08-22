@@ -1,17 +1,16 @@
 package com.javaex.service;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import com.javaex.repository.PracticeroomRepository;
+import com.javaex.vo.ReserveInfoVO;
+import com.javaex.vo.RoomPriceVO;
 import com.javaex.vo.RoomsVO;
+import com.javaex.vo.SlotVO;
 import com.javaex.vo.SpacesVO;
 
 @Service
@@ -47,34 +46,37 @@ public class PracticeroomService {
         return practiceroomRepository.selectFavoriteCandidates(userNo);
     }
     
-    public List<Map<String, Object>> getRoomSlots(Long roomNo, LocalDate date) {
-        String dayType = (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY)
-                ? "주말" : "평일";
-
-        List<Map<String, Object>> rows = practiceroomRepository.selectRoomPricesByDayType(roomNo, dayType);
-
-        // 00~24 슬롯 초기화
-        List<Map<String, Object>> slots = new ArrayList<>();
-        for (int h = 0; h < 24; h++) {
-            Map<String, Object> slot = new HashMap<>();
-            slot.put("start", h);
-            slot.put("end", h + 1);
-            slot.put("price", null);   // 가격 없으면 선택 불가 처리
-            slots.add(slot);
+    //룸가격리스트 가져오기
+    public List<SlotVO> getRoomSlots(ReserveInfoVO reserveInfoVO) {
+    	System.out.println("PracticeroomService.getRoomSlots()");
+    	
+    	reserveInfoVO.setRoomNo(24);
+    	reserveInfoVO.setTargetDate("2025-08-23");
+    	
+    	
+    	// 1) DB에서 날짜 기반 요금 구간 조회
+        List<RoomPriceVO> roomPriceList = practiceroomRepository.selectRoomPricesByDate(reserveInfoVO);
+        
+        // 2) 24시간 데이터 작성
+        List<SlotVO> slotList = new ArrayList<SlotVO>(); 
+        for(int i=0; i<24; i++) {
+        	SlotVO slotVO = new SlotVO(reserveInfoVO.getRoomNo(), reserveInfoVO.getTargetDate(), i, 0 );
+        	slotList.add(slotVO);
         }
-
-        // 요금 구간을 시간 단위로 확장
-        for (Map<String, Object> r : rows) {
-            LocalTime st = LocalTime.parse(r.get("startTime").toString()); // "10:00:00"
-            LocalTime et = LocalTime.parse(r.get("endTime").toString());   // "22:00:00"
-            int sh = st.getHour();
-            int eh = et.getHour();
-            int price = Integer.parseInt(String.valueOf(r.get("hourlyPrice")));
-
-            for (int h = sh; h < eh && h < 24; h++) {
-                slots.get(h).put("price", price);
-            }
+        for(int i=0; i<roomPriceList.size(); i++ ) {
+        	RoomPriceVO rule = roomPriceList.get(i);
+        	int start = Integer.parseInt(rule.getStartTime().substring(0,2));
+        	int end = Integer.parseInt(rule.getEndTime().substring(0,2));
+        	int price = rule.getHourlyPrice();
+        	
+        	System.out.println(rule);
+        	
+        	for(int j=start; j<end; j++) {
+        		slotList.get(j).setPrice(price);
+        	}
         }
-        return slots;
+        
+        return slotList;
     }
+    
 }
