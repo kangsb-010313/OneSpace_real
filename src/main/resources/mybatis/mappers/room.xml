@@ -3,50 +3,36 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="room">
 
-  <!-- rooms 공통 컬럼 -->
   <sql id="room_cols">
-    r.roomNo    AS roomNo,
-    r.spacesNo  AS spacesNo,
-    r.roomName  AS roomName,
-    r.roomInfo  AS roomInfo,
-    r.area      AS area,
-    r.capacity  AS capacity,
-    r.instDtm   AS instDtm,
-    r.updtDtm   AS updtDtm
+    r.roomNo   AS roomNo,
+    r.spacesNo AS spacesNo,
+    r.roomName AS roomName,
+    r.roomInfo AS roomInfo,
+    r.area     AS area,
+    r.capacity AS capacity,
+    r.instDtm  AS instDtm,
+    r.updtDtm  AS updtDtm
   </sql>
 
-  <!-- 특정 건물(spacesNo)의 방 목록 -->
-  <select id="select_rooms_by_spacesno"
-          parameterType="long"
-          resultType="com.javaex.vo.RoomsVO">
-    SELECT
-      <include refid="room_cols"/>
-      -- 필요 시: s.spaceName AS spaceName, s.address AS address
+  <!-- 특정 공간의 방 목록 -->
+  <select id="select_rooms_by_spacesno" parameterType="long" resultType="com.javaex.vo.RoomsVO">
+    SELECT <include refid="room_cols"/>
     FROM rooms r
-    JOIN spaces s ON s.spacesNo = r.spacesNo
     WHERE r.spacesNo = #{value}
     ORDER BY r.roomNo DESC
   </select>
 
   <!-- 방 상세 -->
-  <select id="select_room_detail"
-          parameterType="long"
-          resultType="com.javaex.vo.RoomsVO">
-    SELECT
-      <include refid="room_cols"/>
-      -- 필요 시: s.spaceName AS spaceName, s.address AS address
+  <select id="select_room_detail" parameterType="long" resultType="com.javaex.vo.RoomsVO">
+    SELECT <include refid="room_cols"/>
     FROM rooms r
-    JOIN spaces s ON s.spacesNo = r.spacesNo
     WHERE r.roomNo = #{value}
     LIMIT 1
   </select>
 
   <!-- 방 신규 등록 -->
-  <insert id="insert_room"
-          parameterType="com.javaex.vo.RoomsVO"
-          useGeneratedKeys="true"
-          keyProperty="roomNo"
-          keyColumn="roomNo">
+  <insert id="insert_room" parameterType="com.javaex.vo.RoomsVO"
+          useGeneratedKeys="true" keyProperty="roomNo" keyColumn="roomNo">
     INSERT INTO rooms (
       spacesNo, roomName, roomInfo, area, capacity, instDtm, updtDtm
     ) VALUES (
@@ -68,81 +54,6 @@
   <!-- 방 삭제 -->
   <delete id="delete_room" parameterType="long">
     DELETE FROM rooms WHERE roomNo = #{value}
-  </delete>
-
-  <!-- ===================== Prices ===================== -->
-
-  <!-- 요금 등록 -->
-  <insert id="insert_price"
-          parameterType="com.javaex.vo.RoomsVO$RoomPrices"
-          useGeneratedKeys="true"
-          keyProperty="pricesNo"
-          keyColumn="pricesNo">
-    INSERT INTO roomPrices (
-      roomNo, dayType, startTime, endTime, hourlyPrice, instDtm, updtDtm
-    ) VALUES (
-      #{roomNo}, #{dayType}, #{startTime}, #{endTime}, #{hourlyPrice}, NOW(), NOW()
-    )
-  </insert>
-
-  <!-- 특정 방의 요금 전체 삭제 -->
-  <delete id="delete_prices_by_room" parameterType="long">
-    DELETE FROM roomPrices WHERE roomNo = #{value}
-  </delete>
-
-  <!-- 특정 방의 요금 목록 -->
-  <select id="select_prices"
-          parameterType="long"
-          resultType="com.javaex.vo.RoomsVO$RoomPrices">
-    SELECT
-      pricesNo     AS pricesNo,
-      roomNo       AS roomNo,
-      dayType      AS dayType,
-      startTime    AS startTime,
-      endTime      AS endTime,
-      hourlyPrice  AS hourlyPrice,
-      instDtm      AS instDt,
-      updtDtm      AS updtDt
-    FROM roomPrices
-    WHERE roomNo = #{value}
-    ORDER BY pricesNo DESC
-  </select>
-
-  <!-- ===================== Photos ===================== -->
-
-  <!-- 사진 등록 -->
-  <insert id="insert_photo"
-          parameterType="com.javaex.vo.RoomsVO$RoomAttachment"
-          useGeneratedKeys="true"
-          keyProperty="pictureSno"
-          keyColumn="pictureSno">
-    INSERT INTO roomAttachments (
-      roomNo, storedFileName, originFileName, filePath, instDtm, updtDtm
-    ) VALUES (
-      #{roomNo}, #{storedFileName}, #{originFileName}, #{filePath}, NOW(), NOW()
-    )
-  </insert>
-
-  <!-- 특정 방의 사진 목록 -->
-  <select id="select_photos"
-          parameterType="long"
-          resultType="com.javaex.vo.RoomsVO$RoomAttachment">
-    SELECT
-      pictureSno     AS pictureSno,
-      roomNo         AS roomNo,
-      storedFileName AS storedFileName,
-      originFileName AS originFileName,
-      filePath       AS filePath,
-      instDtm        AS instDt,
-      updtDtm        AS updtDt
-    FROM roomAttachments
-    WHERE roomNo = #{value}
-    ORDER BY pictureSno DESC
-  </select>
-
-  <!-- 특정 방의 사진 전체 삭제 -->
-  <delete id="delete_photos_by_room" parameterType="long">
-    DELETE FROM roomAttachments WHERE roomNo = #{value}
   </delete>
 
 </mapper>

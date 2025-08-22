@@ -57,8 +57,8 @@ public class HostController {
         if (userno == null) return "redirect:/onespace/loginForm";
 
         HostVO space = hostService.getSpace(spacesNo);
-        if (space == null || !space.getUserno().equals(userno)) {
-            // 남의 공간 접근 차단: 리스트로 돌려보냄
+        if (space == null || !space.getUserno().equals(userno)) { 
+            // 남의 공간 접근 차단-> 리스트로 돌려보냄
             return "redirect:/onespace/hostcenter/spaces";
         }
         model.addAttribute("space", space);
@@ -71,4 +71,6 @@ public class HostController {
         model.addAttribute("spacesNo", spacesNo);
         return "forward:/WEB-INF/views/admin/host/host_info2.jsp";
     }
+    
+    
 }
