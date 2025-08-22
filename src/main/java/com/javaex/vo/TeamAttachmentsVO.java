@@ -10,7 +10,7 @@ public class TeamAttachmentsVO {
 	private String teamFileCreatedDate;	//등록일(작성일)
 	private String teamFileUpdateDate;	//수정일
 	
-	//테이블에 없지만 파일 크기 관리하면 나중에 유용할 수도 있어서 일단 둔다
+	//테이블에 없지만 파일 크기 관리하면 나중에 유용할 수도 있어서 일단 추가
 	private long  teamFileSize;
 
 	

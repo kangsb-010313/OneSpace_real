@@ -222,7 +222,7 @@
         <!-- /푸터 영역------------------------------------------------ -->
     </div>
     
-    <%-- 파일 미리보기 스크립트는 body 맨 아래에 그대로 두시면 됩니다. --%>
+    <!-- 파일 미리보기 -->
 	<script>
 	    document.addEventListener('DOMContentLoaded', function() {
 	        const fileInput = document.getElementById('file-upload');

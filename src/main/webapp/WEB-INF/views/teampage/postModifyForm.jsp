@@ -94,7 +94,18 @@
                                     </div>
                                     <div class="content-box">
                                         <textarea id="post-content" name="teamContent" placeholder="내용을 입력하세요">${post.teamContent}</textarea>
-                                        <div id="file-preview-zone"></div>
+                                        <div id="file-preview-zone">
+                                        	<%-- 컨트롤러에서 보내준 기존 첨부파일 목록을 반복문으로 출력 --%>
+									        <c:forEach items="${post.attachments}" var="file">
+									            <div class="preview-item" id="file-${file.teamfileNo}">
+									                <img src="${pageContext.request.contextPath}/onespace/display/${file.teamStoredFileName}" 
+									                     alt="${file.teamOriginFileName}" 
+									                     class="preview-img">
+									                <%-- 삭제 버튼 추가 --%>
+									                <span class="remove-btn" data-fileno="${file.teamfileNo}">X</span>
+									            </div>
+									        </c:forEach>
+                                        </div>
                                     </div>
                                 </div>
 

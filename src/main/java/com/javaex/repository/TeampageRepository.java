@@ -33,7 +33,7 @@ public class TeampageRepository {
     // teams 테이블에 팀 정보 추가
     public void insertTeam(TeamVO teamVO) {
         System.out.println("TeampageRepository.insertTeam()");
-        // XML의 insertTeam 쿼리를 호출합니다. teamVO에는 userNo도 들어있습니다.
+        // XML의 insertTeam 쿼리를 호출 teamVO에는 userNo도 ㅇㅇ
         sqlSession.insert("teampage.insertTeam", teamVO);
     }
     
@@ -48,7 +48,7 @@ public class TeampageRepository {
     public void insertTeamMember(int teamNo, int userNo, String position, String status) {
         System.out.println("TeampageRepository.insertTeamMember() - position: " + position + ", status: " + status);
         
-        // 파라미터를 Map에 담아서 전달 (String도 담아야 하므로 Object 타입 사용)
+        // 파라미터를 Map에 담아서 전달 
         Map<String, Object> params = new HashMap<>();
         params.put("teamNo", teamNo);
         params.put("userNo", userNo);
@@ -58,7 +58,7 @@ public class TeampageRepository {
         sqlSession.insert("teampage.insertTeamMember", params);
     }
     
-    // 특정 팀에 특정 유저가 몇 명 있는지 카운트 (0 또는 1이 나옴)
+    // 특정 팀에 특정 유저가 몇 명 있는지 카운트 (0 또는 1)
     public int selectMemberCount(int userNo, int teamNo) {
         System.out.println("TeampageRepository.selectMemberCount()");
         Map<String, Integer> params = new HashMap<>();
@@ -103,19 +103,19 @@ public class TeampageRepository {
 		return count;
 	}
 	
-    // (추가) 마지막 게시글 번호 가져오기
+    // 마지막 게시글 번호 가져오기
     public int selectLastPostNo(int userNo) {
         System.out.println("TeampageRepository.selectLastPostNo()");
         return sqlSession.selectOne("teampage.selectLastPostNo", userNo);
     }
 
-    // (추가) 첨부파일 정보 저장
+    // 첨부파일 정보 저장
     public int insertAttachment(TeamAttachmentsVO teamAttachmentsVO) {
         System.out.println("TeampageRepository.insertAttachment()");
         return sqlSession.insert("teampage.insertAttachment", teamAttachmentsVO);
     }
     
-    // (추가) 특정 게시글의 첨부파일 목록 가져오기
+    // 특정 게시글의 첨부파일 목록 가져오기
     public List<TeamAttachmentsVO> selectAttachments(int postNo) {
         System.out.println("TeampageRepository.selectAttachments()");
         return sqlSession.selectList("teampage.selectAttachmentsByPostNo", postNo);
@@ -167,7 +167,11 @@ public class TeampageRepository {
         return count;
     }
     
-
+    //-- 팀페이지 파일첨부 삭제
+    public int deleteAttachments(int postNo) {
+        System.out.println("TeampageRepository.deleteAttachments()");
+        return sqlSession.delete("teampage.deleteAttachmentsByPostNo", postNo);
+    }
 
 	 // 사용자의 찜 목록을 투표 후보로 가져오기
 	 public List<TeamVoteOptionVO> selectWishlistForVote(int userNo) {

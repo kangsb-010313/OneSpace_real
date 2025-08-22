@@ -71,6 +71,36 @@
     transition: background-color 0.3s;
 }
 
+/* teamwriteform.css 또는 공통 CSS에 추가 */
+
+.preview-item {
+    position: relative; /* 자식 요소인 X 버튼의 위치 기준점 */
+    display: inline-block;
+    margin: 5px;
+}
+
+.preview-img {
+    max-width: 120px;
+    max-height: 120px;
+}
+
+.remove-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+
 .btn-file-attach:hover {
     background-color: #e0e0e0;
 }

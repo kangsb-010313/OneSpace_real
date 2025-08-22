@@ -6,7 +6,7 @@
 
 <!-- 쿼리문 작성 -->
 
-	<!-- 팀 생성 (TEAMS 테이블) - <selectKey> 없는 순수 INSERT 구문 -->
+	<!-- 팀 생성 (teams 테이블) -->
     <insert id="insertTeam" parameterType="com.javaex.vo.TeamVO">
         insert into teams (
             teamName, 
@@ -29,7 +29,7 @@
         where userNo = #{userNo}
     </select>
     
-    <!-- 팀원 등록 (TEAM_MEMBERS 테이블) - position, status 컬럼 추가 -->
+    <!-- 팀원 등록 (teamMembers 테이블) - position, status 컬럼 추가 -->
     <insert id="insertTeamMember" parameterType="map">
         insert into teamMembers (
             teamNo, 
@@ -49,7 +49,7 @@
     
 
     <!-- 유저 번호로 소속된 팀 목록 조회 (teammain aside용) -->
-    <!-- team_members 테이블은 user와 team의 관계를 정의하는 테이블로 가정합니다. -->
+    <!-- teamMembers 테이블은 user와 team의 관계를 정의하는 테이블로 가정 -->
 	<select id="selectTeamsByUserNo" parameterType="int" resultType="com.javaex.vo.TeamVO">
 	    <![CDATA[
 	        select  t.teamNo,
@@ -158,39 +158,39 @@
 		]]>
 	</insert>
 	
-	<!-- (추가) 특정 유저가 가장 마지막에 등록한 게시글의 번호를 가져오는 쿼리 -->
+	<!-- 특정 유저가 가장 마지막에 등록한 게시글의 번호를 가져오는 쿼리 -->
 	<select id="selectLastPostNo" parameterType="int" resultType="int">
 	    <![CDATA[
-	        SELECT MAX(teamPostNo)
-	        FROM posts
-	        WHERE userNo = #{userNo}
+	        select max(teamPostNo)
+	        from posts
+	        where userNo = #{userNo}
 	    ]]>
 	</select>
 	
-	<!-- (추가) 첨부파일 정보 저장 쿼리 (이전과 동일) -->
+	<!-- 첨부파일 정보 저장 쿼리 (이전과 동일) -->
 	<insert id="insertAttachment" parameterType="com.javaex.vo.TeamAttachmentsVO">
 	    <![CDATA[
-	        INSERT INTO teamAttachments (
+	        insert into teamAttachments (
 	            postNo, teamStoredFileName, teamOriginFileName, teamFilePath, 
 	            teamFileCreatedDate, teamFileUpdateDate
-	        ) VALUES (
+	        ) values (
 	            #{postNo}, #{teamStoredFileName}, #{teamOriginFileName}, #{teamFilePath},
-	            NOW(), NOW()
+	            now(), now()
 	        )
 	    ]]>
 	</insert>
 	
-	<!-- (추가) 특정 게시글에 속한 모든 첨부파일 목록 조회 -->
+	<!-- 특정 게시글에 속한 모든 첨부파일 목록 조회 -->
 	<select id="selectAttachmentsByPostNo" parameterType="int" resultType="com.javaex.vo.TeamAttachmentsVO">
 	    <![CDATA[
-	        SELECT  teamfileNo,
+	        select  teamfileNo,
 	                postNo,
 	                teamStoredFileName,
 	                teamOriginFileName,
 	                teamFilePath
-	        FROM teamAttachments
-	        WHERE postNo = #{postNo}
-	        ORDER BY teamfileNo ASC
+	        from teamAttachments
+	        where postNo = #{postNo}
+	        order by teamfileNo ASC
 	    ]]>
 	</select>
 	
@@ -214,6 +214,15 @@
             where teamPostNo = #{teamPostNo}
         ]]>
     </delete>
+
+	<!-- 특정 게시글의 모든 첨부파일 삭제 -->
+	<delete id="deleteAttachmentsByPostNo" parameterType="int">
+	    <![CDATA[
+	        delete from teamAttachments
+	        where postNo = #{postNo}
+	    ]]>
+	</delete>
+    
     
 	<!-- 투표 만들기를 위해 사용자의 '찜 목록'에 있는 연습실 정보 가져오기 -->
 	<select id="selectWishlistForVote" parameterType="int" resultType="com.javaex.vo.TeamVoteOptionVO">
@@ -266,16 +275,16 @@
 	        u.userName,  -- users 테이블에서 이름 가져오기
 	        tm.position,
 	        tm.status,
-	        DATE_FORMAT(tm.joinedDate, '%Y-%m-%d') as joinedDate -- 날짜 형식을 YYYY-MM-DD로 지정
+	        date_format(tm.joinedDate, '%Y-%m-%d') as joinedDate -- 날짜 형식을 YYYY-MM-DD로 지정
 	    from teamMembers tm
 	    join users u on tm.userNo = u.userNo
 	    where tm.teamNo = #{teamNo}
 	    order by
-	        CASE
-	            WHEN tm.position = '팀장' THEN 1
-	            WHEN tm.status = '승인' THEN 2
-	            ELSE 3
-	        END,
+	        case
+	            when tm.position = '팀장' THEN 1
+	            when tm.status = '승인' THEN 2
+	            else 3
+	        end,
 	        tm.joinedDate asc,
 	        u.userName asc
 	</select>
@@ -293,14 +302,14 @@
 	<update id="updateMemberStatus" parameterType="map">
 	    update teamMembers
 	    set status = #{status},
-	        joinedDate = CURDATE() 
+	        joinedDate = curdate() 
 	    where userNo = #{userNo}
 	      and teamNo = #{teamNo}
 	</update>
 	
 	<!-- 팀원 관리: 가입 거부 또는 멤버 삭제 -->
 	<delete id="deleteMember" parameterType="map">
-	    delete FROM teamMembers
+	    delete from teamMembers
 	    where userNo = #{userNo}
 	      and teamNo = #{teamNo}
 	</delete>

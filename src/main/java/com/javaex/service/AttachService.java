@@ -15,7 +15,7 @@ import com.javaex.vo.TeamAttachmentsVO;
 public class AttachService {
 
     // 파일을 저장하고, 그 파일의 정보를 VO에 담아 반환하는 메소드
-    public TeamAttachmentsVO exeSave(MultipartFile file) { // ★★★ 반환 타입도 수정
+    public TeamAttachmentsVO exeSave(MultipartFile file) { 
         System.out.println("AttachService.exeSave()");
 
         // OS에 따라 파일 저장 경로 설정

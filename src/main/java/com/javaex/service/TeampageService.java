@@ -40,7 +40,7 @@ public class TeampageService {
 		// 3. 방금 내가(userNo) 만든 팀의 teamNo를 다시 DB에서 SELECT로 가져오기
 		int newTeamNo = teampageRepository.selectNewTeamNo(userNo);
 		
-		// 4. 팀 생성자를 'LEADER'/'ACTIVE' 상태로 팀원에 추가
+		// 4. 팀 생성자를 '팀장'/'승인' 상태로 팀원에 추가
 		teampageRepository.insertTeamMember(newTeamNo, userNo, "팀장", "승인");
 		
 		// 5. 환영 게시글 자동 생성 로직
@@ -86,17 +86,9 @@ public class TeampageService {
         return teamPostList;
     }
 	
-	//--팀페이지 글 등록
-//	public int exeAdd(TeamPostVO teamPostVO) {
-//		System.out.println("TeampageService.exeAdd()");
-//		
-//		int count = teampageRepository.teampageInsert(teamPostVO);
-//		
-//		return count;
-//	}
 	
-    // (수정) 팀페이지 글 등록
-    public void exeAdd(TeamPostVO teamPostVO) { // 반환타입을 void로 변경
+    // 팀페이지 글 등록
+    public void exeAdd(TeamPostVO teamPostVO) { // 반환타입을 void로 변경-> 리턴 안 시켜줘도 됨
         System.out.println("TeampageService.exeAdd()");
 
         // 1. 게시글 정보 저장 (posts 테이블)
@@ -123,29 +115,20 @@ public class TeampageService {
         }
     }
 	
-	//--팀페이지 등록 글 보기
-//    public TeamPostVO exeGetPost(int teamPostNo) {
-//    	
-//        System.out.println("TeampageService.exeGetPost()");
-//        
-//        TeamPostVO post = teampageRepository.teampageSelectPostByNo(teamPostNo);
-//        
-//        return post;
-//    }
     
-    // (수정) --팀페이지 등록 글 보기
+    // --팀페이지 등록 글 보기
     public TeamPostVO exeGetPost(int teamPostNo) {
         System.out.println("TeampageService.exeGetPost()");
         
-        // 1. 기존처럼 게시글의 기본 정보를 먼저 가져옵니다.
+        // 1. 기존처럼 게시글의 기본 정보 가져옴
         TeamPostVO post = teampageRepository.teampageSelectPostByNo(teamPostNo);
 
-        // 2. 게시글 정보가 성공적으로 조회되었다면,
+        // 2. 게시글 정보가 성공적으로 조회되면
         if (post != null) {
-            // 3. 위에서 가져온 게시글의 번호(teamPostNo)를 이용해서 첨부파일 목록을 추가로 가져옵니다.
+            // 3. 위에서 가져온 게시글의 번호(teamPostNo)를 이용해서 첨부파일 목록을 추가로 가져옴
             List<TeamAttachmentsVO> attachments = teampageRepository.selectAttachments(teamPostNo);
             
-            // 4. 가져온 첨부파일 목록을 post 객체의 '주머니'에 넣어줍니다. (1단계에서 만든 필드)
+            // 4. 가져온 첨부파일 목록을 post 객체의 주머니에 넣음(1단계에서 만든 필드)
             post.setAttachments(attachments);
         }
         
@@ -177,17 +160,19 @@ public class TeampageService {
         return count;
     }
     
-    // -- 팀페이지 등록글 삭제
+    
+ // -- 팀페이지 등록글 삭제
     public int exeDelete(int teamPostNo, int authUserNo) {
         System.out.println("TeampageService.exeDelete()");
         
-        // (선택적 보안 강화) 삭제하려는 게시글 정보를 가져와서 작성자가 맞는지 한번 더 확인
         TeamPostVO post = teampageRepository.teampageSelectPostByNo(teamPostNo);
         if (post != null && post.getUserNo() == authUserNo) {
-            // 작성자가 일치하면 삭제 진행
+            // 1. (추가) 자식 테이블인 첨부파일부터 먼저 삭제합니다.
+            teampageRepository.deleteAttachments(teamPostNo);
+            
+            // 2. 그 다음에 부모 테이블인 게시글을 삭제합니다.
             return teampageRepository.teampageDelete(teamPostNo);
         } else {
-            // 작성자가 아니거나 게시글이 없으면 0을 반환 (삭제 실패)
             return 0; 
         }
     }
