@@ -86,6 +86,7 @@
     
     <select id="selectFavoriteSpaces" parameterType="long" resultType="com.javaex.vo.SpacesVO">
 	  SELECT
+	      r.roomNo,
 	      s.spacesNo,
 	      s.userNo,
 	      s.spaceName,
@@ -100,7 +101,6 @@
 	      s.addressDetail,
 	      s.instDtm,
 	      s.updtDtm,
-	      /* roomNo 기준 대표 이미지(있으면 그거, 없으면 대체) */
 	      COALESCE(
 	        CONCAT(ra.filePath, ra.storedFileName),
 	        CASE
@@ -112,14 +112,14 @@
 	        END
 	      ) AS imageUrl
 	  FROM studioWishlist sw
-	  JOIN rooms r ON r.roomNo = sw.roomNo
-	  JOIN spaces s ON s.spacesNo = r.spacesNo
+	  JOIN rooms r   ON r.roomNo   = sw.roomNo
+	  JOIN spaces s  ON s.spacesNo = r.spacesNo
 	  LEFT JOIN (
-	      SELECT roomNo, MIN(pictureSno) AS minPic
+	      SELECT roomNo, MIN(picturesNo) AS minPic
 	      FROM roomAttachments
 	      GROUP BY roomNo
 	  ) pick ON pick.roomNo = r.roomNo
-	  LEFT JOIN roomAttachments ra ON ra.pictureSno = pick.minPic
+	  LEFT JOIN roomAttachments ra ON ra.picturesNo = pick.minPic
 	  WHERE sw.userNo = #{userNo}
 	  ORDER BY sw.studioWishlistNo DESC
 	</select>

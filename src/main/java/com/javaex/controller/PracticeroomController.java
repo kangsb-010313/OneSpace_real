@@ -1,7 +1,10 @@
 package com.javaex.controller;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,5 +68,13 @@ public class PracticeroomController {
         model.addAttribute("favoriteCandidates", practiceroomService.getFavoriteCandidates(userNo));
         
         return "practiceroom/practice4_list";
+    }
+    
+    @GetMapping("/api/room-slots")
+    @ResponseBody
+    public List<Map<String, Object>> getRoomSlots(
+            @RequestParam Long roomNo,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        return practiceroomService.getRoomSlots(roomNo, date);
     }
 }

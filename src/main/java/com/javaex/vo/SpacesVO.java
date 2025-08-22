@@ -20,6 +20,7 @@ public class SpacesVO {
     private LocalDateTime instDtm;
     private LocalDateTime updtDtm;
     private String imageUrl;
+    private Long roomNo;
     
     //생성자
     public SpacesVO() {
@@ -27,7 +28,7 @@ public class SpacesVO {
     
     public SpacesVO(Long spacesNo, Long userNo, String spaceName, String spaceSummary, String spaceInfo,
                     	String email, String phone, String tel, String spaceLink, String postCode,
-                    	String address, String addressDetail, LocalDateTime instDtm, LocalDateTime updtDtm) {
+                    	String address, String addressDetail, LocalDateTime instDtm, LocalDateTime updtDtm, Long roomNo) {
         this.spacesNo = spacesNo;
         this.userNo = userNo;
         this.spaceName = spaceName;
@@ -42,6 +43,7 @@ public class SpacesVO {
         this.addressDetail = addressDetail;
         this.instDtm = instDtm;
         this.updtDtm = updtDtm;
+        this.roomNo = roomNo;
     }
     
     //메소드gs
@@ -165,11 +167,21 @@ public class SpacesVO {
     	this.imageUrl = imageUrl;
     }
     
-    @Override
+    public Long getRoomNo() {
+		return roomNo;
+	}
+
+	public void setRoomNo(Long roomNo) {
+		this.roomNo = roomNo;
+	}
+
+	@Override
 	public String toString() {
 		return "SpacesVO [spacesNo=" + spacesNo + ", userNo=" + userNo + ", spaceName=" + spaceName + ", spaceSummary="
 				+ spaceSummary + ", spaceInfo=" + spaceInfo + ", email=" + email + ", phone=" + phone + ", tel=" + tel
 				+ ", spaceLink=" + spaceLink + ", postCode=" + postCode + ", address=" + address + ", addressDetail="
-				+ addressDetail + ", instDtm=" + instDtm + ", updtDtm=" + updtDtm + ", imageUrl=" + imageUrl + "]";
+				+ addressDetail + ", instDtm=" + instDtm + ", updtDtm=" + updtDtm + ", imageUrl=" + imageUrl
+				+ ", roomNo=" + roomNo + "]";
 	}
+	
 }

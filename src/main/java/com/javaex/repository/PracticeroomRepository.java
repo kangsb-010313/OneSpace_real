@@ -8,8 +8,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.javaex.vo.SpacesVO;
 import com.javaex.vo.RoomsVO;
+import com.javaex.vo.SpacesVO;
+
 
 @Repository
 public class PracticeroomRepository {
@@ -54,4 +55,13 @@ public class PracticeroomRepository {
     public List<Map<String, Object>> selectFavoriteCandidates(Long userNo) {
         return sqlSession.selectList("practiceroom.selectFavoriteCandidates", userNo);
     }
+    
+    public List<Map<String, Object>> selectRoomPricesByDayType(Long roomNo, String dayType) {
+        Map<String, Object> p = new HashMap<>();
+        p.put("roomNo", roomNo);
+        p.put("dayType", dayType);
+        return sqlSession.selectList("practiceroom.selectRoomPricesByDayType", p);
+    }
+    
+    
 }
