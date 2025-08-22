@@ -158,6 +158,42 @@
 		]]>
 	</insert>
 	
+	<!-- (추가) 특정 유저가 가장 마지막에 등록한 게시글의 번호를 가져오는 쿼리 -->
+	<select id="selectLastPostNo" parameterType="int" resultType="int">
+	    <![CDATA[
+	        SELECT MAX(teamPostNo)
+	        FROM posts
+	        WHERE userNo = #{userNo}
+	    ]]>
+	</select>
+	
+	<!-- (추가) 첨부파일 정보 저장 쿼리 (이전과 동일) -->
+	<insert id="insertAttachment" parameterType="com.javaex.vo.TeamAttachmentsVO">
+	    <![CDATA[
+	        INSERT INTO teamAttachments (
+	            postNo, teamStoredFileName, teamOriginFileName, teamFilePath, 
+	            teamFileCreatedDate, teamFileUpdateDate
+	        ) VALUES (
+	            #{postNo}, #{teamStoredFileName}, #{teamOriginFileName}, #{teamFilePath},
+	            NOW(), NOW()
+	        )
+	    ]]>
+	</insert>
+	
+	<!-- (추가) 특정 게시글에 속한 모든 첨부파일 목록 조회 -->
+	<select id="selectAttachmentsByPostNo" parameterType="int" resultType="com.javaex.vo.TeamAttachmentsVO">
+	    <![CDATA[
+	        SELECT  teamfileNo,
+	                postNo,
+	                teamStoredFileName,
+	                teamOriginFileName,
+	                teamFilePath
+	        FROM teamAttachments
+	        WHERE postNo = #{postNo}
+	        ORDER BY teamfileNo ASC
+	    ]]>
+	</select>
+	
 	<!-- 게시글 수정 -->
     <update id="update" parameterType="com.javaex.vo.TeamPostVO">
         <![CDATA[

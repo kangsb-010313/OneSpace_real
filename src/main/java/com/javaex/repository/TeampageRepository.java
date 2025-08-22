@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.javaex.vo.TeamAttachmentsVO;
 import com.javaex.vo.TeamMemberVO;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
@@ -101,6 +102,24 @@ public class TeampageRepository {
 		
 		return count;
 	}
+	
+    // (추가) 마지막 게시글 번호 가져오기
+    public int selectLastPostNo(int userNo) {
+        System.out.println("TeampageRepository.selectLastPostNo()");
+        return sqlSession.selectOne("teampage.selectLastPostNo", userNo);
+    }
+
+    // (추가) 첨부파일 정보 저장
+    public int insertAttachment(TeamAttachmentsVO teamAttachmentsVO) {
+        System.out.println("TeampageRepository.insertAttachment()");
+        return sqlSession.insert("teampage.insertAttachment", teamAttachmentsVO);
+    }
+    
+    // (추가) 특정 게시글의 첨부파일 목록 가져오기
+    public List<TeamAttachmentsVO> selectAttachments(int postNo) {
+        System.out.println("TeampageRepository.selectAttachments()");
+        return sqlSession.selectList("teampage.selectAttachmentsByPostNo", postNo);
+    }
 	
 	//--팀페이지 등록 글 보기
     public TeamPostVO teampageSelectPostByNo(int teamPostNo) {

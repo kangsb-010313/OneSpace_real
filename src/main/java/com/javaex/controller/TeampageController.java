@@ -1,5 +1,7 @@
 package com.javaex.controller;
 
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.service.TeampageService;
 import com.javaex.vo.TeamPostVO;
@@ -18,6 +21,7 @@ import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVoteOptionVO;
 import com.javaex.vo.UserVO;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -193,10 +197,23 @@ public class TeampageController {
 		System.out.println("TeampageController.write()");
 		
 		
-		System.out.println(teamPostVO.getFiles()[0].getOriginalFilename());
-		System.out.println(teamPostVO.getFiles()[1].getOriginalFilename());
-		System.out.println(teamPostVO.getFiles()[2].getOriginalFilename());
-	
+//		System.out.println(teamPostVO.getFiles()[0].getOriginalFilename());
+//		System.out.println(teamPostVO.getFiles()[1].getOriginalFilename());
+//		System.out.println(teamPostVO.getFiles()[2].getOriginalFilename());
+
+	    // 첨부된 파일이 있는지 먼저 확인하고,
+	    if (teamPostVO.getFiles() != null && teamPostVO.getFiles().length > 0) {
+	        System.out.println("--- 첨부된 파일 목록 ---");
+	        // 파일 개수만큼 반복하면서 안전하게 이름을 출력합니다.
+	        for (MultipartFile file : teamPostVO.getFiles()) {
+	            // 파일 이름이 비어있지 않은 실제 파일일 경우에만 출력
+	            if (!file.getOriginalFilename().isEmpty()) {
+	                System.out.println("첨부파일명: " + file.getOriginalFilename());
+	            }
+	        }
+	        System.out.println("----------------------");
+	    }
+		
 		UserVO authUser = (UserVO)session.getAttribute("authUser");
 		
         if(authUser == null) {
@@ -212,6 +229,44 @@ public class TeampageController {
 		
 		return "redirect:/onespace/teams/" + teamNo + "/posts/list";
 	}
+	
+    // (추가) 이미지 파일 출력 메소드 (가장 클래식하고 쉬운 방식)
+    @RequestMapping(value="/display/{saveName}", method = RequestMethod.GET)
+    public void display(@PathVariable("saveName") String saveName,
+                        HttpServletResponse response) {
+        
+        System.out.println("이미지 출력 요청: " + saveName);
+        
+        // 1. 이미지가 저장된 폴더 경로를 지정합니다.
+        String saveDir = "C:\\javaStudy\\upload\\";
+        
+        // 2. 출력할 이미지 파일의 전체 경로를 만듭니다.
+        String filePath = saveDir + saveName;
+        
+        try {
+            // 3. 파일에서 데이터를 읽어올 '입력 파이프'(InputStream)를 엽니다.
+            FileInputStream fis = new FileInputStream(filePath);
+            
+            // 4. 읽어온 데이터를 브라우저로 보낼 '출력 파이프'(OutputStream)를 엽니다.
+            OutputStream os = response.getOutputStream();
+            
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            
+            // 5. 파일 끝까지 1KB씩 반복해서 읽고, 읽자마자 브라우저로 쏴줍니다.
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            
+            // 6. 파이프를 다 썼으니 닫아줍니다.
+            os.close();
+            fis.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(saveName + " 이미지 파일을 찾을 수 없습니다.");
+        }
+    }
 	
 	//--팀페이지 등록 글 보기
 	// URL: /onespace/teams/{teamNo}/posts/{teamPostNo}
@@ -256,6 +311,7 @@ public class TeampageController {
 
         return "teampage/view";
     }
+    
 	
     // -- 팀페이지 등록글 수정 폼
     // URL: /onespace/teams/{teamNo}/posts/{teamPostNo}/modifyform

@@ -1,6 +1,7 @@
 package com.javaex.vo;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,9 @@ public class TeamPostVO {
 	private String teamName; // 팀 이름 (teams 테이블)
 
 	private MultipartFile[] files;
+	
+    // (추가) 이 게시글에 달린 첨부파일 목록을 담을 리스트
+    private List<TeamAttachmentsVO> attachments;
 
 	// 기본생성자
 	public TeamPostVO() {
@@ -47,6 +51,27 @@ public class TeamPostVO {
 		this.userName = userName;
 		this.teamName = teamName;
 		this.files = files;
+	}
+	
+
+	public TeamPostVO(int teamPostNo, int teamNo, int userNo, int voteNo, String teamPostType, String teamPostTitle,
+			String instaAccount, String teamContent, String teamWriteDate, String teamUpdateDate, String userName,
+			String teamName, MultipartFile[] files, List<TeamAttachmentsVO> attachments) {
+		super();
+		this.teamPostNo = teamPostNo;
+		this.teamNo = teamNo;
+		this.userNo = userNo;
+		this.voteNo = voteNo;
+		this.teamPostType = teamPostType;
+		this.teamPostTitle = teamPostTitle;
+		this.instaAccount = instaAccount;
+		this.teamContent = teamContent;
+		this.teamWriteDate = teamWriteDate;
+		this.teamUpdateDate = teamUpdateDate;
+		this.userName = userName;
+		this.teamName = teamName;
+		this.files = files;
+		this.attachments = attachments;
 	}
 
 	// 메소드 gs
@@ -153,6 +178,16 @@ public class TeamPostVO {
 	public void setFiles(MultipartFile[] files) {
 		this.files = files;
 	}
+	
+
+	public List<TeamAttachmentsVO> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<TeamAttachmentsVO> attachments) {
+		this.attachments = attachments;
+	}
+
 
 	// 메소드 일반
 	@Override
@@ -161,7 +196,8 @@ public class TeamPostVO {
 				+ voteNo + ", teamPostType=" + teamPostType + ", teamPostTitle=" + teamPostTitle + ", instaAccount="
 				+ instaAccount + ", teamContent=" + teamContent + ", teamWriteDate=" + teamWriteDate
 				+ ", teamUpdateDate=" + teamUpdateDate + ", userName=" + userName + ", teamName=" + teamName
-				+ ", files=" + Arrays.toString(files) + "]";
+				+ ", files=" + Arrays.toString(files) + ", attachments=" + attachments + "]";
 	}
-
+	
+	
 }

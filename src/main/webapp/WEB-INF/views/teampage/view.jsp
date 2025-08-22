@@ -74,9 +74,13 @@
                                         </div>
                                         <!-- 첨부 이미지 표시 영역 -->
                                         <div class="post-image-gallery">
-                                            <!-- 실제로는 DB에 저장된 이미지 경로를 반복문으로 출력합니다 -->
-                                            <img src="${pageContext.request.contextPath}/assets/images/댄스팀 연습 사진01.jpg" alt="팀 연습 사진 1" class="attached-image">
-                                            <img src="${pageContext.request.contextPath}/assets/images/댄스팀연습사진02.jpg" alt="팀 연습 사진 2" class="attached-image">
+								            <!-- 컨트롤러에서 보내준 첨부파일 목록(attachments)을 반복문으로 돌립니다. -->
+								            <c:forEach items="${post.attachments}" var="file">
+								                <!-- 4단계에서 만든 URL을 호출해서 이미지를 표시합니다. -->
+								                <img src="${pageContext.request.contextPath}/onespace/display/${file.teamStoredFileName}" 
+								                     alt="${file.teamOriginFileName}" 
+								                     class="attached-image">
+								            </c:forEach>
                                         </div>
                                     </c:if>
                                     <%-- 팀자랑 글 내용 끝 --%>
@@ -84,6 +88,14 @@
                                     <%-- 일반공지/투표 글 내용 (기본 내용) 시작 --%>
                                     <c:if test="${post.teamPostType == '일반공지' || post.teamPostType == '투표'}">
                                         <p>${post.teamContent}</p>
+                                        
+                                        <div class="post-image-gallery">
+								            <c:forEach items="${post.attachments}" var="file">
+							                	<img src="${pageContext.request.contextPath}/onespace/display/${file.teamStoredFileName}" 
+								                     alt="${file.teamOriginFileName}" 
+								                     class="attached-image">
+							            	</c:forEach>
+		        						</div>     
                                     </c:if>
                                     <%-- 일반공지/투표 글 내용 끝 --%>
 

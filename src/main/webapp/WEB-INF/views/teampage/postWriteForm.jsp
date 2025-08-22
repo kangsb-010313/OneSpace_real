@@ -82,8 +82,6 @@
                                     <div class="form-group instagram-group">
                                         <label>인스타계정</label>
                                         <span>${currentTeam.instaAccount}</span> 
-                                        <%-- 실제 값을 입력받으려면 input 태그를 사용해야 합니다. span은 보여주기만 함 --%>
-                                        <%-- <input type="text" name="instagramAccount" placeholder="인스타 계정 입력"> --%>
                                     </div>
                                 </c:if>
                                 
@@ -199,6 +197,7 @@
                                             <input type="file" id="file-upload" name="files" multiple="multiple" >
                                         </div>
                                     </div>
+                                    
                                     <div class="content-box">
                                         <textarea id="post-content" name="teamContent" placeholder="내용을 입력하세요"></textarea>
                                         <div id="file-preview-zone"></div>
@@ -222,5 +221,35 @@
 		<c:import url="/WEB-INF/views/include/footer.jsp" />
         <!-- /푸터 영역------------------------------------------------ -->
     </div>
+    
+    <%-- 파일 미리보기 스크립트는 body 맨 아래에 그대로 두시면 됩니다. --%>
+	<script>
+	    document.addEventListener('DOMContentLoaded', function() {
+	        const fileInput = document.getElementById('file-upload');
+	        const previewZone = document.getElementById('file-preview-zone');
+	
+	        if (fileInput && previewZone) {
+	            fileInput.addEventListener('change', function(event) {
+	                const files = event.target.files;
+	                previewZone.innerHTML = ""; // 기존 미리보기 지우기
+	
+	                Array.from(files).forEach(file => {
+	                    if (file.type.startsWith('image/')) {
+	                        const reader = new FileReader();
+	                        reader.onload = function(e) {
+	                            const img = document.createElement('img');
+	                            img.src = e.target.result;
+	                            img.style.maxWidth = '120px';
+	                            img.style.maxHeight = '120px';
+	                            img.style.margin = '5px';
+	                            previewZone.appendChild(img);
+	                        };
+	                        reader.readAsDataURL(file);
+	                    }
+	                });
+	            });
+	        }
+	    });
+	</script>
 </body>
 </html>

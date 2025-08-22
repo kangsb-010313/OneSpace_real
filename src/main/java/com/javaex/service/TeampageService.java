@@ -6,8 +6,10 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.repository.TeampageRepository;
+import com.javaex.vo.TeamAttachmentsVO;
 import com.javaex.vo.TeamMemberVO;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
@@ -19,6 +21,8 @@ public class TeampageService {
 	//필드
 	@Autowired
 	private TeampageRepository teampageRepository;
+	@Autowired
+	private AttachService attachService;
 	
 	
 	//메소드일반
@@ -83,20 +87,67 @@ public class TeampageService {
     }
 	
 	//--팀페이지 글 등록
-	public int exeAdd(TeamPostVO teamPostVO) {
-		System.out.println("TeampageService.exeAdd()");
-		
-		int count = teampageRepository.teampageInsert(teamPostVO);
-		
-		return count;
-	}
+//	public int exeAdd(TeamPostVO teamPostVO) {
+//		System.out.println("TeampageService.exeAdd()");
+//		
+//		int count = teampageRepository.teampageInsert(teamPostVO);
+//		
+//		return count;
+//	}
+	
+    // (수정) 팀페이지 글 등록
+    public void exeAdd(TeamPostVO teamPostVO) { // 반환타입을 void로 변경
+        System.out.println("TeampageService.exeAdd()");
+
+        // 1. 게시글 정보 저장 (posts 테이블)
+        teampageRepository.teampageInsert(teamPostVO);
+
+        // 2. 방금 저장한 게시글의 번호(PK)를 다시 조회해서 가져오기
+        int postNo = teampageRepository.selectLastPostNo(teamPostVO.getUserNo());
+        System.out.println("방금 저장된 게시글의 번호는: " + postNo);
+
+
+        // 3. 첨부파일 저장 (teamAttachments 테이블)
+        MultipartFile[] files = teamPostVO.getFiles();
+        if (files != null && !files[0].getOriginalFilename().isEmpty()) {
+            for (MultipartFile file : files) {
+                // (1) 파일 저장 및 정보 받기
+                TeamAttachmentsVO attachmentVO = attachService.exeSave(file);
+
+                // (2) 파일 정보에 게시글 번호 세팅
+                attachmentVO.setPostNo(postNo);
+
+                // (3) 파일 정보 DB에 저장
+                teampageRepository.insertAttachment(attachmentVO);
+            }
+        }
+    }
 	
 	//--팀페이지 등록 글 보기
+//    public TeamPostVO exeGetPost(int teamPostNo) {
+//    	
+//        System.out.println("TeampageService.exeGetPost()");
+//        
+//        TeamPostVO post = teampageRepository.teampageSelectPostByNo(teamPostNo);
+//        
+//        return post;
+//    }
+    
+    // (수정) --팀페이지 등록 글 보기
     public TeamPostVO exeGetPost(int teamPostNo) {
-    	
         System.out.println("TeampageService.exeGetPost()");
         
+        // 1. 기존처럼 게시글의 기본 정보를 먼저 가져옵니다.
         TeamPostVO post = teampageRepository.teampageSelectPostByNo(teamPostNo);
+
+        // 2. 게시글 정보가 성공적으로 조회되었다면,
+        if (post != null) {
+            // 3. 위에서 가져온 게시글의 번호(teamPostNo)를 이용해서 첨부파일 목록을 추가로 가져옵니다.
+            List<TeamAttachmentsVO> attachments = teampageRepository.selectAttachments(teamPostNo);
+            
+            // 4. 가져온 첨부파일 목록을 post 객체의 '주머니'에 넣어줍니다. (1단계에서 만든 필드)
+            post.setAttachments(attachments);
+        }
         
         return post;
     }
