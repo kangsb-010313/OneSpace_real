@@ -7,58 +7,58 @@
 
   <!-- 공통 컬럼 -->
   <sql id="space_cols">
-    spacesNo      AS spacesno,
-    userNo        AS userno,
-    spaceName     AS spacename,
-    spaceSummary  AS spacesummary,
-    spaceInfo     AS spaceinfo,
-    email         AS email,
-    phone         AS phone,
-    tel           AS tel,
-    spaceLink     AS spacelink,
-    postCode      AS postcode,
-    address       AS address,
-    addressDetail AS addressdetail,
-    instDtm       AS inst_dt,
-    updtDtm       AS updt_dt
+    spacesNo      as spacesno,
+    userNo        as userno,
+    spaceName     as spacename,
+    spaceSummary  as spacesummary,
+    spaceInfo     as spaceinfo,
+    email         as email,
+    phone         as phone,
+    tel           as tel,
+    spaceLink     as spacelink,
+    postCode      as postcode,
+    address       as address,
+    addressDetail as addressdetail,
+    instDtm       as instdtm,
+    updtDtm       as updtdtm
   </sql>
 
   <!-- 로그인 사용자 공간 목록 -->
   <select id="spaces_by_user" parameterType="long" resultType="com.javaex.vo.HostVO">
-    SELECT <include refid="space_cols"/>
-    FROM spaces
-    WHERE userNo = #{value}
-    ORDER BY instDtm DESC, spacesNo DESC
+    select <include refid="space_cols"/>
+    from spaces
+    where userNo = #{value}
+    order by instDtm desc, spacesNo desc
   </select>
 
   <!-- 단건 조회 -->
   <select id="space_by_no" parameterType="long" resultType="com.javaex.vo.HostVO">
-    SELECT <include refid="space_cols"/>
-    FROM spaces
-    WHERE spacesNo = #{value}
-    LIMIT 1
+    select <include refid="space_cols"/>
+    from spaces
+    where spacesNo = #{value}
+    limit 1
   </select>
 
   <!-- 신규 생성 -->
   <insert id="insert_space" parameterType="com.javaex.vo.HostVO"
           useGeneratedKeys="true" keyProperty="spacesno" keyColumn="spacesNo">
-    INSERT INTO spaces (
+    insert into spaces (
       userNo, spaceName, spaceSummary, spaceInfo,
       email, phone, tel, spaceLink,
       postCode, address, addressDetail,
       instDtm, updtDtm
-    ) VALUES (
+    ) values (
       #{userno}, #{spacename}, #{spacesummary}, #{spaceinfo},
       #{email}, #{phone}, #{tel}, #{spacelink},
       #{postcode}, #{address}, #{addressdetail},
-      NOW(), NOW()
+      now(), now()
     )
   </insert>
 
   <!-- 수정 -->
   <update id="update_space" parameterType="com.javaex.vo.HostVO">
-    UPDATE spaces
-       SET spaceName     = #{spacename},
+    update spaces
+       set spaceName     = #{spacename},
            spaceSummary  = #{spacesummary},
            spaceInfo     = #{spaceinfo},
            email         = #{email},
@@ -68,30 +68,30 @@
            postCode      = #{postcode},
            address       = #{address},
            addressDetail = #{addressdetail},
-           updtDtm       = NOW()
-     WHERE spacesNo = #{spacesno}
-       AND userNo   = #{userno}
+           updtDtm       = now()
+     where spacesNo = #{spacesno}
+       and userNo   = #{userno}
   </update>
 
   <!-- ===== 시설(facilityInfo) ===== -->
 
   <!-- 한 공간의 시설 전체 삭제(업데이트/재저장 시 사용) -->
   <delete id="delete_facilities_by_spacesno" parameterType="long">
-    DELETE FROM facilityInfo WHERE spacesNo = #{value}
+    delete from facilityInfo where spacesNo = #{value}
   </delete>
 
   <!-- 시설 한 건 삽입 -->
   <insert id="insert_facility">
-    INSERT INTO facilityInfo (spacesNo, facilityName, instDtm, updtDtm)
-    VALUES (#{spacesNo}, #{facilityName}, NOW(), NOW())
+    insert into facilityInfo (spacesNo, facilityName, instDtm, updtDtm)
+    values (#{spacesNo}, #{facilityName}, now(), now())
   </insert>
 
   <!-- 조회(필요 시) -->
   <select id="select_facilities_by_spacesno" parameterType="long" resultType="string">
-    SELECT facilityName
-    FROM facilityInfo
-    WHERE spacesNo = #{value}
-    ORDER BY facilityName
+    select facilityName
+    from facilityInfo
+    where spacesNo = #{value}
+    order by facilityName
   </select>
 
 </mapper>
