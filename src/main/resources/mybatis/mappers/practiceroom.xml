@@ -183,5 +183,17 @@
 	    END
 	  ORDER BY startTime
 	</select>
+	
+    <select id="selectRoomByNo" parameterType="long" resultType="com.javaex.vo.RoomsVO">
+    	SELECT
+      		roomNo,
+      		spacesNo,
+      		roomName,
+      		roomInfo,
+      		capacity,
+      		area
+    	FROM rooms
+    	WHERE roomNo = #{roomNo}
+  </select>
 
 </mapper>

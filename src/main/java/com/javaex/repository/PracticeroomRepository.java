@@ -65,5 +65,8 @@ public class PracticeroomRepository {
         return sqlSession.selectList("practiceroom.selectRoomPricesByDate", reserveInfoVO);
     }
     
+    public RoomsVO selectRoomByNo(Long roomNo) {
+        return sqlSession.selectOne("practiceroom.selectRoomByNo", roomNo);
+    }
     
 }

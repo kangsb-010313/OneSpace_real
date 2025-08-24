@@ -107,80 +107,130 @@
   let page = 2;
   //let page = Math.ceil(document.querySelectorAll('#cardList .card').length / size);
   let loading = false, done = false;
-
+  
+  //안전하게 속성값을 찾아주는 헬퍼 (여러 후보 키명을 시도)
+  function findField(obj, candidates) {
+    for (let i = 0; i < candidates.length; i++) {
+      const k = candidates[i];
+      if (obj[k] !== undefined && obj[k] !== null) return obj[k];
+    }
+    return '';
+  }
+  
+  //간단한 HTML 이스케이프 (XSS 방지용, 출력용)
+  function escapeHtml(s) {
+    if (!s && s !== 0) return '';
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  
+  //이미지 경로 판단: http(s) / 웹절대경로(/...) / 파일명 -> assets/images/
   function resolveImg(raw) {
-    if (!raw) return ctx + '/assets/images/placeholder.jpg';
-    if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/')) return raw;
-    return ctx + '/assets/images/' + encodeURIComponent(raw);
+    const placeholder = ctx + '/assets/images/placeholder.jpg';
+    if (!raw) return placeholder;
+    try {
+      raw = String(raw);
+      if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/')) {
+        return raw;
+      }
+      // 파일명인 경우 (DB에 저장된 파일명): 그대로 /assets/images/ + 파일명
+      // (브라우저가 적절히 인코딩 처리함; 한글파일명 문제가 있으면 서버에서 영문으로 바꾸는게 안전)
+      return ctx + '/assets/images/' + raw;
+    } catch (e) {
+      return placeholder;
+    }
   }
 
+  //무한스크롤로 받아온 데이터(배열)를 카드로 추가
   function appendCards(arr) {
-	  const list = document.getElementById('cardList');
-	  const placeholder = ctx + '/assets/images/placeholder.jpg';
-	  
-	  arr.forEach(function(r) {
-	    const src = resolveImg(r.spaceLink || '');
-	    const card = document.createElement('div');
-	    card.className = 'card';
-	    card.innerHTML =
-	      '<a href="#">' +
-	        '<div class="card-img-wrap">' +
-	          '<img class="card-img" src="' + src + '" alt="' + (r.spaceName || '') + '"' +
-	               ' onerror="this.src=\'' + placeholder + '\'">' +
-	        '</div>' +
-	        '<div class="card-content">' +
-	          '<div class="card-title">' + (r.spaceName || '') + '</div>' +
-	          '<div class="card-meta">' + (r.spaceSummary || '') + '</div>' +
-	          '<div class="card-meta">' + (r.spaceInfo || '') + '</div>' +
-	        '</div>' +
-	      '</a>';
-	    list.appendChild(card);
-	  });
-	}
+    console.log('[appendCards] received array:', arr);
+    if (!Array.isArray(arr)) return;
 
+    const list = document.getElementById('cardList');
+    const placeholder = ctx + '/assets/images/placeholder.jpg';
+
+    arr.forEach(function (r) {
+      // 가능한 필드 이름 후보들 (서버 응답 구조가 조금 달라도 대응)
+      const spacesNo = findField(r, ['spacesNo', 'spaces_no', 'spacesno', 'id', 'spaceId', 'spaceNo']);
+      const rawLink = findField(r, ['spaceLink', 'space_link', 'spaceLink', 'link', 'spaceImage', 'spaceImg', 'image']);
+      const spaceName = findField(r, ['spaceName', 'space_name', 'name', 'title']) || '';
+      const spaceSummary = findField(r, ['spaceSummary', 'space_summary', 'summary']) || '';
+      const spaceInfo = findField(r, ['spaceInfo', 'space_info', 'info', 'description']) || '';
+
+      // build href to zone page (like static cards)
+      const href = ctx + '/onespace/practice2_zone?spacesNo=' + encodeURIComponent(spacesNo);
+
+      const src = resolveImg(rawLink || '');
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      // 전체 카드를 하나의 앵커로 감싸서 이미지+제목 모두 같은 링크로 동작
+      card.innerHTML = ''
+        + '<a href="' + href + '">'
+          + '<div class="card-img-wrap">'
+            + '<img class="card-img" src="' + src + '" alt="' + escapeHtml(spaceName) + '"'
+              + ' onerror="this.onerror=null;this.src=\'' + placeholder + '\';">'
+          + '</div>'
+          + '<div class="card-content">'
+            + '<div class="card-title">' + escapeHtml(spaceName) + '</div>'
+            + '<div class="card-meta">' + escapeHtml(spaceSummary) + '</div>'
+            + '<div class="card-meta">' + escapeHtml(spaceInfo) + '</div>'
+          + '</div>'
+        + '</a>';
+
+      list.appendChild(card);
+    });
+  }
+
+  //loadMore, observer 로직은 기존과 동일 (필요시 아래 코드를 원래 위치에 유지)
   async function loadMore() {
-	  if (loading || done) return;
-	  loading = true;
+    if (loading || done) return;
+    loading = true;
 
-	  const url = ctx + '/onespace/api/practicerooms?page=' + page + '&size=' + size;
-	  console.log('[loadMore] page=', page, 'GET', url);
+    const url = ctx + '/onespace/api/practicerooms?page=' + page + '&size=' + size;
+    console.log('[loadMore] page=', page, 'GET', url);
 
-	  try {
-	    const res = await fetch(url, { headers: { 'Accept':'application/json' } });
-	    if (!res.ok) throw new Error('HTTP ' + res.status);
-	    const data = await res.json();
+    try {
+      const res = await fetch(url, { headers: { 'Accept':'application/json' } });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
 
-	    if (!Array.isArray(data) || data.length === 0) {
-	      done = true;
-	      return;
-	    }
+      console.log('[loadMore] data:', data);
 
-	    appendCards(data);
+      if (!Array.isArray(data) || data.length === 0) {
+        done = true;
+        return;
+      }
 
-	    if (data.length < size) {
-	      done = true; // 마지막 페이지
-	    } else {
-	      page++; // 다음 페이지 준비
-	    }
-	  } catch (e) {
-	    console.error('[loadMore] error', e);
-	    done = true;
-	  } finally {
-	    loading = false;
-	  }
-	}
+      appendCards(data);
 
-  // 초기 1회 로드(원하면 주석 처리 가능)
+      if (data.length < size) {
+        done = true; // 마지막 페이지
+      } else {
+        page++; // 다음 페이지 준비
+      }
+    } catch (e) {
+      console.error('[loadMore] error', e);
+      done = true;
+    } finally {
+      loading = false;
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', loadMore);
 
-  // 스크롤 바닥 근접 시 추가 로드
   const sentinel = document.getElementById('sentinel');
   const observer = new IntersectionObserver(entries => {
-	if (entries[0].isIntersecting && !loading && !done) {
-	  loadMore();
-	}
+    if (entries[0].isIntersecting && !loading && !done) {
+      loadMore();
+    }
   });
-  observer.observe(sentinel);
+  if (sentinel) observer.observe(sentinel);
   </script>
   
   </div>

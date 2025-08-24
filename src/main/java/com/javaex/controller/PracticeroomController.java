@@ -56,13 +56,25 @@ public class PracticeroomController {
 
 		return "practiceroom/practice2_zone";
 	}
-
+	
+	@GetMapping("/practice3_room")
+	public String room(@RequestParam("roomNo") Long roomNo, Model model) {
+	    RoomsVO room = practiceroomService.getRoomByNo(roomNo);
+	    model.addAttribute("room", room);
+	    
+	    SpacesVO zone = practiceroomService.getZoneDetail(room.getSpacesNo());
+	    model.addAttribute("zone", zone);
+	    
+	    return "practiceroom/practice3_room";
+	}
+	
 	// 찜리스트
 	@GetMapping("/practice4_list")
 	public String favoritesList(Model model) {
 		Long userNo = 1L;
 
 		List<SpacesVO> favoriteSpaces = practiceroomService.getFavoriteSpaces(userNo);
+		System.out.println("favoriteSpaces=" + favoriteSpaces);
 		model.addAttribute("favoriteSpaces", favoriteSpaces);
 
 		model.addAttribute("favoriteCandidates", practiceroomService.getFavoriteCandidates(userNo));
@@ -81,4 +93,5 @@ public class PracticeroomController {
 
 		return slotList;
 	}
+	
 }
