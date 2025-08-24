@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.javaex.service.TeampageService;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
-import com.javaex.vo.TeamVoteOptionVO;
+import com.javaex.vo.TeamVotePostVO;
 import com.javaex.vo.UserVO;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -160,10 +160,10 @@ public class TeampageController {
 	    
 	    // 글쓰기 종류가 '투표'일 경우에만
 	    if ("투표".equals(teamPostType)) {
-	        // exeGetVoteOptions 대신 exeGetWishlistForVote 호출
-	        List<TeamVoteOptionVO> voteOptions = teampageService.exeGetWishlistForVote(userNo); 
-	        model.addAttribute("voteOptions", voteOptions);
-	        System.out.println("불러온 찜 목록: " + voteOptions);
+	        // 서비스에서 투표 후보 목록을 가져옵니다.
+	        List<TeamVotePostVO> voteCandidates = teampageService.exeGetVoteCandidates(userNo); 
+	        model.addAttribute("voteCandidates", voteCandidates); // 모델에 "voteCandidates" 라는 이름으로 담기
+	        System.out.println("불러온 투표 후보 목록: " + voteCandidates);
 	    }
 		
 		model.addAttribute("authUser", authUser);
@@ -235,7 +235,23 @@ public class TeampageController {
         System.out.println("이미지 출력 요청: " + saveName);
         
         // 1. 이미지가 저장된 폴더 경로를 지정
-        String saveDir = "C:\\javaStudy\\upload\\";
+//        String saveDir = "C:\\javaStudy\\upload\\";
+        
+        // --- 여기부터 수정 ---
+        String saveDir;
+        String osName = System.getProperty("os.name").toLowerCase();
+
+        // 윈도우일 경우
+        if (osName.contains("win")) {
+            // 윈도우 경로
+            saveDir = "C:\\javaStudy\\upload\\";
+        }
+        // 맥 또는 리눅스일 경우
+        else { 
+            // 맥 경로 (AttachService와 동일하게 설정)
+            saveDir = System.getProperty("user.home") + "/upload/";
+        }
+        // --- 여기까지 수정 ---
         
         // 2. 출력할 이미지 파일의 전체 경로
         String filePath = saveDir + saveName;

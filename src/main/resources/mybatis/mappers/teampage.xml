@@ -313,6 +313,56 @@
 	    where userNo = #{userNo}
 	      and teamNo = #{teamNo}
 	</delete>
+	
+	
+	<!-- 투표 만들기를 위해 날짜/시간이 지정된 후보 목록을 조회하는 쿼리 (roomAttachments 테이블 사용) -->
+	<select id="selectVoteCandidates" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
+	    <![CDATA[
+	        SELECT
+	            v.voteNo,
+	            s.spaceName,
+	            r.roomName,
+	            r.roomNo,
+	            s.address,
+	            vo.voteDate,
+	            
+	            /* ▼▼▼▼▼ 핵심: 시간을 그룹화하여 시작-종료 시간으로 표시 ▼▼▼▼▼ */
+	            MIN(vo.voteTime) AS startTime, /* 가장 빠른 시간을 시작 시간으로 */
+	            TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime, /* 가장 늦은 시간에 1시간을 더해 종료 시간으로 */
+	            /* ▲▲▲▲▲ 여기까지 ▲▲▲▲▲ */
+	
+	            v.totalPrice,
+	            (
+	                SELECT storedFileName 
+	                FROM roomAttachments 
+	                WHERE roomNo = r.roomNo 
+	                LIMIT 1
+	            ) AS picturesNo,
+	            (
+	                SELECT GROUP_CONCAT(fi.facilityName SEPARATOR ', ')
+	                FROM spacesGuide sg
+	                JOIN facilityInfo fi ON sg.facilityNo = fi.facilityNo
+	                WHERE sg.spacesNo = s.spacesNo
+	                  AND fi.facilityName IN ('주차', '조명', '블루투스 스피커')
+	            ) AS spacesGuideNo
+	            
+	        FROM votes v
+	        
+	        JOIN voteOptions vo ON v.voteNo = vo.voteNo
+	        JOIN rooms r ON vo.roomNo = r.roomNo
+	        JOIN spaces s ON r.spacesNo = s.spacesNo
+	
+	        WHERE v.userNo = #{userNo}
+	          AND v.postNo IS NULL
+	          AND vo.voteStatus = 0
+	        
+	        /* ▼▼▼▼▼ 핵심: voteNo와 날짜 등으로 그룹화하여 하나의 후보로 묶음 ▼▼▼▼▼ */
+	        GROUP BY v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
+	        /* ▲▲▲▲▲ 여기까지 ▲▲▲▲▲ */
+	          
+	        ORDER BY vo.voteDate, startTime
+	    ]]>
+	</select>
     
 
 </mapper>

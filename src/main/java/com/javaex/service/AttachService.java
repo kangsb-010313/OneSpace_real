@@ -1,6 +1,7 @@
 package com.javaex.service;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,8 +20,29 @@ public class AttachService {
         System.out.println("AttachService.exeSave()");
 
         // OS에 따라 파일 저장 경로 설정
+//        String osName = System.getProperty("os.name").toLowerCase();
+//        String saveDir = osName.contains("win") ? "C:\\javaStudy\\upload\\" : "/data/upload/";
+        
+        // --- 여기부터 수정 ---
+        String saveDir;
         String osName = System.getProperty("os.name").toLowerCase();
-        String saveDir = osName.contains("win") ? "C:\\javaStudy\\upload\\" : "/data/upload/";
+
+        // 윈도우일 경우
+        if (osName.contains("win")) {
+            saveDir = "C:\\javaStudy\\upload\\";
+        } 
+        // 맥 또는 리눅스일 경우
+        else { 
+            // 사용자 홈 디렉토리 경로를 가져와서 그 하위에 upload 폴더를 사용합니다.
+            // 예: /Users/사용자이름/upload/
+            saveDir = System.getProperty("user.home") + "/upload/";
+        }
+        
+        // upload 폴더가 없으면 자동으로 생성해주는 로직
+        File dir = new File(saveDir);
+        if (!dir.exists()) {
+            dir.mkdirs(); // mkdirs()는 필요한 상위 폴더까지 모두 생성합니다.
+        }
 
         // 1. 파일 정보 추출
         String orgName = file.getOriginalFilename();

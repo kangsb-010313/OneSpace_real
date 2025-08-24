@@ -14,6 +14,7 @@ import com.javaex.vo.TeamMemberVO;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVoteOptionVO;
+import com.javaex.vo.TeamVotePostVO;
 
 @Service
 public class TeampageService {
@@ -133,6 +134,16 @@ public class TeampageService {
         }
         
         return post;
+    }
+    
+    /**
+     * 투표 만들기 폼에 필요한 후보 목록을 가져오는 서비스 로직
+     * @param userNo 현재 로그인한 사용자의 번호
+     * @return 투표 후보 정보 리스트
+     */
+    public List<TeamVotePostVO> exeGetVoteCandidates(int userNo) {
+        System.out.println("TeampageService.exeGetVoteCandidates()");
+        return teampageRepository.selectVoteCandidates(userNo);
     }
     
     // -- 모든 팀 목록 조회

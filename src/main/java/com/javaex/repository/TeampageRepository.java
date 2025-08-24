@@ -13,6 +13,7 @@ import com.javaex.vo.TeamMemberVO;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVoteOptionVO;
+import com.javaex.vo.TeamVotePostVO;
 
 @Repository
 public class TeampageRepository {
@@ -129,6 +130,18 @@ public class TeampageRepository {
         TeamPostVO post = sqlSession.selectOne("teampage.selectPostByNo", teamPostNo);
         
         return post;
+    }
+    
+    /**
+     * 투표 만들기 폼에 필요한 후보 목록을 조회합니다.
+     * (아직 게시물로 등록되지 않은, 사용자의 투표 후보 목록)
+     * @param userNo 현재 로그인한 사용자의 번호
+     * @return 투표 후보 정보가 담긴 List
+     */
+    public List<TeamVotePostVO> selectVoteCandidates(int userNo) {
+        System.out.println("TeampageRepository.selectVoteCandidates()");
+        List<TeamVotePostVO> candidates = sqlSession.selectList("teampage.selectVoteCandidates", userNo);
+        return candidates;
     }
 
     // -- 모든 팀 목록 조회

@@ -76,117 +76,61 @@
                                     <input type="text" id="post-title" name="teamPostTitle" placeholder="제목을 입력하세요">
                                 </div>
 
-
-                                <%-- ▼▼▼▼▼ 글 종류에 따라 다른 내용 추가 ▼▼▼▼▼ --%>
-                                <c:if test="${param.teamPostType == '팀자랑'}">
-                                    <div class="form-group instagram-group">
-                                        <label>인스타계정</label>
-                                        <span>${currentTeam.instaAccount}</span> 
-                                    </div>
-                                </c:if>
                                 
-                                <%-- ▼▼▼▼▼ 글 종류가 '투표'일 때만 이 부분이 보이도록 수정 ▼▼▼▼▼ --%>
-<%-- 								<c:if test="${param.teamPostType == '투표'}">
+								<c:if test="${param.teamPostType == '투표'}">
 								    <div class="form-group vote-list-group">
-								        <label>투표 목록</label>
-								
-								        컨트롤러에서 받은 찜 목록(voteOptions)을 반복문으로 출력
-								        <div class="wishlist-container">
-								            <c:choose>
-								                <c:when test="${not empty voteOptions}">
-								                    <ul>
-								                        <c:forEach items="${voteOptions}" var="option">
-								                            <li>
-								                                <strong>[${option.spaceName}]</strong> ${option.roomName} 
-								                                (${option.address})
-								                            </li>
-								                        </c:forEach>
-								                    </ul>
-								                </c:when>
-								                <c:otherwise>
-								                    <p>찜한 연습실이 없습니다. 먼저 연습실을 찜해주세요.</p>
-								                </c:otherwise>
-								            </c:choose>
-								        </div>
+								        <label>투표목록</label>
+								        
+								        <%-- 컨트롤러에서 받은 voteCandidates 리스트가 있는지 확인 --%>
+								        <c:choose>
+								            <%-- 리스트가 비어있지 않다면, forEach를 사용해 반복 --%>
+								            <c:when test="${not empty voteCandidates}">
+								                <ol class="vote-items-container">
+								                    <%-- "voteCandidates" 리스트의 각 항목을 "candidate"라는 변수로 반복 --%>
+								                    <c:forEach items="${voteCandidates}" var="candidate">
+								                        <li>
+								                            <div class="vote-item-card">
+								                                <%-- 이미지: candidate 변수의 picturesNo 필드를 사용 --%>
+								                                <img src="${pageContext.request.contextPath}/onespace/display/${candidate.picturesNo}" alt="${candidate.spaceName}">
+								                                <div class="card-content-wrapper">
+								                                    <div class="card-main-info">
+								                                        <div class="info-left">
+								                                            <%-- 연습실 이름과 날짜/시간: candidate 변수의 필드들 사용 --%>
+								                                            <p class="item-title">${candidate.roomName}</p>
+                        													<p class="item-datetime">${candidate.voteDate} ${candidate.startTime} ~ ${candidate.endTime}</p> 
+								                                        </div>
+								                                        <div class="info-right">
+								                                            <%-- 가격: candidate 변수의 totalPrice 필드 사용 --%>
+								                                            <p class="item-price">${candidate.totalPrice} 원</p>
+								                                        </div>
+								                                    </div>
+								                                    <div class="card-sub-info">
+								                                        <%-- 부가정보와 주소: candidate 변수의 필드들 사용 --%>
+													                    <%-- spacesGuideNo 필드에 값이 있을 때만 p 태그를 보여줌 --%>
+													                    <c:if test="${not empty candidate.spacesGuideNo}">
+													                        <p class="item-info">${candidate.spacesGuideNo}</p>
+													                    </c:if>
+								                                        <p class="item-location">
+								                                            <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon">
+								                                            ${candidate.address}
+								                                        </p>
+								                                    </div>
+								                                </div>
+								                            </div>
+								                        </li>
+								                    </c:forEach>
+								                </ol>
+								            </c:when>
+								            <%-- 만약 리스트가 비어있다면, 안내 메시지 표시 --%>
+								            <c:otherwise>
+								                <div class="wishlist-container" style="padding: 20px; text-align: center;">
+								                    <p>투표로 만들 후보가 없습니다.<br>먼저 '찜 목록'에서 연습실의 날짜와 시간을 선택해주세요.</p>
+								                </div>
+								            </c:otherwise>
+								        </c:choose>
 								    </div>
-								</c:if> --%>
-
-
-                                 <c:if test="${param.teamPostType == '투표'}">
-                                    <div class="form-group vote-list-group">
-                                        <label>투표목록</label>
-                                        <ol class="vote-items-container">
-                                            <li>
-                                                <a href="#" class="vote-item-card">
-                                                    <img src="${pageContext.request.contextPath}/assets/images/연습실사진01.jpg" alt="네스트 연습실">
-                                                    <div class="card-content-wrapper">
-                                                        <div class="card-main-info">
-                                                            <div class="info-left">
-                                                                <p class="item-title">네스트 연습실 101호</p>
-                                                                <p class="item-datetime">8/4(월) 15:00-17:00</p> 
-                                                            </div>
-                                                            <div class="info-right">
-                                                                <p class="item-price">10,000 원</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card-sub-info">
-                                                            <p class="item-info">실외화 가능/주차/최대7인</p>
-                                                            <p class="item-location">
-                                                                <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon"> 강동구
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <!-- ... 나머지 투표 카드들 ... -->
-                                            <li>
-                                                <a href="#" class="vote-item-card">
-                                                    <img src="${pageContext.request.contextPath}/assets/images/연습실사진02.jpg" alt="네스트 연습실">
-                                                    <div class="card-content-wrapper">
-                                                        <div class="card-main-info">
-                                                            <div class="info-left">
-                                                                <p class="item-title">네스트 연습실 101호</p>
-                                                                <p class="item-datetime">8/4(월) 15:00-17:00</p> 
-                                                            </div>
-                                                            <div class="info-right">
-                                                                <p class="item-price">20,000 원</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card-sub-info">
-                                                            <p class="item-info">실외화 가능/주차/최대7인</p>
-                                                            <p class="item-location">
-                                                                <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon"> 강동구
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="vote-item-card">
-                                                    <img src="${pageContext.request.contextPath}/assets/images/연습실사진03.jpg" alt="네스트 연습실">
-                                                    <div class="card-content-wrapper">
-                                                        <div class="card-main-info">
-                                                            <div class="info-left">
-                                                                <p class="item-title">네스트 연습실 101호</p>
-                                                                <p class="item-datetime">8/4(월) 15:00-17:00</p> 
-                                                            </div>
-                                                            <div class="info-right">
-                                                                <p class="item-price">25,000 원</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card-sub-info">
-                                                            <p class="item-info">실외화 가능/주차/최대7인</p>
-                                                            <p class="item-location">
-                                                                <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon"> 강동구
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        </ol>
-                                    </div>
-                                </c:if> 
-                                <%-- ▲▲▲▲▲ 여기까지 ▼▼▼▼▼ --%>
+								</c:if>
+								<%-- <-- ▲▲▲▲▲ 여기까지 ▲▲▲▲▲ --> --%>
 
                                 <!-- 글 내용 및 파일 첨부 영역 (공통) -->
                                 <div class="form-group content-group">
