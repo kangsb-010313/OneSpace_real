@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.service.TeampageService;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVotePostVO;
+import com.javaex.vo.TeamVoteResultVO;
 import com.javaex.vo.UserVO;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -511,8 +513,24 @@ public class TeampageController {
         return "redirect:/onespace/teammain";
     }
 
-	
-	
+	//투표 기능 메소드 api
+    @ResponseBody
+    @RequestMapping(value="/api/addvote", method=RequestMethod.POST)
+    public boolean addVote(@RequestParam("voteNo") int voteNo,
+                           @RequestParam("postNo") int postNo,
+                           HttpSession session) {
+        System.out.println("API: /api/addvote");
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if (authUser == null) { return false; }
+        return teampageService.exeAddVote(authUser.getUserNo(), voteNo, postNo);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/api/getvoters", method=RequestMethod.GET)
+    public List<TeamVoteResultVO> getVoters(@RequestParam("voteNo") int voteNo) {
+        System.out.println("API: /api/getvoters");
+        return teampageService.exeGetVoters(voteNo);
+    }
 	
 	
 	

@@ -4,13 +4,11 @@ public class TeamVotePostVO {
 	
     // 필드
     private int voteNo;         // votes 테이블 pk
-//    private int reservationNo;  // voteOptions 테이블 pk
     private int roomNo;         // rooms 테이블 pk
     private String spaceName;   // spaces 테이블
     private String roomName;    // rooms 테이블
     private String address;     // spaces 테이블
     private String voteDate;    // voteOptions 테이블
-//    private String voteTime;    // voteOptions 테이블
     private String startTime; 
     private String endTime;
     
@@ -19,12 +17,17 @@ public class TeamVotePostVO {
     private String spacesGuideNo;   // 편의시설 정보 (ex: "주차/최대15인")
     private String picturesNo;   	// 대표 이미지 경로 
     
+    private int competitionCount; // 경쟁 팀 수를 담을 필드
+
     
     //생성자
 	public TeamVotePostVO() {
+		super();
 	}
+
 	public TeamVotePostVO(int voteNo, int roomNo, String spaceName, String roomName, String address, String voteDate,
-			String startTime, String endTime, int totalPrice, String spacesGuideNo, String picturesNo) {
+			String startTime, String endTime, int totalPrice, String spacesGuideNo, String picturesNo,
+			int competitionCount) {
 		super();
 		this.voteNo = voteNo;
 		this.roomNo = roomNo;
@@ -37,77 +40,107 @@ public class TeamVotePostVO {
 		this.totalPrice = totalPrice;
 		this.spacesGuideNo = spacesGuideNo;
 		this.picturesNo = picturesNo;
+		this.competitionCount = competitionCount;
 	}
-	
+
 	
 	//메소드 gs
 	public int getVoteNo() {
 		return voteNo;
 	}
+
 	public void setVoteNo(int voteNo) {
 		this.voteNo = voteNo;
 	}
+
 	public int getRoomNo() {
 		return roomNo;
 	}
+
 	public void setRoomNo(int roomNo) {
 		this.roomNo = roomNo;
 	}
+
 	public String getSpaceName() {
 		return spaceName;
 	}
+
 	public void setSpaceName(String spaceName) {
 		this.spaceName = spaceName;
 	}
+
 	public String getRoomName() {
 		return roomName;
 	}
+
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
 	}
+
 	public String getAddress() {
 		return address;
 	}
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
 	public String getVoteDate() {
 		return voteDate;
 	}
+
 	public void setVoteDate(String voteDate) {
 		this.voteDate = voteDate;
 	}
+
 	public String getStartTime() {
 		return startTime;
 	}
+
 	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
+
 	public String getEndTime() {
 		return endTime;
 	}
+
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
+
 	public int getTotalPrice() {
 		return totalPrice;
 	}
+
 	public void setTotalPrice(int totalPrice) {
 		this.totalPrice = totalPrice;
 	}
+
 	public String getSpacesGuideNo() {
 		return spacesGuideNo;
 	}
+
 	public void setSpacesGuideNo(String spacesGuideNo) {
 		this.spacesGuideNo = spacesGuideNo;
 	}
+
 	public String getPicturesNo() {
 		return picturesNo;
 	}
+
 	public void setPicturesNo(String picturesNo) {
 		this.picturesNo = picturesNo;
 	}
-	
+
+	public int getCompetitionCount() {
+		return competitionCount;
+	}
+
+	public void setCompetitionCount(int competitionCount) {
+		this.competitionCount = competitionCount;
+	}
+
 	
 	//메소드 일반
 	@Override
@@ -115,8 +148,12 @@ public class TeamVotePostVO {
 		return "TeamVotePostVO [voteNo=" + voteNo + ", roomNo=" + roomNo + ", spaceName=" + spaceName + ", roomName="
 				+ roomName + ", address=" + address + ", voteDate=" + voteDate + ", startTime=" + startTime
 				+ ", endTime=" + endTime + ", totalPrice=" + totalPrice + ", spacesGuideNo=" + spacesGuideNo
-				+ ", picturesNo=" + picturesNo + "]";
+				+ ", picturesNo=" + picturesNo + ", competitionCount=" + competitionCount + "]";
 	}
+
+    
+    
+
     
     
 

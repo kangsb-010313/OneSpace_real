@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <%-- 글 종류에 따라 다른 CSS 파일 로드 (공통은 위에서, 개별은 여기서) --%>
     <c:choose>
@@ -217,7 +218,7 @@
 									                <li>
 									                    <div class="vote-option">
 									                        <a href="#" class="vote-item-card">
-									                            <div class="favorite-count">🔥 0</div> <%-- 불꽃 카운트는 나중에 동적으로 처리할 예정 --%>
+									                            <div class="favorite-count">🔥 ${option.competitionCount}</div>
 									                            <img src="${pageContext.request.contextPath}/onespace/display/${option.picturesNo}" alt="${option.roomName}">
 									                            <div class="card-content-wrapper">
 									                                <div class="card-main-info">
@@ -247,7 +248,7 @@
 									                            <button type="button" class="btn-vote" data-voteno="${option.voteNo}">투표</button>
 									                            <%-- 각 후보별 투표자 목록을 표시할 영역입니다. (id를 고유하게 만듦) --%>
 									                            <div class="voter-list" id="voter-list-${option.voteNo}">
-									                                <!-- 여기에 나중에 Ajax로 투표자 이름들이 들어옵니다. -->
+									                                <!-- 여기에 Ajax로 투표자 이름 -->
 									                            </div>
 									                        </div>
 									                    </div>
@@ -369,7 +370,47 @@
 	    });
 	</script>
     
-    
+    <script>
+	$(document).ready(function() {
+	
+	    $(".voter-list").each(function() {
+	        var voteNo = $(this).attr("id").replace("voter-list-", "");
+	        if (voteNo) { fetchVoters(voteNo); }
+	    });
+	
+	    $(".btn-vote").on("click", function() {
+	        var voteNo = $(this).data("voteno");
+	        var postNo = "${post.teamPostNo}";
+	        $.ajax({
+	            url: "${pageContext.request.contextPath}/onespace/api/addvote",
+	            type: "POST", data: { voteNo: voteNo, postNo: postNo },
+	            success: function(result) {
+	                if (result) {
+	                    alert("투표가 완료되었습니다.");
+	                    fetchVoters(voteNo);
+	                } else {
+	                    alert("이미 이 글에 투표하셨습니다.");
+	                }
+	            },
+	            error: function() { alert("투표 처리 중 오류가 발생했습니다."); }
+	        });
+	    });
+	
+	    function fetchVoters(voteNo) {
+	        $.ajax({
+	            url: "${pageContext.request.contextPath}/onespace/api/getvoters",
+	            type: "GET", data: { voteNo: voteNo },
+	            success: function(voterList) {
+	                var voterListDiv = $("#voter-list-" + voteNo);
+	                voterListDiv.empty();
+	                voterList.forEach(function(voter) {
+	                    voterListDiv.append("<span>" + voter.userName + "</span>");
+	                });
+	            }
+	        });
+	    }
+	});
+	</script>
         
         
         

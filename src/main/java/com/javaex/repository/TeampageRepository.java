@@ -14,6 +14,7 @@ import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVoteOptionVO;
 import com.javaex.vo.TeamVotePostVO;
+import com.javaex.vo.TeamVoteResultVO;
 
 @Repository
 public class TeampageRepository {
@@ -248,5 +249,23 @@ public class TeampageRepository {
 	     System.out.println("TeampageRepository.deleteMember()");
 	     return sqlSession.delete("teampage.deleteMember", params);
 	 }
+	
+	 //투표기능 메소드
+	 public int checkIfUserVotedInPost(Map<String, Object> params) {
+	    System.out.println("TeampageRepository.checkIfUserVotedInPost()");
+	    return sqlSession.selectOne("teampage.checkIfUserVotedInPost", params);
+	}
+
+	public int insertVoteResult(Map<String, Object> params) {
+	    System.out.println("TeampageRepository.insertVoteResult()");
+	    return sqlSession.insert("teampage.insertVoteResult", params);
+	}
+
+	public List<TeamVoteResultVO> selectVotersByVoteNo(int voteNo) {
+	    System.out.println("TeampageRepository.selectVotersByVoteNo()");
+	    return sqlSession.selectList("teampage.selectVotersByVoteNo", voteNo);
+	}
+	
+	
 	
 }

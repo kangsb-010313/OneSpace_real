@@ -16,6 +16,7 @@ import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVoteOptionVO;
 import com.javaex.vo.TeamVotePostVO;
+import com.javaex.vo.TeamVoteResultVO;
 
 @Service
 public class TeampageService {
@@ -294,6 +295,29 @@ public class TeampageService {
 	    
 	    // 기존의 insertTeamMember 메소드를 재사용하여 '보류' 상태의 팀원을 추가합니다.
 	    teampageRepository.insertTeamMember(teamNo, userNo, "팀원", "보류");
+	}
+	
+	//투표 기능 메소드
+	@Transactional
+	public boolean exeAddVote(int userNo, int voteNo, int postNo) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("userNo", userNo);
+	    params.put("postNo", postNo);
+
+	    if (teampageRepository.checkIfUserVotedInPost(params) > 0) {
+	        return false; 
+	    } else {
+	        Map<String, Object> voteParams = new HashMap<>();
+	        voteParams.put("userNo", userNo);
+	        voteParams.put("voteNo", voteNo);
+	        teampageRepository.insertVoteResult(voteParams);
+	        return true;
+	    }
+	}
+
+	public List<TeamVoteResultVO> exeGetVoters(int voteNo) {
+	    System.out.println("TeampageService.exeGetVoters()");
+	    return teampageRepository.selectVotersByVoteNo(voteNo);
 	}
 	
 }

@@ -316,7 +316,7 @@
 	
 	
 	<!-- 투표 만들기를 위해 날짜/시간이 지정된 후보 목록을 조회하는 쿼리 (roomAttachments 테이블 사용) -->
-	<select id="selectVoteCandidates" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
+<!-- 	<select id="selectVoteCandidates" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
 	    <![CDATA[
 	        SELECT
 	            v.voteNo,
@@ -362,10 +362,47 @@
 	          
 	        ORDER BY vo.voteDate, startTime
 	    ]]>
-	</select>
+	</select> -->
+	
+	<!-- 투표 만들기를 위해 날짜/시간이 지정된 후보 목록을 조회하는 쿼리 (roomAttachments 테이블 사용) -->
+    <select id="selectVoteCandidates" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
+        SELECT
+            v.voteNo, 
+            r.roomNo, 
+            s.spaceName, 
+            r.roomName, 
+            v.totalPrice,
+            SUBSTRING_INDEX(SUBSTRING_INDEX(s.address, ' ', 2), ' ', -1) AS address,
+            vo.voteDate, 
+            MIN(vo.voteTime) AS startTime,
+            TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
+            (SELECT storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) AS picturesNo,
+            (
+                SELECT GROUP_CONCAT( CASE WHEN fi.facilityName = '블루투스 스피커' THEN '스피커' ELSE fi.facilityName END SEPARATOR ', ')
+                FROM spacesGuide sg 
+                JOIN facilityInfo fi ON sg.facilityNo = fi.facilityNo
+                WHERE sg.spacesNo = s.spacesNo AND fi.facilityName IN ('주차', '조명', '블루투스 스피커')
+            ) AS spacesGuideNo,
+            (
+                SELECT COUNT(DISTINCT v2.userNo) 
+                FROM voteOptions vo2 
+                JOIN votes v2 ON vo2.voteNo = v2.voteNo
+                WHERE vo2.roomNo = vo.roomNo 
+                AND vo2.voteDate = vo.voteDate 
+                AND vo2.voteTime = vo.voteTime 
+                AND v2.postNo IS NOT NULL
+            ) AS competitionCount
+        FROM votes v
+        JOIN voteOptions vo ON v.voteNo = vo.voteNo
+        JOIN rooms r ON vo.roomNo = r.roomNo
+        JOIN spaces s ON r.spacesNo = s.spacesNo
+        WHERE v.userNo = #{userNo} AND v.postNo IS NULL AND vo.voteStatus = 0
+        GROUP BY v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
+        ORDER BY vo.voteDate, startTime
+    </select>
 	
 	<!-- postNo로 해당 게시글의 투표 후보 목록 조회 -->
-	<select id="selectVoteOptionsByPostNo" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
+<!-- 	<select id="selectVoteOptionsByPostNo" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
 	    <![CDATA[
 	        SELECT
 	            v.voteNo,
@@ -394,16 +431,51 @@
 	        JOIN voteOptions vo ON v.voteNo = vo.voteNo
 	        JOIN rooms r ON vo.roomNo = r.roomNo
 	        JOIN spaces s ON r.spacesNo = s.spacesNo
-	        WHERE v.postNo = #{postNo} /* <-- 이 조건이 핵심! */
+	        WHERE v.postNo = #{postNo} /*  이 조건이 핵심! */
 	        GROUP BY v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
 	        ORDER BY vo.voteDate, startTime
 	    ]]>
-	</select>
+	</select>  -->
 	
-	<!-- mybatis/mappers/teampage.xml -->
+	<!-- postNo로 해당 게시글의 투표 후보 목록 조회  -->
+    <select id="selectVoteOptionsByPostNo" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
+        SELECT
+            v.voteNo, 
+            r.roomNo, 
+            s.spaceName, 
+            r.roomName, 
+            v.totalPrice,
+            SUBSTRING_INDEX(SUBSTRING_INDEX(s.address, ' ', 2), ' ', -1) AS address,
+            vo.voteDate, MIN(vo.voteTime) AS startTime,
+            TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
+            (SELECT storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) AS picturesNo,
+            (
+                SELECT GROUP_CONCAT( CASE WHEN fi.facilityName = '블루투스 스피커' THEN '스피커' ELSE fi.facilityName END SEPARATOR ', ')
+                FROM spacesGuide sg 
+                JOIN facilityInfo fi ON sg.facilityNo = fi.facilityNo
+                WHERE sg.spacesNo = s.spacesNo 
+                AND fi.facilityName IN ('주차', '조명', '블루투스 스피커')
+            ) AS spacesGuideNo,
+            (
+                SELECT COUNT(DISTINCT v2.userNo) 
+                FROM voteOptions vo2 
+                JOIN votes v2 ON vo2.voteNo = v2.voteNo
+                WHERE vo2.roomNo = vo.roomNo 
+                AND vo2.voteDate = vo.voteDate 
+                AND vo2.voteTime = vo.voteTime 
+                AND v2.postNo IS NOT NULL
+            ) AS competitionCount
+        FROM votes v
+        JOIN voteOptions vo ON v.voteNo = vo.voteNo
+        JOIN rooms r ON vo.roomNo = r.roomNo
+        JOIN spaces s ON r.spacesNo = s.spacesNo
+        WHERE v.postNo = #{postNo}
+        GROUP BY v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
+        ORDER BY vo.voteDate, startTime
+    </select>
+	
 
 	<!-- 1. votes 테이블에 postNo 업데이트 -->
-	<!-- ▼▼▼▼▼ 이 쿼리를 교체해주세요 ▼▼▼▼▼ -->
 	<update id="updatePostNoInVotes" parameterType="map">
 	    UPDATE votes
 	    SET postNo = #{postNo}
@@ -415,7 +487,6 @@
 	</update>
 	
 	<!-- 2. voteOptions 테이블의 status를 1(투표중)로 업데이트 -->
-	<!-- ▼▼▼▼▼ 이 쿼리를 교체해주세요 ▼▼▼▼▼ -->
 	<update id="updateStatusInVoteOptions" parameterType="map">
 	    UPDATE voteOptions
 	    SET voteStatus = 1
@@ -425,6 +496,23 @@
 	        #{voteNo}
 	    </foreach>
 	</update>
+	
+	<!-- 투표기능 쿼리 3개 -->
+    <select id="checkIfUserVotedInPost" parameterType="map" resultType="int">
+        SELECT COUNT(vr.votedNo) FROM voteResults vr JOIN votes v ON vr.voteNo = v.voteNo
+        WHERE vr.userNo = #{userNo} AND v.postNo = #{postNo}
+    </select>
+
+    <insert id="insertVoteResult" parameterType="map">
+        INSERT INTO voteResults (votedNo, voteNo, userNo, votedTime)
+        VALUES (null, #{voteNo}, #{userNo}, now())
+    </insert>
+
+    <select id="selectVotersByVoteNo" parameterType="int" resultType="com.javaex.vo.TeamVoteResultVO">
+        SELECT u.userNo, u.userName FROM voteResults vr JOIN users u ON vr.userNo = u.userNo
+        WHERE vr.voteNo = #{voteNo} ORDER BY vr.votedTime ASC
+    </select>
+    <!-- 여기까지  -->
 	
     
 
