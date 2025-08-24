@@ -99,117 +99,8 @@
 		        						</div>     
                                     </c:if>
                                     <%-- 일반공지/투표 글 내용 끝 --%>
-
-<%--                                     투표 전용 섹션 시작
-                                    <c:if test="${post.teamPostType == '투표'}">
-                                        <div class="vote-section-wrap">
-                                            <ol class="vote-items-container">
-                                                <!-- 투표 옵션 1 -->
-                                                <li>
-                                                    <div class="vote-option">
-                                                        <a href="#" class="vote-item-card">
-                                                            <div class="favorite-count">🔥 6</div> 
-                                                            <img src="${pageContext.request.contextPath}/assets/images/연습실사진01.jpg" alt="네스트 연습실">
-                                                            <div class="card-content-wrapper">
-                                                                <div class="card-main-info">
-                                                                    <div class="info-left">
-                                                                        <p class="item-title">1. 네스트 연습실 101호</p>
-                                                                        <p class="item-datetime">8/4(월) 15:00-17:00</p>
-                                                                    </div>
-                                                                    <div class="info-right">
-                                                                        <p class="item-price">16,000 원</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="card-sub-info">
-                                                                    <p class="item-info">실외화 가능/주차/최대7인</p>
-                                                                    <p class="item-location">
-                                                                        <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon"> 강동구
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                        <div class="vote-action-area">
-                                                            <button type="button" class="btn-vote">투표</button>
-                                                            <div class="voter-list">
-                                                                <span>강수빈</span>
-                                                                <span>이현진</span>
-                                                                <span>신현석</span>
-                                                                <span>정영민</span>
-                                                                <span>정성찬</span>
-                                                                <span>박원빈</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <!-- 투표 옵션 2 -->
-                                                <li>
-                                                    <div class="vote-option">
-                                                        <a href="#" class="vote-item-card">
-                                                            <div class="favorite-count">🔥 3</div> 
-                                                            <img src="${pageContext.request.contextPath}/assets/images/연습실사진02.jpg" alt="두번째 연습실">
-                                                            <div class="card-content-wrapper">
-                                                                <div class="card-main-info">
-                                                                    <div class="info-left">
-                                                                        <p class="item-title">2. 퍼스트 연습실 A홀</p>
-                                                                        <p class="item-datetime">8/4(월) 18:00-20:00</p>
-                                                                    </div>
-                                                                    <div class="info-right">
-                                                                        <p class="item-price">18,000 원</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="card-sub-info">
-                                                                    <p class="item-info">주차/최대15인</p>
-                                                                    <p class="item-location">
-                                                                        <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon"> 강동구
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                        <div class="vote-action-area">
-                                                            <button type="button" class="btn-vote">투표</button>
-                                                            <div class="voter-list">
-                                                                <span>신현석</span>
-                                                                <span>정영민</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <!-- 투표 옵션 3 -->
-                                                <li>
-                                                    <div class="vote-option">
-                                                        <a href="#" class="vote-item-card">
-                                                            <div class="favorite-count">🔥 7</div> 
-                                                            <img src="${pageContext.request.contextPath}/assets/images/연습실사진03.jpg" alt="세번째 연습실">
-                                                            <div class="card-content-wrapper">
-                                                                <div class="card-main-info">
-                                                                    <div class="info-left">
-                                                                        <p class="item-title">3. 드림 스튜디오</p>
-                                                                        <p class="item-datetime">8/5(화) 19:00-21:00</p>
-                                                                    </div>
-                                                                    <div class="info-right">
-                                                                        <p class="item-price">15,000 원</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="card-sub-info">
-                                                                    <p class="item-info">실외화 가능/최대5인</p>
-                                                                    <p class="item-location">
-                                                                        <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon"> 강동구
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                        <div class="vote-action-area">
-                                                            <button type="button" class="btn-vote">투표</button>
-                                                            <div class="voter-list">
-                                                                <span>이현진</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ol> --%>
                                             
                                     <%-- 투표 전용 섹션 시작 --%>
-									<%-- <-- ▼▼▼▼▼ 여기부터 교체 ▼▼▼▼▼ --> --%>
 									<c:if test="${post.teamPostType == '투표'}">
 									    <div class="vote-section-wrap">
 									        <ol class="vote-items-container">
@@ -257,7 +148,6 @@
 									        </ol>
 									    </div>
 									</c:if>
-									<%-- <-- ▲▲▲▲▲ 여기까지 교체 ▲▲▲▲▲ --> --%>
                                     <%-- 투표 전용 섹션 끝 --%>
                                 </div>
                                 <%-- 글 종류에 따른 내용 표시 끝 --%>
@@ -277,7 +167,7 @@
 								                <%-- 1-2: '투표' 글일 때 --%>
 								                <c:when test="${post.teamPostType == '투표'}">
 								                    <button type="button" class="btn-action btn-share" id="kakao-share-btn">공유하기</button>
-								                    <button type="button" class="btn-action">바로 예약하기</button>
+							                        <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/confirm" class="btn-action">바로 예약하기</a>
 								                </c:when>
 								
 								                <%-- 1-3: '일반 공지' 또는 그 외 모든 글일 때 --%>

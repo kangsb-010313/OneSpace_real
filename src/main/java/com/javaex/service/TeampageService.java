@@ -297,27 +297,76 @@ public class TeampageService {
 	    teampageRepository.insertTeamMember(teamNo, userNo, "팀원", "보류");
 	}
 	
-	//투표 기능 메소드
+	// ==================== 투표 기능 관련 ====================
+	// 투표 기록하기 (중복 투표 허용 버전)
 	@Transactional
 	public boolean exeAddVote(int userNo, int voteNo, int postNo) {
-	    Map<String, Object> params = new HashMap<>();
-	    params.put("userNo", userNo);
-	    params.put("postNo", postNo);
+	    System.out.println("TeampageService.exeAddVote()");
+	    
+//	    Map<String, Object> params = new HashMap<>();
+//	    params.put("userNo", userNo);
+//	    params.put("postNo", postNo);
 
-	    if (teampageRepository.checkIfUserVotedInPost(params) > 0) {
-	        return false; 
-	    } else {
-	        Map<String, Object> voteParams = new HashMap<>();
-	        voteParams.put("userNo", userNo);
-	        voteParams.put("voteNo", voteNo);
-	        teampageRepository.insertVoteResult(voteParams);
-	        return true;
-	    }
+	    // 투표 안했으면 기록 추가
+        Map<String, Object> voteParams = new HashMap<>();
+        voteParams.put("userNo", userNo);
+        voteParams.put("voteNo", voteNo); // 어떤 '후보'에 투표했는지
+        
+        teampageRepository.insertVoteResult(voteParams);
+        
+        return true;
+	    
 	}
 
+	// 특정 후보에 투표한 유저 목록 가져오기
 	public List<TeamVoteResultVO> exeGetVoters(int voteNo) {
 	    System.out.println("TeampageService.exeGetVoters()");
 	    return teampageRepository.selectVotersByVoteNo(voteNo);
+	}
+	
+	// ==================== 예약 확정 기능 관련 ====================
+	// 예약 페이지에 필요한 정보(최다 득표 후보 + 투표자 목록) 가져오기
+	public Map<String, Object> exeGetReservationInfo(int postNo) {
+	    System.out.println("TeampageService.exeGetReservationInfo()");
+	    Integer topVoteNo = teampageRepository.selectTopVotedVoteNo(postNo);
+	    
+	    if (topVoteNo == null) { return null; }
+	    
+	    TeamVotePostVO topOption = teampageRepository.getVoteOptionDetail(topVoteNo);
+	    List<TeamVoteResultVO> voters = teampageRepository.selectVotersByVoteNo(topVoteNo);
+	    
+	    Map<String, Object> reservationInfo = new HashMap<>();
+	    reservationInfo.put("topOption", topOption);
+	    reservationInfo.put("voters", voters);
+	    
+	    return reservationInfo;
+	}
+
+	// 최종 예약 확정 처리(상태 변경 및 게시글 자동 생성)
+	@Transactional
+	public int exeFinalizeReservation(int postNo, int userNo) {
+	    System.out.println("TeampageService.exeFinalizeReservation()");
+	    int topVoteNo = teampageRepository.selectTopVotedVoteNo(postNo);
+	    teampageRepository.updateVoteStatusToConfirmed(topVoteNo);
+	    
+	    TeamVotePostVO confirmedOption = teampageRepository.getVoteOptionDetail(topVoteNo);
+	    TeamPostVO originalPost = teampageRepository.teampageSelectPostByNo(postNo);
+	    
+	    TeamPostVO schedulePost = new TeamPostVO();
+	    schedulePost.setTeamNo(originalPost.getTeamNo());
+	    schedulePost.setUserNo(userNo);
+	    schedulePost.setTeamPostType("일반공지");
+	    schedulePost.setTeamPostTitle("[연습일정 확정] " + confirmedOption.getRoomName());
+	    schedulePost.setTeamContent(
+	        "팀 연습일정이 확정되었습니다.\n\n" +
+	        "연습실: " + confirmedOption.getSpaceName() + " (" + confirmedOption.getRoomName() + ")\n" +
+	        "날짜: " + confirmedOption.getVoteDate() + "\n" +
+	        "시간: " + confirmedOption.getStartTime() + " ~ " + confirmedOption.getEndTime() + "\n\n" +
+	        "모든 팀원은 일정을 확인해주세요."
+	    );
+	    
+	    teampageRepository.teampageInsert(schedulePost);
+	    return teampageRepository.selectLastPostNo(userNo);
 	}
 	
 }

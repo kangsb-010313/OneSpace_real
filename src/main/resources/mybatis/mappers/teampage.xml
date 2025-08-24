@@ -395,7 +395,7 @@
 	    JOIN voteOptions vo ON v.voteNo = vo.voteNo
 	    JOIN rooms r ON vo.roomNo = r.roomNo
 	    JOIN spaces s ON r.spacesNo = s.spacesNo
-	    WHERE v.postNo = #{postNo}
+	    	WHERE v.postNo = #{postNo}
 	    GROUP BY v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
 	    ORDER BY vo.voteDate, startTime
 	</select>
@@ -423,23 +423,62 @@
 	    </foreach>
 	</update>
 	
-	<!-- 투표기능 쿼리 3개 -->
+	<!-- ==================== 투표 기능 관련 쿼리 ==================== -->
+	<!-- 특정 유저가 특정 게시글의 투표에 참여했는지 확인 (1인 1투표) -->
     <select id="checkIfUserVotedInPost" parameterType="map" resultType="int">
-        SELECT COUNT(vr.votedNo) FROM voteResults vr JOIN votes v ON vr.voteNo = v.voteNo
-        WHERE vr.userNo = #{userNo} AND v.postNo = #{postNo}
+        SELECT COUNT(vr.votedNo) 
+        FROM voteResults vr 
+        	JOIN votes v ON vr.voteNo = v.voteNo
+        WHERE vr.userNo = #{userNo} 
+        	AND v.postNo = #{postNo}
     </select>
 
+	<!-- voteResults 테이블에 투표 기록 추가 -->
     <insert id="insertVoteResult" parameterType="map">
         INSERT INTO voteResults (votedNo, voteNo, userNo, votedTime)
         VALUES (null, #{voteNo}, #{userNo}, now())
     </insert>
 
+	<!-- 특정 투표 후보(voteNo)에 투표한 모든 사람의 이름 조회 -->
     <select id="selectVotersByVoteNo" parameterType="int" resultType="com.javaex.vo.TeamVoteResultVO">
         SELECT u.userNo, u.userName FROM voteResults vr JOIN users u ON vr.userNo = u.userNo
         WHERE vr.voteNo = #{voteNo} ORDER BY vr.votedTime ASC
     </select>
-    <!-- 여기까지  -->
+
+	<!-- ==================== 예약 확정 기능 관련 쿼리 ==================== -->
 	
+	<!-- 특정 게시글에서 가장 많이 득표한 voteNo 찾기 -->
+	<select id="selectTopVotedVoteNo" parameterType="int" resultType="int">
+	    SELECT voteNo
+	    FROM voteResults
+	    WHERE voteNo IN (SELECT voteNo FROM votes WHERE postNo = #{postNo})
+	    GROUP BY voteNo
+	    ORDER BY COUNT(voteNo) DESC
+	    LIMIT 1
+	</select>
+	
+	<!-- 특정 후보(voteOption)의 상태를 2(예약확정)로 변경 -->
+	<update id="updateVoteStatusToConfirmed" parameterType="int">
+	    UPDATE voteOptions
+	    SET voteStatus = 2
+	    WHERE voteNo = #{voteNo}
+	</update>
+	
+	<!-- 특정 voteNo의 상세 정보를 가져오는 쿼리 -->
+	<select id="getVoteOptionDetail" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
+	    SELECT
+	        v.voteNo, s.spaceName, r.roomName, r.roomNo,
+	        SUBSTRING_INDEX(SUBSTRING_INDEX(s.address, ' ', 2), ' ', -1) AS address,
+	        vo.voteDate, MIN(vo.voteTime) AS startTime,
+	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
+	        v.totalPrice
+	    FROM votes v
+	    JOIN voteOptions vo ON v.voteNo = vo.voteNo
+	    JOIN rooms r ON vo.roomNo = r.roomNo
+	    JOIN spaces s ON r.spacesNo = s.spacesNo
+	    WHERE v.voteNo = #{voteNo}
+	    GROUP BY v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
+	</select>
     
 
 </mapper>

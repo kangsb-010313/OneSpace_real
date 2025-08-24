@@ -250,20 +250,42 @@ public class TeampageRepository {
 	     return sqlSession.delete("teampage.deleteMember", params);
 	 }
 	
-	 //투표기능 메소드
+	// ==================== 투표 기능 관련 ====================
+	// 특정 유저가 특정 게시글에 투표했는지 확인
 	 public int checkIfUserVotedInPost(Map<String, Object> params) {
 	    System.out.println("TeampageRepository.checkIfUserVotedInPost()");
 	    return sqlSession.selectOne("teampage.checkIfUserVotedInPost", params);
 	}
 
+	// 투표 기록(voteResults) 테이블에 데이터 추가
 	public int insertVoteResult(Map<String, Object> params) {
 	    System.out.println("TeampageRepository.insertVoteResult()");
 	    return sqlSession.insert("teampage.insertVoteResult", params);
 	}
 
+	// 특정 후보(voteNo)에 투표한 유저 목록 조회
 	public List<TeamVoteResultVO> selectVotersByVoteNo(int voteNo) {
 	    System.out.println("TeampageRepository.selectVotersByVoteNo()");
 	    return sqlSession.selectList("teampage.selectVotersByVoteNo", voteNo);
+	}
+	
+	// ==================== 예약 확정 기능 관련 ====================
+	// 특정 게시글에서 최다 득표한 voteNo 조회
+	public Integer selectTopVotedVoteNo(int postNo) {
+	    System.out.println("TeampageRepository.selectTopVotedVoteNo()");
+	    return sqlSession.selectOne("teampage.selectTopVotedVoteNo", postNo);
+	}
+
+	// 특정 voteNo에 해당하는 후보의 상세 정보 조회
+	public TeamVotePostVO getVoteOptionDetail(int voteNo) {
+	    System.out.println("TeampageRepository.getVoteOptionDetail()");
+	    return sqlSession.selectOne("teampage.getVoteOptionDetail", voteNo);
+	}
+
+	// 특정 후보(voteOption)의 상태를 2(예약확정)로 변경
+	public int updateVoteStatusToConfirmed(int voteNo) {
+	    System.out.println("TeampageRepository.updateVoteStatusToConfirmed()");
+	    return sqlSession.update("teampage.updateVoteStatusToConfirmed", voteNo);
 	}
 	
 	

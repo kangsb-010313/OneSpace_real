@@ -2,6 +2,7 @@ package com.javaex.controller;
 
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -512,8 +513,10 @@ public class TeampageController {
         // 3. 신청 완료 후 메인 페이지로 이동(팀이 없으면 아무 리스트도 안 보임)
         return "redirect:/onespace/teammain";
     }
-
-	//투표 기능 메소드 api
+	
+	 // ==================== 투표/예약 관련 API ====================
+	
+	 // API '투표하기' 버튼 클릭 시 호출 (Ajax)
     @ResponseBody
     @RequestMapping(value="/api/addvote", method=RequestMethod.POST)
     public boolean addVote(@RequestParam("voteNo") int voteNo,
@@ -525,6 +528,7 @@ public class TeampageController {
         return teampageService.exeAddVote(authUser.getUserNo(), voteNo, postNo);
     }
 
+    // API 특정 후보의 투표자 목록 실시간 조회 (Ajax)
     @ResponseBody
     @RequestMapping(value="/api/getvoters", method=RequestMethod.GET)
     public List<TeamVoteResultVO> getVoters(@RequestParam("voteNo") int voteNo) {
@@ -532,6 +536,39 @@ public class TeampageController {
         return teampageService.exeGetVoters(voteNo);
     }
 	
-	
+    
+    // '바로 예약하기' 버튼 클릭 시 예약 페이지로 이동
+    @RequestMapping(value="/teams/{teamNo}/posts/{postNo}/confirm", method=RequestMethod.GET)
+    public String reservationForm(@PathVariable("teamNo") int teamNo,
+                                  @PathVariable("postNo") int postNo, Model model) {
+        System.out.println("Controller: reservationForm()");
+        Map<String, Object> reservationInfo = teampageService.exeGetReservationInfo(postNo);
+        
+        if (reservationInfo == null) {
+            return "redirect:/onespace/teams/" + teamNo + "/posts/" + postNo;
+        }
+        
+        model.addAttribute("topOption", reservationInfo.get("topOption"));
+        model.addAttribute("voters", reservationInfo.get("voters"));
+        model.addAttribute("teamNo", teamNo);
+        model.addAttribute("postNo", postNo);
+        
+        return "teampage/reservation";
+    }
+
+    // API '결제하기' 버튼 클릭 시 최종 처리 (Ajax)
+    @ResponseBody
+    @RequestMapping(value="/api/finalize", method=RequestMethod.POST)
+    public int finalizeReservation(@RequestParam("postNo") int postNo, HttpSession session) {
+        System.out.println("API: /api/finalize");
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if(authUser == null) { return -1; }
+        
+        int newPostNo = teampageService.exeFinalizeReservation(postNo, authUser.getUserNo());
+        return newPostNo;
+    }
+    
+    
+    
 	
 }
