@@ -1,8 +1,12 @@
 package com.javaex.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+
 import com.javaex.vo.HostVO;
 
 @Repository
@@ -33,5 +37,18 @@ public class HostRepository {
     /** 수정 저장 */
     public int updateSpace(HostVO vo) {
         return sqlSession.update(NS + "update_space", vo);
+    }
+
+    /** 시설 전체 삭제 */
+    public int deleteFacilitiesBySpacesno(Long spacesno) {
+        return sqlSession.delete(NS + "delete_facilities_by_spacesno", spacesno);
+    }
+
+    /** 시설 1건 삽입 */
+    public int insertFacility(Long spacesno, String facilityName) {
+        Map<String, Object> p = new HashMap<>();
+        p.put("spacesNo", spacesno);
+        p.put("facilityName", facilityName);
+        return sqlSession.insert(NS + "insert_facility", p);
     }
 }

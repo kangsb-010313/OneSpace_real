@@ -3,7 +3,7 @@ package com.javaex.repository;
 import java.util.List;
 
 import com.javaex.vo.RoomsVO;
-import com.javaex.vo.RoomsVO.RoomPrices;
+import com.javaex.vo.RoomPriceVO;
 import com.javaex.vo.RoomsVO.RoomAttachment;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -33,22 +33,22 @@ public class RoomRepository {
         return sqlsession.delete(NS + "delete_room", roomNo);
     }
 
-    // prices
-    public int insert_price(RoomPrices vo) {
+    // prices (RoomPriceVO)
+    public int insert_price(RoomPriceVO vo) {
         return sqlsession.insert(NS + "insert_price", vo);
     }
     public int delete_prices_by_room(Long roomNo) {
         return sqlsession.delete(NS + "delete_prices_by_room", roomNo);
     }
-    public List<RoomPrices> select_prices(Long roomNo) {
+    public List<RoomPriceVO> select_prices(Long roomNo) {
         return sqlsession.selectList(NS + "select_prices", roomNo);
     }
 
     // photos
-    public int insert_photo(RoomAttachment vo) {
+    public int insert_photo(RoomsVO.RoomAttachment vo) {
         return sqlsession.insert(NS + "insert_photo", vo);
     }
-    public List<RoomAttachment> select_photos(Long roomNo) {
+    public List<RoomsVO.RoomAttachment> select_photos(Long roomNo) {
         return sqlsession.selectList(NS + "select_photos", roomNo);
     }
     public int delete_photos_by_room(Long roomNo) {

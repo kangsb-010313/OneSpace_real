@@ -6,6 +6,8 @@
 <head>
   <meta charset="UTF-8">
   <title>원스페이스 | 기본정보</title>
+
+  <!-- css 상대경로 유지 -->
   <link rel="stylesheet" href="../../../assets/css/reset.css">
   <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
   <link rel="stylesheet" href="../../../assets/css/host_info.css">
@@ -24,10 +26,10 @@
       <c:url var="urlSpacesList" value="/onespace/hostcenter/spaces"/>
       <c:choose>
         <c:when test="${not empty space.spacesno}">
-          <c:url var="urlSaveSpace" value="/onespace/hostcenter/info"/>
+          <c:url var="urlSaveSpace" value="/onespace/hostcenter/spaces/update"/>
         </c:when>
         <c:otherwise>
-          <c:url var="urlSaveSpace" value="/onespace/hostcenter/spaces"/>
+          <c:url var="urlSaveSpace" value="/onespace/hostcenter/spaces/insert"/>
         </c:otherwise>
       </c:choose>
 
@@ -69,12 +71,14 @@
             <input id="space-name" name="spacename" type="text" maxlength="18"
                    value="${space.spacename}" placeholder="예: 인디워커스 하이브 회의실" required>
           </div>
+
           <div class="input-group">
             <label for="space-desc">공간 한 줄 소개</label>
             <span class="char-count">0자/200자</span>
             <input id="space-desc" name="spacesummary" type="text" maxlength="500"
                    value="${space.spacesummary}" placeholder="공간의 특징점을 한 문장으로 작성해주세요.">
           </div>
+
           <div class="input-group">
             <label for="space-detail">공간소개</label>
             <span class="char-count">0자/500자(최소 20자)</span>
@@ -83,7 +87,7 @@
           </div>
         </section>
 
-        <!-- 시설 안내 -->
+        <!-- 시설 안내 (원본 구조 유지) -->
         <section class="form-section">
           <div class="section-title">시설 안내</div>
           <div class="facility-list">
@@ -104,7 +108,7 @@
           </div>
         </section>
 
-        <!-- 환불 규정 -->
+        <!-- 환불 규정 (원본 구조 유지) -->
         <section class="form-section">
           <div class="refund-row">
             <div>
@@ -120,7 +124,7 @@
           </div>
         </section>
 
-        <!-- 대표 이미지(선택) -->
+        <!-- 대표 이미지 (DB repImg 직접 사용) -->
         <section class="form-section img-section">
           <div class="img-header">
             <div class="section-title">대표 이미지</div>
@@ -144,9 +148,13 @@
           <div class="attach-btn-wrap">
             <label class="btn-solid attach-btn">
               파일첨부
+              <!-- 컨트롤러: MultipartFile repImage 받고 저장 후 vo.repimg에 파일명 세팅 -->
               <input type="file" id="repImage" name="repImage" hidden>
             </label>
           </div>
+
+          <!-- 기존 repImg 값 유지 -->
+          <input type="hidden" name="repimg" id="repimgHidden" value="${space.repimg}">
         </section>
 
         <!-- 주소 -->
@@ -160,7 +168,7 @@
           <div class="addr-row">
             <input type="text" class="addr-input-long" name="address"
                    value="${space.address}" placeholder="실제 서비스되는 공간의 주소를 입력해주세요." required>
-            <button class="addr-btn" type="button">주소 등록</button>
+            <button class="addr-btn" type="button" id="btnFindAddr">주소 등록</button>
           </div>
           <input type="text" class="addr-detail" name="addressdetail"
                  value="${space.addressdetail}" placeholder="상세 주소">
@@ -169,16 +177,18 @@
           <input type="hidden" name="spacelink" value="${space.spacelink}">
         </section>
 
-        <!-- 연락처 -->
+        <!-- 연락처 (이메일 구조/클래스 원본 유지) -->
         <section class="contact-section">
           <div class="section-title">연락처 정보를 입력해 주세요.</div>
+
+          <!-- 이메일 (원래 클래스명/구조 유지) -->
           <div class="contact-flex">
             <div class="email-row">
               <label>이메일</label>
               <div class="email-inputs">
-                <input type="text" class="email-id" id="emailId" placeholder="id">
+                <input type="text" class="email-id" id="emailId" placeholder="이메일">
                 <span class="at">@</span>
-                <input type="text" class="email-domain" id="emailDomain" placeholder="domain">
+                <input type="text" class="email-domain" id="emailDomain" placeholder="직접 입력">
                 <select class="email-select" id="emailSelect">
                   <option value="">직접입력</option>
                   <option>gmail.com</option>
@@ -194,6 +204,7 @@
             </div>
           </div>
 
+          <!-- 휴대폰/대표전화 -->
           <div class="phone-flex-row">
             <div class="phone-col">
               <label>휴대폰</label>
@@ -225,6 +236,7 @@
 
   <!-- 푸터 -->
   <c:import url="/WEB-INF/views/include/footer.jsp" />
+
 </div>
 
 <script>
@@ -233,19 +245,27 @@
     const input = document.getElementById('repImage');
     const nameSpan = document.getElementById('repImageName');
     const guideText = document.getElementById('imgGuideText');
+    const hiddenKeep = document.getElementById('repimgHidden');
+
+    const existing = (hiddenKeep && hiddenKeep.value || '').trim();
+    if (existing) {
+      if (nameSpan) nameSpan.textContent = existing;
+      if (guideText) guideText.style.display = 'none';
+    }
+
     if (!input) return;
     input.addEventListener('change', function () {
       if (this.files && this.files.length > 0) {
         nameSpan.textContent = this.files[0].name;
         if (guideText) guideText.style.display = 'none';
       } else {
-        nameSpan.textContent = '';
-        if (guideText) guideText.style.display = 'block';
+        nameSpan.textContent = existing || '';
+        if (!existing && guideText) guideText.style.display = 'block';
       }
     });
   })();
 
-  // ========== 이메일 입력 동기화 ==========
+  // ========== 이메일 입력 동기화 (원본 구조 유지) ==========
   (function () {
     const emailId      = document.getElementById('emailId');
     const emailDomain  = document.getElementById('emailDomain');
@@ -254,19 +274,18 @@
 
     if (!emailSelect || !emailDomain || !emailFull) return;
 
-    // 1) 페이지 진입 시: hidden email을 분해해서 id/domain 채우기
+    // 기존 값 분해해서 표시
     (function hydrateFromFull() {
       const full = (emailFull.value || '').trim();
       if (!full || !full.includes('@')) return;
-      const [id, domain] = full.split('@');
-      if (emailId) emailId.value = id || '';
-      emailDomain.value = domain || '';
-
-      // domain이 옵션 중 하나면 select도 해당 값으로 맞추고, domain 입력칸은 읽기전용
+      const parts = full.split('@');
+      const id = parts[0] || '';
+      const domain = parts[1] || '';
+      if (emailId) emailId.value = id;
+      emailDomain.value = domain;
       const match = Array.from(emailSelect.options).find(o => o.value === domain);
       if (match) {
         emailSelect.value = domain;
-        emailDomain.value = domain;
         emailDomain.readOnly = true;
       } else {
         emailSelect.value = '';
@@ -274,26 +293,22 @@
       }
     })();
 
-    // 2) 도메인 옵션 변경 시: 입력칸 즉시 반영
+    const updateHidden = () => {
+      const id  = (emailId ? emailId.value : '').trim();
+      const dom = (emailDomain.value || '').trim();
+      emailFull.value = (id && dom) ? (id + '@' + dom) : '';
+    };
+
     emailSelect.addEventListener('change', function () {
       const sel = (this.value || '').trim();
       if (sel) {
         emailDomain.value = sel;
-        emailDomain.readOnly = true;   // 옵션 선택 시 수동입력 막기
+        emailDomain.readOnly = true;
       } else {
-        // "직접입력" 선택
         emailDomain.readOnly = false;
-        // 직접입력 모드에서는 값을 비우지 않고 사용자가 입력한 값을 유지
       }
       updateHidden();
     });
-
-    // 3) 입력 타이핑 시 hidden(emailFull) 즉시 갱신
-    const updateHidden = () => {
-      const id = (emailId ? emailId.value : '').trim();
-      const dom = (emailDomain.value || '').trim();
-      emailFull.value = (id && dom) ? (id + '@' + dom) : '';
-    };
 
     if (emailId)     emailId.addEventListener('input',   updateHidden);
     emailDomain.addEventListener('input', updateHidden);
@@ -310,19 +325,14 @@
     const syncTel = () => {
       if (sameChk.checked) {
         telInp.value = phoneInp.value;
-        telInp.readOnly = true;   // 동일 체크되면 수정 못 하게
+        telInp.readOnly = true;
       } else {
         telInp.readOnly = false;
       }
     };
 
-    // 1) 체크박스 토글 시 즉시 복사/잠금
     sameChk.addEventListener('change', syncTel);
-
-    // 2) 체크된 상태에서 휴대폰 번호가 바뀌면, 대표번호도 즉시 따라감
     phoneInp.addEventListener('input', syncTel);
-
-    // 3) 초기 진입 시 상태 반영
     syncTel();
   })();
 
@@ -332,19 +342,19 @@
     if (!form) return;
 
     form.addEventListener('submit', function() {
-      // 시설 체크박스 -> "facilities" 히든
+      // 시설 체크값 → hidden
       const arr = Array.from(document.querySelectorAll('input[name="facility"]:checked'))
                        .map(el => el.value.trim());
       const facHidden = document.getElementById('facilitiesHidden');
       if (facHidden) facHidden.value = arr.join(',');
 
-      // 대표전화 동일 체크되어 있으면 한번 더 보정
+      // same-phone이면 대표전화 = 휴대폰
       const same = document.getElementById('same-phone');
       const phoneVal = (document.querySelector('input[name="phone"]') || {}).value || '';
       const tel = document.getElementById('telInput');
       if (same && same.checked && tel) tel.value = phoneVal;
 
-      // 이메일 hidden(emailFull)도 한번 더 보정
+      // 이메일 hidden 완성(보수)
       const emailId     = document.getElementById('emailId');
       const emailDomain = document.getElementById('emailDomain');
       const emailFull   = document.getElementById('emailFull');
@@ -355,6 +365,12 @@
       }
     });
   })();
+
+  // 주소 등록 버튼(다음 우편번호 API 연결 지점 - 필요 시 실제 스크립트 추가)
+  document.getElementById('btnFindAddr')?.addEventListener('click', function() {
+    // TODO: 다음 주소 API 팝업 연결
+    alert('주소 검색 팝업을 연결하세요.');
+  });
 </script>
 
 </body>

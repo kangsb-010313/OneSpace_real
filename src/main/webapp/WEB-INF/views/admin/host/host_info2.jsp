@@ -21,8 +21,6 @@
   <main>
     <div class="container">
 
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   여기(main container)안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-
 <c:url var="urlSpacesNew"  value="/onespace/hostcenter/spaces/new"/>
 <c:url var="urlSpacesList" value="/onespace/hostcenter/spaces"/>
 <c:url var="urlRoomSave"   value="/onespace/hostcenter/rooms/save"/>
@@ -123,7 +121,6 @@
           </select>
           <span class="text-label">까지</span>
           <input type="text" class="input-price" name="hourlyPrice" placeholder="금액을 설정해주세요.">
-          <button type="button" class="btn-remove" onclick="removeRow(this)" style="margin-left:8px;">삭제</button>
         </div>
       </div>
     </div>
@@ -136,8 +133,6 @@
   </div>
 </form>
 
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-
     </div>
   </main>
   <!-- /컨텐츠 영역---------------------------------------------- -->
@@ -149,37 +144,45 @@
 </div>
 
 <script>
-  // price row 추가/삭제
-  (function(){
-    const priceWrap = document.getElementById('priceWrap');
-    const addBtn = document.getElementById('btnAddPrice');
-    if (!priceWrap || !addBtn) return;
+// ======== 최소 수정 버전: 삭제 버튼 제거 ========
 
-    addBtn.addEventListener('click', function(){
-      const row = document.createElement('div');
-      row.className = 'price-row';
-      row.innerHTML = `
-        <select class="select-day" name="dayType">
-          <option>평일</option><option>주말</option>
-        </select>
-        <select class="select-time" name="startTime">
-          ${[...Array(25)].map((_,h)=>`<option>${String(h).padStart(2,'0')}시</option>`).join('')}
-        </select>
-        <span class="text-label">부터</span>
-        <select class="select-time" name="endTime">
-          ${[...Array(25)].map((_,h)=>`<option>${String(h).padStart(2,'0')}시</option>`).join('')}
-        </select>
-        <span class="text-label">까지</span>
-        <input type="text" class="input-price" name="hourlyPrice" placeholder="금액을 설정해주세요.">
-        <button type="button" class="btn-remove" onclick="removeRow(this)" style="margin-left:8px;">삭제</button>
-      `;
-      priceWrap.appendChild(row);
-    });
-    window.removeRow = (btn) => {
-      const row = btn.closest('.price-row');
-      if (row && priceWrap.children.length > 1) row.remove();
-    };
-  })();
+// 00~24시 <option> HTML을 미리 만들어둔다
+var HOUR_OPTIONS = (function(){
+  var s = '';
+  for (var h = 0; h <= 24; h++) {
+    var hh = (h < 10 ? '0' : '') + h;
+    s += '<option>' + hh + '시</option>';
+  }
+  return s;
+})();
+
+// "추가하기" 버튼: 새 행 추가
+(function(){
+  var priceWrap = document.getElementById('priceWrap');
+  var addBtn = document.getElementById('btnAddPrice');
+  if (!priceWrap || !addBtn) return;
+
+  addBtn.addEventListener('click', function(){
+    var row = document.createElement('div');
+    row.className = 'price-row';
+
+    row.innerHTML =
+        '<select class="select-day" name="dayType">'
+      +   '<option>평일</option><option>주말</option>'
+      + '</select>'
+      + '<select class="select-time" name="startTime">'
+      +   HOUR_OPTIONS
+      + '</select>'
+      + '<span class="text-label">부터</span>'
+      + '<select class="select-time" name="endTime">'
+      +   HOUR_OPTIONS
+      + '</select>'
+      + '<span class="text-label">까지</span>'
+      + '<input type="text" class="input-price" name="hourlyPrice" placeholder="금액을 설정해주세요.">';
+
+    priceWrap.appendChild(row);
+  });
+})();
 </script>
 </body>
 </html>

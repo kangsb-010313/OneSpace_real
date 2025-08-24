@@ -56,4 +56,65 @@
     DELETE FROM rooms WHERE roomNo = #{value}
   </delete>
 
+  <!-- ==================== prices (RoomPriceVO) ==================== -->
+  <resultMap id="RoomPricesMap" type="com.javaex.vo.RoomPriceVO">
+    <id     property="priceNo"    column="priceNo"/>
+    <result property="roomNo"     column="roomNo"/>
+    <result property="dayType"    column="dayType"/>
+    <result property="startTime"  column="startTime"/>
+    <result property="endTime"    column="endTime"/>
+    <result property="hourlyPrice" column="hourlyPrice"/>
+  </resultMap>
+
+  <insert id="insert_price" parameterType="com.javaex.vo.RoomPriceVO"
+          useGeneratedKeys="true" keyProperty="priceNo" keyColumn="priceNo">
+    INSERT INTO roomPrices (
+      roomNo, dayType, startTime, endTime, hourlyPrice
+    ) VALUES (
+      #{roomNo}, #{dayType}, #{startTime}, #{endTime}, #{hourlyPrice}
+    )
+  </insert>
+
+  <delete id="delete_prices_by_room" parameterType="long">
+    DELETE FROM roomPrices WHERE roomNo = #{value}
+  </delete>
+
+  <select id="select_prices" parameterType="long" resultMap="RoomPricesMap">
+    SELECT priceNo, roomNo, dayType, startTime, endTime, hourlyPrice
+    FROM roomPrices
+    WHERE roomNo = #{value}
+    ORDER BY priceNo ASC
+  </select>
+
+  <!-- ==================== photos ==================== -->
+  <resultMap id="RoomPhotoMap" type="com.javaex.vo.RoomsVO$RoomAttachment">
+    <id     property="pictureSno"     column="pictureSno"/>
+    <result property="roomNo"         column="roomNo"/>
+    <result property="storedFileName" column="storedFileName"/>
+    <result property="originFileName" column="originFileName"/>
+    <result property="filePath"       column="filePath"/>
+    <result property="instDt"         column="instDt"/>
+    <result property="updtDt"         column="updtDt"/>
+  </resultMap>
+
+  <insert id="insert_photo" parameterType="com.javaex.vo.RoomsVO$RoomAttachment"
+          useGeneratedKeys="true" keyProperty="pictureSno" keyColumn="pictureSno">
+    INSERT INTO roomAttachments (
+      roomNo, storedFileName, originFileName, filePath, instDt, updtDt
+    ) VALUES (
+      #{roomNo}, #{storedFileName}, #{originFileName}, #{filePath}, NOW(), NOW()
+    )
+  </insert>
+
+  <select id="select_photos" parameterType="long" resultMap="RoomPhotoMap">
+    SELECT pictureSno, roomNo, storedFileName, originFileName, filePath, instDt, updtDt
+    FROM roomAttachments
+    WHERE roomNo = #{value}
+    ORDER BY pictureSno ASC
+  </select>
+
+  <delete id="delete_photos_by_room" parameterType="long">
+    DELETE FROM roomAttachments WHERE roomNo = #{value}
+  </delete>
+
 </mapper>

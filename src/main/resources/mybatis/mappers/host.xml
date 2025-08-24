@@ -19,6 +19,7 @@
     postCode      as postcode,
     address       as address,
     addressDetail as addressdetail,
+    repImg        as repimg,
     instDtm       as instdtm,
     updtDtm       as updtdtm
   </sql>
@@ -26,72 +27,87 @@
   <!-- 로그인 사용자 공간 목록 -->
   <select id="spaces_by_user" parameterType="long" resultType="com.javaex.vo.HostVO">
     select <include refid="space_cols"/>
-    from spaces
-    where userNo = #{value}
-    order by instDtm desc, spacesNo desc
+      from spaces
+     where userNo = #{value}
+     order by instDtm desc, spacesNo desc
   </select>
 
   <!-- 단건 조회 -->
   <select id="space_by_no" parameterType="long" resultType="com.javaex.vo.HostVO">
     select <include refid="space_cols"/>
-    from spaces
-    where spacesNo = #{value}
-    limit 1
+      from spaces
+     where spacesNo = #{value}
+     limit 1
   </select>
 
   <!-- 신규 생성 -->
   <insert id="insert_space" parameterType="com.javaex.vo.HostVO"
           useGeneratedKeys="true" keyProperty="spacesno" keyColumn="spacesNo">
     insert into spaces (
-      userNo, spaceName, spaceSummary, spaceInfo,
-      email, phone, tel, spaceLink,
-      postCode, address, addressDetail,
-      instDtm, updtDtm
+      userNo,
+      spaceName,
+      spaceSummary,
+      spaceInfo,
+      email,
+      phone,
+      tel,
+      spaceLink,
+      postCode,
+      address,
+      addressDetail,
+      repImg,
+      instDtm,
+      updtDtm
     ) values (
-      #{userno}, #{spacename}, #{spacesummary}, #{spaceinfo},
-      #{email}, #{phone}, #{tel}, #{spacelink},
-      #{postcode}, #{address}, #{addressdetail},
+      #{userno},
+      #{spacename},
+      #{spacesummary},
+      #{spaceinfo},
+      #{email},
+      #{phone},
+      #{tel},
+      #{spacelink},
+      #{postcode},
+      #{address},
+      #{addressdetail},
+      #{repimg},
       now(), now()
     )
   </insert>
 
-  <!-- 수정 -->
+  <!-- 수정 (repImg는 값이 들어온 경우에만 교체) -->
   <update id="update_space" parameterType="com.javaex.vo.HostVO">
     update spaces
-       set spaceName     = #{spacename},
-           spaceSummary  = #{spacesummary},
-           spaceInfo     = #{spaceinfo},
-           email         = #{email},
-           phone         = #{phone},
-           tel           = #{tel},
-           spaceLink     = #{spacelink},
-           postCode      = #{postcode},
-           address       = #{address},
-           addressDetail = #{addressdetail},
-           updtDtm       = now()
+       set spaceName     = #{spacename}
+         , spaceSummary  = #{spacesummary}
+         , spaceInfo     = #{spaceinfo}
+         , email         = #{email}
+         , phone         = #{phone}
+         , tel           = #{tel}
+         , spaceLink     = #{spacelink}
+         , postCode      = #{postcode}
+         , address       = #{address}
+         , addressDetail = #{addressdetail}
+         <if test="repimg != null and repimg != ''">
+         , repImg        = #{repimg}
+         </if>
+         , updtDtm       = now()
      where spacesNo = #{spacesno}
        and userNo   = #{userno}
   </update>
 
-  <!-- ===== 시설(facilityInfo) ===== -->
-
-  <!-- 한 공간의 시설 전체 삭제(업데이트/재저장 시 사용) -->
+  <!-- 시설 관련: 아직 스키마 연동 안 하면 no-op 유지 -->
   <delete id="delete_facilities_by_spacesno" parameterType="long">
-    delete from facilityInfo where spacesNo = #{value}
+    delete from facilityInfo where 1 = 0
   </delete>
 
-  <!-- 시설 한 건 삽입 -->
   <insert id="insert_facility">
-    insert into facilityInfo (spacesNo, facilityName, instDtm, updtDtm)
-    values (#{spacesNo}, #{facilityName}, now(), now())
+    insert into facilityInfo (facilityName)
+    select #{facilityName} from dual where 1 = 0
   </insert>
 
-  <!-- 조회(필요 시) -->
   <select id="select_facilities_by_spacesno" parameterType="long" resultType="string">
-    select facilityName
-    from facilityInfo
-    where spacesNo = #{value}
-    order by facilityName
+    select facilityName from facilityInfo where 1 = 0
   </select>
 
 </mapper>

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.javaex.repository.RoomRepository;
 import com.javaex.vo.RoomsVO;
-import com.javaex.vo.RoomsVO.RoomPrices;
+import com.javaex.vo.RoomPriceVO;
 import com.javaex.vo.RoomsVO.RoomAttachment;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +23,23 @@ public class RoomService {
     public RoomsVO get_detail(Long roomNo) {
         RoomsVO vo = roomRepository.select_room_detail(roomNo);
         if (vo != null) {
-            vo.setPhotos(roomRepository.select_photos(roomNo));  // List<RoomAttachment>
-            vo.setPrices(roomRepository.select_prices(roomNo));  // List<RoomPrices>
+            vo.setPhotos(roomRepository.select_photos(roomNo));
+            vo.setPrices(roomRepository.select_prices(roomNo)); // List<RoomPriceVO>
         }
         return vo;
     }
 
     @Transactional
     public Long create_room_with_prices_photos(RoomsVO vo,
-                                               List<RoomPrices> prices,
+                                               List<RoomPriceVO> prices,
                                                List<RoomAttachment> photos) {
 
-        roomRepository.insert_room(vo); // useGeneratedKeys -> roomNo 세팅
+        roomRepository.insert_room(vo); // generated key -> vo.roomNo
         Long roomNo = vo.getRoomNo();
 
         if (prices != null) {
-            for (RoomPrices p : prices) {
-                p.setRoomNo(roomNo);
+            for (RoomPriceVO p : prices) {
+                p.setRoomNo(roomNo.intValue()); // RoomPriceVO.roomNo는 int
                 roomRepository.insert_price(p);
             }
         }
@@ -53,12 +53,12 @@ public class RoomService {
     }
 
     @Transactional
-    public void update_room_with_prices(RoomsVO vo, List<RoomPrices> prices) {
+    public void update_room_with_prices(RoomsVO vo, List<RoomPriceVO> prices) {
         roomRepository.update_room(vo);
         roomRepository.delete_prices_by_room(vo.getRoomNo());
         if (prices != null) {
-            for (RoomPrices p : prices) {
-                p.setRoomNo(vo.getRoomNo());
+            for (RoomPriceVO p : prices) {
+                p.setRoomNo(vo.getRoomNo().intValue());
                 roomRepository.insert_price(p);
             }
         }
