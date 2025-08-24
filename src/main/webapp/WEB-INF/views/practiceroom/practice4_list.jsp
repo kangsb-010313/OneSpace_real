@@ -10,7 +10,7 @@
   <meta charset="UTF-8">
   <title>원스페이스 | 연습실찜하기</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/practice.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/practice.css">	
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
   <c:set var="CTX" value="${pageContext.request.contextPath}" />
@@ -45,28 +45,48 @@
                   <br>
                   <div class="two-col">
                     <div class="practice-card-list">
-                      <c:forEach var="space" items="${favoriteSpaces}">
-                        <div class="practice-card card-bordered">
-                          <img src="${fn:startsWith(space.imageUrl,'http') ? space.imageUrl : CTX.concat(space.imageUrl)}"
-     							alt="${space.spaceName}" class="practice-card-img" />
-                          <div class="practice-card-body">
-                            <div class="practice-card-title">${space.spaceName}</div>
-                            <div class="practice-card-meta">${space.address}</div>
-                            <div class="practice-card-price">
-                              <span class="price-highlight">7,000~12,000</span> 원/시간
-                              <span class="price-sub">&nbsp; 실외화 가능/주차/최대7인</span>
-                            </div>
-                          </div>
-                          <div class="card-actions">
-                            <button class="btn-outline btn-pill-sm open-schedule" data-spaces-no="${space.spacesNo}" data-room-no="${space.roomNo}">날짜 시간 추가</button>
-                            <button class="btn-like btn-pill-sm" data-spaces-no="${space.spacesNo}">찜해제</button>
-                          </div>
-                        </div>
-                      </c:forEach>
                       
-                      <c:if test="${empty favoriteSpaces}">
-                        <div style="padding:16px;color:#888;">찜한 연습실이 없습니다.</div>
-                      </c:if>
+                      <c:forEach var="space" items="${favoriteSpaces}">
+	                      <div class="practice-card card-bordered">
+						
+						
+						    <c:set var="imgUrlRaw" value="${space.imageUrl}" />
+							<c:set var="spaceLink" value="${space.spaceLink}" />
+							
+							<c:choose>
+							  
+							  <c:when test="${not empty spaceLink}">
+							    <img src="${CTX}/assets/images/${spaceLink}" alt="${space.spaceName}" class="practice-card-img"
+							         style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
+							         onerror="this.onerror=null;this.src='${CTX}/assets/images/placeholder.jpg'"/>
+							  </c:when>
+							
+							  <c:otherwise>
+							    <img src="${CTX}/assets/images/placeholder.jpg" alt="placeholder" class="practice-card-img"
+							         style="width:100%; height:120px; object-fit:cover; border-radius:6px;"/>
+							  </c:otherwise>
+							</c:choose>
+							
+						    <div class="practice-card-body">
+						      <div class="practice-card-title">${space.spaceName}</div>
+						      <div class="practice-card-meta">${space.address}</div>
+						      <div class="practice-card-price">
+						        <span class="price-highlight">7,000~12,000</span> 원/시간
+						        <span class="price-sub">&nbsp; 실외화 가능/주차/최대7인</span>
+						      </div>
+						    </div>
+						
+						    <div class="card-actions">
+						      <button class="btn-outline btn-pill-sm open-schedule" data-spaces-no="${space.spacesNo}" data-room-no="${space.roomNo}">날짜 시간 추가</button>
+						      <button class="btn-like btn-pill-sm" data-spaces-no="${space.spacesNo}">찜해제</button>
+						    </div>
+						  </div>
+						</c:forEach>
+						
+						<c:if test="${empty favoriteSpaces}">
+						  <div style="padding:16px;color:#888;">찜한 연습실이 없습니다.</div>
+						</c:if>
+					
                     </div>
                     <section class="fav-panel">
                       <div class="fav-title">#내가 찜한 연습실 후보</div>
@@ -168,240 +188,209 @@
   </div>
   
   <script>
-  const schedTitle = document.getElementById('schedTitle');
-  const schedDays  = document.getElementById('schedDays');
-  const navBtns    = document.querySelectorAll('.sched-nav');
+$(document).ready(function(){
 
+  const ctx = '${pageContext.request.contextPath}';
+  const $overlay = $('#scheduleModal');
+  const $schedDays = $('#schedDays');
+  const $schedTitle = $('#schedTitle');
+  const $schedSlots = $('#schedSlots');
+  const $schedDate = $('#schedDate');
+  const $schedTime = $('#schedTime');
+  const $schedPrice = $('#schedPrice');
+  const $schedSubmit = $('#schedSubmit');
+  const $schedClose = $('#schedClose');
+
+  // 날짜 변수
   let selectedDate = new Date();
-  let currentDate  = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+  let calendarCursor = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
 
-  const WEEKDAY_KR = ['일','월','화','수','목','금','토'];
-  const pad = n => n.toString().padStart(2, '0');
-  const formatTitle = d => (d.getFullYear() + '.' + pad(d.getMonth()+1));
-  const formatSummaryDate = d => {
-    const y = d.getFullYear(), m = pad(d.getMonth()+1), day = pad(d.getDate()), w = WEEKDAY_KR[d.getDay()];
-    return y + '/' + m + '/' + day + '(' + w + ')';
-  };
-
-  //////////////////////////////////////////////////////////
-  // 이벤트
-  //////////////////////////////////////////////////////////
-  
-  //돔트리가 완료되었을때
-  $(document).ready(function(){
-	  console.log('aaaa');
-  });
-  
-  // 모달 열고/닫기
-  $('.open-schedule').on('click', function(){
-	  console.log('모달창 열기 클릭');
-	  const overlay   = document.getElementById('scheduleModal');
-	  overlay.style.display = 'flex';
-	  initCalendarOnOpen();
-	  updateSubmitState();
-	  
-	  //날짜
-	  let targetDate = $("#schedTitle").text() +'.'+ $(".today").text();
-	  let roomNo = $(this).data('room-no');
-	  
-	  let reserveInfoVO = {
-	    targetDate: targetDate,
-	    roomNo: roomNo
-	  };
-	  
-	  //룸번호
-	  $.ajax({
-	    url : '${pageContext.request.contextPath}/onespace/api/room-slots',		
-		type : 'post',
-		/* contentType : 'application/json', */
-		data : reserveInfoVO,
-
-		dataType : 'json',
-		success : function(slotList){
-		    /*성공시 처리해야될 코드 작성*/
-		    console.log(slotList);
-		    //슬롯을 그린다
-		    for(let i=0; i<slotList.length; i++){
-		    	renderSlot(slotList[i]);
-		    }
-		    //
-		},
-		error : function(XHR, status, error) {
-			console.error(status + ' : ' + error);
-		}
-	  });
-
-	  
-  });
-  
-  
-  function renderSlot(slotVO){
-	  
-	  /*
-	  startNo
-	  end
-	  */
-	  
-	  let htmlStr = '';
-	  htmlStr += '<li id="" class="slot">00~01<span>('+slotVO.price+')</span></li>';
-	  
-	  $('#schedSlots').append(htmlStr);
-	  
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function formatTitle(d){ return d.getFullYear() + '.' + pad2(d.getMonth()+1); }
+  function formatSummaryDate(d){
+    const WEEKDAY = ['일','월','화','수','목','금','토'];
+    return d.getFullYear() + '/' + pad2(d.getMonth()+1) + '/' + pad2(d.getDate()) + '(' + WEEKDAY[d.getDay()] + ')';
   }
-  
-  
-  
-  
-  
-  const overlay   = document.getElementById('scheduleModal');
-  const openBtns  = document.querySelectorAll('.open-schedule');
-  const closeBtn  = document.getElementById('schedClose');
-  const submitBtn = document.getElementById('schedSubmit');
-/*
-  openBtns.forEach(b => b.addEventListener('click', () => {
-    overlay.style.display = 'flex';
-    initCalendarOnOpen();
-    updateSubmitState();
-  }));
-  overlay.addEventListener('click', () => { overlay.style.display = 'none'; });
-  closeBtn.addEventListener('click', () => { overlay.style.display = 'none'; });
-  */
-  
-  
-  
-  
-  function renderCalendar() {
-    schedTitle.textContent = formatTitle(currentDate);
-    schedDays.innerHTML = '';
+  function toYYYYMMDD(d){ return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()); }
 
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
+  /* ------------------ 캘린더 렌더 ------------------ */
+  function renderCalendar(){
+    $schedTitle.text(formatTitle(calendarCursor));
+    $schedDays.empty();
+
+    const year = calendarCursor.getFullYear();
+    const month = calendarCursor.getMonth();
     const first = new Date(year, month, 1);
     const last  = new Date(year, month + 1, 0);
-    const leading  = first.getDay();
+    const leading = first.getDay();
     const prevLast = new Date(year, month, 0).getDate();
     const totalCells = 42;
-    const thisCount  = last.getDate();
+    const thisCount = last.getDate();
 
-    // 앞부분(이전 달)
-    for (let i = leading - 1; i >= 0; i--) {
-      const day = document.createElement('span');
-      day.className = 'muted';
-      day.textContent = prevLast - i;
-      schedDays.appendChild(day);
+    // 이전달 꼬리
+    for(let i = leading - 1; i >= 0; i--){
+      $('<span>').addClass('muted').text(prevLast - i).appendTo($schedDays);
     }
 
-    // 이번 달 날짜
-    for (let d = 1; d <= thisCount; d++) {
-      const day = document.createElement('span');
-      day.textContent = d;
-
+    // 이번달
+    for(let d = 1; d <= thisCount; d++){
+      const $day = $('<span>').text(d).css('cursor','pointer');
       const today = new Date();
-      if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) day.classList.add('today');
-      if (year === selectedDate.getFullYear() && month === selectedDate.getMonth() && d === selectedDate.getDate()) day.classList.add('picked');
+      if(year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) $day.addClass('today');
+      if(year === selectedDate.getFullYear() && month === selectedDate.getMonth() && d === selectedDate.getDate()) $day.addClass('picked');
 
-      day.style.cursor = 'pointer';
-      day.addEventListener('click', () => {
+      $day.on('click', function(){
         selectedDate = new Date(year, month, d);
+        $schedDate.text(formatSummaryDate(selectedDate));
+        // 선택한 날짜로 슬롯 재조회 (roomNo 저장 필요)
+        const roomNo = $overlay.data('room-no');
+        if (roomNo) loadSlots(roomNo, toYYYYMMDD(selectedDate));
         renderCalendar();
-        document.getElementById('schedDate').textContent = formatSummaryDate(selectedDate);
-        // 서버 재조회 없음 — 단순 표시만 업데이트
       });
 
-      schedDays.appendChild(day);
+      $schedDays.append($day);
     }
 
-    // 뒷부분(다음 달)
-    const used = schedDays.children.length;
-    for (let k = 1; k <= totalCells - used; k++) {
-      const day = document.createElement('span');
-      day.className = 'muted';
-      day.textContent = k;
-      schedDays.appendChild(day);
+    // 다음달 머리
+    const used = $schedDays.children().length;
+    for(let k = 1; k <= totalCells - used; k++){
+      $('<span>').addClass('muted').text(k).appendTo($schedDays);
     }
   }
 
-  navBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const dir = btn.dataset.dir === 'prev' ? -1 : 1;
-      currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + dir, 1);
-      renderCalendar();
+  function initCalendarOnOpen(){
+    selectedDate = new Date();
+    calendarCursor = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+    $schedDate.text(formatSummaryDate(selectedDate));
+    renderCalendar();
+  }
+
+  /* ------------------ 슬롯 로드 & 렌더 ------------------ */
+  function loadSlots(roomNo, targetDate){
+    console.log('[sched] loadSlots', roomNo, targetDate);
+    $schedSlots.empty();
+    // AJAX: POST form-encoded (현재 컨트롤러와 맞춤)
+    $.ajax({
+      url: ctx + '/onespace/api/room-slots',
+      type: 'POST',
+      data: { roomNo: roomNo, targetDate: targetDate },
+      dataType: 'json'
+    }).done(function(slotList){
+      console.log('[sched] slotList', slotList);
+      if (!Array.isArray(slotList) || slotList.length === 0) {
+        $schedSlots.append('<li style="color:#888;padding:8px;">해당 날짜에 등록된 요금 정보가 없습니다.</li>');
+        updateSummaryAndState();
+        return;
+      }
+      // 렌더
+      slotList.forEach(function(slot){
+        renderSlot(slot);
+      });
+      bindSlotClick();
+      updateSummaryAndState();
+    }).fail(function(xhr, status, err){
+      console.error('[sched] loadSlots fail', status, err);
+      $schedSlots.append('<li style="color:#c00;padding:8px;">슬롯 조회 실패</li>');
     });
-  });
-
-  function initCalendarOnOpen() {
-	selectedDate = new Date();
-	dateEl.textContent = formatSummaryDate(selectedDate);
-	calendarCursor = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-	renderCalendar();
   }
 
+  function renderSlot(slotVO){
+    // slotVO의 필드명이 다양할 수 있으니 여러 가능성 체크
+    const start = (slotVO.startHour!==undefined)? +slotVO.startHour :
+                  (slotVO.start!==undefined)? +slotVO.start :
+                  (slotVO.hour!==undefined)? +slotVO.hour :
+                  (slotVO.startNo!==undefined)? +slotVO.startNo : 0;
+    const price = (slotVO.price!==undefined)? +slotVO.price :
+                  (slotVO.hourlyPrice!==undefined)? +slotVO.hourlyPrice : 0;
+    const end = start + 1;
 
+    const $li = $('<li>')
+      .addClass('slot')
+      .attr('data-start', start)
+      .attr('data-end', end)
+      .attr('data-price', price)
+      .html(pad2(start) + '~' + pad2(end) + '<span>(' + price.toLocaleString() + ')</span>');
 
-  // 슬롯 선택(연속 + 최대 3칸)
-  const slots   = Array.from(document.querySelectorAll('#schedSlots .slot:not(.disabled)'));
-  const dateEl  = document.getElementById('schedDate');
-  const timeEl  = document.getElementById('schedTime');
-  const priceEl = document.getElementById('schedPrice');
-
-  const getSelected = () => slots.filter(s => s.classList.contains('selected'));
-  const toStarts    = arr => arr.map(s => +s.dataset.start).sort((a,b) => a - b);
-  const isContiguous = starts => {
-    if (starts.length === 0) return true;
-    const min = starts[0], max = starts[starts.length - 1];
-    return (max - min + 1) === starts.length;
-  };
-
-  function updateSummary() {
-    const selected = getSelected();
-    if (selected.length === 0) {
-      timeEl.textContent  = '-';
-      priceEl.textContent = '0 원';
-      return;
-    }
-    const sorted = selected.sort((a,b) => +a.dataset.start - +b.dataset.start);
-    const start  = +sorted[0].dataset.start;
-    const end    = +sorted[sorted.length - 1].dataset.end;
-    const total  = sorted.reduce((sum, s) => sum + (+s.dataset.price || 0), 0);
-
-    timeEl.textContent  = (start + '시~' + end + '시');
-    priceEl.textContent = total.toLocaleString() + ' 원';
+    $schedSlots.append($li);
   }
 
-  // 1~3칸, 연속이면 “선택” 버튼 활성화
-  function updateSubmitState() {
-    const selStarts = toStarts(getSelected());
-    const ok = selStarts.length >= 1 && selStarts.length <= 3 && isContiguous(selStarts);
-    submitBtn.disabled = !ok;
-  }
+  /* ------------------ 슬롯 클릭/선택 로직 ------------------ */
+  function bindSlotClick(){
+    $schedSlots.off('click', '.slot');
+    $schedSlots.on('click', '.slot', function(){
+      $(this).toggleClass('selected');
 
-  slots.forEach(s => {
-    s.addEventListener('click', () => {
-      s.classList.toggle('selected');
-
-      const sel    = getSelected();
-      const starts = toStarts(sel);
-      const withinLimit = starts.length <= 3;
-      const contiguous  = isContiguous(starts);
-
-      if (!(withinLimit && contiguous)) {
-        s.classList.toggle('selected');
-        if (!withinLimit) alert('최대 3시간까지 선택할 수 있습니다.');
+      const starts = $schedSlots.find('.slot.selected').map(function(){ return +this.dataset.start; }).get().sort((a,b)=>a-b);
+      if (starts.length > 3 || !isContiguous(starts)) {
+        $(this).toggleClass('selected'); // revert
+        if (starts.length > 3) alert('최대 3시간까지 선택할 수 있습니다.');
         else alert('선택은 연속된 시간만 가능합니다.');
       }
-
-      updateSummary();
-      updateSubmitState();
+      updateSummaryAndState();
     });
+  }
+
+  function isContiguous(arr){
+    if (arr.length === 0) return true;
+    return (arr[arr.length-1] - arr[0] + 1) === arr.length;
+  }
+
+  function updateSummaryAndState(){
+    const $selected = $schedSlots.find('.slot.selected');
+    if ($selected.length === 0) {
+      $schedTime.text('-');
+      $schedPrice.text('0 원');
+      $schedSubmit.prop('disabled', true);
+      return;
+    }
+    const starts = $selected.map(function(){ return +this.dataset.start; }).get().sort((a,b)=>a-b);
+    const start = starts[0];
+    const end = +$selected.last().attr('data-end') || (starts[starts.length-1] + 1);
+    const total = $selected.toArray().reduce((sum, el) => sum + (+el.dataset.price || 0), 0);
+
+    $schedTime.text(start + '시~' + end + '시');
+    $schedPrice.text(total.toLocaleString() + ' 원');
+
+    $schedSubmit.prop('disabled', !($selected.length >=1 && $selected.length <=3 && isContiguous(starts)));
+  }
+
+  /* ------------------ 핸들러 바인딩 ------------------ */
+  // open 버튼: delegated binding (동적 요소에도 동작)
+  $(document).off('click', '.open-schedule').on('click', '.open-schedule', function(e){
+    e.preventDefault();
+    const roomNo = $(this).data('room-no');
+    if (!roomNo) { alert('roomNo 정보를 찾을 수 없습니다'); return; }
+
+    // 모달 열기
+    $overlay.css('display','flex');
+
+    // 캘린더 초기화
+    initCalendarOnOpen();
+
+    // 서버로 슬롯 요청 (기본적으로 오늘 선택)
+    const tdate = toYYYYMMDD(selectedDate); // YYYY-MM-DD
+    $overlay.data('room-no', roomNo); // store for later
+    loadSlots(roomNo, tdate);
   });
 
-  updateSummary();
-  updateSubmitState();
-
-  submitBtn.addEventListener('click', () => {
-    alert(dateEl.textContent + ' ' + timeEl.textContent + ' / ' + priceEl.textContent + ' 선택되었습니다.');
-    overlay.style.display = 'none';
+  // 달 이동 버튼
+  $(document).off('click', '.sched-nav').on('click', '.sched-nav', function(){
+    const dir = $(this).data('dir') === 'prev' ? -1 : 1;
+    calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + dir, 1);
+    renderCalendar();
   });
+
+  // 닫기/선택
+  $schedClose.on('click', function(){ $overlay.hide(); });
+  $schedSubmit.on('click', function(){
+    alert($schedDate.text() + ' ' + $schedTime.text() + ' / ' + $schedPrice.text() + ' 선택되었습니다.');
+    $overlay.hide();
+  });
+
+  // 초기 캘린더 렌더(선택적)
+  renderCalendar();
+
+}); // document.ready
 </script>
   
 </body>

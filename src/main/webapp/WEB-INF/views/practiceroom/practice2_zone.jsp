@@ -41,8 +41,10 @@
                 <div class="detail-main-left">
                   <!-- 대표 이미지 -->
                   <c:if test="${not empty zone.spaceLink}">
-                    <div style="border-radius: 22px; overflow: hidden; margin-bottom: 24px; margin-left: 30px; margin-right: 50px;">
-                      <img class="main-photo" src="${zone.spaceLink}" alt="${zone.spaceName} 대표사진">
+                  <c:set var="raw" value="${zone.spaceLink}" />
+                    <!--  <div style="border-radius: 22px; overflow: hidden; margin-bottom: 24px; margin-left: 30px; margin-right: 50px;">-->
+                    <div>
+                      <img class="main-photo" src="${pageContext.request.contextPath}/assets/images/${raw}" alt="${zone.spaceName} 대표사진">
                     </div>
                   </c:if>
 
@@ -100,14 +102,7 @@
                       <div class="room-card">
                         <a href="${pageContext.request.contextPath}/onespace/practice3_room?roomNo=${room.roomNo}">
                           <div class="room-thumb-wrap">
-                            <c:choose>
-                              <c:when test="${fn:startsWith(room.roomInfo, 'http')}">
-                                <img class="room-thumb" src="${room.roomInfo}" alt="${room.roomName}">
-                              </c:when>
-                              <c:otherwise>
-                                <img class="room-thumb" src="${pageContext.request.contextPath}/assets/images/${room.roomInfo}" alt="${room.roomName}">
-                              </c:otherwise>
-                            </c:choose>
+		                    <img class="main-photo" src="${pageContext.request.contextPath}/assets/images/${raw}" alt="${zone.spaceName} 대표사진">
                             <div class="room-title">${room.roomName}</div>
                           </div>
                           <div class="room-bottom-row">

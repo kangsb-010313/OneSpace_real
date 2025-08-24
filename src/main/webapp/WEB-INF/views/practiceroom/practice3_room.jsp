@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -10,125 +12,149 @@
   <link rel="stylesheet" href="../../assets/css/practice.css">
   <link rel="stylesheet" href="../../assets/css/asidedefault.css">
   <link rel="stylesheet" href="../../assets/css/basicdefault.css">
+  <c:set var="ctx" value="${pageContext.request.contextPath}" />
+<style>
+    /* 간단 레이아웃: 좌/우 */
+    .detail-container { display:flex; gap:32px; align-items:flex-start; padding:24px 0; }
+    .left-col { flex: 1 1 60%; }
+    .right-col { width: 320px; flex: 0 0 320px; }
+
+    .main-photo { width:100%; height:400px; object-fit:cover; border-radius:12px; display:block; }
+    .thumb-row { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+    .thumb-row img { width:90px; height:66px; object-fit:cover; border-radius:6px; border:1px solid #eee; cursor:pointer; }
+
+    .room-info-card {
+      background:#fff; border:1px solid #eee; padding:16px; border-radius:10px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .room-info-card h3 { margin:0 0 8px 0; font-size:18px; }
+    .room-info-text { white-space: pre-wrap; color:#333; font-size:14px; line-height:1.6; }
+
+    /* 이미지 fallback */
+    .placeholder { background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#bbb; }
+  </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- 헤더 영역------------------------------------------------ -->
     <header>
       <c:import url="/WEB-INF/views/include/header.jsp" />
     </header>
-    <!-- /헤더 영역------------------------------------------------ -->
 
     <main>
       <div class="container">
-        <div class="main-section">
-          <div class="content-area">
-            <div class="filter-bar">
-              <button class="btn-list" onclick="location.href='file:///C:/javaStudy/onespace_front/views/practiceroom/practice4_list.html'">
-                찜리스트<span style="color:#ff3333;">❤</span>
-              </button>
-            </div>
-            <main class="main">
-              <div class="page-title">연습실찜하기</div>
-              <div style="width: 90%; border-bottom: 1px solid #e4e2ef; margin-left: 30px;"></div>
+        <h2 style="margin-top:18px;">${room.roomName}</h2>
+        <div style="width:90%; border-bottom:1px solid #e9e9f0; margin-bottom:18px;"></div>
 
-              <div class="detail-main align-start">
-                <!-- 왼쪽: 사진 영역 -->
-                <div class="detail-main-left">
-                  <div class="main-photo-wrap">
-                    <img src="C:/javaStudy/onespace_front/assets/images/연습실찜하기사진01.jpg" class="main-photo" alt="메인사진">
-                  </div>
+        <div class="detail-container">
+          <!-- LEFT: 대표 이미지 (room.roomInfo 기반) -->
+          <div class="left-col">
+            <c:set var="rawAll" value="${room.roomInfo}" />
+            <c:choose>
+              <c:when test="${not empty rawAll}">
+                <c:set var="firstRaw" value="${fn:trim(fn:split(rawAll, ',')[0])}" />
+				<img class="main-photo" src="${ctx}/assets/images/${zone.spaceLink}" alt="${zone.spaceName}" 
+     				onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
+                
+              </c:when>
 
-                  <div class="photo-grid">
-                    <img src="C:/javaStudy/onespace_front/assets/images/연습실찜하기사진01.jpg" class="sub-photo" alt="서브1">
-                    <img src="C:/javaStudy/onespace_front/assets/images/연습실찜하기사진01.jpg" class="sub-photo" alt="서브2">
-                    <img src="C:/javaStudy/onespace_front/assets/images/연습실찜하기사진01.jpg" class="sub-photo" alt="서브3">
-                    <img src="C:/javaStudy/onespace_front/assets/images/연습실찜하기사진01.jpg" class="sub-photo" alt="서브4">
-                  </div>
-                </div>
-
-                <!-- 오른쪽: 설명/버튼 -->
-                <aside class="room-right">
-                  <div class="room-card">
-                    <div class="section">
-                      <div class="room-title">네스트 연습실 에이홀</div>
-                      <div class="section-h">공간소개</div>
-                      <div class="section-b">
-                        • 가로 5m X 세로 4m 대략 6평대<br>
-                        &nbsp;&nbsp;(3~7인 사용 추천)<br>
-                        • 공간면적 약 20m<sup>2</sup><br>
-                        • 수용인원 최대 7명
-                      </div>
-                    </div>
-
-                    <div class="section">
-                      <div class="section-h">시설안내</div>
-                      <div class="section-b">
-                        대관 비용은<br>
-                        • 오전 (00시~15시) 6,000원<br>
-                        • 오후 (15시~24시) 7,000원<br>
-                        • 새벽통대관(00시~06시) 27,000원 입니다.<br><br>
-                        • 태블릿 비치(조명 개별 조정 및 음악 재생 가능)<br>
-                        • 블루투스 스피커<br>
-                        • 냉난방 시설
-                      </div>
-                    </div>
-
-                    <div class="section">
-                      <div class="section-h">가격안내</div>
-                      <div class="section-b">
-                        • 00~16시 15000원<br>
-                        • 16~18시 20000원<br>
-                        • 18~24시 25000원
-                      </div>
-                    </div>
-
-                    <div class="team-like-list">
-                      <div class="team-like-row">
-                        <button class="btn-outline btn-w120" id="team1">팀 원밀리언</button>
-                        <button class="btn-like" id="likeBtn1">찜하기</button>
-                      </div>
-                      <div class="team-like-row">
-                        <button class="btn-outline btn-w120" id="team2">팀 저스트절크</button>
-                        <button class="btn-like" id="likeBtn2">찜하기</button>
-                      </div>
-                    </div>
-                  </div>
-                </aside>
-              </div>
-            </main>
+              <c:otherwise>
+                <div class="placeholder">이미지 없음</div>
+              </c:otherwise>
+            </c:choose>
           </div>
-          <!-- /content-area -->
+
+          <!-- 오른쪽: roomInfo(이미지 갤러리 또는 텍스트) -->
+          <div class="right-col">
+            <div class="room-info-card">
+              <h3>방 정보</h3>
+
+              <c:choose>
+                <%-- 만약 roomInfo에 이미지 확장자가 포함되어 있으면 이미지 목록으로 표시 --%>
+                <c:when test="${not empty rawAll and (fn:contains(rawAll,'.jpg') or fn:contains(rawAll,'.jpeg') or fn:contains(rawAll,'.png') or fn:contains(rawAll,'.gif'))}">
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                    <c:forEach var="img" items="${fn:split(rawAll, ',')}">
+                      <c:set var="iTrim" value="${fn:trim(img)}" />
+                      <c:choose>
+                        <c:when test="${fn:startsWith(iTrim,'http')}">
+                          <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
+                               src="${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
+                        </c:when>
+                        <c:when test="${fn:startsWith(iTrim,'/')}">
+                          <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
+                               src="${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
+                        </c:when>
+                        <c:otherwise>
+                          <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
+                               src="${ctx}/assets/images/${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
+                        </c:otherwise>
+                      </c:choose>
+                    </c:forEach>
+                  </div>
+                </c:when>
+
+                <c:otherwise>
+                  <%-- 텍스트(줄바꿈 유지) --%>
+                  <div class="room-info-text">
+                    <c:out value="${room.roomInfo}" />
+                  </div>
+                </c:otherwise>
+              </c:choose>
+
+              <!-- 추가 정보(예: 수용인원/면적) -->
+              <hr style="margin:12px 0 10px;">
+              <div><strong>수용인원:</strong> ${room.capacity}명</div>
+              <div><strong>면적:</strong> ${room.area}</div>
+              
+              <div class="team-like-list" style="margin-top:12px;">
+			    <div class="team-like-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+			      <button class="btn-outline btn-w120" type="button">팀 원밀리언</button>
+			      <button class="btn-like" type="button">찜하기</button>
+			    </div>
+			    <div class="team-like-row" style="display:flex;gap:8px;align-items:center;">
+			      <button class="btn-outline btn-w120" type="button">팀 저스트절크</button>
+			      <button class="btn-like" type="button">찜하기</button>
+			    </div>
+			  </div>
+            </div>
+          </div>
         </div>
-        <!-- /main-section -->
       </div>
-      <!-- container -->
     </main>
     <!-- /컨텐츠 영역---------------------------------------------- -->
 
     <script>
-      const teams = [
-        { likeBtn: document.getElementById('likeBtn1'), teamBtn: document.getElementById('team1') },
-        { likeBtn: document.getElementById('likeBtn2'), teamBtn: document.getElementById('team2') }
-      ];
-
-      teams.forEach((team, index) => {
-        team.likeBtn.addEventListener('click', () => {
-          const isLiked = team.likeBtn.textContent === '찜하기';
-
-          // 모든 버튼 초기화
-          teams.forEach(t => {
-            t.likeBtn.textContent = '찜하기';
-            t.teamBtn.classList.remove('active');
-          });
-
-          // 클릭한 버튼만 상태 변경
-          if (isLiked) {
-            team.likeBtn.textContent = '찜';
-            team.teamBtn.classList.add('active');
-          }
-        });
-      });
+    document.addEventListener('DOMContentLoaded', function() {
+	  const likeBtns = Array.from(document.querySelectorAll('.btn-like'));
+	  const teamBtns = Array.from(document.querySelectorAll('.btn-outline'));
+	
+	  function resetAll() {
+	    likeBtns.forEach(b => b.textContent = '찜하기');
+	    teamBtns.forEach(b => b.classList.remove('active'));
+	  }
+	
+	  likeBtns.forEach(btn => {
+	    btn.addEventListener('click', function() {
+	      const row = btn.closest('.team-like-row');
+	      const teamBtn = row ? row.querySelector('.btn-outline') : null;
+	      const willLike = btn.textContent.trim() === '찜하기';
+	      resetAll();
+	      if (willLike) {
+	        btn.textContent = '찜';
+	        if (teamBtn) teamBtn.classList.add('active');
+	      }
+	    });
+	  });
+	
+	  teamBtns.forEach(btn => {
+	    btn.addEventListener('click', function() {
+	      const row = btn.closest('.team-like-row');
+	      const likeBtn = row ? row.querySelector('.btn-like') : null;
+	      resetAll();
+	      if (likeBtn) likeBtn.textContent = '찜';
+	      btn.classList.add('active');
+	    });
+	  });
+	});
     </script>
   </div>
 

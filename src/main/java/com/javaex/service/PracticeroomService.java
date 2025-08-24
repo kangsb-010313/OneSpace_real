@@ -79,4 +79,7 @@ public class PracticeroomService {
         return slotList;
     }
     
+    public RoomsVO getRoomByNo(Long roomNo) {
+        return practiceroomRepository.selectRoomByNo(roomNo);
+    }
 }
