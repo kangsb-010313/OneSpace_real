@@ -99,7 +99,7 @@
                                     </c:if>
                                     <%-- 일반공지/투표 글 내용 끝 --%>
 
-                                    <%-- 투표 전용 섹션 시작 --%>
+<%--                                     투표 전용 섹션 시작
                                     <c:if test="${post.teamPostType == '투표'}">
                                         <div class="vote-section-wrap">
                                             <ol class="vote-items-container">
@@ -205,9 +205,58 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                            </ol>
-                                        </div>
-                                    </c:if>
+                                            </ol> --%>
+                                            
+                                    <%-- 투표 전용 섹션 시작 --%>
+									<%-- <-- ▼▼▼▼▼ 여기부터 교체 ▼▼▼▼▼ --> --%>
+									<c:if test="${post.teamPostType == '투표'}">
+									    <div class="vote-section-wrap">
+									        <ol class="vote-items-container">
+									            <%-- 컨트롤러에서 받은 voteOptions 리스트를 반복합니다. --%>
+									            <c:forEach items="${voteOptions}" var="option" varStatus="status">
+									                <li>
+									                    <div class="vote-option">
+									                        <a href="#" class="vote-item-card">
+									                            <div class="favorite-count">🔥 0</div> <%-- 불꽃 카운트는 나중에 동적으로 처리할 예정 --%>
+									                            <img src="${pageContext.request.contextPath}/onespace/display/${option.picturesNo}" alt="${option.roomName}">
+									                            <div class="card-content-wrapper">
+									                                <div class="card-main-info">
+									                                    <div class="info-left">
+									                                        <%-- varStatus.count를 사용해 1, 2, 3.. 과 같은 순번을 표시합니다. --%>
+									                                        <p class="item-title">${status.count}. ${option.roomName}</p>
+									                                        <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
+									                                    </div>
+									                                    <div class="info-right">
+									                                        <p class="item-price">${option.totalPrice} 원</p>
+									                                    </div>
+									                                </div>
+									                                <div class="card-sub-info">
+									                                    <%-- 편의시설 정보가 있을 때만 표시합니다. --%>
+									                                    <c:if test="${not empty option.spacesGuideNo}">
+									                                        <p class="item-info">${option.spacesGuideNo}</p>
+									                                    </c:if>
+									                                    <p class="item-location">
+									                                        <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon">
+									                                        ${option.address}
+									                                    </p>
+									                                </div>
+									                            </div>
+									                        </a>
+									                        <div class="vote-action-area">
+									                            <%-- '투표' 버튼에 어떤 후보인지 식별할 수 있도록 voteNo를 data 속성으로 추가합니다. --%>
+									                            <button type="button" class="btn-vote" data-voteno="${option.voteNo}">투표</button>
+									                            <%-- 각 후보별 투표자 목록을 표시할 영역입니다. (id를 고유하게 만듦) --%>
+									                            <div class="voter-list" id="voter-list-${option.voteNo}">
+									                                <!-- 여기에 나중에 Ajax로 투표자 이름들이 들어옵니다. -->
+									                            </div>
+									                        </div>
+									                    </div>
+									                </li>
+									            </c:forEach>
+									        </ol>
+									    </div>
+									</c:if>
+									<%-- <-- ▲▲▲▲▲ 여기까지 교체 ▲▲▲▲▲ --> --%>
                                     <%-- 투표 전용 섹션 끝 --%>
                                 </div>
                                 <%-- 글 종류에 따른 내용 표시 끝 --%>

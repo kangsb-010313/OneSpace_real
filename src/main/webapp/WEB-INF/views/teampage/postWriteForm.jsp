@@ -88,6 +88,9 @@
 								                <ol class="vote-items-container">
 								                    <%-- "voteCandidates" 리스트의 각 항목을 "candidate"라는 변수로 반복 --%>
 								                    <c:forEach items="${voteCandidates}" var="candidate">
+								                    
+						                    	        <input type="hidden" name="voteNo" value="${candidate.voteNo}">
+								                    
 								                        <li>
 								                            <div class="vote-item-card">
 								                                <%-- 이미지: candidate 변수의 picturesNo 필드를 사용 --%>

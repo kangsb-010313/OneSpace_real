@@ -191,10 +191,12 @@ public class TeampageController {
 	// URL: /onespace/teams/{teamNo}/posts/teamwriteadd
 	@RequestMapping(value="teams/{teamNo}/posts/teamwriteadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String write(@PathVariable("teamNo") int teamNo,
-						@ModelAttribute TeamPostVO teamPostVO, 
+						@ModelAttribute TeamPostVO teamPostVO,
+						@RequestParam(value="voteNo", required=false) List<Integer> voteNoList,
 						HttpSession session) {
 		
 		System.out.println("TeampageController.write()");
+		System.out.println("넘어온 투표 번호 리스트: " + voteNoList); // 넘어오는지 로그로 확인
 		
 		
 
@@ -222,7 +224,7 @@ public class TeampageController {
 		teamPostVO.setUserNo(userNo); // 작성자 userNo 설정
         teamPostVO.setTeamNo(teamNo); // URL에서 받은 teamNo 설정
 		
-		teampageService.exeAdd(teamPostVO);
+		teampageService.exeAdd(teamPostVO, voteNoList);
 		
 		return "redirect:/onespace/teams/" + teamNo + "/posts/list";
 	}
@@ -306,8 +308,16 @@ public class TeampageController {
         boolean isWelcomePost = teampageService.isWelcomePost(teamPostNo, teamNo);
         model.addAttribute("isWelcomePost", isWelcomePost);
 
+        // 1. 게시글 기본 정보 가져오기
         TeamPostVO post = teampageService.exeGetPost(teamPostNo);
         model.addAttribute("post", post); // 게시글 정보를 "post"라는 이름으로 JSP에 전달
+        
+        // 2. 만약 게시글 타입이 '투표'라면, 투표 옵션 목록을 추가로 가져온다.
+        if (post != null && "투표".equals(post.getTeamPostType())) {
+            List<TeamVotePostVO> voteOptions = teampageService.getVoteOptions(teamPostNo);
+            model.addAttribute("voteOptions", voteOptions);
+            System.out.println("가져온 투표 옵션: " + voteOptions);
+        }
 
         // JSP에서 '목록으로' 돌아갈 때 현재 팀 번호가 필요할 수 있으므로 일단 전달
         model.addAttribute("teamNo", teamNo); 

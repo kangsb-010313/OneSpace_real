@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.repository.TeampageRepository;
@@ -89,7 +90,8 @@ public class TeampageService {
 	
 	
     // 팀페이지 글 등록
-    public void exeAdd(TeamPostVO teamPostVO) { // 반환타입을 void로 변경-> 리턴 안 시켜줘도 됨
+    @Transactional
+    public void exeAdd(TeamPostVO teamPostVO, List<Integer> voteNoList) { // 반환타입을 void로 변경-> 리턴 안 시켜줘도 됨
         System.out.println("TeampageService.exeAdd()");
 
         // 1. 게시글 정보 저장 (posts 테이블)
@@ -98,6 +100,15 @@ public class TeampageService {
         // 2. 방금 저장한 게시글의 번호(PK)를 다시 조회해서 가져오기
         int postNo = teampageRepository.selectLastPostNo(teamPostVO.getUserNo());
         System.out.println("방금 저장된 게시글의 번호는: " + postNo);
+        
+        if ("투표".equals(teamPostVO.getTeamPostType()) && voteNoList != null && !voteNoList.isEmpty()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("postNo", postNo);
+            params.put("voteNoList", voteNoList);
+
+            teampageRepository.updatePostNoInVotes(params); // votes 테이블 업데이트
+            teampageRepository.updateStatusInVoteOptions(params); // voteOptions 상태 업데이트
+        }
 
 
         // 3. 첨부파일 저장 (teamAttachments 테이블)
@@ -145,6 +156,13 @@ public class TeampageService {
         System.out.println("TeampageService.exeGetVoteCandidates()");
         return teampageRepository.selectVoteCandidates(userNo);
     }
+    
+    //투표 등록할 때 후보등록
+    public List<TeamVotePostVO> getVoteOptions(int postNo) {
+        System.out.println("TeampageService.getVoteOptions()");
+        return teampageRepository.selectVoteOptionsByPostNo(postNo);
+    }
+
     
     // -- 모든 팀 목록 조회
     public List<TeamVO> exeGetAllTeams() {

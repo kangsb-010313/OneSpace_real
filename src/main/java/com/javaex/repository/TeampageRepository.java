@@ -143,6 +143,26 @@ public class TeampageRepository {
         List<TeamVotePostVO> candidates = sqlSession.selectList("teampage.selectVoteCandidates", userNo);
         return candidates;
     }
+    
+    //투표 등록할 때 후보등록
+    public List<TeamVotePostVO> selectVoteOptionsByPostNo(int postNo) {
+        System.out.println("TeampageRepository.selectVoteOptionsByPostNo()");
+        return sqlSession.selectList("teampage.selectVoteOptionsByPostNo", postNo);
+    }
+
+	
+	 // votes 테이블에 postNo 업데이트
+	 public int updatePostNoInVotes(Map<String, Object> params) {
+	     System.out.println("TeampageRepository.updatePostNoInVotes()");
+	     return sqlSession.update("teampage.updatePostNoInVotes", params);
+	 }
+	
+	 // voteOptions 테이블의 status 업데이트
+	 public int updateStatusInVoteOptions(Map<String, Object> params) {
+	     System.out.println("TeampageRepository.updateStatusInVoteOptions()");
+	     return sqlSession.update("teampage.updateStatusInVoteOptions", params);
+	 }
+
 
     // -- 모든 팀 목록 조회
     public List<TeamVO> selectAllTeams() {
