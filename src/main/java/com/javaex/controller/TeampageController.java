@@ -577,10 +577,21 @@ public class TeampageController {
     @RequestMapping(value="/teams/{teamNo}/posts/{postNo}/confirm", method=RequestMethod.GET)
     public String showConfirmPage(@PathVariable("teamNo") int teamNo,
                                   @PathVariable("postNo") int postNo,
-                                  Model model) {
+                                  Model model,
+                                  HttpSession session) {
         System.out.println("TeampageController.showConfirmPage()");
         
-        // [수정] 서비스에서 최다 득표 후보 정보 + 투표자 목록을 한 번에 가져옴
+        // Aside를 위한 팀 목록 조회 로직 ---
+        UserVO authUser = (UserVO) session.getAttribute("authUser");
+        if(authUser == null) {
+            return "redirect:/onespace/loginForm"; // 로그인 안했으면 바로 로그인폼으로
+        }
+        // 서비스 호출해서 현재 유저의 팀 목록 가져오기
+        List<TeamVO> userTeamList = teampageService.exeGetUserTeams(authUser.getUserNo());
+        // 모델에 "allTeams" 라는 이름으로 담기 (asideteampage.jsp가 이 이름을 사용함)
+        model.addAttribute("allTeams", userTeamList);
+        
+        // 서비스에서 최다 득표 후보 정보 + 투표자 목록을 한 번에 가져옴
         Map<String, Object> reservationInfo = teampageService.getReservationInfo(postNo);
         
         // 만약 확정된 후보가 없으면 (아무도 투표 안했으면) 원래 투표 페이지로 돌려보냄
@@ -591,7 +602,7 @@ public class TeampageController {
         
         // JSP(View)로 데이터 전달
         model.addAttribute("confirmedOption", reservationInfo.get("topOption")); // 확정된 연습실 정보
-        model.addAttribute("voters", reservationInfo.get("voters"));           // [신규] 투표자 목록 추가
+        model.addAttribute("voters", reservationInfo.get("voters"));           // 투표자 목록 
         model.addAttribute("teamNo", teamNo);                                  // 현재 팀 번호
         model.addAttribute("originalPostNo", postNo);                          // 원래 투표 게시글 번호
         

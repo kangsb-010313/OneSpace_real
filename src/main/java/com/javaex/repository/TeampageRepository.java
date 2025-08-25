@@ -329,4 +329,24 @@ public class TeampageRepository {
 	}
 	
 	
+	/**
+	 * 원본 투표 게시글의 상태를 변경하는 메소드
+	 * @param params postNo와 status가 담긴 Map
+	 * @return 업데이트된 행의 수
+	 */
+	public int updatePostStatus(Map<String, Object> params) {
+	    System.out.println("TeampageRepository.updatePostStatus()");
+	    return sqlSession.update("teampage.updatePostStatus", params);
+	}
+
+	/**
+	 * voteNo로 해당 투표가 속한 게시글의 상태를 조회하는 메소드
+	 * @param voteNo 조회할 투표 번호
+	 * @return 게시글의 postStatus 값
+	 */
+	public int selectPostStatusByVoteNo(int voteNo) {
+	    System.out.println("TeampageRepository.selectPostStatusByVoteNo()");
+	    return sqlSession.selectOne("teampage.selectPostStatusByVoteNo", voteNo);
+	}
+	
 }

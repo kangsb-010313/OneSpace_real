@@ -24,10 +24,12 @@ public class TeamPostVO {
 	// teams, users테이블에서 가져올 정보
 	private String userName; // 작성자 이름 (users 테이블)
 	private String teamName; // 팀 이름 (teams 테이블)
+	
+	private int postStatus;
 
 	private MultipartFile[] files;
 	
-    // (추가) 이 게시글에 달린 첨부파일 목록을 담을 리스트
+    // 이 게시글에 달린 첨부파일 목록을 담을 리스트
     private List<TeamAttachmentsVO> attachments;
 
 	// 기본생성자
@@ -73,7 +75,29 @@ public class TeamPostVO {
 		this.files = files;
 		this.attachments = attachments;
 	}
+	
+	public TeamPostVO(int teamPostNo, int teamNo, int userNo, int voteNo, String teamPostType, String teamPostTitle,
+			String instaAccount, String teamContent, String teamWriteDate, String teamUpdateDate, String userName,
+			String teamName, int postStatus, MultipartFile[] files, List<TeamAttachmentsVO> attachments) {
+		super();
+		this.teamPostNo = teamPostNo;
+		this.teamNo = teamNo;
+		this.userNo = userNo;
+		this.voteNo = voteNo;
+		this.teamPostType = teamPostType;
+		this.teamPostTitle = teamPostTitle;
+		this.instaAccount = instaAccount;
+		this.teamContent = teamContent;
+		this.teamWriteDate = teamWriteDate;
+		this.teamUpdateDate = teamUpdateDate;
+		this.userName = userName;
+		this.teamName = teamName;
+		this.postStatus = postStatus;
+		this.files = files;
+		this.attachments = attachments;
+	}
 
+	
 	// 메소드 gs
 	public int getTeamPostNo() {
 		return teamPostNo;
@@ -188,7 +212,15 @@ public class TeamPostVO {
 		this.attachments = attachments;
 	}
 
+	public int getPostStatus() {
+		return postStatus;
+	}
 
+	public void setPostStatus(int postStatus) {
+		this.postStatus = postStatus;
+	}
+
+	
 	// 메소드 일반
 	@Override
 	public String toString() {
@@ -196,8 +228,9 @@ public class TeamPostVO {
 				+ voteNo + ", teamPostType=" + teamPostType + ", teamPostTitle=" + teamPostTitle + ", instaAccount="
 				+ instaAccount + ", teamContent=" + teamContent + ", teamWriteDate=" + teamWriteDate
 				+ ", teamUpdateDate=" + teamUpdateDate + ", userName=" + userName + ", teamName=" + teamName
-				+ ", files=" + Arrays.toString(files) + ", attachments=" + attachments + "]";
+				+ ", postStatus=" + postStatus + ", files=" + Arrays.toString(files) + ", attachments=" + attachments
+				+ "]";
 	}
-	
+
 	
 }

@@ -195,7 +195,7 @@ public class TeampageService {
     }
     
     
- // -- 팀페이지 등록글 삭제
+    // -- 팀페이지 등록글 삭제
     public int exeDelete(int teamPostNo, int authUserNo) {
         System.out.println("TeampageService.exeDelete()");
         
@@ -211,11 +211,11 @@ public class TeampageService {
         }
     }
 
-	 // 사용자의 찜 목록을 투표 후보로 가져오기
-	    public List<TeamVoteOptionVO> exeGetWishlistForVote(int userNo) {
-	        System.out.println("TeampageService.exeGetWishlistForVote()");
-	        return teampageRepository.selectWishlistForVote(userNo);
-	    }
+    // 사용자의 찜 목록을 투표 후보로 가져오기
+    public List<TeamVoteOptionVO> exeGetWishlistForVote(int userNo) {
+        System.out.println("TeampageService.exeGetWishlistForVote()");
+        return teampageRepository.selectWishlistForVote(userNo);
+    }
 	    
 	// 특정 유저가 특정 팀의 멤버인지 확인하는 메소드
 	public boolean isUserMember(int userNo, int teamNo) {
@@ -305,6 +305,13 @@ public class TeampageService {
 	public boolean exeAddVote(int userNo, int voteNo, int postNo) {
 	    System.out.println("TeampageService.exeAddVote()");
 	    
+	    // [방어 로직] 해당 투표가 이미 마감되었는지 확인
+	    int postStatus = teampageRepository.selectPostStatusByVoteNo(voteNo);
+	    if (postStatus != 0) {
+	        System.out.println("오류: 이미 마감된 투표(postStatus=" + postStatus + ")에 투표 시도.");
+	        return false;
+	    }
+	    
 	    Map<String, Object> params = new HashMap<>();
 	    params.put("userNo", userNo);
 	    params.put("voteNo", voteNo);
@@ -339,13 +346,20 @@ public class TeampageService {
 	}
 	
 	/**
-	 * [신규] 투표 취소 로직
+	 * 투표 취소 로직
 	 * @param userNo 현재 로그인한 사용자 번호
 	 * @param voteNo 취소할 투표 후보 번호
 	 * @return 삭제 성공 시 true, 실패 시 false
 	 */
 	public boolean exeRemoveVote(int userNo, int voteNo) {
 	    System.out.println("TeampageService.exeRemoveVote()");
+	    
+	    // [방어 로직] 해당 투표가 이미 마감되었는지 확인
+	    int postStatus = teampageRepository.selectPostStatusByVoteNo(voteNo);
+	    if (postStatus != 0) {
+	        System.out.println("오류: 이미 마감된 투표(postStatus=" + postStatus + ")는 취소할 수 없음.");
+	        return false;
+	    }
 	    
 	    Map<String, Object> params = new HashMap<>();
 	    params.put("userNo", userNo);
@@ -406,7 +420,7 @@ public class TeampageService {
 	    newPost.setUserNo(authUser.getUserNo());
 	    newPost.setTeamPostTitle("[연습일정 확정] " + roomName); // JSP에서 넘겨받은 roomName 사용
 	    
-	    // [수정] 오류나던 부분을 수정합니다. 이제 receiptVO에 voteNo가 담겨서 넘어옵니다.
+	    // 오류나던 부분을 수정합니다. 이제 receiptVO에 voteNo가 담겨서 넘어옵니다.
 	    newPost.setTeamContent("[CONFIRMED_VOTE_NO:" + receiptVO.getVoteNo() + "]");
 	    newPost.setTeamPostType("연습일정");
 	    
@@ -415,13 +429,21 @@ public class TeampageService {
 	    int newPostNo = newPost.getTeamPostNo(); 
 	    
 	    // 3. 영수증(TeamReciptVO) 정보 저장
-	    // [수정] reservationTime(String) 필드에 맞게 Date 객체를 "yyyy-MM-dd HH:mm:ss" 형태의 문자열로 변환하여 저장
+	    // reservationTime(String) 필드에 맞게 Date 객체를 "yyyy-MM-dd HH:mm:ss" 형태의 문자열로 변환하여 저장
 	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    receiptVO.setReservationTime(sdf.format(new Date()));
 	    teampageRepository.insertReceipt(receiptVO);
 	    
 	    // 4. 원본 투표 게시글에 있던 모든 후보(voteOptions)들의 상태를 2(예약확정)로 변경
 	    teampageRepository.updateAllVoteStatusInPost(originalPostNo, 2);
+	    
+	    // 4. !!!원본 투표 게시글 자체의 상태를 1('예약완료')로 변경
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("postNo", originalPostNo);
+	    params.put("status", 1);
+	    teampageRepository.updatePostStatus(params);
+
+	    System.out.println("TeampageService.exeCreateReceiptAndPost() 종료: 새 게시글 번호 " + newPostNo);
 
 	    // 5. 모든 작업이 성공하면, 새로 생성된 게시글 번호를 Controller로 반환
 	    return newPostNo;

@@ -137,6 +137,7 @@
                     p.teamPostType,
                     p.teamPostTitle,
                     p.teamContent,
+                    p.postStatus, -- [추가] 게시글 상태 컬럼
                     date_format(p.teamWriteDate, '%Y-%m-%d') as teamWriteDate,
                     date_format(p.teamUpdateDate, '%Y-%m-%d') as teamUpdateDate,
                     u.userName,
@@ -516,6 +517,21 @@
 	    from recipt r
 	    join users u on r.userNo = u.userNo
 	    where r.voteNo = #{voteNo}
+	</select>
+	
+	<!-- 2. 원본 '투표' 게시글의 상태를 '예약완료(1)'로 변경하는 쿼리 -->
+	<update id="updatePostStatus" parameterType="map">
+	    update posts
+	    set postStatus = #{status} -- 파라미터로 받은 상태값으로 변경
+	    where teamPostNo = #{postNo}
+	</update>
+	
+	<!-- 3. voteNo로 해당 투표가 속한 게시글의 상태(postStatus)를 조회하는 쿼리 -->
+	<select id="selectPostStatusByVoteNo" parameterType="int" resultType="int">
+	    select p.postStatus
+	    from posts p
+	    join votes v on p.teamPostNo = v.postNo
+	    where v.voteNo = #{voteNo}
 	</select>
 	
     

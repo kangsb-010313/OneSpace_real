@@ -173,18 +173,27 @@
 								                                            </div>
 								                                        </div>
 								                                    </a>
-								                                    <div class="vote-action-area">
-                                                                        <%-- ▼▼▼▼▼ 버튼 클래스를 동적으로 변경 ▼▼▼▼▼ --%>
-                                                                        <c:set var="isVoted" value="false" />
-                                                                        <c:forEach items="${userVotedList}" var="votedNo">
-                                                                            <c:if test="${votedNo == option.voteNo}">
-                                                                                <c:set var="isVoted" value="true" />
-                                                                            </c:if>
-                                                                        </c:forEach>
-								                                        <button type="button" class="btn-vote ${isVoted ? 'active' : ''}" data-voteno="${option.voteNo}">투표</button>
-                                                                        <%-- ▲▲▲▲▲ 여기까지 수정 ▲▲▲▲▲ --%>
-								                                        <div class="voter-list" id="voter-list-${option.voteNo}"></div>
-								                                    </div>
+								                                    
+  																	<c:if test="${post.postStatus == 0}">
+                                                                        <!-- postStatus가 0(정상)일 때만 투표 버튼과 명단 영역을 보여줌 -->
+                                                                        <div class="vote-action-area">
+                                                                            <c:set var="isVoted" value="false" />
+                                                                            <c:forEach items="${userVotedList}" var="votedNo">
+                                                                                <c:if test="${votedNo == option.voteNo}">
+                                                                                    <c:set var="isVoted" value="true" />
+                                                                                </c:if>
+                                                                            </c:forEach>
+                                                                            <button type="button" class="btn-vote ${isVoted ? 'active' : ''}" data-voteno="${option.voteNo}">투표</button>
+                                                                            <div class="voter-list" id="voter-list-${option.voteNo}"></div>
+                                                                        </div>
+                                                                    </c:if>
+                                
+                                                                    <c:if test="${post.postStatus == 1}">
+                                                                        <!-- postStatus가 1(예약완료)이면, 안내 문구를 보여줌 -->
+                                                                        <div class="vote-action-area reserved">
+                                                                            <span>투표진행이 완료된 항목입니다.</span>
+                                                                        </div>
+                                                                    </c:if>
 								                                </div>
 								                            </li>
 								                        </c:forEach>
@@ -210,9 +219,12 @@
 								                </c:when>
 								                
 								                <%-- 1-2: '투표' 글일 때 --%>
-								                <c:when test="${post.teamPostType == '투표'}">
-								                    <button type="button" class="btn-action btn-share" id="kakao-share-btn">공유하기</button>
-							                        <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/confirm" class="btn-action">바로 예약하기</a>
+								                <c:when test="${post.teamPostType == '투표'}">    
+                                                    <!-- postStatus가 0(정상)일 때만 '바로 예약하기' 버튼을 보여줌 -->
+                                                    <c:if test="${post.postStatus == 0}">
+                                                    	<button type="button" class="btn-action btn-share" id="kakao-share-btn">공유하기</button>
+								                        <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/confirm" class="btn-action">바로 예약하기</a>
+                                                    </c:if>
 								                </c:when>
 								                
 								                <%-- '연습일정'일 때 버튼 --%>
@@ -270,12 +282,11 @@
 
     <!-- 2. 카카오 SDK 초기화 및 공유 기능 구현 -->
 	<script>
-	    // 페이지의 모든 HTML 요소가 완전히 로드된 후에 이 안의 코드가 실행되도록 보장합니다.
 	    document.addEventListener('DOMContentLoaded', function() {
 	    
 	        // 기능 (1): 카카오 SDK 초기화
 	        try {
-	            // 여기에 본인의 카카오 자바스크립트 키를 넣습니다.
+	            // 카카오 자바스크립트 키
 	            Kakao.init('2ea5d5cfa151794faf308425365c73cd');
 	            console.log("Kakao SDK가 성공적으로 초기화되었습니다.");
 	        } catch(e) {
@@ -283,7 +294,7 @@
 	        }
 	        
 	        // 기능 (2): 카카오 공유하기 버튼
-	        // id가 'kakao-share-btn'인 버튼을 찾아서 기능을 연결합니다.
+	        // id가 'kakao-share-btn'인 버튼을 찾아서 기능을 연결
 	        const kakaoShareButton = document.getElementById('kakao-share-btn');
 	        if (kakaoShareButton) {
 	            kakaoShareButton.addEventListener('click', function() {
@@ -314,18 +325,18 @@
     <script>
     $(document).ready(function() {
 
-        // 페이지 로딩 시, 각 후보의 투표자 목록을 가져옵니다.
+        // 페이지 로딩 시, 각 후보의 투표자 목록
         $(".voter-list").each(function() {
             var voteNo = $(this).attr("id").replace("voter-list-", "");
             if (voteNo) { fetchVoters(voteNo); }
         });
 
-        // '투표' 버튼 클릭 이벤트 (괄호 위치 수정된 최종 버전)
+        // '투표' 버튼 클릭 이벤트 
         $(".btn-vote").on("click", function() {
             var $button = $(this); // 클릭된 버튼 요소
             var voteNo = $button.data("voteno");
         
-            // (핵심) 버튼이 이미 'active' 상태인지 (투표한 상태인지) 확인
+            // 버튼이 이미 'active' 상태인지 (투표한 상태인지) 확인
             if ($button.hasClass('active')) {
                 // === 투표 취소 로직 ===
                 $.ajax({
@@ -346,7 +357,7 @@
                 });
         
             } else {
-                // === 기존 투표하기 로직 ===
+                // === 투표하기 로직 ===
                 $.ajax({
                     url: "${pageContext.request.contextPath}/onespace/api/addvote",
                     type: "POST", 
@@ -366,8 +377,8 @@
                         alert("서버와 통신 중 오류가 발생했습니다."); 
                     }
                 });
-            } // if-else 문의 닫는 괄호
-        }); // .btn-vote.on("click", ...)의 닫는 괄호
+            } 
+        });
 
         // 투표자 목록을 가져와서 화면에 뿌려주는 함수
         function fetchVoters(voteNo) {
@@ -387,7 +398,7 @@
             });
         }
 
-    }); // $(document).ready(...)의 닫는 괄호
+    }); 
 	</script>
         
         
