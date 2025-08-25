@@ -1,11 +1,19 @@
 package com.javaex.controller;
 
-import com.javaex.service.PrideService;
-import com.javaex.vo.PrideVO;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.javaex.service.PrideService;
+import com.javaex.vo.PrideVO;
 
 @Controller
 @RequestMapping("/pride")
@@ -14,7 +22,10 @@ public class PrideController {
     private final PrideService service;
     public PrideController(PrideService service){ this.service = service; }
 
-    @GetMapping("/list") public String list(){ return "pride/pridemain"; }
+    @GetMapping("/list")
+    public String list(){
+    	return "pride/pridemain";
+    }
 
     @ResponseBody
     @GetMapping("/api")
@@ -36,8 +47,7 @@ public class PrideController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable("id") Long teamPostNo, Model model){
-        model.addAttribute("pride", service.get(teamPostNo));
-        return "pride/detail";
+    public String detailNoDb(@PathVariable Long id) {
+        return "pride/pridepage";   // /WEB-INF/views/pride/pridepage.jsp
     }
 }

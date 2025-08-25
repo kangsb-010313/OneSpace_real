@@ -22,7 +22,19 @@ public class PrideService {
         return res;
     }
 
-    public PrideVO get(Long teamPostNo){ return repo.selectPrideOne(teamPostNo); }
+    public PrideVO get(Long teamPostNo){
+        PrideVO pride = repo.selectPrideOne(teamPostNo);
+        if (pride == null) {
+            pride = new PrideVO();
+            pride.setTeamPostTitle("임시 제목");
+            pride.setTeamContent("DB에 데이터가 없어 임시로 보여줍니다.");
+            pride.setInstaAccount("temp_insta");
+            pride.setTeamName("임시 팀");
+        }
+        return pride;
+    }
+    
+    
 
     public void write(PrideVO pride){ repo.insertPride(pride); }
 }

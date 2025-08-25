@@ -3,23 +3,18 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.javaex.repository.PrideRepository">
 
-  <!-- 팀자랑 목록 (teams 조인: 팀명/인스타 표시) -->
+  <!-- 팀자랑 목록 (조인/날짜컬럼 제거: 최소 컬럼만) -->
   <select id="selectPridePage" resultType="com.javaex.vo.PrideVO">
     SELECT
-      p.team_post_no     AS teamPostNo,
-      p.team_no          AS teamNo,
-      p.team_post_type   AS teamPostType,
-      p.team_post_title  AS teamPostTitle,
-      p.team_content     AS teamContent,
-      p.team_write_date  AS teamWriteDate,
-      p.team_update_date AS teamUpdateDate,
-      t.team_name        AS teamName,
-      t.insta_account    AS instaAccount
+      p.team_post_no   AS teamPostNo,
+      p.team_no        AS teamNo,
+      p.team_post_type AS teamPostType,
+      p.team_post_title AS teamPostTitle,
+      p.team_content   AS teamContent
     FROM posts p
-    LEFT JOIN teams t ON t.team_no = p.team_no
     WHERE p.team_post_type = 'TEAM_PRIDE'
     ORDER BY p.team_post_no DESC
-    LIMIT #{size} OFFSET #{offset}
+    LIMIT #{offset}, #{size}
   </select>
 
   <!-- 팀자랑 총 개수 -->
@@ -29,20 +24,15 @@
     WHERE team_post_type = 'TEAM_PRIDE'
   </select>
 
-  <!-- 팀자랑 상세 -->
+  <!-- 팀자랑 상세 (조인/날짜컬럼 제거: 최소 컬럼만) -->
   <select id="selectPrideOne" resultType="com.javaex.vo.PrideVO">
     SELECT
-      p.team_post_no     AS teamPostNo,
-      p.team_no          AS teamNo,
-      p.team_post_type   AS teamPostType,
-      p.team_post_title  AS teamPostTitle,
-      p.team_content     AS teamContent,
-      p.team_write_date  AS teamWriteDate,
-      p.team_update_date AS teamUpdateDate,
-      t.team_name        AS teamName,
-      t.insta_account    AS instaAccount
+      p.team_post_no    AS teamPostNo,
+      p.team_no         AS teamNo,
+      p.team_post_type  AS teamPostType,
+      p.team_post_title AS teamPostTitle,
+      p.team_content    AS teamContent
     FROM posts p
-    LEFT JOIN teams t ON t.team_no = p.team_no
     WHERE p.team_post_no = #{teamPostNo}
       AND p.team_post_type = 'TEAM_PRIDE'
   </select>
@@ -53,5 +43,4 @@
     INSERT INTO posts (team_no, team_post_type, team_post_title, team_content, team_write_date)
     VALUES (#{teamNo}, 'TEAM_PRIDE', #{teamPostTitle}, #{teamContent}, NOW())
   </insert>
-
 </mapper>

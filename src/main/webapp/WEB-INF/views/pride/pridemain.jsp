@@ -37,7 +37,7 @@
                     <div class="team-grid">
             <!-- 카드 1 -->
             <article class="team-card">
-            	<a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
+            	<a class="card-link" href="<c:url value='/pride/detail/1'/>" aria-label="상세보기"></a>
               <img src="../../assets/images/댄스팀 연습 사진01.jpg" alt="팀 원밀리언 프로필 이미지" />
               <div class="team-info">
                 <h2 class="team-title">팀 원밀리언</h2>
