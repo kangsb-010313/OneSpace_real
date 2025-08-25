@@ -1,57 +1,34 @@
 package com.javaex.repository;
 
 import java.util.List;
-
-import com.javaex.vo.RoomsVO;
-import com.javaex.vo.RoomPriceVO;
-import com.javaex.vo.RoomsVO.RoomAttachment;
-
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import com.javaex.vo.RoomPriceVO;
+import com.javaex.vo.RoomsVO;
 
 @Repository
 public class RoomRepository {
 
-    private static final String NS = "room.";
-    @Autowired private SqlSessionTemplate sqlsession;
+    private final SqlSessionTemplate sql;
+    public RoomRepository(SqlSessionTemplate sql) { this.sql = sql; }
 
-    // rooms
-    public List<RoomsVO> select_rooms_by_spacesno(Long spacesNo) {
-        return sqlsession.selectList(NS + "select_rooms_by_spacesno", spacesNo);
-    }
-    public RoomsVO select_room_detail(Long roomNo) {
-        return sqlsession.selectOne(NS + "select_room_detail", roomNo);
-    }
-    public int insert_room(RoomsVO vo) {
-        return sqlsession.insert(NS + "insert_room", vo);
-    }
-    public int update_room(RoomsVO vo) {
-        return sqlsession.update(NS + "update_room", vo);
-    }
-    public int delete_room(Long roomNo) {
-        return sqlsession.delete(NS + "delete_room", roomNo);
-    }
-
-    // prices (RoomPriceVO)
-    public int insert_price(RoomPriceVO vo) {
-        return sqlsession.insert(NS + "insert_price", vo);
-    }
-    public int delete_prices_by_room(Long roomNo) {
-        return sqlsession.delete(NS + "delete_prices_by_room", roomNo);
-    }
-    public List<RoomPriceVO> select_prices(Long roomNo) {
-        return sqlsession.selectList(NS + "select_prices", roomNo);
-    }
-
-    // photos
-    public int insert_photo(RoomsVO.RoomAttachment vo) {
-        return sqlsession.insert(NS + "insert_photo", vo);
+    // 조회
+    public RoomsVO select_room_with_prices(Long roomNo) {
+        return sql.selectOne("room.select_room_with_prices", roomNo);
     }
     public List<RoomsVO.RoomAttachment> select_photos(Long roomNo) {
-        return sqlsession.selectList(NS + "select_photos", roomNo);
+        return sql.selectList("room.select_photos", roomNo);
     }
-    public int delete_photos_by_room(Long roomNo) {
-        return sqlsession.delete(NS + "delete_photos_by_room", roomNo);
-    }
+
+    // 기본 저장/수정
+    public int insert_room(RoomsVO vo) { return sql.insert("room.insert_room", vo); }
+    public int update_room(RoomsVO vo) { return sql.update("room.update_room", vo); }
+
+    // 가격 교체
+    public int delete_prices_by_room(Long roomNo) { return sql.delete("room.delete_prices_by_room", roomNo); }
+    public int insert_prices_batch(List<RoomPriceVO> list) { return sql.insert("room.insert_prices_batch", list); }
+
+    // 사진 교체
+    public int delete_photos_by_room(Long roomNo){ return sql.delete("room.delete_photos_by_room", roomNo); }
+    public int insert_photo(RoomsVO.RoomAttachment a){ return sql.insert("room.insert_photo", a); }
 }

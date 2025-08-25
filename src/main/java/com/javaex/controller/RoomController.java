@@ -3,100 +3,131 @@ package com.javaex.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.javaex.service.RoomService;
-import com.javaex.vo.RoomsVO;
-import com.javaex.vo.RoomPriceVO;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import com.javaex.service.RoomService;
+import com.javaex.vo.RoomPriceVO;
+import com.javaex.vo.RoomsVO;
+import com.javaex.vo.RoomsVO.RoomAttachment;
 
 @Controller
 @RequestMapping("/onespace/hostcenter/rooms")
 public class RoomController {
 
-    @Autowired private RoomService roomService;
+    private final RoomService roomService;
 
-    /** 연습실 등록 폼 */
-    @GetMapping("/new")
-    public String form_new(@RequestParam("spacesNo") Long spacesNo, Model model) {
-        model.addAttribute("spacesNo", spacesNo);
-        return "forward:/WEB-INF/views/admin/host/host_info2.jsp";
+    public RoomController(RoomService roomService) {
+        this.roomService = roomService;
     }
 
-    /** 연습실 저장 */
-    @PostMapping("/save")
-    public String save(@ModelAttribute RoomsVO vo,
-                       @RequestParam(value="dayType", required=false) List<String> dayType,
-                       @RequestParam(value="startTime", required=false) List<String> startTime,
-                       @RequestParam(value="endTime", required=false) List<String> endTime,
-                       @RequestParam(value="hourlyPrice", required=false) List<String> hourlyPrice) {
+    /* ========== 폼/뷰 ========== */
 
-        List<RoomPriceVO> prices = build_prices(dayType, startTime, endTime, hourlyPrice);
-        Long roomNo = roomService.create_room_with_prices_photos(vo, prices, null);
-        return "redirect:/onespace/hostcenter/rooms/" + roomNo;
+    /** 신규 등록 폼 */
+    @GetMapping("/new")
+    public String formNew(@RequestParam("spacesNo") Long spacesNo, Model model) {
+        model.addAttribute("spacesNo", spacesNo);
+        return "admin/host/host_info2"; // 화면 경로에 맞게 수정
     }
 
     /** 상세 보기 */
     @GetMapping("/{roomNo}")
     public String view(@PathVariable Long roomNo, Model model) {
-        RoomsVO room = roomService.get_detail(roomNo);
-        model.addAttribute("room", room);
-        return "forward:/WEB-INF/views/admin/host/host_manage_added.jsp";
+        RoomsVO vo = roomService.get_detail(roomNo); // JOIN 한 번 + 사진 별도
+        model.addAttribute("vo", vo);
+        return "admin/host/host_manage_added"; // 화면 경로에 맞게 수정
     }
 
-    /** 수정 폼 */
-    @GetMapping("/{roomNo}/edit")
-    public String form_edit(@PathVariable Long roomNo, Model model) {
-        RoomsVO room = roomService.get_detail(roomNo);
-        model.addAttribute("room", room);
-        model.addAttribute("spacesNo", room != null ? room.getSpacesNo() : null);
-        return "forward:/WEB-INF/views/admin/host/host_info2.jsp";
-    }
+    /* ========== 저장/수정 ========== */
 
-    /** 수정 저장 */
-    @PostMapping("/{roomNo}/update")
-    public String update(@PathVariable Long roomNo,
-                         @ModelAttribute RoomsVO vo,
-                         @RequestParam(value="dayType", required=false) List<String> dayType,
-                         @RequestParam(value="startTime", required=false) List<String> startTime,
-                         @RequestParam(value="endTime", required=false) List<String> endTime,
-                         @RequestParam(value="hourlyPrice", required=false) List<String> hourlyPrice) {
+    /**
+     * 저장(신규/수정 공용): 기본정보 → 가격 완전교체 → 사진 완전교체
+     *
+     * 프런트에서 아래 배열 파라미터가 들어온다고 가정
+     * - dayType[], startTime[], endTime[], hourlyPrice[]
+     * - photoName[](storedFileName), originName[], photoPath[], contentType[], fileSize[]
+     */
+    @PostMapping("/save")
+    public String save(@ModelAttribute RoomsVO vo,
+                       @RequestParam(value = "dayType",     required = false) List<String>  dayType,
+                       @RequestParam(value = "startTime",   required = false) List<String>  startTime,
+                       @RequestParam(value = "endTime",     required = false) List<String>  endTime,
+                       // 🔧 변경: 인풋은 String이므로 String 리스트로 받기
+                       @RequestParam(value = "hourlyPrice", required = false) List<String>  hourlyPrice,
 
-        vo.setRoomNo(roomNo);
-        roomService.update_room_with_prices(vo, build_prices(dayType, startTime, endTime, hourlyPrice));
+                       @RequestParam(value = "photoName",   required = false) List<String>  storedFileName,
+                       @RequestParam(value = "originName",  required = false) List<String>  originFileName,
+                       @RequestParam(value = "photoPath",   required = false) List<String>  filePath,
+                       @RequestParam(value = "contentType", required = false) List<String>  contentType,
+                       @RequestParam(value = "fileSize",    required = false) List<Long>    fileSize) {
+
+        // 0) 썸네일 기본값: 폼에서 thumbImg가 비어 있으면 첫 번째 사진으로
+        if ((vo.getThumbImg() == null || vo.getThumbImg().isBlank())
+                && storedFileName != null && !storedFileName.isEmpty()) {
+            vo.setThumbImg(storedFileName.get(0));
+        }
+
+        // 1) room 기본 저장/수정 (useGeneratedKeys 로 roomNo 세팅됨)
+        Long roomNo = roomService.create_or_update_room(vo);
+
+        // 2) 가격 리스트 빌드 후 완전교체
+        List<RoomPriceVO> prices = new ArrayList<>();
+        if (dayType != null) {
+            int n = dayType.size();
+            for (int i = 0; i < n; i++) {
+                RoomPriceVO p = new RoomPriceVO();
+                p.setDayType(dayType.get(i));
+                p.setStartTime(safeGet(startTime, i));
+                p.setEndTime(safeGet(endTime, i));
+
+                // 🔧 변경: String → Integer 변환해서 set
+                String priceStr = safeGet(hourlyPrice, i);
+                if (priceStr != null && !priceStr.isBlank()) {
+                    try {
+                        p.setHourlyPrice(Integer.valueOf(priceStr.trim()));
+                    } catch (NumberFormatException e) {
+                        p.setHourlyPrice(null); // 숫자 아님 → null로 저장
+                    }
+                } else {
+                    p.setHourlyPrice(null);
+                }
+
+                prices.add(p);
+            }
+        }
+        roomService.replace_prices(roomNo, prices);
+
+        // 3) 사진 리스트 빌드 후 완전교체 (업로드는 다른 곳에서 이미 처리되고 메타만 저장)
+        List<RoomAttachment> photos = new ArrayList<>();
+        if (storedFileName != null) {
+            int n = storedFileName.size();
+            for (int i = 0; i < n; i++) {
+                RoomAttachment a = new RoomAttachment();
+                a.setStoredFileName(storedFileName.get(i));
+                a.setOriginFileName(safeGet(originFileName, i, storedFileName.get(i)));
+                a.setFilePath(safeGet(filePath, i, "/uploads/rooms/" + roomNo + "/"));
+                a.setContentType(safeGet(contentType, i, "image/jpeg"));
+                a.setFileSize(safeGet(fileSize, i, 0L));
+                photos.add(a);
+            }
+        }
+        roomService.replace_photos(roomNo, photos);
+
         return "redirect:/onespace/hostcenter/rooms/" + roomNo;
     }
 
-    /** 삭제 */
-    @PostMapping("/{roomNo}/delete")
-    public String delete(@PathVariable Long roomNo,
-                         @RequestParam("spacesNo") Long spacesNo) {
-        roomService.delete_room_cascade(roomNo);
-        return "redirect:/onespace/hostcenter/rooms/new?spacesNo=" + spacesNo;
+    /* ========== 유틸 ========== */
+
+    private static String safeGet(List<String> list, int idx) {
+        return (list != null && list.size() > idx) ? list.get(idx) : null;
     }
 
-    /* form 배열 -> RoomPriceVO 리스트 변환 */
-    private List<RoomPriceVO> build_prices(List<String> dayType,
-                                           List<String> startTime,
-                                           List<String> endTime,
-                                           List<String> hourlyPrice) {
-        List<RoomPriceVO> prices = new ArrayList<>();
-        if (dayType == null || startTime == null || endTime == null || hourlyPrice == null) return prices;
+    private static String safeGet(List<String> list, int idx, String def) {
+        return (list != null && list.size() > idx && list.get(idx) != null) ? list.get(idx) : def;
+    }
 
-        int n = Math.min(Math.min(dayType.size(), startTime.size()),
-                         Math.min(endTime.size(), hourlyPrice.size()));
-
-        for (int i = 0; i < n; i++) {
-            RoomPriceVO p = new RoomPriceVO();
-            p.setDayType(dayType.get(i));
-            p.setStartTime(startTime.get(i));
-            p.setEndTime(endTime.get(i));
-            String hp = hourlyPrice.get(i);
-            p.setHourlyPrice((hp == null || hp.isBlank()) ? 0 : Integer.parseInt(hp.replaceAll("[^0-9]", "")));
-            prices.add(p);
-        }
-        return prices;
+    private static Long safeGet(List<Long> list, int idx, Long def) {
+        return (list != null && list.size() > idx && list.get(idx) != null) ? list.get(idx) : def;
     }
 }
