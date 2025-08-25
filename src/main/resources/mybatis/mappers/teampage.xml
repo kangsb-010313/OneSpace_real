@@ -445,6 +445,23 @@
         where vr.voteNo = #{voteNo} 
         order by vr.votedTime asc
     </select>
+    
+    <!-- 특정 유저가 특정 '후보(voteNo)'에 투표했는지 카운트 -->
+	<select id="checkIfUserVotedForOption" parameterType="map" resultType="int">
+	    select count(*)
+	    from voteResults
+	    where userNo = #{userNo}
+	      and voteNo = #{voteNo}
+	</select>
+	
+	<!-- 특정 유저가 특정 '게시글(postNo)'에서 투표한 모든 voteNo 리스트 조회 -->
+	<select id="selectUserVotedOptionsInPost" parameterType="map" resultType="int">
+	    select vr.voteNo
+	    from voteResults vr
+	    join votes v on vr.voteNo = v.voteNo
+	    where vr.userNo = #{userNo}
+	      and v.postNo = #{postNo}
+	</select>
 
 	<!-- ==================== 예약 확정 기능 관련 쿼리 ==================== -->
 	

@@ -269,6 +269,18 @@ public class TeampageRepository {
 	    return sqlSession.selectList("teampage.selectVotersByVoteNo", voteNo);
 	}
 	
+	// 특정 유저가 특정 '후보'에게 투표했는지 확인
+	public int checkIfUserVotedForOption(Map<String, Object> params) {
+	   System.out.println("TeampageRepository.checkIfUserVotedForOption()");
+	   return sqlSession.selectOne("teampage.checkIfUserVotedForOption", params);
+	}
+
+	// 특정 유저가 특정 '게시글'에서 투표한 모든 voteNo 목록 조회
+	public List<Integer> selectUserVotedOptionsInPost(Map<String, Object> params) {
+	    System.out.println("TeampageRepository.selectUserVotedOptionsInPost()");
+	    return sqlSession.selectList("teampage.selectUserVotedOptionsInPost", params);
+	}
+	
 	// ==================== 예약 확정 기능 관련 ====================
 	// 특정 게시글에서 최다 득표한 voteNo 조회
 	public Integer selectTopVotedVoteNo(int postNo) {

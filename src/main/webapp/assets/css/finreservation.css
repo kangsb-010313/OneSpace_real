@@ -242,3 +242,56 @@
     background-color: #5a379e;
 }
 
+.post-actions {
+    bottom: 20px;       /* 부모의 맨 아래에서 20px 위 */
+    right: 15px;        /* 부모의 맨 오른쪽에서 15px 왼쪽 */
+    display: flex;      /* 버튼들을 가로로 정렬하기 위해 유지 */
+    gap: 10px;          /* 버튼 사이의 간격 */
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+/* 버튼 공통 스타일 */
+.btn-action {
+    display: inline-block;
+    padding: 10px 25px;
+    background-color: #704CE4;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: background-color 0.3s;
+    border: none;
+}
+
+.btn-action:hover {
+    background-color: #5a379e;
+}
+/* 하단 버튼 영역 수정 */
+.post-actions {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    padding: 20px 0;
+}
+
+.post-actions .btn-action.btn-share {
+    background-color: #fff;
+    border: 1px solid #704CE4;
+    color: #704CE4;
+}
+
+.post-actions .btn-action.btn-share:hover{
+    background-color: #704CE4;
+    color: #fff;
+}
+
+.post-actions .btn-action {
+    background-color: #704CE4;
+    color: #fff;
+    padding: 10px 30px;
+}
+
+.post-actions .btn-action:hover {
+    background-color: #5a379e;
+}

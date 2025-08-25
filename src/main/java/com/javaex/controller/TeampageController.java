@@ -2,7 +2,6 @@ package com.javaex.controller;
 
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -285,58 +284,74 @@ public class TeampageController {
             System.out.println(saveName + " 이미지 파일을 찾을 수 없습니다.");
         }
     }
+    
+    
+	 //--팀페이지 등록 글 보기
+	 // URL: /onespace/teams/{teamNo}/posts/{teamPostNo}
+	 @RequestMapping(value="/teams/{teamNo}/posts/{teamPostNo}", method= {RequestMethod.GET, RequestMethod.POST})
+	 public String viewPost(@PathVariable("teamNo") int teamNo, 
+	                        @PathVariable("teamPostNo") int teamPostNo,
+	                        HttpSession session,
+	                        Model model) {
+	     System.out.println("TeampageController.viewPost() for teamPostNo: " + teamPostNo);
+	     
+	     UserVO authUser = (UserVO)session.getAttribute("authUser");
+	     if(authUser == null) { return "redirect:/onespace/loginForm"; }
+	     
+	     // --- 기본 정보 조회 및 모델에 추가 ---
+	     int userNo = authUser.getUserNo();
+	     TeamPostVO post = teampageService.exeGetPost(teamPostNo);
+	     TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
+	     List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
+	     
+	     model.addAttribute("post", post);
+	     model.addAttribute("teamNo", teamNo);
+	     model.addAttribute("teamName", currentTeam.getTeamName());
+	     model.addAttribute("allTeams", userTeamList);
+	     model.addAttribute("isMember", teampageService.isUserMember(userNo, teamNo));
 	
-	//--팀페이지 등록 글 보기
-	// URL: /onespace/teams/{teamNo}/posts/{teamPostNo}
-    @RequestMapping(value="/teams/{teamNo}/posts/{teamPostNo}", method= {RequestMethod.GET, RequestMethod.POST})
-    public String viewPost(@PathVariable("teamNo") int teamNo, 
-                           @PathVariable("teamPostNo") int teamPostNo,
-                           HttpSession session,
-                           Model model) {
-        System.out.println("TeampageController.viewPost() for teamPostNo: " + teamPostNo);
-        
-        //로그인 체크
-        UserVO authUser = (UserVO)session.getAttribute("authUser");
-        if(authUser == null) {
-            return "redirect:/onespace/loginForm";
-        }
-        
-        int userNo = authUser.getUserNo();
-        
-        // 현재 로그인한 유저가 이 팀의 멤버인지 확인
-        boolean isMember = teampageService.isUserMember(userNo, teamNo);
-        model.addAttribute("isMember", isMember); // 결과를 모델에 담아 JSP로 전달
-        
-        //  현재 보고 있는 글이 '환영(등록) 게시글'인지 확인
-        boolean isWelcomePost = teampageService.isWelcomePost(teamPostNo, teamNo);
-        model.addAttribute("isWelcomePost", isWelcomePost);
-
-        // 1. 게시글 기본 정보 가져오기
-        TeamPostVO post = teampageService.exeGetPost(teamPostNo);
-        model.addAttribute("post", post); // 게시글 정보를 "post"라는 이름으로 JSP에 전달
-        
-        // 2. 만약 게시글 타입이 '투표'라면, 투표 옵션 목록을 추가로 가져온다.
-        if (post != null && "투표".equals(post.getTeamPostType())) {
-            List<TeamVotePostVO> voteOptions = teampageService.getVoteOptions(teamPostNo);
-            model.addAttribute("voteOptions", voteOptions);
-            System.out.println("가져온 투표 옵션: " + voteOptions);
-        }
-
-        // JSP에서 '목록으로' 돌아갈 때 현재 팀 번호가 필요할 수 있으므로 일단 전달
-        model.addAttribute("teamNo", teamNo); 
-        
-        List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
-        model.addAttribute("allTeams", userTeamList);
-
-        TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
-        if (currentTeam != null) {
-            model.addAttribute("teamName", currentTeam.getTeamName());
-        } else {
-            model.addAttribute("teamName", "알 수 없는 팀");
-        }
-
-        return "teampage/view";
-    }
+	     // --- (핵심) 게시글 종류에 따라 추가 정보 조회 ---
+	     if (post != null) {
+	         String postType = post.getTeamPostType();
+	
+	         if ("투표".equals(postType)) {
+	             // '투표' 글일 경우: 투표 옵션 목록 조회
+	             List<TeamVotePostVO> voteOptions = teampageService.getVoteOptions(teamPostNo);
+	             model.addAttribute("voteOptions", voteOptions);
+	             
+	             // (핵심) 현재 로그인한 유저가 이 게시글의 어떤 후보에게 투표했는지 목록 조회
+	             List<Integer> userVotedList = teampageService.exeGetUserVotedOptions(userNo, teamPostNo);
+	             model.addAttribute("userVotedList", userVotedList);
+	
+	         } else if ("연습일정".equals(postType)) {
+	             // '연습일정' 글일 경우: 확정된 예약 정보 조회
+	             String content = post.getTeamContent();
+	             
+	             // 1. 내용에서 숨겨둔 voteNo 추출
+	             if (content != null && content.startsWith("[CONFIRMED_VOTE_NO:")) {
+	                 try {
+	                     int start = content.indexOf(":") + 1;
+	                     int end = content.indexOf("]");
+	                     int confirmedVoteNo = Integer.parseInt(content.substring(start, end));
+	                     
+	                     // 2. voteNo로 상세 정보(연습실 정보 + 투표자 목록) 조회
+	                     Map<String, Object> confirmedInfo = teampageService.exeGetReservationInfoByVoteNo(confirmedVoteNo);
+	                     
+	                     // 3. 모델에 담기
+	                     if (confirmedInfo != null) {
+	                         model.addAttribute("confirmedOption", confirmedInfo.get("topOption"));
+	                         model.addAttribute("voters", confirmedInfo.get("voters"));
+	                     }
+	                     
+	                 } catch (Exception e) {
+	                     System.out.println("연습일정 정보 파싱 실패: " + e.getMessage());
+	                 }
+	             }
+	         }
+	     }
+	
+	     return "teampage/view";
+	 }
     
 	
     // -- 팀페이지 등록글 수정 폼

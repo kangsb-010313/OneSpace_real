@@ -298,24 +298,36 @@ public class TeampageService {
 	}
 	
 	// ==================== 투표 기능 관련 ====================
-	// 투표 기록하기 (중복 투표 허용 버전)
+	// 투표 기록하기 (같은 후보 중복 투표 방지)
 	@Transactional
 	public boolean exeAddVote(int userNo, int voteNo, int postNo) {
 	    System.out.println("TeampageService.exeAddVote()");
 	    
-//	    Map<String, Object> params = new HashMap<>();
-//	    params.put("userNo", userNo);
-//	    params.put("postNo", postNo);
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("userNo", userNo);
+	    params.put("voteNo", voteNo);
 
-	    // 투표 안했으면 기록 추가
-        Map<String, Object> voteParams = new HashMap<>();
-        voteParams.put("userNo", userNo);
-        voteParams.put("voteNo", voteNo); // 어떤 '후보'에 투표했는지
-        
-        teampageRepository.insertVoteResult(voteParams);
-        
-        return true;
+	    // 1. 이 후보에게 이미 투표했는지 확인
+	    int count = teampageRepository.checkIfUserVotedForOption(params);
 	    
+	    // 2. 투표한 기록이 없으면(0이면) 새로 추가
+	    if (count == 0) {
+	        teampageRepository.insertVoteResult(params);
+	        return true; // 성공
+	    } else {
+	        return false; // 이미 투표함 (실패)
+	    }
+	}
+	
+	// 특정 유저가 특정 게시글에서 투표한 후보(voteNo) 목록 가져오기
+	public List<Integer> exeGetUserVotedOptions(int userNo, int postNo) {
+	    System.out.println("TeampageService.exeGetUserVotedOptions()");
+	    
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("userNo", userNo);
+	    params.put("postNo", postNo);
+	    
+	    return teampageRepository.selectUserVotedOptionsInPost(params);
 	}
 
 	// 특정 후보에 투표한 유저 목록 가져오기
@@ -346,27 +358,52 @@ public class TeampageService {
 	@Transactional
 	public int exeFinalizeReservation(int postNo, int userNo) {
 	    System.out.println("TeampageService.exeFinalizeReservation()");
+	    
+	    // 1. 최다 득표 voteNo 찾기
 	    int topVoteNo = teampageRepository.selectTopVotedVoteNo(postNo);
+	    
+	    // 2. 해당 voteOption의 상태를 2(예약확정)로 변경
 	    teampageRepository.updateVoteStatusToConfirmed(topVoteNo);
 	    
+	    // 3. 자동 게시글 생성을 위해 확정된 후보의 정보 가져오기
 	    TeamVotePostVO confirmedOption = teampageRepository.getVoteOptionDetail(topVoteNo);
 	    TeamPostVO originalPost = teampageRepository.teampageSelectPostByNo(postNo);
 	    
+	    // 4. '연습일정' 게시글 자동 생성
 	    TeamPostVO schedulePost = new TeamPostVO();
 	    schedulePost.setTeamNo(originalPost.getTeamNo());
-	    schedulePost.setUserNo(userNo);
-	    schedulePost.setTeamPostType("일반공지");
+	    schedulePost.setUserNo(userNo); // 팀장 userNo
+	    
+	    // 4-1. (핵심) 게시글 타입을 '연습일정'으로 지정
+	    schedulePost.setTeamPostType("연습일정"); 
 	    schedulePost.setTeamPostTitle("[연습일정 확정] " + confirmedOption.getRoomName());
+	    
+	    // 4-2. (핵심) 내용에 확정된 voteNo를 식별자로 숨겨둠
 	    schedulePost.setTeamContent(
-	        "팀 연습일정이 확정되었습니다.\n\n" +
-	        "연습실: " + confirmedOption.getSpaceName() + " (" + confirmedOption.getRoomName() + ")\n" +
-	        "날짜: " + confirmedOption.getVoteDate() + "\n" +
-	        "시간: " + confirmedOption.getStartTime() + " ~ " + confirmedOption.getEndTime() + "\n\n" +
-	        "모든 팀원은 일정을 확인해주세요."
+	        "[CONFIRMED_VOTE_NO:" + topVoteNo + "]\n\n" + // JSP에서는 보이지 않을 식별자
+	        "팀 연습일정이 확정되었습니다.\n" +
+	        "자세한 내용은 아래를 확인해주세요."
 	    );
 	    
 	    teampageRepository.teampageInsert(schedulePost);
+	    
+	    // 5. 방금 만든 게시글 번호를 Controller에 반환
 	    return teampageRepository.selectLastPostNo(userNo);
 	}
+	
+	// voteNo로 예약 정보(후보 상세 + 투표자 목록) 조회
+	public Map<String, Object> exeGetReservationInfoByVoteNo(int voteNo) {
+	    System.out.println("TeampageService.exeGetReservationInfoByVoteNo()");
+	    
+	    TeamVotePostVO topOption = teampageRepository.getVoteOptionDetail(voteNo);
+	    List<TeamVoteResultVO> voters = teampageRepository.selectVotersByVoteNo(voteNo);
+	    
+	    Map<String, Object> reservationInfo = new HashMap<>();
+	    reservationInfo.put("topOption", topOption);
+	    reservationInfo.put("voters", voters);
+	    
+	    return reservationInfo;
+	}
+	
 	
 }
