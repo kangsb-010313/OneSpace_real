@@ -224,8 +224,6 @@ public class TeampageService {
 	    int count = teampageRepository.selectMemberCount(userNo, teamNo);
 	    return count > 0;
 	}
-	
-	// TeampageService.java
 
 
 	// 특정 게시글이 해당 팀의 첫 환영 게시글인지 확인하는 메소드
