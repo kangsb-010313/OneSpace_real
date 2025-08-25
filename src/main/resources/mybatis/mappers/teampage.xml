@@ -317,95 +317,95 @@
 	
 	<!-- 투표 만들기를 위해 날짜/시간이 지정된 후보 목록을 조회하는 쿼리 (roomAttachments 테이블 사용) -->
     <select id="selectVoteCandidates" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
-        SELECT
+        select
             v.voteNo, 
             r.roomNo, 
             s.spaceName, 
             r.roomName, 
             v.totalPrice,
-            SUBSTRING_INDEX(SUBSTRING_INDEX(s.address, ' ', 2), ' ', -1) AS address,
+            SUBSTRING_INDEX(SUBSTRING_INDEX(s.address, ' ', 2), ' ', -1) as address,
             vo.voteDate, 
-            MIN(vo.voteTime) AS startTime,
+            min(vo.voteTime) as startTime,
             TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
-            (SELECT storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) AS picturesNo,
+            (select storedFileName from roomAttachments where roomNo = r.roomNo LIMIT 1) as picturesNo,
             (
-                SELECT GROUP_CONCAT( CASE WHEN fi.facilityName = '블루투스 스피커' THEN '스피커' ELSE fi.facilityName END SEPARATOR ', ')
-                FROM spacesGuide sg 
-                JOIN facilityInfo fi ON sg.facilityNo = fi.facilityNo
-                WHERE sg.spacesNo = s.spacesNo AND fi.facilityName IN ('주차', '조명', '블루투스 스피커')
-            ) AS spacesGuideNo,
+                select group_concat( case when fi.facilityName = '블루투스 스피커' then '스피커' else fi.facilityName END SEPARATOR ', ')
+                from spacesGuide sg 
+                join facilityInfo fi on sg.facilityNo = fi.facilityNo
+                where sg.spacesNo = s.spacesNo and fi.facilityName in ('주차', '조명', '블루투스 스피커')
+            ) as spacesGuideNo,
             (
-                SELECT COUNT(DISTINCT v2.userNo) 
-                FROM voteOptions vo2 
-                JOIN votes v2 ON vo2.voteNo = v2.voteNo
-                WHERE vo2.roomNo = vo.roomNo 
-                AND vo2.voteDate = vo.voteDate 
-                AND vo2.voteTime = vo.voteTime 
-                AND v2.postNo IS NOT NULL
-            ) AS competitionCount
-        FROM votes v
-        JOIN voteOptions vo ON v.voteNo = vo.voteNo
-        JOIN rooms r ON vo.roomNo = r.roomNo
-        JOIN spaces s ON r.spacesNo = s.spacesNo
-        WHERE v.userNo = #{userNo} AND v.postNo IS NULL AND vo.voteStatus = 0
-        GROUP BY v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
-        ORDER BY vo.voteDate, startTime
+                select count(DISTINCT v2.userNo) 
+                from voteOptions vo2 
+                join votes v2 ON vo2.voteNo = v2.voteNo
+                where vo2.roomNo = vo.roomNo 
+                and vo2.voteDate = vo.voteDate 
+                and vo2.voteTime = vo.voteTime 
+                and v2.postNo is not null
+            ) as competitionCount
+        from votes v
+        join voteOptions vo ON v.voteNo = vo.voteNo
+        join rooms r ON vo.roomNo = r.roomNo
+        join spaces s ON r.spacesNo = s.spacesNo
+        where v.userNo = #{userNo} AND v.postNo IS NULL AND vo.voteStatus = 0
+        group by v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
+        order by vo.voteDate, startTime
     </select>
 	
 	
 	<!-- postNo로 해당 게시글의 투표 후보 목록 조회  -->
     <select id="selectVoteOptionsByPostNo" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
-	    SELECT
+	    select
 	        v.voteNo,
 	        s.spaceName,
 	        r.roomName,
 	        r.roomNo,
 	        SUBSTRING_INDEX(SUBSTRING_INDEX(s.address, ' ', 2), ' ', -1) AS address,
 	        vo.voteDate,
-	        MIN(vo.voteTime) AS startTime,
+	        min(vo.voteTime) as startTime,
 	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
 	        v.totalPrice,
-	        (SELECT storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) AS picturesNo,
+	        (select storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) AS picturesNo,
 	        (
-	            SELECT GROUP_CONCAT(
+	            select group_concat(
 	                CASE WHEN fi.facilityName = '블루투스 스피커' THEN '스피커' ELSE fi.facilityName END
 	                SEPARATOR ', ')
-	            FROM spacesGuide sg JOIN facilityInfo fi ON sg.facilityNo = fi.facilityNo
-	            WHERE sg.spacesNo = s.spacesNo AND fi.facilityName IN ('주차', '조명', '블루투스 스피커')
-	        ) AS spacesGuideNo,
+	            from spacesGuide sg join facilityInfo fi on sg.facilityNo = fi.facilityNo
+	            where sg.spacesNo = s.spacesNo and fi.facilityName in ('주차', '조명', '블루투스 스피커')
+	        ) as spacesGuideNo,
 	
 	        /* (핵심) 이 후보의 시간과 겹치는 '등록된 다른 투표'가 몇 팀인지 계산 */
 	        (
-	            SELECT COUNT(DISTINCT v2.userNo)
-	            FROM votes v2
-	            JOIN voteOptions vo2 ON v2.voteNo = vo2.voteNo
-	            WHERE v2.postNo IS NOT NULL      /* 이미 등록된 투표 중에서 */
-	              AND v2.postNo != v.postNo      /* 이 게시글이 아닌 다른 게시글이 */
-	              AND vo2.roomNo = r.roomNo      /* 같은 연습실, */
-	              AND vo2.voteDate = vo.voteDate /* 같은 날짜에 */
-	              AND EXISTS (                   /* 겹치는 시간이 하나라도 존재하는 경우 */
-	                  SELECT 1
-	                  FROM voteOptions vo_current
-	                  WHERE vo_current.voteNo = v.voteNo
-	                    AND vo_current.voteTime = vo2.voteTime
+	            select count(DISTINCT v2.userNo)
+	            from votes v2
+	            join voteOptions vo2 ON v2.voteNo = vo2.voteNo
+	            where v2.postNo IS NOT NULL      /* 이미 등록된 투표 중에서 */
+	              and v2.postNo != v.postNo      /* 이 게시글이 아닌 다른 게시글이 */
+	              and vo2.roomNo = r.roomNo      /* 같은 연습실, */
+	              and vo2.voteDate = vo.voteDate /* 같은 날짜에 */
+	              and EXISTS (                   /* 겹치는 시간이 하나라도 존재하는 경우 */
+	                  select 1
+	                  from voteOptions vo_current
+	                  where vo_current.voteNo = v.voteNo
+	                    and vo_current.voteTime = vo2.voteTime
 	              )
-	        ) + 1 AS competitionCount /* 자기 자신을 포함해야 하므로 +1 */
+	        ) + 1 as competitionCount /* 자기 자신을 포함해야 하므로 +1 */
 	
-	    FROM votes v
-	    JOIN voteOptions vo ON v.voteNo = vo.voteNo
-	    JOIN rooms r ON vo.roomNo = r.roomNo
-	    JOIN spaces s ON r.spacesNo = s.spacesNo
-	    	WHERE v.postNo = #{postNo}
-	    GROUP BY v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
-	    ORDER BY vo.voteDate, startTime
+	    from votes v
+	    join voteOptions vo ON v.voteNo = vo.voteNo
+	    join rooms r ON vo.roomNo = r.roomNo
+	    join spaces s ON r.spacesNo = s.spacesNo
+	    	where v.postNo = #{postNo}
+	    group by v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
+	    order by vo.voteDate, startTime
 	</select>
 	
 
 	<!-- 1. votes 테이블에 postNo 업데이트 -->
 	<update id="updatePostNoInVotes" parameterType="map">
-	    UPDATE votes
-	    SET postNo = #{postNo}
-	    WHERE voteNo IN
+	    update votes
+	    set postNo = #{postNo}
+	    where voteNo IN
 	    <!-- collection에 Map의 key인 "voteNoList"를 명시 -->
 	    <foreach item="voteNo" index="index" collection="voteNoList" open="(" separator="," close=")">
 	        #{voteNo}
@@ -414,9 +414,9 @@
 	
 	<!-- 2. voteOptions 테이블의 status를 1(투표중)로 업데이트 -->
 	<update id="updateStatusInVoteOptions" parameterType="map">
-	    UPDATE voteOptions
-	    SET voteStatus = 1
-	    WHERE voteNo IN
+	    update voteOptions
+	    set voteStatus = 1
+	    where voteNo IN
 	    <!-- collection에 Map의 key인 "voteNoList"를 명시 -->
 	    <foreach item="voteNo" index="index" collection="voteNoList" open="(" separator="," close=")">
 	        #{voteNo}
@@ -426,58 +426,60 @@
 	<!-- ==================== 투표 기능 관련 쿼리 ==================== -->
 	<!-- 특정 유저가 특정 게시글의 투표에 참여했는지 확인 (1인 1투표) -->
     <select id="checkIfUserVotedInPost" parameterType="map" resultType="int">
-        SELECT COUNT(vr.votedNo) 
-        FROM voteResults vr 
-        	JOIN votes v ON vr.voteNo = v.voteNo
-        WHERE vr.userNo = #{userNo} 
-        	AND v.postNo = #{postNo}
+        select count(vr.votedNo) 
+        from voteResults vr 
+        	join votes v on vr.voteNo = v.voteNo
+        where vr.userNo = #{userNo} 
+        	and v.postNo = #{postNo}
     </select>
 
 	<!-- voteResults 테이블에 투표 기록 추가 -->
     <insert id="insertVoteResult" parameterType="map">
-        INSERT INTO voteResults (votedNo, voteNo, userNo, votedTime)
-        VALUES (null, #{voteNo}, #{userNo}, now())
+        insert into voteResults (votedNo, voteNo, userNo, votedTime)
+        values (null, #{voteNo}, #{userNo}, now())
     </insert>
 
 	<!-- 특정 투표 후보(voteNo)에 투표한 모든 사람의 이름 조회 -->
     <select id="selectVotersByVoteNo" parameterType="int" resultType="com.javaex.vo.TeamVoteResultVO">
-        SELECT u.userNo, u.userName FROM voteResults vr JOIN users u ON vr.userNo = u.userNo
-        WHERE vr.voteNo = #{voteNo} ORDER BY vr.votedTime ASC
+        select u.userNo, u.userName from voteResults vr join users u on vr.userNo = u.userNo
+        where vr.voteNo = #{voteNo} 
+        order by vr.votedTime asc
     </select>
 
 	<!-- ==================== 예약 확정 기능 관련 쿼리 ==================== -->
 	
 	<!-- 특정 게시글에서 가장 많이 득표한 voteNo 찾기 -->
 	<select id="selectTopVotedVoteNo" parameterType="int" resultType="int">
-	    SELECT voteNo
-	    FROM voteResults
-	    WHERE voteNo IN (SELECT voteNo FROM votes WHERE postNo = #{postNo})
-	    GROUP BY voteNo
-	    ORDER BY COUNT(voteNo) DESC
-	    LIMIT 1
+	    select voteNo
+	    from voteResults
+	    where voteNo IN (SELECT voteNo FROM votes WHERE postNo = #{postNo})
+	    group by voteNo
+	    order by count(voteNo) desc
+	    limit 1
 	</select>
 	
 	<!-- 특정 후보(voteOption)의 상태를 2(예약확정)로 변경 -->
 	<update id="updateVoteStatusToConfirmed" parameterType="int">
-	    UPDATE voteOptions
-	    SET voteStatus = 2
-	    WHERE voteNo = #{voteNo}
+	    update voteOptions
+	    set voteStatus = 2
+	    where voteNo = #{voteNo}
 	</update>
 	
 	<!-- 특정 voteNo의 상세 정보를 가져오는 쿼리 -->
 	<select id="getVoteOptionDetail" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
-	    SELECT
+	    select
 	        v.voteNo, s.spaceName, r.roomName, r.roomNo,
 	        SUBSTRING_INDEX(SUBSTRING_INDEX(s.address, ' ', 2), ' ', -1) AS address,
-	        vo.voteDate, MIN(vo.voteTime) AS startTime,
+	        vo.voteDate, 
+	        min(vo.voteTime) as startTime,
 	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
 	        v.totalPrice
-	    FROM votes v
-	    JOIN voteOptions vo ON v.voteNo = vo.voteNo
-	    JOIN rooms r ON vo.roomNo = r.roomNo
-	    JOIN spaces s ON r.spacesNo = s.spacesNo
-	    WHERE v.voteNo = #{voteNo}
-	    GROUP BY v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
+	    from votes v
+	    join voteOptions vo ON v.voteNo = vo.voteNo
+	    join rooms r ON vo.roomNo = r.roomNo
+	    join spaces s ON r.spacesNo = s.spacesNo
+	    where v.voteNo = #{voteNo}
+	    group by v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
 	</select>
     
 
