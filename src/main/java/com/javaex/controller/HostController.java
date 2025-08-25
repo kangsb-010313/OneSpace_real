@@ -67,7 +67,7 @@ public class HostController {
             return "redirect:/onespace/hostcenter/spaces";
         }
         model.addAttribute("space", vo);
-        return "forward:/WEB-INF/views/admin/host/host_info.jsp";
+        return "forward:/WEB-INF/views/admin/host/host_info2.jsp";
     }
 
     /* 신규 저장 */

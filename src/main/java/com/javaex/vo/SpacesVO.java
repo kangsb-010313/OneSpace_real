@@ -14,6 +14,7 @@ public class SpacesVO {
     private String phone;
     private String tel;
     private String spaceLink;
+    private String repImg;
     private String postCode;
     private String address;
     private String addressDetail;
@@ -118,6 +119,9 @@ public class SpacesVO {
     public void setSpaceLink(String spaceLink) {
         this.spaceLink = spaceLink;
     }
+    
+    public String getRepImg() { return repImg; }
+    public void setRepImg(String repImg) { this.repImg = repImg; }
 
     public String getPostCode() {
         return postCode;
