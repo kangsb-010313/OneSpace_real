@@ -580,7 +580,7 @@ public class TeampageController {
         model.addAttribute("teamNo", teamNo);                                  // 현재 팀 번호
         model.addAttribute("originalPostNo", postNo);                          // 원래 투표 게시글 번호
         
-        // 새로 만든 JSP 파일로 요청을 넘김 (Forward)
+
         return "teampage/reservationConfirm"; 
     }
 
