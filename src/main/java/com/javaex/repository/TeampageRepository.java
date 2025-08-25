@@ -322,6 +322,11 @@ public class TeampageRepository {
 	    return sqlSession.update("teampage.updateAllVoteStatusInPost", params);
 	}
 
+	// voteNo로 실제 예약자 이름 조회
+	public String selectReserverNameByVoteNo(int voteNo) {
+	    System.out.println("TeampageRepository.selectReserverNameByVoteNo()");
+	    return sqlSession.selectOne("teampage.selectReserverNameByVoteNo", voteNo);
+	}
 	
 	
 }

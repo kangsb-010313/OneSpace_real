@@ -127,7 +127,7 @@
 								                    <div class="reservation-details">
 								                        <h3>예약정보</h3>
 								                        <ul class="reservation-info-list">
-								                            <li><span class="label">예약자명</span><span class="value">${sessionScope.authUser.userName}</span></li>
+								                            <li><span class="label">예약자명</span><span class="value">${reserverName}</span></li>
 								                            <li><span class="label">참여인원</span><span class="value">${fn:length(voters)}명</span></li>
 								                            <li><span class="label">예약날짜</span><span class="value">${confirmedOption.voteDate} ${confirmedOption.startTime}~${confirmedOption.endTime}</span></li>
 								                        </ul>

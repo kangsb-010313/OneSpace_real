@@ -499,8 +499,8 @@
 	
 	<!-- [최종 저장 2] 결제 완료 후, 영수증(recipt) 정보를 DB에 기록 -->
 	<insert id="insertReceipt" parameterType="com.javaex.vo.TeamReciptVO">
-	    insert into recipt(userNo, roomNo, paymentMethod, phoneNum, reservationTime)
-	    values (#{userNo}, #{roomNo}, #{paymentMethod}, #{phoneNum}, #{reservationTime})
+	    insert into recipt(userNo, roomNo, paymentMethod, phoneNum, reservationTime, voteNo)
+	    values (#{userNo}, #{roomNo}, #{paymentMethod}, #{phoneNum}, #{reservationTime}, #{voteNo})
 	</insert>
 	
 	<!-- [최종 저장 3] 원본 '투표' 게시글에 있던 모든 후보들의 상태를 '예약확정(2)'으로 변경하여 더 이상 투표할 수 없도록 막음 -->
@@ -509,6 +509,14 @@
 	    set voteStatus = #{status}
 	    where voteNo IN (select voteNo from votes where postNo = #{postNo})
 	</update>
+	
+	<!-- voteNo로 실제 예약자(결제자) 이름 조회 -->
+	<select id="selectReserverNameByVoteNo" parameterType="int" resultType="String">
+	    select u.userName
+	    from recipt r
+	    join users u on r.userNo = u.userNo
+	    where r.voteNo = #{voteNo}
+	</select>
 	
     
 

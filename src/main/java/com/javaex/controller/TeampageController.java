@@ -342,6 +342,7 @@ public class TeampageController {
 	                     if (confirmedInfo != null) {
 	                         model.addAttribute("confirmedOption", confirmedInfo.get("topOption"));
 	                         model.addAttribute("voters", confirmedInfo.get("voters"));
+	                         model.addAttribute("reserverName", confirmedInfo.get("reserverName")); 
 	                     }
 	                     
 	                 } catch (Exception e) {

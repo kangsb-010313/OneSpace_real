@@ -437,9 +437,13 @@ public class TeampageService {
 	    TeamVotePostVO topOption = teampageRepository.getVoteOptionDetail(voteNo);
 	    List<TeamVoteResultVO> voters = teampageRepository.selectVotersByVoteNo(voteNo);
 	    
+	    // Repository를 호출하여 실제 예약자 이름을 조회
+	    String reserverName = teampageRepository.selectReserverNameByVoteNo(voteNo);
+	    
 	    Map<String, Object> reservationInfo = new HashMap<>();
 	    reservationInfo.put("topOption", topOption);
 	    reservationInfo.put("voters", voters);
+	    reservationInfo.put("reserverName", reserverName); 
 	    
 	    return reservationInfo;
 	}
