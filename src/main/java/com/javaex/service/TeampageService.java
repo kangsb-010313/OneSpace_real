@@ -340,6 +340,24 @@ public class TeampageService {
 	    return teampageRepository.selectVotersByVoteNo(voteNo);
 	}
 	
+	/**
+	 * [신규] 투표 취소 로직
+	 * @param userNo 현재 로그인한 사용자 번호
+	 * @param voteNo 취소할 투표 후보 번호
+	 * @return 삭제 성공 시 true, 실패 시 false
+	 */
+	public boolean exeRemoveVote(int userNo, int voteNo) {
+	    System.out.println("TeampageService.exeRemoveVote()");
+	    
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("userNo", userNo);
+	    params.put("voteNo", voteNo);
+
+	    int count = teampageRepository.deleteVoteResult(params);
+
+	    return count > 0; // 1개 이상 삭제되었으면 true 반환
+	}
+	
 	// ==================== 예약 확정 기능 관련 ====================
 
 	/**

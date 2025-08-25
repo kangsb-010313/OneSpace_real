@@ -551,6 +551,20 @@ public class TeampageController {
         System.out.println("API: /api/getvoters");
         return teampageService.exeGetVoters(voteNo);
     }
+    
+    // API '투표 취소하기' 버튼 클릭 시 호출 (Ajax)
+    @ResponseBody
+    @RequestMapping(value="/api/removevote", method=RequestMethod.POST)
+    public boolean removeVote(@RequestParam("voteNo") int voteNo,
+                              HttpSession session) {
+        System.out.println("API: /api/removevote");
+        UserVO authUser = (UserVO)session.getAttribute("authUser");
+        if (authUser == null) { 
+            return false; 
+        }
+        
+        return teampageService.exeRemoveVote(authUser.getUserNo(), voteNo);
+    }
 	
     /**
      * [1단계: 페이지 로딩] '바로 예약하기' 버튼 클릭 시, 예약 정보를 확인하는 페이지로 이동시킵니다.

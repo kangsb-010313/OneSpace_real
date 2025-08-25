@@ -289,3 +289,28 @@
 .post-actions .btn-action:hover {
     background-color: #5a379e;
 }
+
+/* ================================== */
+/* 연습일정 참여 팀원 목록 스타일 (4명씩) */
+/* ================================== */
+
+.voted-members {
+    display: flex;         /* 자식 요소들을 가로로 정렬 */
+    flex-wrap: wrap;       /* 자식 요소들이 컨테이너를 넘치면 다음 줄로 자동 줄바꿈 */
+    gap: 10px;             /* 이름들 사이의 간격 (상하좌우) */
+    margin-top: 10px;      /* '#연습일정 참여 팀원' 제목과의 상단 간격 */
+}
+
+.voter-item {
+    /* (핵심) 한 줄에 4개가 들어가도록 너비 계산 */
+    /* 전체 너비의 25%에서 gap의 절반 정도를 뺀 값으로 설정 */
+    flex-basis: calc(25% - 8px); 
+    
+    box-sizing: border-box; /* 패딩, 테두리가 너비에 포함되도록 설정 */
+    
+    /* 보기 좋게 꾸미기 */
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+}

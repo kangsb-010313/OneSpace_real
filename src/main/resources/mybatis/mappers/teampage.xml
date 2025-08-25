@@ -453,6 +453,13 @@
 	    where vr.userNo = #{userNo}
 	      and v.postNo = #{postNo}
 	</select>
+	
+	<!-- '투표 취소'를 위해 voteResults 테이블에서 특정 투표 기록 삭제 -->
+	<delete id="deleteVoteResult" parameterType="map">
+	    delete from voteResults
+	    where userNo = #{userNo}
+	      and voteNo = #{voteNo}
+	</delete>
 
 	<!-- ==================== 예약 확정 기능 관련 쿼리 ==================== -->
 	

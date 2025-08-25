@@ -312,65 +312,82 @@
 	</script>
     
     <script>
-	$(document).ready(function() {
+    $(document).ready(function() {
 
-	    // 페이지 로딩 시, 각 후보의 투표자 목록을 가져옵니다.
-	    $(".voter-list").each(function() {
-	        var voteNo = $(this).attr("id").replace("voter-list-", "");
-	        if (voteNo) { fetchVoters(voteNo); }
-	    });
-	
-	    // '투표' 버튼 클릭 이벤트
-	    $(".btn-vote").on("click", function() {
-	        var $button = $(this); // 클릭된 버튼 요소를 변수에 저장
-	        var voteNo = $button.data("voteno");
-	        var postNo = "${post.teamPostNo}";
+        // 페이지 로딩 시, 각 후보의 투표자 목록을 가져옵니다.
+        $(".voter-list").each(function() {
+            var voteNo = $(this).attr("id").replace("voter-list-", "");
+            if (voteNo) { fetchVoters(voteNo); }
+        });
 
-            // (핵심) 이미 'active' 클래스가 있다면 (즉, 이미 투표했다면) 아무것도 하지 않음
+        // '투표' 버튼 클릭 이벤트 (괄호 위치 수정된 최종 버전)
+        $(".btn-vote").on("click", function() {
+            var $button = $(this); // 클릭된 버튼 요소
+            var voteNo = $button.data("voteno");
+        
+            // (핵심) 버튼이 이미 'active' 상태인지 (투표한 상태인지) 확인
             if ($button.hasClass('active')) {
-                // 여기서 나중에 '투표 취소' 로직을 넣을 수 있습니다.
-                // alert("이미 투표한 후보입니다.");
-                return;
-            }
+                // === 투표 취소 로직 ===
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/onespace/api/removevote",
+                    type: "POST",
+                    data: { voteNo: voteNo },
+                    success: function(result) {
+                        if (result) {
+                            $button.removeClass('active');
+                            fetchVoters(voteNo);
+                        } else {
+                            alert("투표 취소 중 오류가 발생했습니다.");
+                        }
+                    },
+                    error: function() {
+                        alert("서버와 통신 중 오류가 발생했습니다.");
+                    }
+                });
+        
+            } else {
+                // === 기존 투표하기 로직 ===
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/onespace/api/addvote",
+                    type: "POST", 
+                    data: { 
+                        voteNo: voteNo, 
+                        postNo: "${post.teamPostNo}"
+                    },
+                    success: function(result) {
+                        if (result) {
+                            $button.addClass('active');
+                            fetchVoters(voteNo);
+                        } else {
+                            alert("투표 처리 중 오류가 발생했습니다.");
+                        }
+                    },
+                    error: function() { 
+                        alert("서버와 통신 중 오류가 발생했습니다."); 
+                    }
+                });
+            } // if-else 문의 닫는 괄호
+        }); // .btn-vote.on("click", ...)의 닫는 괄호
 
-	        $.ajax({
-	            url: "${pageContext.request.contextPath}/onespace/api/addvote",
-	            type: "POST", 
-                data: { voteNo: voteNo, postNo: postNo },
-	            success: function(result) {
-	                if (result) {
-	                    // 성공 시, 버튼에 'active' 클래스 추가하여 보라색으로 만듦
-                        $button.addClass('active');
-	                    // 투표자 목록 실시간 갱신
-	                    fetchVoters(voteNo);
-	                } else {
-	                    // 서버에서 false를 반환한 경우 (이미 다른 후보에게 투표했거나 등)
-	                    alert("이미 투표하셨거나 오류가 발생했습니다.");
-	                }
-	            },
-	            error: function() { 
-                    alert("투표 처리 중 오류가 발생했습니다."); 
-                }
-	        });
-	    });
-	
-	    // 투표자 목록을 가져와서 화면에 뿌려주는 함수
-	    function fetchVoters(voteNo) {
-	        $.ajax({
-	            url: "${pageContext.request.contextPath}/onespace/api/getvoters",
-	            type: "GET", 
+        // 투표자 목록을 가져와서 화면에 뿌려주는 함수
+        function fetchVoters(voteNo) {
+            $.ajax({
+                url: "${pageContext.request.contextPath}/onespace/api/getvoters",
+                type: "GET", 
                 data: { voteNo: voteNo },
-	            success: function(voterList) {
-	                var voterListDiv = $("#voter-list-" + voteNo);
-	                voterListDiv.empty();
-	                voterList.forEach(function(voter) {
-	                    voterListDiv.append("<span>" + voter.userName + "</span>");
-	                });
-	            }
-	        });
-	    }
+                success: function(voterList) {
+                    var voterListDiv = $("#voter-list-" + voteNo);
+                    voterListDiv.empty();
+                    
+                    voterList.forEach(function(voter) {
+                        var voterHtml = '<span>' + voter.userName + '</span>';
+                        voterListDiv.append(voterHtml);
+                    });
+                }
+            });
+        }
 
-	});
+    }); // $(document).ready(...)의 닫는 괄호
 	</script>
         
         

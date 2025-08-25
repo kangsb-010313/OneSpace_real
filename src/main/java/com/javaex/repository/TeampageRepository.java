@@ -282,6 +282,12 @@ public class TeampageRepository {
 	    return sqlSession.selectList("teampage.selectUserVotedOptionsInPost", params);
 	}
 	
+	// 투표 기록 삭제 (투표 취소)
+	public int deleteVoteResult(Map<String, Object> params) {
+	    System.out.println("TeampageRepository.deleteVoteResult()");
+	    return sqlSession.delete("teampage.deleteVoteResult", params);
+	}
+	
 	// ==================== 예약 확정 기능 관련 ====================
 	// 특정 게시글에서 최다 득표한 voteNo 조회
 	public Integer selectTopVotedVoteNo(int postNo) {
