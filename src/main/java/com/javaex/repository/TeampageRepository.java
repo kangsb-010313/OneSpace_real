@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.javaex.vo.TeamAttachmentsVO;
 import com.javaex.vo.TeamMemberVO;
 import com.javaex.vo.TeamPostVO;
+import com.javaex.vo.TeamReciptVO;
 import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVoteOptionVO;
 import com.javaex.vo.TeamVotePostVO;
@@ -294,12 +295,27 @@ public class TeampageRepository {
 	    return sqlSession.selectOne("teampage.getVoteOptionDetail", voteNo);
 	}
 
-	// 특정 후보(voteOption)의 상태를 2(예약확정)로 변경
-	public int updateVoteStatusToConfirmed(int voteNo) {
-	    System.out.println("TeampageRepository.updateVoteStatusToConfirmed()");
-	    return sqlSession.update("teampage.updateVoteStatusToConfirmed", voteNo);
+	// '연습일정' 게시글을 생성하는 메소드
+	public int insertNewPost(TeamPostVO postVO) {
+	    System.out.println("TeampageRepository.insertNewPost()");
+	    return sqlSession.insert("teampage.insertNewPost", postVO);
 	}
-	
+
+	// 영수증 정보를 생성하는 메소드
+	public int insertReceipt(TeamReciptVO receiptVO) {
+	    System.out.println("TeampageRepository.insertReceipt()");
+	    return sqlSession.insert("teampage.insertReceipt", receiptVO);
+	}
+
+	// 특정 게시글(postNo)에 속한 모든 투표 옵션의 상태(voteStatus)를 변경하는 메소드
+	public int updateAllVoteStatusInPost(int postNo, int status) {
+	    System.out.println("TeampageRepository.updateAllVoteStatusInPost()");
+	    Map<String, Integer> params = new HashMap<>();
+	    params.put("postNo", postNo);
+	    params.put("status", status);
+	    return sqlSession.update("teampage.updateAllVoteStatusInPost", params);
+	}
+
 	
 	
 }

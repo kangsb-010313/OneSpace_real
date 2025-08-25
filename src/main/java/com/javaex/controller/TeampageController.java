@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.service.TeampageService;
 import com.javaex.vo.TeamPostVO;
+import com.javaex.vo.TeamReciptVO;
 import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVotePostVO;
 import com.javaex.vo.TeamVoteResultVO;
@@ -551,39 +552,70 @@ public class TeampageController {
         return teampageService.exeGetVoters(voteNo);
     }
 	
-    
-    // '바로 예약하기' 버튼 클릭 시 예약 페이지로 이동
+    /**
+     * [1단계: 페이지 로딩] '바로 예약하기' 버튼 클릭 시, 예약 정보를 확인하는 페이지로 이동시킵니다.
+     * @param teamNo 현재 팀 번호
+     * @param postNo '투표' 게시글 원본 번호
+     * @param model JSP로 데이터를 전달하기 위한 객체
+     * @return "teampage/reservationConfirm.jsp"
+     */
     @RequestMapping(value="/teams/{teamNo}/posts/{postNo}/confirm", method=RequestMethod.GET)
-    public String reservationForm(@PathVariable("teamNo") int teamNo,
-                                  @PathVariable("postNo") int postNo, Model model) {
-        System.out.println("Controller: reservationForm()");
-        Map<String, Object> reservationInfo = teampageService.exeGetReservationInfo(postNo);
+    public String showConfirmPage(@PathVariable("teamNo") int teamNo,
+                                  @PathVariable("postNo") int postNo,
+                                  Model model) {
+        System.out.println("TeampageController.showConfirmPage()");
         
-        if (reservationInfo == null) {
+        // [수정] 서비스에서 최다 득표 후보 정보 + 투표자 목록을 한 번에 가져옴
+        Map<String, Object> reservationInfo = teampageService.getReservationInfo(postNo);
+        
+        // 만약 확정된 후보가 없으면 (아무도 투표 안했으면) 원래 투표 페이지로 돌려보냄
+        if(reservationInfo == null || reservationInfo.get("topOption") == null) {
+            System.out.println("투표자가 없어 예약 페이지로 이동할 수 없습니다.");
             return "redirect:/onespace/teams/" + teamNo + "/posts/" + postNo;
         }
         
-        model.addAttribute("topOption", reservationInfo.get("topOption"));
-        model.addAttribute("voters", reservationInfo.get("voters"));
-        model.addAttribute("teamNo", teamNo);
-        model.addAttribute("postNo", postNo);
+        // JSP(View)로 데이터 전달
+        model.addAttribute("confirmedOption", reservationInfo.get("topOption")); // 확정된 연습실 정보
+        model.addAttribute("voters", reservationInfo.get("voters"));           // [신규] 투표자 목록 추가
+        model.addAttribute("teamNo", teamNo);                                  // 현재 팀 번호
+        model.addAttribute("originalPostNo", postNo);                          // 원래 투표 게시글 번호
         
-        return "teampage/reservation";
+        // 새로 만든 JSP 파일로 요청을 넘김 (Forward)
+        return "teampage/reservationConfirm"; 
     }
 
-    // API '결제하기' 버튼 클릭 시 최종 처리 (Ajax)
-    @ResponseBody
-    @RequestMapping(value="/api/finalize", method=RequestMethod.POST)
-    public int finalizeReservation(@RequestParam("postNo") int postNo, HttpSession session) {
-        System.out.println("API: /api/finalize");
-        UserVO authUser = (UserVO)session.getAttribute("authUser");
-        if(authUser == null) { return -1; }
+    /**
+     * [2단계: 최종 실행] '결제하기' 버튼 클릭 시, 실제 결제 및 DB 저장 로직을 처리합니다.
+     * @param teamNo 현재 팀 번호
+     * @param receiptVO reservationConfirm.jsp의 form 데이터를 담아올 VO 객체
+     * @param roomName (hidden input) 게시글 제목 생성을 위한 연습실 이름
+     * @param session 로그인한 사용자 정보를 가져오기 위한 세션
+     * @return 새로 생성된 '연습일정' 게시글의 상세 보기 페이지로 이동 (Redirect)
+     */
+    @RequestMapping(value="/teams/{teamNo}/payment/execute", method=RequestMethod.POST)
+    public String executePayment(@PathVariable("teamNo") int teamNo,
+                                 @ModelAttribute TeamReciptVO receiptVO,
+                                 @RequestParam("roomName") String roomName,
+                                 @RequestParam("originalPostNo") int originalPostNo,
+                                 HttpSession session) {
+        System.out.println("TeampageController.executePayment()");
         
-        int newPostNo = teampageService.exeFinalizeReservation(postNo, authUser.getUserNo());
-        return newPostNo;
+        UserVO authUser = (UserVO) session.getAttribute("authUser");
+        if(authUser == null) {
+            return "redirect:/onespace/loginForm"; // 로그인 안했으면 로그인폼으로
+        }
+        
+        // 폼 데이터에 없는 추가 정보(세션의 userNo)를 VO에 설정
+        receiptVO.setUserNo(authUser.getUserNo());
+        
+        // 서비스에 최종 저장 로직 위임 (이 안에서 글 생성 + 영수증 생성 모두 처리됨)
+        int newPracticePostNo = teampageService.exeCreateReceiptAndPost(receiptVO, teamNo, roomName, originalPostNo, authUser);
+        
+        // 모든 처리가 끝나면, 새로 생성된 '연습일정' 게시글 상세 보기 페이지로 이동
+        return "redirect:/onespace/teams/" + teamNo + "/posts/" + newPracticePostNo;
     }
-    
-    
+
+
     
 	
 }

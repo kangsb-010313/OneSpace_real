@@ -114,9 +114,12 @@
 								                    
 								                    <h3 class="section-title">#연습일정 참여 팀원</h3>
 										            <div class="voted-members">
-										                <c:forEach items="${voters}" var="voter" varStatus="loop">
+<%-- 										                <c:forEach items="${voters}" var="voter" varStatus="loop">
 										                    <span>${voter.userName}</span><c:if test="${not loop.last}"></c:if>
-										                </c:forEach>
+										                </c:forEach> --%>
+										                <c:forEach items="${voters}" var="voter">
+													        <div class="voter-item">${voter.userName}</div>
+													    </c:forEach>
 										            </div>
 								                </div>
 								                <!-- 우측: 최종 예약 정보 -->

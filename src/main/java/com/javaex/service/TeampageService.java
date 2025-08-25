@@ -1,5 +1,7 @@
 package com.javaex.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +15,12 @@ import com.javaex.repository.TeampageRepository;
 import com.javaex.vo.TeamAttachmentsVO;
 import com.javaex.vo.TeamMemberVO;
 import com.javaex.vo.TeamPostVO;
+import com.javaex.vo.TeamReciptVO;
 import com.javaex.vo.TeamVO;
 import com.javaex.vo.TeamVoteOptionVO;
 import com.javaex.vo.TeamVotePostVO;
 import com.javaex.vo.TeamVoteResultVO;
+import com.javaex.vo.UserVO;
 
 @Service
 public class TeampageService {
@@ -337,16 +341,27 @@ public class TeampageService {
 	}
 	
 	// ==================== 예약 확정 기능 관련 ====================
-	// 예약 페이지에 필요한 정보(최다 득표 후보 + 투표자 목록) 가져오기
-	public Map<String, Object> exeGetReservationInfo(int postNo) {
-	    System.out.println("TeampageService.exeGetReservationInfo()");
+
+	/**
+	 * [1단계 조회] '예약 확인' 페이지에 필요한 정보(최다 득표 후보 + 투표자 목록)를 가져오는 서비스
+	 * @param postNo 투표가 진행된 원본 게시글 번호
+	 * @return 최다 득표 후보 정보와 투표자 목록이 담긴 Map
+	 */
+	public Map<String, Object> getReservationInfo(int postNo) {
+	    System.out.println("TeampageService.getReservationInfo()");
+	    
+	    // 최다 득표한 voteNo를 먼저 찾음
 	    Integer topVoteNo = teampageRepository.selectTopVotedVoteNo(postNo);
 	    
-	    if (topVoteNo == null) { return null; }
+	    if (topVoteNo == null) {
+	        return null; // 아무도 투표 안했으면 null 반환
+	    }
 	    
+	    // voteNo로 상세 정보와 투표자 목록을 각각 조회
 	    TeamVotePostVO topOption = teampageRepository.getVoteOptionDetail(topVoteNo);
 	    List<TeamVoteResultVO> voters = teampageRepository.selectVotersByVoteNo(topVoteNo);
 	    
+	    // 두 정보를 Map에 담아서 Controller로 전달
 	    Map<String, Object> reservationInfo = new HashMap<>();
 	    reservationInfo.put("topOption", topOption);
 	    reservationInfo.put("voters", voters);
@@ -354,42 +369,48 @@ public class TeampageService {
 	    return reservationInfo;
 	}
 
-	// 최종 예약 확정 처리(상태 변경 및 게시글 자동 생성)
+	/**
+	 * [2단계 실행] 실제 결제/저장 로직을 모두 처리하는 서비스 (트랜잭션으로 관리)
+	 * [트랜잭션] '연습일정' 게시글 생성, 영수증 정보 저장, 원본 투표 상태 변경을 하나의 작업 단위로 처리합니다.
+	 * 이 메소드는 '예약 확정' 프로세스의 핵심 실행을 담당합니다.
+	 * @param receiptVO 예약자 정보, 결제 정보, 확정된 voteNo 등이 담긴 VO
+	 * @param teamNo 현재 팀 번호
+	 * @param roomName 게시글 제목에 사용할 연습실 이름
+	 * @param originalPostNo 상태를 변경할 원본 '투표' 게시글 번호
+	 * @param authUser 현재 로그인한 사용자 정보
+	 * @return 최종 생성된 '연습일정' 게시글의 고유 번호(teamPostNo)
+	 */
 	@Transactional
-	public int exeFinalizeReservation(int postNo, int userNo) {
-	    System.out.println("TeampageService.exeFinalizeReservation()");
+	public int exeCreateReceiptAndPost(TeamReciptVO receiptVO, int teamNo, String roomName, int originalPostNo, UserVO authUser) {
+	    System.out.println("TeampageService.exeCreateReceiptAndPost()");
+
+	    // 1. '연습일정' 타입의 새 게시글 VO를 생성하고 데이터를 채웁니다.
+	    TeamPostVO newPost = new TeamPostVO();
+	    newPost.setTeamNo(teamNo);
+	    newPost.setUserNo(authUser.getUserNo());
+	    newPost.setTeamPostTitle("[연습일정 확정] " + roomName); // JSP에서 넘겨받은 roomName 사용
 	    
-	    // 1. 최다 득표 voteNo 찾기
-	    int topVoteNo = teampageRepository.selectTopVotedVoteNo(postNo);
+	    // [수정] 오류나던 부분을 수정합니다. 이제 receiptVO에 voteNo가 담겨서 넘어옵니다.
+	    newPost.setTeamContent("[CONFIRMED_VOTE_NO:" + receiptVO.getVoteNo() + "]");
+	    newPost.setTeamPostType("연습일정");
 	    
-	    // 2. 해당 voteOption의 상태를 2(예약확정)로 변경
-	    teampageRepository.updateVoteStatusToConfirmed(topVoteNo);
+	    // 2. '연습일정' 게시글을 DB에 INSERT
+	    teampageRepository.insertNewPost(newPost);
+	    int newPostNo = newPost.getTeamPostNo(); 
 	    
-	    // 3. 자동 게시글 생성을 위해 확정된 후보의 정보 가져오기
-	    TeamVotePostVO confirmedOption = teampageRepository.getVoteOptionDetail(topVoteNo);
-	    TeamPostVO originalPost = teampageRepository.teampageSelectPostByNo(postNo);
+	    // 3. 영수증(TeamReciptVO) 정보 저장
+	    // [수정] reservationTime(String) 필드에 맞게 Date 객체를 "yyyy-MM-dd HH:mm:ss" 형태의 문자열로 변환하여 저장
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    receiptVO.setReservationTime(sdf.format(new Date()));
+	    teampageRepository.insertReceipt(receiptVO);
 	    
-	    // 4. '연습일정' 게시글 자동 생성
-	    TeamPostVO schedulePost = new TeamPostVO();
-	    schedulePost.setTeamNo(originalPost.getTeamNo());
-	    schedulePost.setUserNo(userNo); // 팀장 userNo
-	    
-	    // 4-1. (핵심) 게시글 타입을 '연습일정'으로 지정
-	    schedulePost.setTeamPostType("연습일정"); 
-	    schedulePost.setTeamPostTitle("[연습일정 확정] " + confirmedOption.getRoomName());
-	    
-	    // 4-2. (핵심) 내용에 확정된 voteNo를 식별자로 숨겨둠
-	    schedulePost.setTeamContent(
-	        "[CONFIRMED_VOTE_NO:" + topVoteNo + "]\n\n" + // JSP에서는 보이지 않을 식별자
-	        "팀 연습일정이 확정되었습니다.\n" +
-	        "자세한 내용은 아래를 확인해주세요."
-	    );
-	    
-	    teampageRepository.teampageInsert(schedulePost);
-	    
-	    // 5. 방금 만든 게시글 번호를 Controller에 반환
-	    return teampageRepository.selectLastPostNo(userNo);
+	    // 4. 원본 투표 게시글에 있던 모든 후보(voteOptions)들의 상태를 2(예약확정)로 변경
+	    teampageRepository.updateAllVoteStatusInPost(originalPostNo, 2);
+
+	    // 5. 모든 작업이 성공하면, 새로 생성된 게시글 번호를 Controller로 반환
+	    return newPostNo;
 	}
+
 	
 	// voteNo로 예약 정보(후보 상세 + 투표자 목록) 조회
 	public Map<String, Object> exeGetReservationInfoByVoteNo(int voteNo) {

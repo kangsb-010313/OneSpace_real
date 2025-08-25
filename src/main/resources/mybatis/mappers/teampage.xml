@@ -424,15 +424,6 @@
 	</update>
 	
 	<!-- ==================== 투표 기능 관련 쿼리 ==================== -->
-	<!-- 특정 유저가 특정 게시글의 투표에 참여했는지 확인 (1인 1투표) -->
-    <select id="checkIfUserVotedInPost" parameterType="map" resultType="int">
-        select count(vr.votedNo) 
-        from voteResults vr 
-        	join votes v on vr.voteNo = v.voteNo
-        where vr.userNo = #{userNo} 
-        	and v.postNo = #{postNo}
-    </select>
-
 	<!-- voteResults 테이블에 투표 기록 추가 -->
     <insert id="insertVoteResult" parameterType="map">
         insert into voteResults (votedNo, voteNo, userNo, votedTime)
@@ -465,7 +456,7 @@
 
 	<!-- ==================== 예약 확정 기능 관련 쿼리 ==================== -->
 	
-	<!-- 특정 게시글에서 가장 많이 득표한 voteNo 찾기 -->
+	<!-- [예약 1단계] 특정 '투표' 게시글에서 가장 많은 표를 받은 후보(voteNo)를 1개만 조회  -->
 	<select id="selectTopVotedVoteNo" parameterType="int" resultType="int">
 	    select voteNo
 	    from voteResults
@@ -475,14 +466,8 @@
 	    limit 1
 	</select>
 	
-	<!-- 특정 후보(voteOption)의 상태를 2(예약확정)로 변경 -->
-	<update id="updateVoteStatusToConfirmed" parameterType="int">
-	    update voteOptions
-	    set voteStatus = 2
-	    where voteNo = #{voteNo}
-	</update>
 	
-	<!-- 특정 voteNo의 상세 정보를 가져오는 쿼리 -->
+	<!-- [예약 2단계] voteNo를 이용해, 확정된 후보의 상세 정보(연습실, 날짜, 시간 등)를 조회 -->
 	<select id="getVoteOptionDetail" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
 	    select
 	        v.voteNo, s.spaceName, r.roomName, r.roomNo,
@@ -498,6 +483,26 @@
 	    where v.voteNo = #{voteNo}
 	    group by v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
 	</select>
+	
+	<!-- [최종 저장 1] '연습일정' 타입의 새 게시글을 생성하고, 생성된 PK(teamPostNo)를 파라미터로 받은 VO에 다시 담아줌 -->
+	<insert id="insertNewPost" parameterType="com.javaex.vo.TeamPostVO" useGeneratedKeys="true" keyProperty="teamPostNo">
+	    insert into posts(teamNo, userNo, teamPostType, teamPostTitle, teamContent, teamWriteDate)
+	    values (#{teamNo}, #{userNo}, #{teamPostType}, #{teamPostTitle}, #{teamContent}, now())
+	</insert>
+	
+	<!-- [최종 저장 2] 결제 완료 후, 영수증(recipt) 정보를 DB에 기록 -->
+	<insert id="insertReceipt" parameterType="com.javaex.vo.TeamReciptVO">
+	    insert into recipt(userNo, roomNo, paymentMethod, phoneNum, reservationTime)
+	    values (#{userNo}, #{roomNo}, #{paymentMethod}, #{phoneNum}, #{reservationTime})
+	</insert>
+	
+	<!-- [최종 저장 3] 원본 '투표' 게시글에 있던 모든 후보들의 상태를 '예약확정(2)'으로 변경하여 더 이상 투표할 수 없도록 막음 -->
+	<update id="updateAllVoteStatusInPost" parameterType="map">
+	    update voteOptions
+	    set voteStatus = #{status}
+	    where voteNo IN (select voteNo from votes where postNo = #{postNo})
+	</update>
+	
     
 
 </mapper>
