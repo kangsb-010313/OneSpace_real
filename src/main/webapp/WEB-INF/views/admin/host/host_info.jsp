@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="../../../assets/css/reset.css">
   <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
   <link rel="stylesheet" href="../../../assets/css/host_info.css">
+
+  <!-- 다음 우편번호(카카오) API -->
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body>
 <div id="wrap">
@@ -166,14 +169,17 @@
           </div>
 
           <div class="addr-row">
-            <input type="text" class="addr-input-long" name="address"
-                   value="${space.address}" placeholder="실제 서비스되는 공간의 주소를 입력해주세요." required>
+            <!-- 주소는 검색으로만 채우도록 readonly 권장 -->
+            <input type="text" class="addr-input-long" id="address" name="address"
+                   value="${space.address}" placeholder="실제 서비스되는 공간의 주소를 입력해주세요." required readonly>
             <button class="addr-btn" type="button" id="btnFindAddr">주소 등록</button>
           </div>
-          <input type="text" class="addr-detail" name="addressdetail"
+
+          <input type="text" class="addr-detail" id="addressDetail" name="addressdetail"
                  value="${space.addressdetail}" placeholder="상세 주소">
 
-          <input type="hidden" name="postcode"  value="${space.postcode}">
+          <!-- 우편번호는 hidden으로 유지하되 JS에서 채움 -->
+          <input type="hidden" id="postcode" name="postcode"  value="${space.postcode}">
           <input type="hidden" name="spacelink" value="${space.spacelink}">
         </section>
 
@@ -366,11 +372,29 @@
     });
   })();
 
-  // 주소 등록 버튼(다음 우편번호 API 연결 지점 - 필요 시 실제 스크립트 추가)
-  document.getElementById('btnFindAddr')?.addEventListener('click', function() {
-    // TODO: 다음 주소 API 팝업 연결
-    alert('주소 검색 팝업을 연결하세요.');
-  });
+  // ========== 다음 주소 API 연결 ==========
+  function execDaumPostcode() {
+    new daum.Postcode({
+      oncomplete: function(data) {
+        // 선택 타입: R(도로명) / J(지번)
+        var addr = (data.userSelectedType === 'R') ? data.roadAddress : data.jibunAddress;
+
+        // 값 채우기
+        var postcodeEl = document.getElementById('postcode');
+        var addressEl  = document.getElementById('address');
+        var detailEl   = document.getElementById('addressDetail');
+
+        if (postcodeEl) postcodeEl.value = data.zonecode || '';
+        if (addressEl)  addressEl.value  = addr || '';
+
+        // 상세주소로 포커스
+        if (detailEl) detailEl.focus();
+      }
+    }).open();
+  }
+
+  // 버튼에 연결
+  document.getElementById('btnFindAddr')?.addEventListener('click', execDaumPostcode);
 </script>
 
 </body>

@@ -5,60 +5,53 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.javaex.vo.TeamAttachmentsVO;
-
 @Service
 public class AttachService {
 
-    // 파일을 저장하고, 그 파일의 정보를 VO에 담아 반환하는 메소드
-    public TeamAttachmentsVO exeSave(MultipartFile file) { 
-        System.out.println("AttachService.exeSave()");
+    /**
+     * 이 메소드가 이제 모든 파일 저장을 담당합니다.
+     * @param file Controller로부터 전달받은 파일
+     * @return 저장된 파일의 정보(원본명, 저장명, 경로, 크기)가 담긴 Map 객체
+     */
+    public Map<String, Object> saveFile(MultipartFile file) {
+        System.out.println("AttachService.saveFile()");
 
-        // OS에 따라 파일 저장 경로 설정
-//        String osName = System.getProperty("os.name").toLowerCase();
-//        String saveDir = osName.contains("win") ? "C:\\javaStudy\\upload\\" : "/data/upload/";
-        
-        // --- 여기부터 수정 ---
-        String saveDir;
-        String osName = System.getProperty("os.name").toLowerCase();
-
-        // 윈도우일 경우
-        if (osName.contains("win")) {
-            saveDir = "C:\\javaStudy\\upload\\";
-        } 
-        // 맥 또는 리눅스일 경우
-        else { 
-            // 사용자 홈 디렉토리 경로를 가져와서 그 하위에 upload 폴더를 사용합니다.
-            // 예: /Users/사용자이름/upload/
-            saveDir = System.getProperty("user.home") + "/upload/";
+        // 파일이 비어있으면 아무 작업도 하지 않고 null을 반환합니다.
+        if (file == null || file.isEmpty()) {
+            return null;
         }
+
+        // ===================================================================
+        // [파일 저장 경로 설정] - 개발 환경과 배포 환경에 맞게 하나만 주석 해제하여 사용
+        // ===================================================================
+        // 1. EC2(리눅스) 서버 배포 환경
+        // String saveDir = "/home/ubuntu/onespace_uploads/";
+
+        // 2. 윈도우 로컬 개발 환경
+        String saveDir = "C:\\onespace_uploads\\";
+        // ===================================================================
         
-        // upload 폴더가 없으면 자동으로 생성해주는 로직
+        // 지정된 경로에 폴더가 없으면 자동으로 생성합니다.
         File dir = new File(saveDir);
         if (!dir.exists()) {
-            dir.mkdirs(); // mkdirs()는 필요한 상위 폴더까지 모두 생성합니다.
+            dir.mkdirs();
         }
 
         // 1. 파일 정보 추출
-        String orgName = file.getOriginalFilename();
-        String exName = orgName.substring(orgName.lastIndexOf("."));
-        String saveName = System.currentTimeMillis() + UUID.randomUUID().toString() + exName;
-        String filePath = saveDir + saveName;
-        long fileSize = file.getSize();
+        String orgName = file.getOriginalFilename(); // 원본 파일명 (예: "강아지.jpg")
+        String exName = orgName.substring(orgName.lastIndexOf(".")); // 확장자 (예: ".jpg")
+        String saveName = System.currentTimeMillis() + UUID.randomUUID().toString() + exName; // 저장될 파일명 (중복 방지)
+        String filePath = saveDir + saveName; // 저장될 파일의 전체 경로
+        long fileSize = file.getSize(); // 파일 크기
 
-        // 2. VO에 파일 정보 담기
-        TeamAttachmentsVO attachmentVO = new TeamAttachmentsVO(); // ★★★ 생성하는 객체 타입도 수정
-        attachmentVO.setTeamOriginFileName(orgName);
-        attachmentVO.setTeamStoredFileName(saveName);
-        attachmentVO.setTeamFilePath(filePath);
-        attachmentVO.setTeamFileSize(fileSize);
-
-        // 3. 실제 파일을 하드디스크에 저장
+        // 2. 실제 파일을 하드디스크에 저장
         try {
             byte[] fileData = file.getBytes();
             OutputStream os = new FileOutputStream(filePath);
@@ -67,9 +60,17 @@ public class AttachService {
             bos.close();
         } catch (IOException e) {
             e.printStackTrace();
+            return null; // 저장 중 오류 발생 시 null 반환
         }
 
-        // 파일 정보가 담긴 VO 객체를 반환
-        return attachmentVO;
+        // 3. 저장된 파일 정보를 Map에 담아 반환 (이 정보를 Service에서 사용)
+        Map<String, Object> fileInfo = new HashMap<>();
+        fileInfo.put("orgName", orgName);
+        fileInfo.put("saveName", saveName);
+        fileInfo.put("filePath", filePath);
+        fileInfo.put("fileSize", fileSize);
+        
+        System.out.println("파일 저장 완료: " + fileInfo);
+        return fileInfo;
     }
 }

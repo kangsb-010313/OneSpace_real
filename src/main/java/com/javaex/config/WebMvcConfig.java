@@ -10,23 +10,24 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	
-    	String osName = System.getProperty("os.name").toLowerCase();
-    	String resourceLocation = "";
-    	
-    	if(osName.contains("win")) { //윈도우
-    		resourceLocation = "file:///C:/javaStudy/upload/";
-    	}else {
-    		resourceLocation = "file:/data/upload/";
-    	}
-    	
-        registry.addResourceHandler("/upload/**")
-        .addResourceLocations(resourceLocation);
+        // ===================================================================
+        // [파일 경로 설정] - 개발 환경과 배포 환경에 맞게 하나만 주석 해제하여 사용
+        // ===================================================================
+
+        // 1. EC2(리눅스) 서버에 배포할 때 사용할 경로
+        //String resourceLocation = "file:/home/ubuntu/onespace_uploads/";
         
+        // 2. 윈도우에서 로컬 테스트를 할 때 사용할 경로
+         String resourceLocation = "file:///C:/onespace_uploads/"; 
+        // ===================================================================
+
+        // '/uploads/**' 라는 웹 경로(URL)로 요청이 오면,
+        // 위에서 설정한 실제 물리적 폴더(resourceLocation)에서 파일을 찾아 제공합니다.
+        registry.addResourceHandler("/uploads/**") 
+                .addResourceLocations(resourceLocation); 
         
-        
-        
-        
-        // 윈도우 경로	-> file:///C:/javaStudy/upload/
-        // 맥 경로	-> /Users/kangsubin/Desktop/javaStudy/upload/
     }
+    
+        // 맥 경로	-> /Users/kangsubin/Desktop/javaStudy/upload/
+    
 }

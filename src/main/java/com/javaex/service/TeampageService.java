@@ -116,18 +116,26 @@ public class TeampageService {
         }
 
 
-        // 3. 첨부파일 저장 (teamAttachments 테이블)
+        // [수정] 3. 첨부파일 저장 로직 변경
         MultipartFile[] files = teamPostVO.getFiles();
         if (files != null && !files[0].getOriginalFilename().isEmpty()) {
             for (MultipartFile file : files) {
-                // (1) 파일 저장 및 정보 받기
-                TeamAttachmentsVO attachmentVO = attachService.exeSave(file);
+                
+                // (1) AttachService를 호출하여 파일을 실제 폴더에 저장하고, 그 정보를 Map으로 받아옵니다.
+                Map<String, Object> fileInfo = attachService.saveFile(file);
 
-                // (2) 파일 정보에 게시글 번호 세팅
-                attachmentVO.setPostNo(postNo);
+                // (2) 파일 저장에 성공했다면, DB에 저장할 정보를 TeamAttachmentsVO에 담습니다.
+                if (fileInfo != null) {
+                    TeamAttachmentsVO attachmentVO = new TeamAttachmentsVO();
+                    attachmentVO.setPostNo(postNo); // 어느 게시글에 속한 파일인지 (FK)
+                    attachmentVO.setTeamOriginFileName((String) fileInfo.get("orgName"));
+                    attachmentVO.setTeamStoredFileName((String) fileInfo.get("saveName"));
+                    attachmentVO.setTeamFilePath((String) fileInfo.get("filePath"));
+                    attachmentVO.setTeamFileSize((Long) fileInfo.get("fileSize"));
 
-                // (3) 파일 정보 DB에 저장
-                teampageRepository.insertAttachment(attachmentVO);
+                    // (3) TeampageRepository를 통해 'teamAttachments' 테이블에 파일 정보를 저장합니다.
+                    teampageRepository.insertAttachment(attachmentVO);
+                }
             }
         }
     }
