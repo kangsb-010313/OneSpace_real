@@ -6,9 +6,9 @@
 <head>
   <meta charset="UTF-8">
   <title>원스페이스 | 기본정보</title>
-  <link rel="stylesheet" href="../../../assets/css/reset.css">
-  <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
-  <link rel="stylesheet" href="../../../assets/css/host_info2.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/host_info2.css">
 </head>
 <body>
 <div id="wrap">

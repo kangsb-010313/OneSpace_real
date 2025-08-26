@@ -49,8 +49,10 @@
         <div class="space-item">
           <!-- ✅ 변경: repimg가 있을 때만 업로드 이미지 출력 (디폴트 이미지 사용 안 함) -->
           <c:if test="${not empty space.repimg}">
-            <img class="space-thumb" src="<c:url value='/upload/${space.repimg}'/>" alt="공간 사진"/>
-          </c:if>
+			  <img class="space-thumb"
+			       src="<c:url value='/upload/${space.repimg}'/>"
+			       alt="공간 사진"/>
+		 </c:if>
 
           <div class="space-contents">
             <div class="space-info">
@@ -65,8 +67,11 @@
             </div>
 
             <div class="space-edit">
-              <button class="btn-edit" type="button"
-                      onclick="location.href='${urlSpaceInfo}?spacesno=${space.spacesno}'">수정하기</button>
+             <button class="btn-edit" type="button"
+			        onclick="location.href='${pageContext.request.contextPath}/onespace/hostcenter/rooms/${room.roomNo}/edit?spacesNo=${room.spacesNo}'">
+			  수정하기
+			</button>
+
             </div>
           </div>
         </div>

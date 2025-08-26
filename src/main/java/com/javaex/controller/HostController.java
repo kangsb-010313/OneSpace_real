@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.service.AttachService;
 import com.javaex.service.HostService;
+import com.javaex.service.RoomService;
 import com.javaex.vo.HostVO;
+import com.javaex.vo.RoomsVO;
 import com.javaex.vo.TeamAttachmentsVO;
 
 @Controller
@@ -21,6 +23,7 @@ public class HostController {
 
     @Autowired private HostService hostService;
     @Autowired private AttachService attachService;
+    @Autowired private RoomService roomService;
 
     /* --------------------- 세션 유틸 --------------------- */
     private Long get_login_userno(HttpSession session) {
@@ -42,7 +45,10 @@ public class HostController {
         Long userno = get_login_userno(session);
         if (userno == null) return "redirect:/user/loginform";
         List<HostVO> list = hostService.getSpacesByUser(userno);
-        model.addAttribute("list", list);
+
+        // 기존: model.addAttribute("list", list);
+        model.addAttribute("spaces", list);   // ★ JSP가 기대하는 키로 변경
+
         return "forward:/WEB-INF/views/admin/host/host_manage_added.jsp";
     }
 
@@ -57,17 +63,34 @@ public class HostController {
         return "forward:/WEB-INF/views/admin/host/host_info.jsp";
     }
 
-    /* 수정 폼 */
-    @GetMapping("/spaces/{spacesNo}/edit")
-    public String form_edit(@PathVariable Long spacesNo, Model model, HttpSession session) {
-        Long userno = get_login_userno(session);
-        if (userno == null) return "redirect:/user/loginform";
-        HostVO vo = hostService.getSpace(spacesNo);
-        if (vo == null || vo.getUserno() == null || !vo.getUserno().equals(userno)) {
+    /** 연습실 수정 폼: /onespace/hostcenter/rooms/{roomNo}/edit */
+    @GetMapping("/rooms/{roomNo}/edit")
+    public String editRoom(@PathVariable Long roomNo,
+                           @RequestParam(required = false) Long spacesNo,
+                           Model model) {
+        // 반드시 인스턴스 주입된 roomService 사용!
+        RoomsVO vo = roomService.get_detail(roomNo);   // room + prices + photos
+        if (vo == null) return "redirect:/onespace/hostcenter/spaces";
+
+        // spacesNo 파라미터가 안 오면 DB에서 가져온 값 사용
+        if (spacesNo == null) spacesNo = vo.getSpacesNo();
+
+        model.addAttribute("vo", vo);           // ★ info2.jsp는 ${vo.*}로 프리필
+        model.addAttribute("spacesNo", spacesNo);
+        return "admin/host/host_info2";        // 연습실 폼
+    }
+
+    /** (신규) 잘못 들어온 /rooms/edit → 정상 경로로 리다이렉트 */
+    @GetMapping("/rooms/edit")
+    public String roomsEditRedirect(@RequestParam(required = false) Long roomNo,
+                                    @RequestParam(required = false) Long spacesNo) {
+        // roomNo 없이 들어오면 목록으로 회피 (404 방지)
+        if (roomNo == null) {
             return "redirect:/onespace/hostcenter/spaces";
         }
-        model.addAttribute("space", vo);
-        return "forward:/WEB-INF/views/admin/host/host_info2.jsp";
+        String url = "/onespace/hostcenter/rooms/" + roomNo + "/edit";
+        if (spacesNo != null) url += "?spacesNo=" + spacesNo;
+        return "redirect:" + url;
     }
 
     /* 신규 저장 */
