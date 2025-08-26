@@ -82,7 +82,7 @@
 								            </div>
 								            <div class="post-image-gallery">
 								                <c:forEach items="${post.attachments}" var="file">
-								                    <img src="${pageContext.request.contextPath}/onespace/display/${file.teamStoredFileName}" 
+								                    <img src="${pageContext.request.contextPath}/uploads/${file.teamStoredFileName}" 
 								                         alt="${file.teamOriginFileName}" class="attached-image">
 								                </c:forEach>
 								            </div>
@@ -97,7 +97,7 @@
 								                    <h3 class="section-title">#확정된 연습실 정보</h3>
 								                    <div class="vote-option">
 								                        <a href="#" class="vote-item-card">
-								                            <img src="${pageContext.request.contextPath}/onespace/display/${confirmedOption.picturesNo}" alt="연습실 이미지">
+								                            <img src="${pageContext.request.contextPath}/uploads/${confirmedOption.picturesNo}" alt="연습실 이미지">
 								                            <div class="card-content-wrapper">
 								                                <div class="card-main-info">
 								                                    <div class="info-left">
@@ -114,9 +114,6 @@
 								                    
 								                    <h3 class="section-title">#연습일정 참여 팀원</h3>
 										            <div class="voted-members">
-<%-- 										                <c:forEach items="${voters}" var="voter" varStatus="loop">
-										                    <span>${voter.userName}</span><c:if test="${not loop.last}"></c:if>
-										                </c:forEach> --%>
 										                <c:forEach items="${voters}" var="voter">
 													        <div class="voter-item">${voter.userName}</div>
 													    </c:forEach>
@@ -146,7 +143,7 @@
 								            <p>${post.teamContent}</p>
 								            <div class="post-image-gallery">
 								                <c:forEach items="${post.attachments}" var="file">
-								                    <img src="${pageContext.request.contextPath}/onespace/display/${file.teamStoredFileName}" 
+								                    <img src="${pageContext.request.contextPath}/uploads/${file.teamStoredFileName}" 
 								                         alt="${file.teamOriginFileName}" class="attached-image">
 								                </c:forEach>
 								            </div>
@@ -160,7 +157,9 @@
 								                                <div class="vote-option">
 								                                    <a href="#" class="vote-item-card">
 								                                        <div class="favorite-count">🔥 ${option.competitionCount}</div>
-								                                        <img src="${pageContext.request.contextPath}/onespace/display/${option.picturesNo}" alt="${option.roomName}">
+								                                        
+								                                        <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
+								                                        
 								                                        <div class="card-content-wrapper">
 								                                            <div class="card-main-info">
 								                                                <div class="info-left">

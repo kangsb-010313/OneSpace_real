@@ -94,7 +94,7 @@
 								                        <li>
 								                            <div class="vote-item-card">
 								                                <%-- 이미지: candidate 변수의 picturesNo 필드를 사용 --%>
-								                                <img src="${pageContext.request.contextPath}/onespace/display/${candidate.picturesNo}" alt="${candidate.spaceName}">
+								                                <img src="${pageContext.request.contextPath}/uploads/${candidate.picturesNo}" alt="후보 이미지">
 								                                <div class="card-content-wrapper">
 								                                    <div class="card-main-info">
 								                                        <div class="info-left">
