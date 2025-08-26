@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.javaex.service.RoomService;
 import com.javaex.vo.RoomPriceVO;
@@ -31,7 +32,7 @@ public class RoomController {
         return "admin/host/host_info2"; // 화면 경로에 맞게 수정
     }
 
-    /** 상세 보기 */
+    /** 상세 보기 (필요할 때만 사용) */
     @GetMapping("/{roomNo}")
     public String view(@PathVariable Long roomNo, Model model) {
         RoomsVO vo = roomService.get_detail(roomNo); // JOIN 한 번 + 사진 별도
@@ -53,14 +54,14 @@ public class RoomController {
                        @RequestParam(value = "dayType",     required = false) List<String>  dayType,
                        @RequestParam(value = "startTime",   required = false) List<String>  startTime,
                        @RequestParam(value = "endTime",     required = false) List<String>  endTime,
-                       // 🔧 변경: 인풋은 String이므로 String 리스트로 받기
                        @RequestParam(value = "hourlyPrice", required = false) List<String>  hourlyPrice,
 
                        @RequestParam(value = "photoName",   required = false) List<String>  storedFileName,
                        @RequestParam(value = "originName",  required = false) List<String>  originFileName,
                        @RequestParam(value = "photoPath",   required = false) List<String>  filePath,
                        @RequestParam(value = "contentType", required = false) List<String>  contentType,
-                       @RequestParam(value = "fileSize",    required = false) List<Long>    fileSize) {
+                       @RequestParam(value = "fileSize",    required = false) List<Long>    fileSize,
+                       RedirectAttributes ra) {
 
         // 0) 썸네일 기본값: 폼에서 thumbImg가 비어 있으면 첫 번째 사진으로
         if ((vo.getThumbImg() == null || vo.getThumbImg().isBlank())
@@ -81,13 +82,13 @@ public class RoomController {
                 p.setStartTime(safeGet(startTime, i));
                 p.setEndTime(safeGet(endTime, i));
 
-                // 🔧 변경: String → Integer 변환해서 set
+                // String → Integer 변환
                 String priceStr = safeGet(hourlyPrice, i);
                 if (priceStr != null && !priceStr.isBlank()) {
                     try {
                         p.setHourlyPrice(Integer.valueOf(priceStr.trim()));
                     } catch (NumberFormatException e) {
-                        p.setHourlyPrice(null); // 숫자 아님 → null로 저장
+                        p.setHourlyPrice(null);
                     }
                 } else {
                     p.setHourlyPrice(null);
@@ -98,7 +99,7 @@ public class RoomController {
         }
         roomService.replace_prices(roomNo, prices);
 
-        // 3) 사진 리스트 빌드 후 완전교체 (업로드는 다른 곳에서 이미 처리되고 메타만 저장)
+        // 3) 사진 리스트 빌드 후 완전교체 (업로드는 다른 곳에서 이미 처리)
         List<RoomAttachment> photos = new ArrayList<>();
         if (storedFileName != null) {
             int n = storedFileName.size();
@@ -114,7 +115,11 @@ public class RoomController {
         }
         roomService.replace_photos(roomNo, photos);
 
-        return "redirect:/onespace/hostcenter/rooms/" + roomNo;
+        // 4) 저장 완료 → 목록(내 공간 관리)로 깔끔하게! (roomNo 절대 붙이지 않기)
+        ra.addFlashAttribute("msg", "연습실이 등록/수정되었습니다.");
+        return "redirect:/onespace/hostcenter/spaces";
+        // 혹시 특정 공간 대시보드로 가고 싶으면:
+        // return "redirect:/onespace/hostcenter/spaces/" + vo.getSpacesNo();
     }
 
     /* ========== 유틸 ========== */

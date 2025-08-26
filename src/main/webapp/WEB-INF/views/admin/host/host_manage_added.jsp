@@ -62,7 +62,9 @@
               </div>
               <div class="row">
                 <div class="label">주소</div>
-                <div class="value"><c:out value="${space.address}" default=""/></div>
+				 <div class="value">
+				   <c:out value="${space.address}" default=""/> <c:out value="${space.addressdetail}" default=""/>
+				 </div>
               </div>
             </div>
 
