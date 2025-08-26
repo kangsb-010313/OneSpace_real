@@ -5,18 +5,23 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.javaex.service.RoomService;
 import com.javaex.vo.RoomPriceVO;
 import com.javaex.vo.RoomsVO;
-import com.javaex.vo.RoomsVO.RoomAttachment;
 
 @Controller
 @RequestMapping("/onespace/hostcenter/rooms")
 public class RoomController {
-
+	
     private final RoomService roomService;
 
     public RoomController(RoomService roomService) {
@@ -56,83 +61,42 @@ public class RoomController {
                        @RequestParam(value = "endTime",     required = false) List<String>  endTime,
                        @RequestParam(value = "hourlyPrice", required = false) List<String>  hourlyPrice,
 
-                       @RequestParam(value = "photoName",   required = false) List<String>  storedFileName,
-                       @RequestParam(value = "originName",  required = false) List<String>  originFileName,
-                       @RequestParam(value = "photoPath",   required = false) List<String>  filePath,
-                       @RequestParam(value = "contentType", required = false) List<String>  contentType,
-                       @RequestParam(value = "fileSize",    required = false) List<Long>    fileSize,
+                       @RequestParam(value = "photos", required = false) MultipartFile[] photos,
+                       
                        RedirectAttributes ra) {
 
-        // 0) 썸네일 기본값: 폼에서 thumbImg가 비어 있으면 첫 번째 사진으로
-        if ((vo.getThumbImg() == null || vo.getThumbImg().isBlank())
-                && storedFileName != null && !storedFileName.isEmpty()) {
-            vo.setThumbImg(storedFileName.get(0));
-        }
-
-        // 1) room 기본 저장/수정 (useGeneratedKeys 로 roomNo 세팅됨)
-        Long roomNo = roomService.create_or_update_room(vo);
-
-        // 2) 가격 리스트 빌드 후 완전교체
+        // ★★★★★ 1. 빠져있던 prices 리스트 생성 로직을 여기에 다시 추가합니다. ★★★★★
         List<RoomPriceVO> prices = new ArrayList<>();
         if (dayType != null) {
-            int n = dayType.size();
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < dayType.size(); i++) {
                 RoomPriceVO p = new RoomPriceVO();
-                p.setDayType(dayType.get(i));
+                p.setDayType(safeGet(dayType, i));
                 p.setStartTime(safeGet(startTime, i));
                 p.setEndTime(safeGet(endTime, i));
-
-                // String → Integer 변환
+                
                 String priceStr = safeGet(hourlyPrice, i);
                 if (priceStr != null && !priceStr.isBlank()) {
                     try {
                         p.setHourlyPrice(Integer.valueOf(priceStr.trim()));
                     } catch (NumberFormatException e) {
-                        p.setHourlyPrice(null);
+                        p.setHourlyPrice(null); // 숫자가 아니면 null
                     }
-                } else {
-                    p.setHourlyPrice(null);
                 }
-
                 prices.add(p);
             }
         }
-        roomService.replace_prices(roomNo, prices);
+        
+        // ★★★★★ 2. 이제 정상적으로 `prices` 변수를 사용할 수 있습니다.
+        roomService.saveRoomAndDetails(vo, prices, photos);
 
-        // 3) 사진 리스트 빌드 후 완전교체 (업로드는 다른 곳에서 이미 처리)
-        List<RoomAttachment> photos = new ArrayList<>();
-        if (storedFileName != null) {
-            int n = storedFileName.size();
-            for (int i = 0; i < n; i++) {
-                RoomAttachment a = new RoomAttachment();
-                a.setStoredFileName(storedFileName.get(i));
-                a.setOriginFileName(safeGet(originFileName, i, storedFileName.get(i)));
-                a.setFilePath(safeGet(filePath, i, "/uploads/rooms/" + roomNo + "/"));
-                a.setContentType(safeGet(contentType, i, "image/jpeg"));
-                a.setFileSize(safeGet(fileSize, i, 0L));
-                photos.add(a);
-            }
-        }
-        roomService.replace_photos(roomNo, photos);
-
-        // 4) 저장 완료 → 목록(내 공간 관리)로 깔끔하게! (roomNo 절대 붙이지 않기)
-        ra.addFlashAttribute("msg", "연습실이 등록/수정되었습니다.");
+        ra.addFlashAttribute("msg", "연습실이 성공적으로 등록/수정되었습니다.");
         return "redirect:/onespace/hostcenter/spaces";
-        // 혹시 특정 공간 대시보드로 가고 싶으면:
-        // return "redirect:/onespace/hostcenter/spaces/" + vo.getSpacesNo();
     }
-
-    /* ========== 유틸 ========== */
-
+    
+    // ★★★★★ 3. prices 리스트를 만들기 위해 필요한 유틸리티 메소드를 다시 추가합니다.
     private static String safeGet(List<String> list, int idx) {
         return (list != null && list.size() > idx) ? list.get(idx) : null;
     }
 
-    private static String safeGet(List<String> list, int idx, String def) {
-        return (list != null && list.size() > idx && list.get(idx) != null) ? list.get(idx) : def;
-    }
 
-    private static Long safeGet(List<Long> list, int idx, Long def) {
-        return (list != null && list.size() > idx && list.get(idx) != null) ? list.get(idx) : def;
-    }
 }
