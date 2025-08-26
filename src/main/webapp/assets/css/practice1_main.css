@@ -1,0 +1,226 @@
+/* practice1-main.css
+*/
+
+/* 기본 레이아웃 */
+body, main {
+  font-family: 'SUIT', 'Pretendard', 'Noto Sans KR', Arial, sans-serif;
+  font-size: 16px;
+  margin: 0;
+  color: #222;
+  background: #fff;
+}
+
+.wrap {
+  max-width: 1300px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+/* 메인 섹션 / 컨텐츠 영역 */
+.main-section {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  margin-top: 0;
+  min-height: 600px;
+}
+
+.content-area {
+  flex: 1;
+  padding-top: 5px;
+  padding-left: 0;
+  padding-right: 18px;
+  min-width: 0;
+}
+
+/* 상단 필터바 */
+.filter-bar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+  padding-right: 10px;
+}
+
+/* 찜리스트 버튼 (상단) */
+.btn-list {
+  background: #fff;
+  color: #7a4eff;
+  border: 1.5px solid #7a4eff;
+  font-weight: 700;
+  border-radius: 24px;
+  font-size: 13px;
+  padding: 10px 30px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.filter-bar > .btn-list {
+  font-size: 12px;
+  padding: 6px 14px;
+  height: 32px;
+  min-width: 100px;
+  border-radius: 18px;
+}
+.btn-list:hover {
+  background: #5f3ccc;
+  color: #fff;
+  border-color: #5f3ccc;
+}
+
+/* 페이지 타이틀 / 구분선 */
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  text-align: center;
+}
+.page-divider {
+  width: 90%;
+  border-bottom: 1px solid #e4e2ef;
+  margin: 0 auto 16px;
+}
+
+/* 검색/필터 행 */
+.search-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 6px;
+}
+.search-hash {
+  display: inline-block;
+  background: #f3f1f2;
+  color: #444;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 7px 320px 7px 30px;
+  border-radius: 18px;
+  height: 40px;
+  line-height: 20px;
+  min-width: 230px;
+  border: none;
+  outline: none;
+  margin-left: 50px;
+  box-sizing: border-box;
+}
+.filter-select-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+  margin: 30px 50px 0 0;
+}
+.custom-select {
+  width: 132px;
+  text-align-last: center;
+  cursor: pointer;
+  padding: 7px 22px;
+  border-radius: 9px;
+  border: 1.2px solid #c8c8e1;
+  background: #fff;
+  font-size: 15px;
+  outline: none;
+}
+
+/* 카드 그리드 */
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px 26px;
+  margin-bottom: 15px;
+  margin-left: 50px;
+  margin-right: 50px;
+  box-sizing: border-box;
+}
+
+/* 카드(개별) */
+.card {
+  background: #fff;
+  border-radius: 25px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ebe9f9;
+  min-height: 180px;
+  cursor: pointer;
+  transition: transform .08s ease, box-shadow .12s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 18px rgba(101,88,199,0.06);
+}
+
+/* 카드 이미지 영역 */
+.card-img-wrap {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  background: #ece8ff;
+  overflow: hidden;
+  border-top-left-radius: 19px;
+  border-top-right-radius: 19px;
+}
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 카드 본문(타이틀/메타) */
+.card-content {
+  padding: 18px 20px 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.card-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  color: #15123a;
+  letter-spacing: -1px;
+}
+.card-meta {
+  font-size: 12.5px;
+  color: #8a8bb3;
+  margin-top: 4px;
+}
+
+/* 빈 상태 메시지 */
+#cardList > .empty-message,
+.card-list .empty-message {
+  padding: 24px;
+  color: #777;
+  text-align: center;
+}
+
+/* 무한스크롤 관찰자(시각적 영향 없음) */
+#sentinel { height: 1px; }
+
+/* 반응형: 열 개수 축소 */
+@media (max-width: 1200px) {
+  .card-list { grid-template-columns: repeat(2, 1fr); margin-left: 32px; margin-right: 32px; }
+  .search-hash { padding-right: 60px; } /* 좁은 화면에 맞춰 입력 폭 줄임 */
+}
+
+@media (max-width: 850px) {
+  .card-list { grid-template-columns: 1fr; margin-left: 20px; margin-right: 20px; }
+  .filter-select-group { margin: 16px 20px 0 0; }
+  .search-hash { padding-right: 30px; margin-left: 16px; }
+}
+
+/* 접근성/기타 기본 스타일 보완 */
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; height: auto; }
+
+/* 유틸: 숨김(디버그용) */
+.hidden { display: none !important; }

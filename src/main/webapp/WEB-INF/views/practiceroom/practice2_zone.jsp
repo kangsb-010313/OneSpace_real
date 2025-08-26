@@ -8,9 +8,10 @@
   <meta charset="UTF-8">
   <title>원스페이스 | ${zone.spaceName}</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/practice.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/practice2_zone.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
 </head>
 <body>
   <div class="wrap">

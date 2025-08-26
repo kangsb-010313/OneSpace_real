@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="${ctx}/assets/css/reset.css">
   <link rel="stylesheet" href="${ctx}/assets/css/basicdefault.css">
   <link rel="stylesheet" href="${ctx}/assets/css/main.css">
-  <link rel="stylesheet" href="${ctx}/assets/css/practice.css">
+  <link rel="stylesheet" href="${ctx}/assets/css/practice1_main.css">
   <link rel="stylesheet" href="${ctx}/assets/css/asidedefault.css">
 </head>
 <body>

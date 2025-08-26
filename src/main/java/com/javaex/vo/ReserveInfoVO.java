@@ -33,7 +33,7 @@ public class ReserveInfoVO {
 
 	@Override
 	public String toString() {
-		return "RerveInfoVO [targetDate=" + targetDate + ", roomNo=" + roomNo + "]";
+		return "ReserveInfoVO [targetDate=" + targetDate + ", roomNo=" + roomNo + "]";
 	}
 
 }

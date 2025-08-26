@@ -8,17 +8,18 @@
 <head>
   <meta charset="UTF-8">
   <title>원스페이스 | 연습실찜하기</title>
-  <link rel="stylesheet" href="../../assets/css/reset.css">
-  <link rel="stylesheet" href="../../assets/css/practice.css">
-  <link rel="stylesheet" href="../../assets/css/asidedefault.css">
-  <link rel="stylesheet" href="../../assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/practice3_room.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
   <c:set var="ctx" value="${pageContext.request.contextPath}" />
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <c:import url="/WEB-INF/views/include/header.jsp" />
-    </header>
+    <!-- 헤더 영역------------------------------------------------ -->
+    <c:import url="/WEB-INF/views/include/header.jsp" />
+    <!-- /헤더 영역------------------------------------------------ -->
 
     <main>
       <div class="container">
