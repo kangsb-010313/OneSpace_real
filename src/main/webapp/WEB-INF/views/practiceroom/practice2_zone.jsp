@@ -102,7 +102,7 @@
                       <div class="room-card">
                         <a href="${pageContext.request.contextPath}/onespace/practice3_room?roomNo=${room.roomNo}">
                           <div class="room-thumb-wrap">
-		                    <img class="main-photo" src="${pageContext.request.contextPath}/assets/images/${raw}" alt="${zone.spaceName} 대표사진">
+		                    <img class="room-thumb" src="${pageContext.request.contextPath}/assets/images/${raw}" alt="${zone.spaceName} 대표사진">
                             <div class="room-title">${room.roomName}</div>
                           </div>
                           <div class="room-bottom-row">

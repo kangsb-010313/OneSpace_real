@@ -1150,10 +1150,72 @@ body, main {
 /* 각 썸네일은 그리드 셀을 꽉 채우고 main-photo 좌우 여백과 균형을 맞춤 */
 .thumb-grid img {
   width: 100%;
-  height: 170px;           /* 원하는 높이로 조정하세요 (예: 150~200px) */
+  height: 170px;
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid #eee;
   cursor: pointer;
   display: block;
+}
+
+/* 2x2 그리드 유지 */
+.thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* 썸네일 컨테이너: background로 이미지를 넣고 4등분해서 보여줌 */
+.thumb-quad {
+  width: 100%;
+  height: 170px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-size: 200% 200%; /* 이미지 4등분을 위해 2배로 확대 */
+}
+
+/* 각 사분면 위치 지정 */
+.quad-tl { background-position: 0% 0%; }    /* 좌상 */
+.quad-tr { background-position: 100% 0%; }  /* 우상 */
+.quad-bl { background-position: 0% 100%; }  /* 좌하 */
+.quad-br { background-position: 100% 100%; }/* 우하 */
+
+/* (선택) 클릭된 썸네일 표시 */
+.thumb-quad.active { outline: 3px solid rgba(95,60,204,0.12); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+/* 간단 레이아웃: 좌/우 */
+.detail-container { display:flex; gap:32px; align-items:flex-start; padding:24px 0; }
+.left-col { flex: 1 1 60%; }
+.right-col { width: 320px; flex: 0 0 320px; }
+
+.main-photo { width:100%; height:400px; object-fit:cover; border-radius:12px; display:block; }
+.thumb-row { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.thumb-row img { width:90px; height:66px; object-fit:cover; border-radius:6px; border:1px solid #eee; cursor:pointer; }
+
+.room-info-card {
+  background:#fff; border:1px solid #eee; padding:16px; border-radius:10px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.room-info-card h3 { margin:0 0 8px 0; font-size:18px; }
+.room-info-text { white-space: pre-wrap; color:#333; font-size:14px; line-height:1.6; }
+
+/* 이미지 fallback */
+.placeholder { background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#bbb; }
+
+.zone-right .room-card { max-height: 260px; overflow: hidden; }
+
+.zone-right .room-thumb {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+.zone-right .room-card .room-bottom-row {
+  padding: 6px 8px;
+  font-size: 13px;
 }
