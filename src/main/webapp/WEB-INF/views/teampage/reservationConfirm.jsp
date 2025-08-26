@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/finreservation.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    // JSP의 Context Path를 JavaScript 변수로 저장
+    const CONTEXT_PATH = "${pageContext.request.contextPath}";
+	</script>
 </head>
 <body>
     <div id="wrap">
@@ -87,6 +91,7 @@
                                             </li>
                                         </ul>
                                     </div>
+                                    
                                     <div class="refund-policy">
                                         <h3>환불규정안내</h3>
                                         <p>이용 2일전: 총 금액의 100% 환불</p>
@@ -108,5 +113,56 @@
 		<c:import url="/WEB-INF/views/include/footer.jsp" />
         <!-- /푸터 영역------------------------------------------------ -->
     </div>
+    
+    <!-- 결제 완료 모달창 HTML -->
+    <div id="paymentSuccessModal" class="modal-overlay" style="display: none;">
+	    <div class="modal-content">
+	        <h3>결제 완료</h3>
+	        <p>예약 및 결제가 정상적으로 완료되었습니다.</p>
+	        <button id="modalCloseBtn" class="btn-action">확인</button>
+	    </div>
+	</div>
+    
+    <script>
+	$(document).ready(function() {
+	    // 폼 제출(submit) 이벤트를 가로챔쓰
+	    $("#paymentForm").on("submit", function(event) {
+	        // 1. 폼의 기본 동작(페이지 이동) 막기
+	        event.preventDefault(); 
+	
+	        // 2. 폼 데이터를 직렬화하여(serialize) Ajax로 보낼 준비
+	        var formData = $(this).serialize();
+	        var formAction = $(this).attr("action"); // 폼의 action URL
+	
+	        // 3. Ajax를 사용하여 서버에 비동기적으로 데이터를 전송
+	        $.ajax({
+	            type: "POST",
+	            url: formAction,
+	            data: formData,
+	            success: function(response) {
+	                // 4. 서버로부터 성공 응답을 받으면 모달
+	                // Controller에서 반환된 redirect URL을 data-url 속성에 저장
+	                $("#paymentSuccessModal").data("redirectUrl", response).show();
+	            },
+	            error: function() {
+	                // 통신 실패 시 에러 메시지
+	                alert("결제 처리 중 오류가 발생했습니다. 다시 시도해 주세요.");
+	            }
+	        });
+	    });
+	
+	    // 모달의 '확인' 버튼 클릭 이벤트
+	    $("#modalCloseBtn").on("click", function() {
+	        var redirectUrl = $("#paymentSuccessModal").data("redirectUrl");
+	        
+	        if (redirectUrl) {
+	            //CONTEXT_PATH와 Controller가 보내준 경로를 합쳐서 완전한 URL 생성
+	            window.location.href = CONTEXT_PATH + redirectUrl;
+	        }
+	    });
+	});
+	</script>
+    
+    
 </body>
 </html>

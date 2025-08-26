@@ -618,6 +618,7 @@ public class TeampageController {
      * @param session 로그인한 사용자 정보를 가져오기 위한 세션
      * @return 새로 생성된 '연습일정' 게시글의 상세 보기 페이지로 이동 (Redirect)
      */
+    @ResponseBody  // Ajax 요청에 대한 응답
     @RequestMapping(value="/teams/{teamNo}/payment/execute", method=RequestMethod.POST)
     public String executePayment(@PathVariable("teamNo") int teamNo,
                                  @ModelAttribute TeamReciptVO receiptVO,
@@ -637,8 +638,8 @@ public class TeampageController {
         // 서비스에 최종 저장 로직 위임 (이 안에서 글 생성 + 영수증 생성 모두 처리됨)
         int newPracticePostNo = teampageService.exeCreateReceiptAndPost(receiptVO, teamNo, roomName, originalPostNo, authUser);
         
-        // 모든 처리가 끝나면, 새로 생성된 '연습일정' 게시글 상세 보기 페이지로 이동
-        return "redirect:/onespace/teams/" + teamNo + "/posts/" + newPracticePostNo;
+        //결제 확인 모달창에서 확인 누르고 이동
+        return "/onespace/teams/" + teamNo + "/posts/" + newPracticePostNo;
     }
 
 
