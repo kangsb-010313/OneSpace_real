@@ -50,7 +50,7 @@
           <!-- ✅ 변경: repimg가 있을 때만 업로드 이미지 출력 (디폴트 이미지 사용 안 함) -->
           <c:if test="${not empty space.repimg}">
 			  <img class="space-thumb"
-			       src="<c:url value='/upload/${space.repimg}'/>"
+			       src="${pageContext.request.contextPath}/uploads/${space.repimg}"
 			       alt="공간 사진"/>
 		 </c:if>
 

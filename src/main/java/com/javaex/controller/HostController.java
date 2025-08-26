@@ -1,13 +1,18 @@
 package com.javaex.controller;
 
 import java.util.List;
-
-import jakarta.servlet.http.HttpSession;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.service.AttachService;
@@ -16,6 +21,8 @@ import com.javaex.service.RoomService;
 import com.javaex.vo.HostVO;
 import com.javaex.vo.RoomsVO;
 import com.javaex.vo.TeamAttachmentsVO;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/onespace/hostcenter")
@@ -94,43 +101,52 @@ public class HostController {
     }
 
     /* 신규 저장 */
-//    @PostMapping("/spaces/insert")
-//    public String insert(@ModelAttribute HostVO vo,
-//                         @RequestParam(value = "repImage", required = false) MultipartFile repImage,
-//                         HttpSession session) {
-//
-//        Long userno = get_login_userno(session);
-//        if (userno == null) return "redirect:/user/loginform";
-//        vo.setUserno(userno);
-//
-//        if (repImage != null && !repImage.isEmpty()) {
-//            TeamAttachmentsVO att = attachService.exeSave(repImage);
-//            if (att != null) vo.setRepimg(att.getTeamStoredFileName());
-//        }
-//
-//        hostService.createSpace(vo); // useGeneratedKeys -> vo.spacesno
-//        // 저장 후 방 등록으로 이동
-//        return "redirect:/onespace/hostcenter/rooms/new?spacesNo=" + vo.getSpacesno();
-//    }
+    @PostMapping("/spaces/insert")
+    public String insert(@ModelAttribute HostVO vo,
+                         @RequestParam(value = "repImage", required = false) MultipartFile repImage,
+                         HttpSession session) {
+
+        Long userno = get_login_userno(session);
+        if (userno == null) return "redirect:/user/loginform";
+        vo.setUserno(userno);
+
+        // ★★★★★ 2. 파일 처리 로직을 AttachService에 위임합니다.
+        if (repImage != null && !repImage.isEmpty()) {
+            // (1) 공용 AttachService를 호출하여 파일을 저장하고, 그 정보를 Map으로 받습니다.
+            Map<String, Object> fileInfo = attachService.saveFile(repImage);
+            
+            // (2) 파일 저장이 성공했다면, 저장된 파일명(saveName)을 HostVO의 repimg 필드에 세팅합니다.
+            if (fileInfo != null) {
+                vo.setRepimg((String) fileInfo.get("saveName"));
+            }
+        }
+
+        hostService.createSpace(vo); // useGeneratedKeys -> vo.spacesno
+        // 저장 후 방 등록으로 이동
+        return "redirect:/onespace/hostcenter/rooms/new?spacesNo=" + vo.getSpacesno();
+    }
 
     /* 수정 저장 */
-//    @PostMapping("/spaces/update")
-//    public String update(@ModelAttribute HostVO vo,
-//                         @RequestParam(value = "repImage", required = false) MultipartFile repImage,
-//                         HttpSession session) {
-//
-//        Long userno = get_login_userno(session);
-//        if (userno == null) return "redirect:/user/loginform";
-//        vo.setUserno(userno);
-//
-//        if (repImage != null && !repImage.isEmpty()) {
-//            TeamAttachmentsVO att = attachService.exeSave(repImage);
-//            if (att != null) vo.setRepimg(att.getTeamStoredFileName());
-//        }
-//
-//        hostService.updateSpace(vo);
-//        return "redirect:/onespace/hostcenter/spaces";
-//    }
+    @PostMapping("/spaces/update")
+    public String update(@ModelAttribute HostVO vo,
+                         @RequestParam(value = "repImage", required = false) MultipartFile repImage,
+                         HttpSession session) {
+
+        Long userno = get_login_userno(session);
+        if (userno == null) return "redirect:/user/loginform";
+        vo.setUserno(userno);
+
+        // ★★★★★ 신규 저장과 동일한 로직으로 파일 처리를 수행합니다.
+        if (repImage != null && !repImage.isEmpty()) {
+            Map<String, Object> fileInfo = attachService.saveFile(repImage);
+            if (fileInfo != null) {
+                vo.setRepimg((String) fileInfo.get("saveName"));
+            }
+        }
+
+        hostService.updateSpace(vo);
+        return "redirect:/onespace/hostcenter/spaces";
+    }
 
     /* (선택) 단건 보기 */
     @GetMapping("/spaces/{spacesNo}")
