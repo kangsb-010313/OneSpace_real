@@ -143,22 +143,22 @@
                     <h2 class="section-title">#우리팀 좀 보세요!</h2>
                     <div class="team-list">
                         
-                            <a class="team-card" href="팀자랑_게시글1_URL">
+                            <a class="team-card" href="<c:url value='/pride/detail/1'/>">
                                 <img src="../../assets/images/팀자랑사진01.jpg" alt="팀1" />
                             </a>
-                            <a class="team-card" href="팀자랑_게시글2_URL">
+                            <a class="team-card" href="<c:url value='/pride/detail/2'/>">
                                 <img src="../../assets/images/팀자랑사진02.jpg" alt="팀2" />
                             </a>
-                            <a class="team-card" href="팀자랑_게시글3_URL">
+                            <a class="team-card" href="<c:url value='/pride/detail/3'/>">
                                 <img src="../../assets/images/팀자랑사진03.jpg" alt="팀3" />
                             </a>
-                            <a class="team-card" href="팀자랑_게시글4_URL">
+                            <a class="team-card" href="<c:url value='/pride/detail/4'/>">
                                 <img src="../../assets/images/팀자랑사진04.jpg" alt="팀4" />
                             </a>
-                            <a class="team-card" href="팀자랑_게시글1_URL">
+                            <a class="team-card" href="<c:url value='/pride/detail/1'/>">
                                 <img src="../../assets/images/팀자랑사진01.jpg" alt="팀1" />
                             </a>
-                            <a class="team-card" href="팀자랑_게시글2_URL">
+                            <a class="team-card" href="<c:url value='/pride/detail/2'/>">
                                 <img src="../../assets/images/팀자랑사진02.jpg" alt="팀2" />
                             </a>
                             
