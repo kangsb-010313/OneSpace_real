@@ -47,7 +47,7 @@ public class HostController {
         List<HostVO> list = hostService.getSpacesByUser(userno);
 
         // 기존: model.addAttribute("list", list);
-        model.addAttribute("spaces", list);   // ★ JSP가 기대하는 키로 변경
+        model.addAttribute("spaces", list);   
 
         return "forward:/WEB-INF/views/admin/host/host_manage_added.jsp";
     }
@@ -114,23 +114,23 @@ public class HostController {
     }
 
     /* 수정 저장 */
-    @PostMapping("/spaces/update")
-    public String update(@ModelAttribute HostVO vo,
-                         @RequestParam(value = "repImage", required = false) MultipartFile repImage,
-                         HttpSession session) {
-
-        Long userno = get_login_userno(session);
-        if (userno == null) return "redirect:/user/loginform";
-        vo.setUserno(userno);
-
-        if (repImage != null && !repImage.isEmpty()) {
-            TeamAttachmentsVO att = attachService.exeSave(repImage);
-            if (att != null) vo.setRepimg(att.getTeamStoredFileName());
-        }
-
-        hostService.updateSpace(vo);
-        return "redirect:/onespace/hostcenter/spaces";
-    }
+//    @PostMapping("/spaces/update")
+//    public String update(@ModelAttribute HostVO vo,
+//                         @RequestParam(value = "repImage", required = false) MultipartFile repImage,
+//                         HttpSession session) {
+//
+//        Long userno = get_login_userno(session);
+//        if (userno == null) return "redirect:/user/loginform";
+//        vo.setUserno(userno);
+//
+//        if (repImage != null && !repImage.isEmpty()) {
+//            TeamAttachmentsVO att = attachService.exeSave(repImage);
+//            if (att != null) vo.setRepimg(att.getTeamStoredFileName());
+//        }
+//
+//        hostService.updateSpace(vo);
+//        return "redirect:/onespace/hostcenter/spaces";
+//    }
 
     /* (선택) 단건 보기 */
     @GetMapping("/spaces/{spacesNo}")

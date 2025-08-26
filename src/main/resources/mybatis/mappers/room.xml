@@ -13,7 +13,6 @@
     r.roomInfo    AS roomInfo,
     r.area        AS area,
     r.capacity    AS capacity,
-    /* DB가 thumb_img 라면: r.thumb_img AS thumbImg */
     r.thumbImg    AS thumbImg,
     r.instDtm     AS instDtm,
     r.updtDtm     AS updtDtm
@@ -110,7 +109,6 @@
   <!-- 사진 목록 -->
   <select id="select_photos" parameterType="long" resultMap="room_attachment_rm">
     SELECT
-      /* 실제 컬럼명에 맞춰 alias 해줘 */
       picturesNo       AS pictureSno,
       refType,
       roomNo           AS refNo,
@@ -118,7 +116,6 @@
       originFileName,
       filePath,
       fileSize,
-      /* content_type 이면: content_type AS contentType */
       contentType      AS contentType,
       instDtm, updtDtm
     FROM roomAttachments
