@@ -1,6 +1,7 @@
 package com.javaex.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,11 @@ import com.javaex.vo.ReserveInfoVO;
 import com.javaex.vo.RoomsVO;
 import com.javaex.vo.SlotVO;
 import com.javaex.vo.SpacesVO;
+import com.javaex.vo.TeamVO;
+import com.javaex.vo.UserVO;
+
+import jakarta.servlet.http.HttpSession;
+
 
 @Controller
 @RequestMapping("/onespace")
@@ -57,21 +63,34 @@ public class PracticeroomController {
 		return "practiceroom/practice2_zone";
 	}
 	
+	// ROOM 상세 페이지 로드
 	@GetMapping("/practice3_room")
-	public String room(@RequestParam("roomNo") Long roomNo, Model model) {
-	    RoomsVO room = practiceroomService.getRoomByNo(roomNo);
+	public String room(@RequestParam("roomNo") Long roomNo, HttpSession session, Model model) {
+		System.out.println("PracticeroomController.room()");
+		
+		//userNo 세션에서 꺼낸다
+		UserVO authUser = (UserVO)session.getAttribute("authUser");
+		int userNo = authUser.getUserNo();
+		System.out.println("userNo from session: " + userNo);
+		
+		RoomsVO room = practiceroomService.getRoomByNo(roomNo);
 	    model.addAttribute("room", room);
-	    
+
 	    SpacesVO zone = practiceroomService.getZoneDetail(room.getSpacesNo());
 	    model.addAttribute("zone", zone);
-	    
+
+	    List<TeamVO> teams = practiceroomService.getTeamsForUser(userNo);
+        model.addAttribute("teams", teams);
+        
 	    return "practiceroom/practice3_room";
 	}
 	
 	// 찜리스트
 	@GetMapping("/practice4_list")
-	public String favoritesList(Model model) {
-		Long userNo = 1L;
+	public String favoritesList(Model model, HttpSession session) {
+		System.out.println("PracticeroomController.favoritesList()");
+		UserVO authUser = (UserVO)session.getAttribute("authUser");
+		int userNo = authUser.getUserNo();
 
 		List<SpacesVO> favoriteSpaces = practiceroomService.getFavoriteSpaces(userNo);
 		System.out.println("favoriteSpaces=" + favoriteSpaces);
@@ -81,7 +100,8 @@ public class PracticeroomController {
 
 		return "practiceroom/practice4_list";
 	}
-
+	
+	// 방 시간대별 슬롯 정보
 	@PostMapping("/api/room-slots")
 	@ResponseBody
 	public List<SlotVO> getRoomSlots(ReserveInfoVO reserveInfoVO) {
@@ -93,5 +113,41 @@ public class PracticeroomController {
 
 		return slotList;
 	}
+	
+	// 찜 추가
+	@PostMapping("/api/favorite")
+	@ResponseBody
+	public Map<String, Object> addFavorite(@RequestParam Long roomNo, @RequestParam String teamName, HttpSession session) {
+		UserVO authUser = (UserVO)session.getAttribute("authUser");
+		int userNo = authUser.getUserNo();
+		System.out.println("addFavorite: userNo from session: " + userNo);
+	    
+	    boolean result = practiceroomService.addFavorite(userNo, roomNo);
+	    if (result) {
+	        return Map.of("success", true, "message", "팀 " + teamName + "에 대한 찜이 추가되었습니다.");
+	    } else {
+	        return Map.of("success", false, "message", "찜 추가 실패");
+	    }
+	}
+	
+	// 찜 목록 삭제
+	@PostMapping("/api/favorite/remove")
+	@ResponseBody
+	public Map<String, Object> removeFavorite(@RequestParam Long roomNo, HttpSession session) {
+	    UserVO authUser = (UserVO) session.getAttribute("authUser");
+	    if (authUser == null) {
+	        return Map.of("success", false, "message", "로그인 필요");
+	    }
+	    int userNo = authUser.getUserNo();
+	    System.out.println("removeFavorite: userNo=" + userNo + ", roomNo=" + roomNo);
+
+	    boolean result = practiceroomService.removeFavorite(userNo, roomNo);
+	    if (result) {
+	        return Map.of("success", true, "message", "찜이 해제되었습니다.");
+	    } else {
+	        return Map.of("success", false, "message", "찜 해제 실패");
+	    }
+	}
+	
 	
 }

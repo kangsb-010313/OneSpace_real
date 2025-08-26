@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="../../assets/css/asidedefault.css">
   <link rel="stylesheet" href="../../assets/css/basicdefault.css">
   <c:set var="ctx" value="${pageContext.request.contextPath}" />
+  
 <style>
     /* 간단 레이아웃: 좌/우 */
     .detail-container { display:flex; gap:32px; align-items:flex-start; padding:24px 0; }
@@ -44,24 +45,65 @@
       <div class="container">
         <h2 style="margin-top:18px;">${room.roomName}</h2>
         <div style="width:90%; border-bottom:1px solid #e9e9f0; margin-bottom:18px;"></div>
-
+				
         <div class="detail-container">
           <!-- LEFT: 대표 이미지 (room.roomInfo 기반) -->
           <div class="left-col">
-            <c:set var="rawAll" value="${room.roomInfo}" />
-            <c:choose>
-              <c:when test="${not empty rawAll}">
-                <c:set var="firstRaw" value="${fn:trim(fn:split(rawAll, ',')[0])}" />
-				<img class="main-photo" src="${ctx}/assets/images/${zone.spaceLink}" alt="${zone.spaceName}" 
-     				onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
-                
-              </c:when>
-
-              <c:otherwise>
-                <div class="placeholder">이미지 없음</div>
-              </c:otherwise>
-            </c:choose>
-          </div>
+			  <%-- mainSrc 계산: 1) zone.spaceLink 우선 2) room.roomInfo 첫번째 3) placeholder --%>
+			  <c:choose>
+			    <c:when test="${not empty zone && not empty zone.spaceLink}">
+			      <c:set var="z" value="${fn:trim(zone.spaceLink)}"/>
+			      <c:choose>
+			        <c:when test="${fn:startsWith(z,'http')}">
+			          <c:set var="mainSrc" value="${z}" />
+			        </c:when>
+			        <c:when test="${fn:startsWith(z,'/')}">
+			          <c:set var="mainSrc" value="${z}" />
+			        </c:when>
+			        <c:otherwise>
+			          <c:set var="mainSrc" value="${ctx}/assets/images/${z}" />
+			        </c:otherwise>
+			      </c:choose>
+			    </c:when>
+			
+			    <c:when test="${not empty room.roomInfo}">
+			      <c:set var="firstRaw" value="${fn:trim(fn:split(room.roomInfo, ',')[0])}" />
+			      <c:choose>
+			        <c:when test="${fn:startsWith(firstRaw,'http')}">
+			          <c:set var="mainSrc" value="${firstRaw}" />
+			        </c:when>
+			        <c:when test="${fn:startsWith(firstRaw,'/')}">
+			          <c:set var="mainSrc" value="${firstRaw}" />
+			        </c:when>
+			        <c:otherwise>
+			          <c:set var="mainSrc" value="${ctx}/assets/images/${firstRaw}" />
+			        </c:otherwise>
+			      </c:choose>
+			    </c:when>
+			
+			    <c:otherwise>
+			      <c:set var="mainSrc" value="${ctx}/assets/images/placeholder.jpg" />
+			    </c:otherwise>
+			  </c:choose>
+			
+			  <%-- 메인 이미지 --%>
+			  <img id="mainPhoto" class="main-photo"
+			       src="${mainSrc}"
+			       alt="${room.roomName}"
+			       onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
+			
+			  <%-- 2x2 썸네일 그리드 (메인과 동일한 이미지로 4장) --%>
+			  <div class="thumb-grid">
+			    <c:forEach var="i" begin="0" end="3">
+			      <img class="thumb"
+			           src="${mainSrc}"
+			           data-full="${mainSrc}"
+			           alt="thumb-${i}"
+			           onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"
+			           onclick="swapMainImage(this)"/>
+			    </c:forEach>
+			  </div>
+			</div>
 
           <!-- 오른쪽: roomInfo(이미지 갤러리 또는 텍스트) -->
           <div class="right-col">
@@ -106,15 +148,28 @@
               <div><strong>면적:</strong> ${room.area}</div>
               
               <div class="team-like-list" style="margin-top:12px;">
-			    <div class="team-like-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
-			      <button class="btn-outline btn-w120" type="button">팀 원밀리언</button>
-			      <button class="btn-like" type="button">찜하기</button>
-			    </div>
-			    <div class="team-like-row" style="display:flex;gap:8px;align-items:center;">
-			      <button class="btn-outline btn-w120" type="button">팀 저스트절크</button>
-			      <button class="btn-like" type="button">찜하기</button>
-			    </div>
+				<c:if test="${not empty teams}">
+				  <c:forEach var="team" items="${teams}">
+				    <div class="team-like-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"
+				         data-team-id="${team.teamNo}" data-team-name="${team.teamName}">
+				    <button class="btn-outline btn-w120" type="button" data-team-id="${team.teamNo}">
+				      <c:out value="${team.teamName}" />
+				    </button>
+				    <button class="btn-like" type="button"
+				            data-room-no="${room.roomNo}"
+				            data-team-id="${team.teamNo}"
+				            data-team-name="${team.teamName}">
+				      찜하기
+				    </button>
+				    </div>
+				  </c:forEach>
+				</c:if>
+				
+				<c:if test="${empty teams}">
+			    <div style="color:#888;">선택 가능한 팀이 없습니다.</div>
+			    </c:if>
 			  </div>
+				
             </div>
           </div>
         </div>
@@ -123,6 +178,7 @@
     <!-- /컨텐츠 영역---------------------------------------------- -->
 
     <script>
+    <!--
     document.addEventListener('DOMContentLoaded', function() {
 	  const likeBtns = Array.from(document.querySelectorAll('.btn-like'));
 	  const teamBtns = Array.from(document.querySelectorAll('.btn-outline'));
@@ -131,20 +187,7 @@
 	    likeBtns.forEach(b => b.textContent = '찜하기');
 	    teamBtns.forEach(b => b.classList.remove('active'));
 	  }
-	
-	  likeBtns.forEach(btn => {
-	    btn.addEventListener('click', function() {
-	      const row = btn.closest('.team-like-row');
-	      const teamBtn = row ? row.querySelector('.btn-outline') : null;
-	      const willLike = btn.textContent.trim() === '찜하기';
-	      resetAll();
-	      if (willLike) {
-	        btn.textContent = '찜';
-	        if (teamBtn) teamBtn.classList.add('active');
-	      }
-	    });
-	  });
-	
+	  
 	  teamBtns.forEach(btn => {
 	    btn.addEventListener('click', function() {
 	      const row = btn.closest('.team-like-row');
@@ -155,7 +198,88 @@
 	    });
 	  });
 	});
-    </script>
+    -->
+    // --- 찜하기 AJAX 핸들러 ---
+    document.addEventListener('DOMContentLoaded', function() {
+	  // ctx는 JSP 상단에서 c:set으로 선언되어 있으므로 여기서 사용
+	  var ctx = '${ctx}';
+	
+	  // 찜 버튼(각 팀 행 안에 있는 .btn-like[data-room-no])
+	  const likeBtns = document.querySelectorAll('.btn-like[data-room-no]');
+	  console.log('찜하기 버튼 개수:', likeBtns.length);
+	
+	  likeBtns.forEach(btn => {
+	    btn.addEventListener('click', function() {
+	      // 이미 처리중이면 무시
+	      if (btn.disabled) return;
+	
+	      // 버튼이 속한 행(row)과 팀 아이디 읽기
+	      const row = btn.closest('.team-like-row');
+	      const teamId = row ? row.getAttribute('data-team-id') : '';
+	      const teamName = row ? (row.getAttribute('data-team-name') || (row.querySelector('.btn-outline')?.textContent.trim() || '')) : '';
+	      const roomNo = btn.getAttribute('data-room-no');
+	      if (!teamId) { alert('팀을 먼저 선택하거나, 팀이 존재하는지 확인하세요.'); return; }
+	      if (!roomNo) { alert('roomNo가 없습니다'); return; }
+	      
+	
+	      // 팀이 선택되어야 하는 로직(선택 요구하면 확인)
+	      // 만약 팀 선택과 무관하게 바로 보내고 싶으면 아래 체크를 제거하세요.
+	      if (!teamId) {
+	        // 선택된 row에 data-team-id가 없으면 안내
+	        alert('팀을 먼저 선택하거나, 팀이 존재하는지 확인하세요.');
+	        return;
+	      }
+	
+	      if (!roomNo) {
+	        alert('roomNo가 없습니다');
+	        return;
+	      }
+	
+	      // UI: 처리중 표시
+	      const originalText = btn.textContent;
+	      btn.disabled = true;
+	      btn.textContent = '처리중...';
+	
+	      // --- 여기서 teamId와 roomNo를 함께 서버로 전송 ---
+	      fetch(ctx + '/onespace/api/favorite', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	        credentials: 'same-origin',
+	        body: 'roomNo=' + encodeURIComponent(roomNo) +
+	              '&teamId=' + encodeURIComponent(teamId) +
+	              '&teamName=' + encodeURIComponent(teamName)
+	      })
+	      .then(res => res.json())
+	      .then(json => {
+	        if (json && json.success) {
+	          btn.textContent = '찜';
+	          alert(json.message || '찜 추가 완료');
+	          window.location.href = ctx + '/onespace/practice4_list';
+	        } else {
+	          alert(json.message || '찜 추가 실패');
+	          btn.disabled = false;
+	          btn.textContent = originalText || '찜하기';
+	        }
+	      })
+	      .catch(err => {
+	        console.error('찜 요청 실패', err);
+	        alert('네트워크/서버 오류');
+	        btn.disabled = false;
+	        btn.textContent = originalText || '찜하기';
+	      });
+	    });
+	  });
+	});
+    
+    function swapMainImage(thumbEl) {
+        var full = thumbEl.getAttribute('data-full');
+        if (!full) return;
+        var main = document.getElementById('mainPhoto');
+        if (!main) return;
+        main.src = full;
+        main.onerror = function() { this.onerror = null; this.src = '${ctx}/assets/images/placeholder.jpg'; };
+      }
+	</script>
   </div>
 
   <!-- 푸터 영역------------------------------------------------ -->

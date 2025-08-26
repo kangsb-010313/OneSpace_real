@@ -78,7 +78,8 @@
 						
 						    <div class="card-actions">
 						      <button class="btn-outline btn-pill-sm open-schedule" data-spaces-no="${space.spacesNo}" data-room-no="${space.roomNo}">날짜 시간 추가</button>
-						      <button class="btn-like btn-pill-sm" data-spaces-no="${space.spacesNo}">찜해제</button>
+						      <!-- <button class="btn-like btn-pill-sm" data-spaces-no="${space.spacesNo}">찜해제</button>  -->
+						      <button class="btn-like btn-pill-sm" type="button" data-spaces-no="${space.spacesNo}" data-room-no="${space.roomNo}">찜해제</button>
 						    </div>
 						  </div>
 						</c:forEach>
@@ -266,50 +267,47 @@ $(document).ready(function(){
   }
 
   /* ------------------ 슬롯 로드 & 렌더 ------------------ */
-  function loadSlots(roomNo, targetDate){
+  function loadSlots(roomNo, targetDate) {
     console.log('[sched] loadSlots', roomNo, targetDate);
     $schedSlots.empty();
-    // AJAX: POST form-encoded (현재 컨트롤러와 맞춤)
     $.ajax({
-      url: ctx + '/onespace/api/room-slots',
-      type: 'POST',
-      data: { roomNo: roomNo, targetDate: targetDate },
-      dataType: 'json'
-    }).done(function(slotList){
-      console.log('[sched] slotList', slotList);
-      if (!Array.isArray(slotList) || slotList.length === 0) {
-        $schedSlots.append('<li style="color:#888;padding:8px;">해당 날짜에 등록된 요금 정보가 없습니다.</li>');
+        url: ctx + '/onespace/api/room-slots',
+        type: 'POST',
+        data: { roomNo: roomNo, targetDate: targetDate },
+        dataType: 'json'
+    }).done(function(slotList) {
+        console.log('[sched] slotList', slotList);
+        if (!slotList || slotList.length === 0) {
+            $schedSlots.append('<li style="color:#888;padding:8px;">예약 가능한 시간대가 없습니다.</li>');
+            updateSummaryAndState();
+            return;
+        }
+        slotList.forEach(slot => {
+            if (slot.price > 0) renderSlot(slot);
+        });
+        if ($schedSlots.children().length === 0) {
+            $schedSlots.append('<li style="color:#888;padding:8px;">예약 가능한 시간대가 없습니다.</li>');
+        }
+        bindSlotClick();
         updateSummaryAndState();
-        return;
-      }
-      // 렌더
-      slotList.forEach(function(slot){
-        renderSlot(slot);
-      });
-      bindSlotClick();
-      updateSummaryAndState();
-    }).fail(function(xhr, status, err){
-      console.error('[sched] loadSlots fail', status, err);
-      $schedSlots.append('<li style="color:#c00;padding:8px;">슬롯 조회 실패</li>');
+    }).fail(function(xhr, status, err) {
+        console.error('[sched] loadSlots fail', status, err);
+        $schedSlots.append('<li style="color:#c00;padding:8px;">슬롯 조회 실패</li>');
     });
   }
 
-  function renderSlot(slotVO){
-    // slotVO의 필드명이 다양할 수 있으니 여러 가능성 체크
-    const start = (slotVO.startHour!==undefined)? +slotVO.startHour :
-                  (slotVO.start!==undefined)? +slotVO.start :
-                  (slotVO.hour!==undefined)? +slotVO.hour :
-                  (slotVO.startNo!==undefined)? +slotVO.startNo : 0;
-    const price = (slotVO.price!==undefined)? +slotVO.price :
-                  (slotVO.hourlyPrice!==undefined)? +slotVO.hourlyPrice : 0;
-    const end = start + 1;
+  function renderSlot(slotVO) {
+    const start = slotVO.slotNo !== undefined ? +slotVO.slotNo : 0;
+    const price = slotVO.price !== undefined ? +slotVO.price : 0;
+    if (price === 0) return; // 가격이 0인 슬롯은 표시하지 않음
+    const end = (start + 1) % 24; // 23 다음은 24로 설정
 
     const $li = $('<li>')
-      .addClass('slot')
-      .attr('data-start', start)
-      .attr('data-end', end)
-      .attr('data-price', price)
-      .html(pad2(start) + '~' + pad2(end) + '<span>(' + price.toLocaleString() + ')</span>');
+        .addClass('slot')
+        .attr('data-start', start)
+        .attr('data-end', end)
+        .attr('data-price', price)
+        .html(pad2(start) + '~' + pad2(end) + '<span>(' + price.toLocaleString() + ')</span>');
 
     $schedSlots.append($li);
   }
@@ -383,13 +381,215 @@ $(document).ready(function(){
   // 닫기/선택
   $schedClose.on('click', function(){ $overlay.hide(); });
   $schedSubmit.on('click', function(){
-    alert($schedDate.text() + ' ' + $schedTime.text() + ' / ' + $schedPrice.text() + ' 선택되었습니다.');
-    $overlay.hide();
-  });
+	  const $selected = $schedSlots.find('.slot.selected');
+	  if ($selected.length === 0) {
+	    alert('시간대를 선택해 주세요.');
+	    return;
+	  }
 
-  // 초기 캘린더 렌더(선택적)
+	  const starts = $selected.map(function(){ return +this.dataset.start; }).get().sort((a,b)=>a-b);
+	  const startHour = starts[0];
+	  const endHour = +$selected.last().attr('data-end') || (starts[starts.length-1] + 1);
+	  const totalPrice = $selected.toArray().reduce((sum, el) => sum + (+el.dataset.price || 0), 0);
+	  const spaceName = $('.open-schedule[data-room-no="' + $overlay.data('room-no') + '"]').closest('.practice-card').find('.practice-card-title').text();
+	  const voteDate = $schedDate.text();
+
+	  $.ajax({
+	    url: ctx + '/onespace/api/vote-option',
+	    method: 'POST',
+	    data: {
+	      userNo: 1, // 세션에서 동적으로 가져오도록 수정
+	      roomNo: $overlay.data('room-no'),
+	      voteDate: voteDate,
+	      voteTime: startHour + ':00~' + endHour + ':00',
+	      voteNo: 0 // 기본값 0 설정, 또는 votes에서 유효한 값 조회
+	    },
+	    dataType: 'json'
+	  }).done(function(res){
+	    if (res.success) {
+	      const $newItem = $('<li class="fav-item">').append(
+	        $('<div>').append(
+	          $('<div class="fav-item-title">').text($favList.children('.fav-item').length + 1 + '. ' + spaceName)
+	        ).append(
+	          $('<div class="fav-item-meta">').append(
+	            $('<span>').text(voteDate)
+	          ).append(
+	            $('<span class="fav-time">').text(startHour + ':00~' + endHour + ':00')
+	          ).append(
+	            $('<span class="fav-duration">').text((endHour - startHour) + '시간')
+	          )
+	        )
+	      ).append(
+	        $('<div class="fav-right">').append(
+	          $('<div class="fav-hot">').text('🔥 <b>0</b>')
+	        ).append(
+	          $('<div class="fav-price">').text('가격: ' + totalPrice.toLocaleString() + ' 원')
+	        )
+	      ).data('reservationNo', res.reservationNo);
+
+	      $favList.append($newItem);
+	      if ($favList.find('.fav-item[style="color:#888;"]').length) {
+	        $favList.find('.fav-item[style="color:#888;"]').remove();
+	      }
+	      alert(res.message || '투표 옵션 추가 완료');
+	    } else {
+	      alert(res.message || '투표 옵션 추가 실패');
+	    }
+	  }).fail(function(xhr, status, err){
+	    console.error('투표 옵션 추가 실패', status, err);
+	    alert('서버 오류가 발생했습니다.');
+	  });
+
+	  $overlay.hide();
+	});
+  
+  //schedSubmit 클릭 핸들러: 서버로 저장하고, 성공하면 우측 리스트에 추가
+  $schedSubmit.off('click').on('click', function(){
+    // 읽을 값
+    const displayDate = toYYYYMMDD(selectedDate); // "YYYY-MM-DD" (서버와 DB에 저장될 포맷)
+    const $selectedSlots = $schedSlots.find('.slot.selected');
+    if ($selectedSlots.length === 0) {
+      alert('시간을 선택하세요.');
+      return;
+    }
+
+    // 연속 선택 가정: 시작시간 = min(selected.start), 끝시간 = max(start)+1
+    const starts = $selectedSlots.map(function(){ return +this.dataset.start; }).get().sort((a,b)=>a-b);
+    const startHour = starts[0];
+    const endHour = (+$selectedSlots.last().attr('data-end')) || (starts[starts.length-1] + 1);
+
+    // voteTime 포맷: "HH:MM~HH:MM"
+    function pad2(n){ return String(n).padStart(2,'0'); }
+    const voteTime = pad2(startHour) + ':00~' + pad2(endHour) + ':00';
+
+    // roomNo는 overlay에 저장해 두었음
+    const roomNo = $overlay.data('room-no');
+    if (!roomNo) {
+      alert('방 정보가 없습니다.');
+      return;
+    }
+
+    // UI 잠금
+    $schedSubmit.prop('disabled', true).text('저장중...');
+
+    $.ajax({
+      url: ctx + '/onespace/api/favorite-candidate',
+      method: 'POST',
+      data: {
+        roomNo: roomNo,
+        voteDate: displayDate,
+        voteTime: voteTime
+      },
+      dataType: 'json'
+    })
+    .done(function(resp){
+      if (resp && resp.success) {
+        // 서버에 저장 성공 -> 우측 리스트에 항목 추가
+        // 서버가 반환한 voteDate, voteTime, id 사용
+        const rDate = resp.voteDate || displayDate;
+        const rTime = resp.voteTime || voteTime;
+        const newId = resp.id || null;
+
+        // 표시 포맷(화면용)
+        const displayDateStr = (function(d){
+           // "YYYY-MM-DD" -> "YYYY/MM/DD(요일)"
+           const parts = d.split('-');
+           if (parts.length === 3) {
+             const dd = new Date(+parts[0], (+parts[1]-1), +parts[2]);
+             const week = ['일','월','화','수','목','금','토'][dd.getDay()];
+             return parts[0] + '/' + parts[1].padStart(2,'0') + '/' + parts[2].padStart(2,'0') + '(' + week + ')';
+           }
+           return d;
+        })(rDate);
+
+        // 가격/시간/길이 등은 이미 화면에서 계산해 쓰면 됨.
+        // 우측 .fav-list에 새 li 생성 (서버에 저장된 항목과 유사하게)
+        const $li = $('<li class="fav-item">').html(
+          '<div>' +
+            '<div class="fav-item-title">__NUM__ ' + $('<div>').text($overlay.data('space-name') || '연습실').html() + '</div>' +
+            '<div class="fav-item-meta">' +
+              '<span class="fav-date">' + $('<div>').text(displayDateStr).html() + '</span> ' +
+              '<span class="fav-time">' + $('<div>').text(rTime).html() + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="fav-right">' +
+            '<div class="fav-hot">🔥 <b>0</b></div>' +
+            '<div class="fav-price">가격: -</div>' +
+          '</div>'
+        );
+
+        const $favList = $('.fav-list');
+        $favList.find('li').filter(function(){ return $(this).text().trim().indexOf('선택한 후보가 없습니다.') !== -1; }).remove();
+        $favList.prepend($li);
+        // 번호 재정렬
+        $favList.find('li').each(function(index){
+          const $t = $(this).find('.fav-item-title');
+          const plain = $t.text().replace(/^\d+\.\s*/, '').trim();
+          $t.text((index + 1) + '. ' + plain);
+        });
+
+        // 닫기 및 알림
+        $overlay.hide();
+        alert('후보가 저장되었습니다.');
+      } else {
+        alert(resp && resp.message ? resp.message : '저장 실패');
+      }
+    })
+    .fail(function(xhr, status, err){
+      console.error('favorite-candidate save fail', status, err);
+      alert('서버 오류가 발생했습니다.');
+    })
+    .always(function(){
+      $schedSubmit.prop('disabled', false).text('선택');
+    });
+  });
+  
+  // 초기 캘린더 렌더
   renderCalendar();
 
+  $(document).off('click', '.btn-like[data-room-no]').on('click', '.btn-like[data-room-no]', function(e){
+    e.preventDefault();
+    var $btn = $(this);
+    var roomNo = $btn.data('room-no');
+
+    if (!roomNo) {
+      alert('roomNo 정보가 없습니다.');
+      return;
+    }
+
+    if (!confirm('정말 이 연습실의 찜을 해제하시겠습니까?')) return;
+
+    // UI 표시
+    var origText = $btn.text();
+    $btn.prop('disabled', true).text('처리중...');
+
+    $.ajax({
+      url: ctx + '/onespace/api/favorite/remove',
+      method: 'POST',
+      data: { roomNo: roomNo },
+      dataType: 'json'
+    })
+    .done(function(res){
+      if (res && res.success) {
+        // 해당 카드(연습실 항목)를 DOM에서 제거
+        var $card = $btn.closest('.practice-card');
+        if ($card.length) {
+          $card.slideUp(200, function(){ $(this).remove(); });
+        } else {
+          location.reload(); // 안전 장치
+        }
+        alert(res.message || '찜 해제 완료');
+      } else {
+        alert(res && res.message ? res.message : '찜 해제 실패');
+        $btn.prop('disabled', false).text(origText);
+      }
+    })
+    .fail(function(xhr, status, err){
+      console.error('찜 해제 실패', status, err);
+      alert('서버 오류가 발생했습니다.');
+      $btn.prop('disabled', false).text(origText);
+    });
+  });
 }); // document.ready
 </script>
   
