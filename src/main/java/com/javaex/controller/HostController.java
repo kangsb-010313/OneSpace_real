@@ -94,24 +94,24 @@ public class HostController {
     }
 
     /* 신규 저장 */
-    @PostMapping("/spaces/insert")
-    public String insert(@ModelAttribute HostVO vo,
-                         @RequestParam(value = "repImage", required = false) MultipartFile repImage,
-                         HttpSession session) {
-
-        Long userno = get_login_userno(session);
-        if (userno == null) return "redirect:/user/loginform";
-        vo.setUserno(userno);
-
-        if (repImage != null && !repImage.isEmpty()) {
-            TeamAttachmentsVO att = attachService.exeSave(repImage);
-            if (att != null) vo.setRepimg(att.getTeamStoredFileName());
-        }
-
-        hostService.createSpace(vo); // useGeneratedKeys -> vo.spacesno
-        // 저장 후 방 등록으로 이동
-        return "redirect:/onespace/hostcenter/rooms/new?spacesNo=" + vo.getSpacesno();
-    }
+//    @PostMapping("/spaces/insert")
+//    public String insert(@ModelAttribute HostVO vo,
+//                         @RequestParam(value = "repImage", required = false) MultipartFile repImage,
+//                         HttpSession session) {
+//
+//        Long userno = get_login_userno(session);
+//        if (userno == null) return "redirect:/user/loginform";
+//        vo.setUserno(userno);
+//
+//        if (repImage != null && !repImage.isEmpty()) {
+//            TeamAttachmentsVO att = attachService.exeSave(repImage);
+//            if (att != null) vo.setRepimg(att.getTeamStoredFileName());
+//        }
+//
+//        hostService.createSpace(vo); // useGeneratedKeys -> vo.spacesno
+//        // 저장 후 방 등록으로 이동
+//        return "redirect:/onespace/hostcenter/rooms/new?spacesNo=" + vo.getSpacesno();
+//    }
 
     /* 수정 저장 */
 //    @PostMapping("/spaces/update")
