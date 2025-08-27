@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.javaex.service.AttachService;
 import com.javaex.service.HostService;
 import com.javaex.service.RoomService;
+import com.javaex.vo.FacilityInfoVO;
 import com.javaex.vo.HostVO;
 import com.javaex.vo.RoomsVO;
 
@@ -66,6 +67,11 @@ public class HostController {
         HostVO empty = new HostVO();
         empty.setUserno(userno);
         model.addAttribute("space", empty);
+        
+        // ★★★ HostService를 통해 전체 시설 목록을 조회합니다.
+        List<FacilityInfoVO> facilityList = hostService.getAllFacilities();
+        model.addAttribute("facilityList", facilityList);
+        
         return "forward:/WEB-INF/views/admin/host/host_info.jsp";
     }
 
@@ -103,6 +109,7 @@ public class HostController {
     @PostMapping("/spaces/insert")
     public String insert(@ModelAttribute HostVO vo,
                          @RequestParam(value = "repImage", required = false) MultipartFile repImage,
+                         @RequestParam(value = "facilityNos", required = false) List<Long> facilityNos, 
                          HttpSession session) {
 
         Long userno = get_login_userno(session);
@@ -121,6 +128,12 @@ public class HostController {
         }
 
         hostService.createSpace(vo); // useGeneratedKeys -> vo.spacesno
+        
+        if (vo.getSpacesno() != null && facilityNos != null) {
+            hostService.replaceFacilities(vo.getSpacesno(), facilityNos);
+        }
+        
+        
         // 저장 후 방 등록으로 이동
         return "redirect:/onespace/hostcenter/rooms/new?spacesNo=" + vo.getSpacesno();
     }
@@ -129,6 +142,7 @@ public class HostController {
     @PostMapping("/spaces/update")
     public String update(@ModelAttribute HostVO vo,
                          @RequestParam(value = "repImage", required = false) MultipartFile repImage,
+                         @RequestParam(value = "facilityNos", required = false) List<Long> facilityNos, 
                          HttpSession session) {
 
         Long userno = get_login_userno(session);
@@ -144,6 +158,11 @@ public class HostController {
         }
 
         hostService.updateSpace(vo);
+        
+        if (vo.getSpacesno() != null && facilityNos != null) {
+            hostService.replaceFacilities(vo.getSpacesno(), facilityNos);
+        }
+        
         return "redirect:/onespace/hostcenter/spaces";
     }
 

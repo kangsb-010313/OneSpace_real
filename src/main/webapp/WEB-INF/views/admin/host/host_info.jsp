@@ -94,20 +94,14 @@
         <section class="form-section">
           <div class="section-title">시설 안내</div>
           <div class="facility-list">
-            <label><input type="checkbox" name="facility" value="음향/마이크">음향/마이크</label>
-            <label><input type="checkbox" name="facility" value="의자/테이블">의자/테이블</label>
-            <label><input type="checkbox" name="facility" value="화이트 보드">화이트 보드</label>
-            <label><input type="checkbox" name="facility" value="전신 거울">전신 거울</label>
-            <label><input type="checkbox" name="facility" value="조명">조명</label>
-            <label><input type="checkbox" name="facility" value="탈의실">탈의실</label>
-            <label><input type="checkbox" name="facility" value="주차">주차</label>
-            <label><input type="checkbox" name="facility" value="인터넷/WIFI">인터넷/WIFI</label>
-            <label><input type="checkbox" name="facility" value="TV/프로젝터">TV/프로젝터</label>
-            <label><input type="checkbox" name="facility" value="내부 화장실">내부 화장실</label>
-            <label><input type="checkbox" name="facility" value="금연">금연</label>
-            <label><input type="checkbox" name="facility" value="장비 대여">장비 대여</label>
-            <label><input type="checkbox" name="facility" value="실외화 가능">실외화 가능</label>
-            <label><input type="checkbox" name="facility" value="외부음식 반입 금지">외부음식 반입 금지</label>
+			<!-- facilityList는 컨트롤러에서 미리 조회해서 모델에 담아줘야 합니다. -->
+			<c:forEach var="facility" items="${facilityList}">
+			  <label>
+			    <!-- ★★★ name="facilityNos", value="시설의 숫자 ID" 가 핵심입니다. -->
+			    <input type="checkbox" name="facilityNos" value="${facility.facilityNo}">
+			    ${facility.facilityName}
+			  </label>
+			</c:forEach>
           </div>
         </section>
 

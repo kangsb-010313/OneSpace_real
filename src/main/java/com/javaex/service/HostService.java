@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.javaex.repository.HostRepository;
+import com.javaex.vo.FacilityInfoVO;
 import com.javaex.vo.HostVO;
 
 @Service
@@ -42,11 +43,33 @@ public class HostService {
         validate_for_update(vo);
         return hostRepository.updateSpace(vo);
     }
+    
+    /** [추가] 전체 시설 목록을 가져오는 메소드 */
+    public List<FacilityInfoVO> getAllFacilities() {
+        return hostRepository.selectAllFacilities();
+    }
 
-    /** 시설 교체 저장: (스키마 미사용 시) no-op */
+    /** 
+     * [수정] 시설 정보 교체 저장
+     * @param spacesno 어느 공간에 속한 시설인지 (FK)
+     * @param facilityNos 새로 저장할 시설 ID 목록
+     */
     @Transactional
-    public void replaceFacilities(Long spacesno, List<String> names) {
-        // 필요 시 facilityInfo 연동 로직 추가
+    public void replaceFacilities(Long spacesno, List<Long> facilityNos) {
+        System.out.println("HostService.replaceFacilities() - 시설 정보 교체 시작");
+
+        // 1. 이 공간(spacesno)에 연결된 기존 시설 정보를 모두 삭제합니다.
+        hostRepository.deleteFacilitiesBySpacesno(spacesno);
+
+        // 2. 새로 전달받은 시설 ID 목록이 있다면, 하나씩 다시 저장합니다.
+        if (facilityNos != null && !facilityNos.isEmpty()) {
+            for (Long facilityNo : facilityNos) {
+                // 3. ID가 null이 아닌 경우에만 저장
+                if(facilityNo != null) {
+                    hostRepository.insertFacility(spacesno, facilityNo);
+                }
+            }
+        }
     }
 
     /* --------------------- 내부 유틸 --------------------- */
