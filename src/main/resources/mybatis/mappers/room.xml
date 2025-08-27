@@ -68,9 +68,6 @@
     <result property="storedFileName" column="storedFileName"/>
     <result property="originFileName" column="originFileName"/>
     <result property="filePath"       column="filePath"/>
-    <result property="fileSize"       column="fileSize"/>
-    <!-- DB가 content_type 이면 column="content_type" 또는 SELECT 별칭 -->
-    <result property="contentType"    column="contentType"/>
     <result property="instDtm"        column="instDtm"/>
     <result property="updtDtm"        column="updtDtm"/>
   </resultMap>
@@ -115,9 +112,8 @@
       storedFileName,
       originFileName,
       filePath,
-      fileSize,
-      contentType      AS contentType,
-      instDtm, updtDtm
+      instDtm, 
+      updtDtm
     FROM roomAttachments
     WHERE refType='ROOM' AND roomNo = #{value}
     ORDER BY picturesNo ASC
@@ -139,8 +135,7 @@
         roomInfo = #{roomInfo},
         area     = #{area},
         capacity = #{capacity},
-        thumbImg = #{thumbImg}, 
-        instDtm = #{instDtm},  
+        thumbImg = #{thumbImg},   
         updtDtm = now()
     WHERE roomNo = #{roomNo}
   </update>

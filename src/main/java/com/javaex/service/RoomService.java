@@ -52,7 +52,7 @@ public class RoomService {
                     
                     if (fileInfo != null) {
                         // (5) DB에 저장할 RoomAttachment 객체를 만들고 정보를 채웁니다.
-                        RoomAttachment attachment = new RoomAttachment();
+                        RoomAttachment attachment = new RoomsVO.RoomAttachment();
                         attachment.setRefType("ROOM"); // 이 파일이 '연습실'에 속한 파일임을 명시
                         attachment.setRefNo(roomNo);   // FK (방금 생성/수정한 연습실 번호)
                         attachment.setStoredFileName((String) fileInfo.get("saveName"));
