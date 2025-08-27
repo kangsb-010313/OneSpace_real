@@ -55,7 +55,7 @@
                 <input type="file" name="infoImgFile" id="infoImgFile" hidden>
               </label>
 
-              <div id="filename-preview" class="file-preview" style="margin-top:10px;font-size:14px;color:#444;"></div>
+              <div id="filename-preview" class="file-preview"></div>
             </div>
 
             <div class="actions">

@@ -212,6 +212,20 @@
     color: #fff;
   }
   
+  /* 파일명 프리뷰 */
+  .textarea-wrap .file-preview {
+  position: absolute;
+  left: 0;
+  right: 160px;   /* 버튼 폭(+여백)만큼 오른쪽을 비워둠 */
+  bottom: 10px;
+  font-size: 14px;
+  color: #444;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 길면 ... 처리 */
+}
+
+  
   /* ===== 버튼 공통 ===== */
   .btn {
     display: inline-flex;
