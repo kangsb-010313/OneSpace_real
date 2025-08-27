@@ -72,6 +72,9 @@ public class PracticeroomController {
 		
 		//userNo 세션에서 꺼낸다
 		UserVO authUser = (UserVO)session.getAttribute("authUser");
+		if(authUser == null) {
+            return "redirect:/onespace/loginForm";
+        }
 		int userNo = authUser.getUserNo();
 		System.out.println("userNo from session: " + userNo);
 		
