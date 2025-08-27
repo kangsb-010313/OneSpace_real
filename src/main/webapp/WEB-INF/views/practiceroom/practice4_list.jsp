@@ -133,7 +133,6 @@
 		<!-- /푸터 영역------------------------------------------------ -->
 
 
-
 		<!-- 모달 영역------------------------------------------------ -->
 		<div id="scheduleModal" class="sched-overlay" role="dialog" aria-modal="true" aria-hidden="true">
 			<div class="sched-modal" onclick="event.stopPropagation()">

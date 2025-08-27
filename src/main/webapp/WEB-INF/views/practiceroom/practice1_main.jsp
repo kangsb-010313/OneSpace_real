@@ -11,33 +11,32 @@
   <c:set var="ctx" value="${pageContext.request.contextPath}" />
   <link rel="stylesheet" href="${ctx}/assets/css/reset.css">
   <link rel="stylesheet" href="${ctx}/assets/css/basicdefault.css">
-  <link rel="stylesheet" href="${ctx}/assets/css/main.css">
   <link rel="stylesheet" href="${ctx}/assets/css/practice1_main.css">
-  <link rel="stylesheet" href="${ctx}/assets/css/asidedefault.css">
 </head>
 <body>
-  <div id="wrap" class="wrap page-practice">
+  <div id="wrap">
     
     <!-- 헤더 영역------------------------------------------------ -->
-    <header>
-      <c:import url="/WEB-INF/views/include/header.jsp" />
-    </header>
+    <c:import url="/WEB-INF/views/include/header.jsp" />
     <!-- /헤더 영역----------------------------------------------- -->
-	
 	
     <!-- 본문 -->
     <!-- 컨텐츠 영역---------------------------------------------- -->
     <main>
       <div class="container">
+        
+        <div class="title-box">
+            <div class="spacer"></div>
+            <h2 class="page-title">연습실찜하기</h2>
+		    <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
+			    찜리스트<span style="color:#ff3333;">❤</span>
+			</button>
+        </div>
+        
         <div class="main-section">
           <!-- 컨텐츠 -->
           <div class="content-area">
-            <div class="filter-bar">
-              <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
-			    찜리스트<span style="color:#ff3333;">❤</span>
-			  </button>
-            </div>
-            <h2 class="page-title">연습실찜하기</h2>
+            
             <div style="width: 90%; border-bottom: 1px solid #e4e2ef; margin-left: 50px;"></div>
             <div class="search-row">
               <input class="search-hash" type="text" placeholder="#찾는 공간이 있나요?" />
@@ -236,9 +235,7 @@
   </div>
   
   <!-- 푸터 영역------------------------------------------------ -->
-  <footer>
-    <c:import url="/WEB-INF/views/include/footer.jsp" />
-  </footer>
+  <c:import url="/WEB-INF/views/include/footer.jsp" />
   <!-- /푸터 영역----------------------------------------------- -->
     
 </body>

@@ -132,12 +132,12 @@
           </div>
         </div>
     </main>
-
-    <!-- 푸터 영역 -->
-    <footer>
-      <c:import url="/WEB-INF/views/include/footer.jsp" />
-    </footer>
     
   </div>
+  
+  <!-- 푸터 영역------------------------------------------------ -->
+  <c:import url="/WEB-INF/views/include/footer.jsp" />
+  <!-- /푸터 영역----------------------------------------------- -->
+    
 </body>
 </html>
