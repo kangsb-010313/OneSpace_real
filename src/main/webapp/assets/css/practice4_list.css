@@ -1,152 +1,329 @@
-/* practice4-list.css
-*/
-@charset "UTF-8";
+/* practice4-list.css */
+.zzim .two-col {
+	display: flex;
+	gap: 40px;
+	align-items: flex-start;
+}
 
-body {
-    margin: 0;
-    padding: 0;
+
+/* 찜리스트 (왼쪽) ****************************************************************/
+.zzim .practice-card-list {
+	display: flex;
+	flex-direction: column;
+	gap: 26px;
+	max-width: 640px;
+	width: 100%;
+}
+
+.zzim .practice-card-list .practice-card {
+    border-radius: 16px;
     background: #fff;
-    font-family: 'SUIT', 'Pretendard', 'Noto Sans KR', Arial, sans-serif;
-    font-size: 16px;
+    overflow: hidden;
+    padding-bottom: 12px;
 }
 
-.wrap {
-    max-width: 1300px;
-    margin: 0 auto;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+.zzim .practice-card-list .card-bordered {
+    border: 1px solid #e5e5ff;
 }
 
-header {
-    display: flex;
-    align-items: flex-end;
-    padding: 0;
-    margin-top: 30px;
-    margin-bottom: 15px;
+.zzim .practice-card-list .practice-card .practice-card-img {
     width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
 }
 
-.logo {
-    font-size: 35px;
-    font-weight: bold;
-    color: #6a62e4;
-    letter-spacing: -2px;
-    white-space: nowrap;
-    margin-left: 30px;
-    margin-right: 55px;
-    transform: translateX(-30px);
+
+.zzim .practice-card-list .practice-card .practice-card-body {
+    padding: 12px 16px 8px;
 }
 
-.right-menu {
+.zzim .practice-card-list .practice-card .practice-card-body .practice-card-title {
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.zzim .practice-card-list .practice-card .practice-card-body .practice-card-meta {
+    font-size: 12px;
+    color: #7a7a7a;
+    margin-bottom: 6px;
+}
+
+.zzim .practice-card-list .practice-card .practice-card-body .practice-card-price {
     font-size: 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
-    margin-right: 24px;
-    margin-left: 20px;
-}
-
-.right-menu .btn,
-.right-menu .btn-outline {
-    border: none;
-    border-radius: 30px;
-    font-size: 12px;
-    padding: 10px 30px;
-    font-weight: 600;
-    cursor: pointer;
-    background: #fff;
-    color: #7a4eff;
-    border: 1.5px solid #7a4eff;
-    transition: background 0.15s, color 0.15s;
-}
-
-.right-menu .btn {
-    background: #7a4eff;
-    color: #fff;
-    border: none;
     font-weight: 700;
 }
 
-.right-menu .btn:hover,
-.right-menu .btn-outline:hover {
-    background: #5f3ccc;
-    color: #fff;
-    border-color: #5f3ccc;
-}
-
-.btn-list,
-.right-menu .btn-list {
-    background: #fff;
+.zzim .practice-card-list .practice-card .practice-card-body .practice-card-price .price-highlight {
     color: #7a4eff;
-    border: 1.5px solid #7a4eff;
-    font-weight: 700;
-    border-radius: 24px;
-    font-size: 13px;
-    padding: 10px 30px;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    white-space: nowrap;
-    margin-right: 30px;
 }
 
-.filter-bar {
-    width: 100%;
+.zzim .practice-card-list .practice-card .practice-card-body .practice-card-price .price-sub {
+    font-weight: 500;
+    color: #666;
+}
+
+
+.zzim .practice-card-list .practice-card .card-actions {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-bottom: 14px;
-    padding-right: 10px;
-}
-
-.filter-bar > .btn-list {
-    font-size: 12px;
-    padding: 6px 14px;
-    height: 32px;
-    min-width: 100px;
-    border-radius: 18px;
-    line-height: 1;
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 10px;
+    padding: 0 16px;
+}
+
+
+/* 연습실후보 (오른쪽) ****************************************************************/
+.zzim .fav-panel {
+    width: 350px;
+    flex: 0 0 350px;
+}
+
+.zzim .fav-panel .fav-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 12px;
+}
+
+
+.zzim .fav-panel .fav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.zzim .fav-panel .fav-list .fav-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.zzim .fav-panel .fav-list .fav-item .fav-item-title {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.zzim .fav-panel .fav-list .fav-item .fav-item-meta {
+    font-size: 14px;
+}
+
+.zzim .fav-panel .fav-list .fav-item .fav-item-meta .fav-time,
+.zzim .fav-panel .fav-list .fav-item .fav-item-meta .fav-duration {
+    color: #7a4eff;
+    font-weight: 700;
+    margin-left: 6px;
+}
+
+
+.zzim .fav-panel .fav-list .fav-item .fav-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     gap: 4px;
 }
 
-.page-practice4 .filter-bar > .btn-list,
-.page-practice4 .filter-bar > .btn-list:hover {
-    background: #5f3ccc;
+.zzim .fav-panel .fav-list .fav-item .fav-right .fav-hot {
+    font-size: 16px;
+}
+
+.zzim .fav-panel .fav-list .fav-item .fav-right .fav-price {
+    font-weight: 700;
+}
+
+/* 버튼영역 (하단) ****************************************************************/
+.zzim .cta-row {
+    display: flex;
+    gap: 12px;
+    margin: 10px 0 24px;
+    justify-content: center;
+}
+
+.zzim .cta-row .btn-primary {
+    width: 120px;
+    background: #7a4eff;
     color: #fff;
-    border-color: #5f3ccc;
-    cursor: default;
+    border-color: #7a4eff;
+    border-radius: 24px;
+    padding: 10px 0;
+    font-weight: 700;
 }
 
-.btn-outline3 {
-    border: 1px solid #7a4eff;
-    border-radius: 20px;
-    padding: 8px 16px;
+.zzim .cta-row .btn-pill {
+    width: 120px;
+    border-radius: 24px;
+    padding: 10px 0;
+    height: 36px;
+}
+
+
+
+/* 모달영역 ****************************************************************/
+
+#scheduleModal.sched-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+}
+
+#scheduleModal .sched-modal {
+    width: 360px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 18px 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+#scheduleModal .sched-modal .sched-month {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+#scheduleModal .sched-modal .sched-month .sched-title {
+    font-weight: 700;
+}
+
+#scheduleModal .sched-modal .sched-month .sched-nav {
+    border: 0;
+    background: #f2f1f8;
+    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+}
+
+#scheduleModal .sched-modal .sched-week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    font-size: 12px;
+    color: #9a96b6;
+    margin: 8px 6px 6px;
+}
+
+
+#scheduleModal .sched-modal .sched-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin: 0 6px 10px;
+}
+
+#scheduleModal .sched-modal .sched-days span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+#scheduleModal .sched-modal .sched-days span.muted {
+    opacity: 0.35;
+}
+
+#scheduleModal .sched-modal .sched-days span.today {
+    outline: 2px solid #e5e1ff;
+}
+
+#scheduleModal .sched-modal .sched-days span.picked {
+    background: #5e46ff;
+    color: #f1edff;
+    font-weight: 700;
+}
+
+
+#scheduleModal .sched-modal .sched-slots {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 6px 0 10px;
+}
+
+#scheduleModal .sched-modal .sched-slots .slot {
+    background: #eee8ff;
+    border-radius: 12px;
+    text-align: center;
+    padding: 10px 2px;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+#scheduleModal .sched-modal .sched-slots .slot span {
+    display: block;
+    font-size: 11px;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+#scheduleModal .sched-modal .sched-slots .slot.selected {
+    background: #5e46ff;
+    color: #fff;
+}
+
+#scheduleModal .sched-modal .sched-slots .slot.disabled {
+    background: #e9e6f3;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+#scheduleModal .sched-modal .sched-summary {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 6px 0 12px;
+}
+
+#scheduleModal .sched-modal .sched-summary .label {
+    font-weight: 800;
+    font-size: 12px;
+}
+
+#scheduleModal .sched-modal .sched-summary .rows {
+    display: flex;
+    gap: 16px;
     font-size: 14px;
-    color: #7a4eff;
+}
+
+#scheduleModal .sched-modal .sched-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+#scheduleModal .sched-modal .sched-actions .btn {
+    border: 1px solid #e4e2ef;
+    border-radius: 24px;
+    padding: 10px 18px;
     background: #fff;
     cursor: pointer;
-    text-align: center;
-    display: block;
-    margin-bottom: 8px;
 }
 
-.btn-outline2 {
-    border: 1px solid #7a4eff;
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-size: 14px;
-    color: #7a4eff;
-    background: #fff;
-    cursor: pointer;
-    text-align: center;
-    display: block;
+#scheduleModal .sched-modal .sched-actions .btn.primary {
+    background: #7a4eff;
+    border-color: #7a4eff;
+    color: #fff;
+    font-weight: 700;
 }
 
-.btn-like {
+
+
+/* 버튼(공통) ****************************************************************/
+.zzim .btn-like {
     background-color: #ffcd00;
     color: white;
     font-size: 12px;
@@ -161,12 +338,12 @@ header {
     line-height: 17px;
 }
 
-.btn-like:hover {
+.zzim .btn-like:hover {
     background-color: #f5b800;
 }
 
-.card-actions .btn-pill-sm,
-.cta-row .btn-pill {
+.zzim .card-actions .btn-pill-sm,
+.zzim .cta-row .btn-pill {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -174,17 +351,18 @@ header {
     box-sizing: border-box;
 }
 
-.btn-pill-sm {
+
+.zzim .btn-pill-sm {
     border-radius: 20px;
     padding: 8px 14px;
     height: 30px;
 }
 
-.btn-pill-sm.btn-like {
+.zzim .btn-pill-sm.btn-like {
     padding: 8px 18px;
 }
 
-.btn-primary {
+.zzim .btn-primary {
     width: 120px;
     background: #7a4eff;
     color: #fff;
@@ -194,399 +372,11 @@ header {
     font-weight: 700;
 }
 
-.btn-pill {
+.zzim .btn-pill {
     width: 120px;
     border-radius: 24px;
     padding: 10px 0;
     height: 36px;
 }
 
-.main-section {
-    display: flex;
-    flex: 1;
-    width: 100%;
-    margin-top: -20px;
-    min-height: 600px;
-}
-
-.content-area {
-    flex: 1;
-    padding-top: 5px;
-    padding-left: 0;
-    padding-right: 18px;
-    min-width: 0;
-}
-
-.team-list-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.page-title {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0 0 5px;
-    text-align: center;
-}
-
-.page-divider {
-    width: 90%;
-    border-bottom: 1px solid #e4e2ef;
-    margin: 0 auto 16px;
-}
-
-.two-col {
-    display: flex;
-    gap: 40px;
-    align-items: flex-start;
-}
-
-.practice-card-list {
-    display: flex;
-    flex-direction: column;
-    gap: 26px;
-    max-width: 640px;
-    width: 100%;
-}
-
-.practice-card {
-    border-radius: 16px;
-    background: #fff;
-    overflow: hidden;
-    padding-bottom: 12px;
-}
-
-.card-bordered {
-    border: 1px solid #e5e5ff;
-}
-
-.practice-card-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    display: block;
-}
-
-.practice-card-body {
-    padding: 12px 16px 8px;
-}
-
-.practice-card-title {
-    font-weight: 700;
-    margin-bottom: 2px;
-}
-
-.practice-card-meta {
-    font-size: 12px;
-    color: #7a7a7a;
-    margin-bottom: 6px;
-}
-
-.practice-card-price {
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.practice-card-price .price-highlight {
-    color: #7a4eff;
-}
-
-.practice-card-price .price-sub {
-    font-weight: 500;
-    color: #666;
-}
-
-.card-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 16px;
-}
-
-.fav-panel {
-    width: 350px;
-    flex: 0 0 350px;
-}
-
-.fav-title {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0 0 12px;
-}
-
-.fav-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.fav-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.fav-item-title {
-    font-weight: 700;
-    font-size: 14px;
-}
-
-.fav-item-meta {
-    font-size: 14px;
-}
-
-.fav-time,
-.fav-duration {
-    color: #7a4eff;
-    font-weight: 700;
-    margin-left: 8px;
-}
-
-.fav-duration {
-    margin-left: 6px;
-}
-
-.fav-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-}
-
-.fav-hot {
-    font-size: 16px;
-}
-
-.fav-price {
-    font-weight: 700;
-}
-
-.cta-row {
-    display: flex;
-    gap: 12px;
-    margin: 10px 0 24px;
-    justify-content: center;
-}
-
-.sched-overlay {
-    position: fixed;
-    inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 1000;
-}
-
-.sched-modal {
-    width: 360px;
-    background: #fff;
-    border-radius: 16px;
-    padding: 18px 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.sched-month {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 6px;
-}
-
-.sched-title {
-    font-weight: 700;
-}
-
-.sched-nav {
-    border: 0;
-    background: #f2f1f8;
-    border-radius: 8px;
-    width: 28px;
-    height: 28px;
-    cursor: pointer;
-}
-
-.sched-week {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    font-size: 12px;
-    color: #9a96b6;
-    margin: 8px 6px 6px;
-}
-
-.sched-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    margin: 0 6px 10px;
-}
-
-.sched-days span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 28px;
-    font-size: 12px;
-    border-radius: 8px;
-}
-
-.sched-days span.muted {
-    opacity: 0.35;
-}
-
-.sched-days span.today {
-    outline: 2px solid #e5e1ff;
-}
-
-.sched-days span.picked {
-    background: #5e46ff;
-    color: #f1edff;
-    font-weight: 700;
-}
-
-.sched-slots {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    list-style: none;
-    padding: 0;
-    margin: 6px 0 10px;
-}
-
-.sched-slots .slot {
-    background: #eee8ff;
-    border-radius: 12px;
-    text-align: center;
-    padding: 10px 2px;
-    cursor: pointer;
-    font-size: 12px;
-    line-height: 1.2;
-}
-
-.sched-slots .slot span {
-    display: block;
-    font-size: 11px;
-    opacity: 0.8;
-    margin-top: 2px;
-}
-
-.sched-slots .slot.selected {
-    background: #5e46ff;
-    color: #fff;
-}
-
-.sched-slots .slot.disabled {
-    background: #e9e6f3;
-    color: #aaa;
-    cursor: not-allowed;
-}
-
-.sched-summary {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin: 6px 0 12px;
-}
-
-.sched-summary .label {
-    font-weight: 800;
-    font-size: 12px;
-}
-
-.sched-summary .rows {
-    display: flex;
-    gap: 16px;
-    font-size: 14px;
-}
-
-.sched-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 8px;
-}
-
-.btn {
-    border: 1px solid #e4e2ef;
-    border-radius: 24px;
-    padding: 10px 18px;
-    background: #fff;
-    cursor: pointer;
-}
-
-.btn.primary {
-    background: #7a4eff;
-    border-color: #7a4eff;
-    color: #fff;
-    font-weight: 700;
-}
-
-footer {
-    flex-shrink: 0;
-    background: #f5f3f3;
-    padding: 18px 0 8px 0;
-    font-size: 13px;
-    color: #888;
-    border-top: 1.6px solid #e3e3e3;
-    width: 100%;
-    margin-top: 45px;
-}
-
-.footer-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 18px;
-}
-
-.footer-row-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 7px;
-}
-
-.footer-brand {
-    color: #6a62e4;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: -1px;
-    margin-right: 7px;
-}
-
-.footer-row-mid {
-    margin: 8px 0 7px 0;
-    line-height: 1.8;
-    color: #555;
-    font-size: 11px;
-    text-align: left;
-}
-
-.footer-row-bottom {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-top: 7px;
-}
-
-.footer-copyright {
-    font-size: 12px;
-    color: #888;
-}
-
-.placeholder {
-    background: #f5f5f5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #bbb;
-}
 

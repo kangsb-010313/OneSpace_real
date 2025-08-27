@@ -3,6 +3,7 @@ package com.javaex.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.service.PracticeroomService;
+import com.javaex.service.TeampageService;
 import com.javaex.vo.ReserveInfoVO;
 import com.javaex.vo.RoomsVO;
 import com.javaex.vo.SlotVO;
@@ -27,12 +29,12 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/onespace")
 public class PracticeroomController {
 
-	private final PracticeroomService practiceroomService;
+	@Autowired
+	private PracticeroomService practiceroomService;
+	
+	@Autowired
+	private TeampageService teampageService;
 
-	// 생성자 자동 생성 & 주입
-	public PracticeroomController(PracticeroomService s) {
-		this.practiceroomService = s;
-	}
 
 	// http://localhost:8888/onespace/practice1_main
 	// 최초 진입: 8장만
@@ -98,6 +100,10 @@ public class PracticeroomController {
 
 		model.addAttribute("favoriteCandidates", practiceroomService.getFavoriteCandidates(userNo));
 
+		//로그인한 사용자의 팀리스트
+		List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
+		model.addAttribute("allTeams", userTeamList); 
+		
 		return "practiceroom/practice4_list";
 	}
 	

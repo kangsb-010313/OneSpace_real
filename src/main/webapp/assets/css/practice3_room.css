@@ -1,6 +1,4 @@
-/* practice3-room.css
-*/
-@charset "UTF-8";
+/* practice3-room.css */
 
 body {
     margin: 0;
@@ -84,9 +82,13 @@ header {
 .team-like-row .btn-outline,
 .team-like-row .btn-like {
     height: 35px;
-    min-width: 100px;
+    width: 120px;
     padding: 10px 30px;
     box-sizing: border-box;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
 }
 
 .btn-like {
@@ -269,19 +271,4 @@ footer {
     align-items: center;
     justify-content: center;
     color: #bbb;
-}
-
-@media (max-width: 1200px) {
-    .wrap {
-        max-width: 98vw;
-    }
-}
-
-@media (max-width: 900px) {
-    .detail-container {
-        flex-direction: column;
-    }
-    .right-col {
-        width: 100%;
-    }
 }

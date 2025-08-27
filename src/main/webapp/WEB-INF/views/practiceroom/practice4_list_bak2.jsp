@@ -44,6 +44,7 @@
                   <a href="#" class="btn-outline2 teamadd-btn">팀 등록하기</a>
                 </div>
                 <div id="main-content">
+                
                   <div class="page-title">찜리스트</div>
                   <div style="width: 90%; border-bottom: 1px solid #e4e2ef; margin-left: 30px;"></div>
                   <br>
