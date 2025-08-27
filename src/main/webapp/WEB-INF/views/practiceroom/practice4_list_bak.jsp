@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<c:set var="CTX" value="${pageContext.request.contextPath}" />
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -117,7 +115,7 @@
 						<!-- //two-col -->
 						<br> <br>
 						<div class="cta-row">
-							<button class="btn-outline btn-primary" onclick="location.href='${pageContext.request.contextPath}/onespace/teams/3/posts/writeform?teamPostType=투표'">투표 만들기</button>
+							<button class="btn-outline btn-primary" onclick="location.href='${pageContext.request.contextPath}/onespace/teams/1/posts/5'">투표 만들기</button>
 							<button class="btn-outline btn-pill" onclick="location.href='${pageContext.request.contextPath}/onespace/practice1_main'">취소</button>
 						</div>
 						<!-- //cta-row -->
@@ -367,23 +365,21 @@
 	  /* ------------------ 핸들러 바인딩 ------------------ */
 	  // open 버튼: delegated binding (동적 요소에도 동작)
 	  $(document).off('click', '.open-schedule').on('click', '.open-schedule', function(e){
-		e.preventDefault();
-		const roomNo = $(this).data('room-no');
-		if (!roomNo) { alert('roomNo 정보를 찾을 수 없습니다'); return; }
-	    
-		// 카드에서 공간명 추출 후 오버레이에 저장
-		const spaceName = $(this).closest('.practice-card').find('.practice-card-title').text().trim();
-		$overlay.data('space-name', spaceName);
-	    
-		// 모달 열기
-		$overlay.css('display','flex');
+	    e.preventDefault();
+	    const roomNo = $(this).data('room-no');
+	    if (!roomNo) { alert('roomNo 정보를 찾을 수 없습니다'); return; }
 	
-		// 캘린더 초기화 + 슬롯 로드
-		initCalendarOnOpen();
-		const tdate = toYYYYMMDD(selectedDate);
-		$overlay.data('room-no', roomNo);
-		loadSlots(roomNo, tdate);
-      });
+	    // 모달 열기
+	    $overlay.css('display','flex');
+	
+	    // 캘린더 초기화
+	    initCalendarOnOpen();
+	
+	    // 서버로 슬롯 요청 (기본적으로 오늘 선택)
+	    const tdate = toYYYYMMDD(selectedDate); // YYYY-MM-DD
+	    $overlay.data('room-no', roomNo); // store for later
+	    loadSlots(roomNo, tdate);
+	  });
 	
 	  // 달 이동 버튼
 	  $(document).off('click', '.sched-nav').on('click', '.sched-nav', function(){
@@ -459,55 +455,104 @@
 	  
 	  //schedSubmit 클릭 핸들러: 서버로 저장하고, 성공하면 우측 리스트에 추가
 	  $schedSubmit.off('click').on('click', function(){
-		  const $selectedSlots = $schedSlots.find('.slot.selected');
-		  if ($selectedSlots.length === 0) {
-		    alert('시간대를 선택하세요.');
-		    return;
-		  }
-		
-		  const starts = $selectedSlots.map(function(){ return +this.dataset.start; }).get().sort((a,b)=>a-b);
-		  const startHour = starts[0];
-		  const endHour = (+$selectedSlots.last().attr('data-end')) || (starts[starts.length-1] + 1);
-		  const voteTime = pad2(startHour)+':00~'+pad2(endHour)+':00';
-		  const voteDate = toYYYYMMDD(selectedDate);
-		
-		  const roomNo = $overlay.data('room-no');
-		  const spaceName = $('.open-schedule[data-room-no="' + roomNo + '"]').closest('.practice-card').find('.practice-card-title').text();
-		
-		  $.ajax({
-		    url: ctx + '/onespace/api/vote-option',
-		    method: 'POST',
-		    data: { roomNo: roomNo, voteDate: voteDate, voteTime: voteTime },
-		    dataType: 'json'
-		  })
-		  .done(function(res){
-		    if (res.success) {
-		      // 오른쪽 후보 리스트에 추가
-		      const $favList = $('.fav-list');
-		      const count = $favList.children('li').length + 1;
-		      const $li = $('<li class="fav-item">').append(
-		        $('<div>').append(
-		          $('<div class="fav-item-title">').text(count+'. '+spaceName),
-		          $('<div class="fav-item-meta">').append(
-		            $('<span>').text(voteDate),
-		            $('<span class="fav-time">').text(voteTime),
-		            $('<span class="fav-duration">').text((endHour - startHour)+'시간')
-		          )
-		        ),
-		        $('<div class="fav-right">').append(
-		          $('<div class="fav-hot">').html('🔥 <b>0</b>'),
-		          $('<div class="fav-price">').text('가격: -')
-		        )
-		      );
-		      $favList.append($li);
-		      $overlay.hide();
-		      alert(res.message);
-		    } else {
-		      alert(res.message || '저장 실패');
-		    }
-		  })
-		  .fail(()=> alert('서버 오류 발생'));
-		});
+	    // 읽을 값
+	    const displayDate = toYYYYMMDD(selectedDate); // "YYYY-MM-DD" (서버와 DB에 저장될 포맷)
+	    const $selectedSlots = $schedSlots.find('.slot.selected');
+	    if ($selectedSlots.length === 0) {
+	      alert('시간을 선택하세요.');
+	      return;
+	    }
+	
+	    // 연속 선택 가정: 시작시간 = min(selected.start), 끝시간 = max(start)+1
+	    const starts = $selectedSlots.map(function(){ return +this.dataset.start; }).get().sort((a,b)=>a-b);
+	    const startHour = starts[0];
+	    const endHour = (+$selectedSlots.last().attr('data-end')) || (starts[starts.length-1] + 1);
+	
+	    // voteTime 포맷: "HH:MM~HH:MM"
+	    function pad2(n){ return String(n).padStart(2,'0'); }
+	    const voteTime = pad2(startHour) + ':00~' + pad2(endHour) + ':00';
+	
+	    // roomNo는 overlay에 저장해 두었음
+	    const roomNo = $overlay.data('room-no');
+	    if (!roomNo) {
+	      alert('방 정보가 없습니다.');
+	      return;
+	    }
+	
+	    // UI 잠금
+	    $schedSubmit.prop('disabled', true).text('저장중...');
+	
+	    $.ajax({
+	      url: ctx + '/onespace/api/favorite-candidate',
+	      method: 'POST',
+	      data: {
+	        roomNo: roomNo,
+	        voteDate: displayDate,
+	        voteTime: voteTime
+	      },
+	      dataType: 'json'
+	    })
+	    .done(function(resp){
+	      if (resp && resp.success) {
+	        // 서버에 저장 성공 -> 우측 리스트에 항목 추가
+	        // 서버가 반환한 voteDate, voteTime, id 사용
+	        const rDate = resp.voteDate || displayDate;
+	        const rTime = resp.voteTime || voteTime;
+	        const newId = resp.id || null;
+	
+	        // 표시 포맷(화면용)
+	        const displayDateStr = (function(d){
+	           // "YYYY-MM-DD" -> "YYYY/MM/DD(요일)"
+	           const parts = d.split('-');
+	           if (parts.length === 3) {
+	             const dd = new Date(+parts[0], (+parts[1]-1), +parts[2]);
+	             const week = ['일','월','화','수','목','금','토'][dd.getDay()];
+	             return parts[0] + '/' + parts[1].padStart(2,'0') + '/' + parts[2].padStart(2,'0') + '(' + week + ')';
+	           }
+	           return d;
+	        })(rDate);
+	
+	        // 가격/시간/길이 등은 이미 화면에서 계산해 쓰면 됨.
+	        // 우측 .fav-list에 새 li 생성 (서버에 저장된 항목과 유사하게)
+	        const $li = $('<li class="fav-item">').html(
+	          '<div>' +
+	            '<div class="fav-item-title">__NUM__ ' + $('<div>').text($overlay.data('space-name') || '연습실').html() + '</div>' +
+	            '<div class="fav-item-meta">' +
+	              '<span class="fav-date">' + $('<div>').text(displayDateStr).html() + '</span> ' +
+	              '<span class="fav-time">' + $('<div>').text(rTime).html() + '</span>' +
+	            '</div>' +
+	          '</div>' +
+	          '<div class="fav-right">' +
+	            '<div class="fav-hot">🔥 <b>0</b></div>' +
+	            '<div class="fav-price">가격: -</div>' +
+	          '</div>'
+	        );
+	
+	        const $favList = $('.fav-list');
+	        $favList.find('li').filter(function(){ return $(this).text().trim().indexOf('선택한 후보가 없습니다.') !== -1; }).remove();
+	        $favList.prepend($li);
+	        // 번호 재정렬
+	        $favList.find('li').each(function(index){
+	          const $t = $(this).find('.fav-item-title');
+	          const plain = $t.text().replace(/^\d+\.\s*/, '').trim();
+	          $t.text((index + 1) + '. ' + plain);
+	        });
+	
+	        // 닫기 및 알림
+	        $overlay.hide();
+	        alert('후보가 저장되었습니다.');
+	      } else {
+	        alert(resp && resp.message ? resp.message : '저장 실패');
+	      }
+	    })
+	    .fail(function(xhr, status, err){
+	      console.error('favorite-candidate save fail', status, err);
+	      alert('서버 오류가 발생했습니다.');
+	    })
+	    .always(function(){
+	      $schedSubmit.prop('disabled', false).text('선택');
+	    });
+	  });
 	  
 	  // 초기 캘린더 렌더
 	  renderCalendar();

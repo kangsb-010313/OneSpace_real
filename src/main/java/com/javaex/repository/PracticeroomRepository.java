@@ -102,26 +102,15 @@ public class PracticeroomRepository {
     }
     
     // 날짜 시간 추가
-    public int insertVoteOption(int userNo, Long roomNo, String voteDate, String voteTime) {
+    public boolean insertVoteOption(int userNo, Long roomNo, String voteDate, String voteTime, Integer voteNo) {
         Map<String, Object> p = new HashMap<>();
         p.put("userNo", userNo);
         p.put("roomNo", roomNo);
-        p.put("voteDate", voteDate);
-        p.put("voteTime", voteTime);
+        p.put("voteDate", voteDate); // "YYYY-MM-DD"
+        p.put("voteTime", voteTime); // "HH:MM~HH:MM"
+        p.put("voteNo", (voteNo == null ? 0 : voteNo)); // NOT NULL 대응
 
-        sqlSession.insert("practiceroom.insertVoteOption", p);
-
-        Object pk = p.get("voteNo"); // keyProperty와 동일해야 함
-        if (pk instanceof Number) {
-            return ((Number) pk).intValue();
-        } else {
-            // 안전장치: LAST_INSERT_ID()로 가져오기 (드라이버/설정 문제시)
-            Integer lastId = sqlSession.selectOne("practiceroom.selectLastInsertId");
-            return lastId == null ? -1 : lastId;
-        }
-    }
-    
-    public int insertVoteOption(Map<String, Object> params) {
-        return sqlSession.insert("practiceroom.insertVoteOption", params);
+        int rows = sqlSession.insert("practiceroom.insertVoteOption", p);
+        return rows == 1;
     }
 }

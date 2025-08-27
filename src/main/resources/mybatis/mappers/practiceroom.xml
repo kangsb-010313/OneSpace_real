@@ -165,6 +165,7 @@
 	        AND rp.endTime   >= MAKETIME(
 	              CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~',-1), ':', 1) AS UNSIGNED),0,0)
 	  WHERE v.userNo = #{userNo}
+	  and v.voteStatus = 0
 	  ORDER BY v.voteDate, startHour, s.spacesNo
 	  ]]>
 	</select>
@@ -226,6 +227,5 @@
     INSERT INTO voteOptions (userNo, roomNo, voteDate, voteTime, voteNo)
     VALUES (#{userNo}, #{roomNo}, #{voteDate}, #{voteTime}, #{voteNo})
   </insert>
-  
   
 </mapper>
