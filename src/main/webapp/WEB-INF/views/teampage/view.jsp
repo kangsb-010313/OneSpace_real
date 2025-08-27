@@ -97,7 +97,7 @@
 								                    <h3 class="section-title">#확정된 연습실 정보</h3>
 								                    <div class="vote-option">
 								                        <a href="#" class="vote-item-card">
-								                            <img src="${pageContext.request.contextPath}/uploads/${confirmedOption.picturesNo}" alt="연습실 이미지">
+								                            <img src="${pageContext.request.contextPath}/uploads/${confirmedOption.thumbImg}" alt="연습실 이미지">
 								                            <div class="card-content-wrapper">
 								                                <div class="card-main-info">
 								                                    <div class="info-left">

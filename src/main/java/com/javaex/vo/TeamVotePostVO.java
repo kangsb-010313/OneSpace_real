@@ -11,6 +11,7 @@ public class TeamVotePostVO {
     private String voteDate;    // voteOptions 테이블
     private String startTime; 
     private String endTime;
+    private String thumbImg;
     
     //다른 테이블에서 가져와야됨
     private int totalPrice;         // 연습실 가격
@@ -26,7 +27,7 @@ public class TeamVotePostVO {
 	}
 
 	public TeamVotePostVO(int voteNo, int roomNo, String spaceName, String roomName, String address, String voteDate,
-			String startTime, String endTime, int totalPrice, String spacesGuideNo, String picturesNo,
+			String startTime, String endTime, String thumbImg, int totalPrice, String spacesGuideNo, String picturesNo,
 			int competitionCount) {
 		super();
 		this.voteNo = voteNo;
@@ -37,13 +38,16 @@ public class TeamVotePostVO {
 		this.voteDate = voteDate;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.thumbImg = thumbImg;
 		this.totalPrice = totalPrice;
 		this.spacesGuideNo = spacesGuideNo;
 		this.picturesNo = picturesNo;
 		this.competitionCount = competitionCount;
 	}
 
-	
+
+
+
 	//메소드 gs
 	public int getVoteNo() {
 		return voteNo;
@@ -140,17 +144,24 @@ public class TeamVotePostVO {
 	public void setCompetitionCount(int competitionCount) {
 		this.competitionCount = competitionCount;
 	}
-
 	
+	public String getThumbImg() {
+		return thumbImg;
+	}
+
+	public void setThumbImg(String thumbImg) {
+		this.thumbImg = thumbImg;
+	}
+
+
 	//메소드 일반
 	@Override
 	public String toString() {
 		return "TeamVotePostVO [voteNo=" + voteNo + ", roomNo=" + roomNo + ", spaceName=" + spaceName + ", roomName="
 				+ roomName + ", address=" + address + ", voteDate=" + voteDate + ", startTime=" + startTime
-				+ ", endTime=" + endTime + ", totalPrice=" + totalPrice + ", spacesGuideNo=" + spacesGuideNo
-				+ ", picturesNo=" + picturesNo + ", competitionCount=" + competitionCount + "]";
+				+ ", endTime=" + endTime + ", thumbImg=" + thumbImg + ", totalPrice=" + totalPrice + ", spacesGuideNo="
+				+ spacesGuideNo + ", picturesNo=" + picturesNo + ", competitionCount=" + competitionCount + "]";
 	}
-
     
     
 
