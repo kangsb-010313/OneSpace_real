@@ -76,7 +76,7 @@
       <div class="attach-btn-wrap">
         <label class="btn-solid attach-btn">
           파일첨부
-          <input type="file" id="spaceImages" name="files" multiple accept=".jpg,.jpeg,.png" hidden>
+          <input type="file" id="spaceImages" name="photos" multiple accept=".jpg,.jpeg,.png" hidden>
         </label>
       </div>
     </div>
