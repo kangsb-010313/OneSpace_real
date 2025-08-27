@@ -92,6 +92,11 @@ public class PracticeroomController {
 	public String favoritesList(Model model, HttpSession session) {
 		System.out.println("PracticeroomController.favoritesList()");
 		UserVO authUser = (UserVO)session.getAttribute("authUser");
+		
+        // 1. 로그인 체크
+        if(authUser == null) {
+            return "redirect:/onespace/loginForm";
+        }
 		int userNo = authUser.getUserNo();
 
 		List<SpacesVO> favoriteSpaces = practiceroomService.getFavoriteSpaces(userNo);
