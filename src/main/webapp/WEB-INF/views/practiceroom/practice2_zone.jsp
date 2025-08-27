@@ -108,8 +108,8 @@
                           </div>
                           <div class="room-bottom-row">
                             <div>
-                              <div class="room-meta">최대 ${room.capacity}인</div>
-                              <div class="room-price">${room.area}</div>
+                              <div class="room-meta"><span style="font-weight:bold; color:#ACACAC">•  수용 인원&nbsp;&nbsp;&nbsp;</span> 최대 ${room.capacity}인</div>
+                              <div class="room-price"> <span style="font-weight:bold; color:#ACACAC">•  공간 면적&nbsp;&nbsp;&nbsp;</span> ${room.area}</div>
                             </div>
                             <!-- <div class="room-like">♡<span>0</span></div> -->
                           </div>

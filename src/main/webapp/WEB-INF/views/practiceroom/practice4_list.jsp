@@ -47,7 +47,7 @@
 
 											<c:when test="${not empty spaceLink}">
 												<img src="${CTX}/assets/images/${spaceLink}" alt="${space.spaceName}" class="practice-card-img"
-													style="width: 100%; height: 120px; object-fit: cover; border-radius: 6px;"
+													style="width: 100%; height: 200px; object-fit: cover;"
 													onerror="this.onerror=null;this.src='${CTX}/assets/images/placeholder.jpg'" />
 											</c:when>
 

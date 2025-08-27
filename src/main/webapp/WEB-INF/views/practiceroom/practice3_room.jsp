@@ -22,8 +22,7 @@
 
     <main>
       <div class="container">
-        <h2 style="margin-top:18px;">${room.roomName}</h2>
-        <div style="width:90%; border-bottom:1px solid #e9e9f0; margin-bottom:18px;"></div>
+        <h2 style="margin-top:18px; text-align:center; font-size: 24px;">${room.roomName}</h2>
 				
         <div class="detail-container">
           <!-- LEFT: 대표 이미지 (room.roomInfo 기반) -->
@@ -143,7 +142,7 @@
 				    <div class="team-like-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"
 				         data-team-id="${team.teamNo}" data-team-name="${team.teamName}">
 				    <button class="btn-outline btn-w120" type="button" data-team-id="${team.teamNo}">
-				      <c:out value="${team.teamName}" />
+				      팀&nbsp<c:out value="${team.teamName}" />
 				    </button>
 				    <button class="btn-like" type="button"
 				            data-room-no="${room.roomNo}"

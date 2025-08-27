@@ -2,17 +2,49 @@
 
 #wrap,
 .wrap {
-  max-width: 1300px;
+  max-width: 1200px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
 
 .container {
-    width: 100%;
+    width: 1200px;
     box-sizing: border-box;
-    padding: 0 10px;
 }
+
+
+/*상단 소제목 영역******************************/
+.title-box{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	margin-bottom: 26px;
+}
+
+.title-box .page-title {
+    font-size: 27px;
+    font-weight: 800;
+    color: #000;
+}
+
+.title-box .btn-list {
+	height: 40px;
+    width: 100px;
+ 	background-color: #fff;
+    border: 1.5px solid #7a4eff;
+	border-radius: 50px;
+	font-size: 13px;
+    color: #7a4eff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.title-box .btn-list:hover {
+    background-color: #5f3ccc;
+    color: #fff;
+    border-color: #5f3ccc;
+} 
 
 /* 메인 섹션 / 컨텐츠 영역 */
 .main-section {
@@ -27,7 +59,6 @@
     flex: 1;
     padding-top: 5px;
     padding-left: 0;
-    padding-right: 18px;
     min-width: 0;
 }
 
@@ -48,7 +79,7 @@
     font-weight: 700;
     border-radius: 24px;
     font-size: 13px;
-    padding: 10px 30px;
+    padding: 10px 20px;
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
     white-space: nowrap;
@@ -56,7 +87,6 @@
 
 .filter-bar > .btn-list {
     font-size: 12px;
-    padding: 6px 14px;
     height: 32px;
     min-width: 100px;
     border-radius: 18px;
@@ -88,6 +118,7 @@
     justify-content: space-between;
     width: 100%;
     margin-top: 6px;
+    margin-bottom: 6px;
 }
 
 .search-hash {
@@ -98,12 +129,11 @@
     font-size: 16px;
     padding: 7px 320px 7px 30px;
     border-radius: 18px;
-    height: 40px;
+    height: 35px;
     line-height: 20px;
     min-width: 230px;
     border: none;
     outline: none;
-    margin-left: 50px;
     box-sizing: border-box;
 }
 
@@ -112,7 +142,6 @@
     align-items: center;
     gap: 10px;
     justify-content: flex-end;
-    margin: 30px 50px 0 0;
 }
 
 .custom-select {
@@ -120,33 +149,26 @@
     text-align-last: center;
     cursor: pointer;
     padding: 7px 22px;
-    border-radius: 9px;
+    border-radius: 50px;
     border: 1.2px solid #c8c8e1;
     background: #fff;
     font-size: 15px;
     outline: none;
 }
 
-main {
-    flex: 1 0 auto;
-    margin: 18px 30px 0 50px;
-}
-
 /* 카드 그리드 */
 .card-list {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 32px 26px;
+    gap: 28px;
     margin-bottom: 15px;
-    margin-left: 50px;
-    margin-right: 50px;
     box-sizing: border-box;
 }
 
 /* 카드(개별) */
 .card {
     background: #fff;
-    border-radius: 25px;
+    border-radius: 20px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -180,7 +202,7 @@ main {
 
 /* 카드 본문(타이틀/메타) */
 .card-content {
-    padding: 18px 20px 12px 20px;
+    padding: 10px 20px 10px 20px;
     display: flex;
     flex-direction: column;
     gap: 4px;

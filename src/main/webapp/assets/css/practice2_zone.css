@@ -10,28 +10,42 @@
 }
 
 .title-box .page-title {
-    font-size: 27px;
+    font-size: 24px;
     font-weight: 800;
     color: #000;
 }
 
-.title-box .btn-list {
-	height: 32px;
-    min-width: 100px;
- 	background-color: #fff;
-    border: 1.5px solid #7a4eff;
-	border-radius: 18px;
-	font-size: 12px;
-    color: #7a4eff;
-    font-weight: 700;
-    cursor: pointer;
-}
 
 .title-box .btn-list:hover {
     background-color: #5f3ccc;
     color: #fff;
     border-color: #5f3ccc;
 } 
+
+/* 찜리스트 버튼 (상단) */
+.title-box .btn-list {
+	height: 40px;
+    width: 100px;
+ 	background-color: #fff;
+    border: 1.5px solid #7a4eff;
+	border-radius: 50px;
+	font-size: 13px;
+    color: #7a4eff;
+    font-weight: 700;
+    cursor: pointer;
+}
+.btn-list {
+    background: #fff;
+    color: #7a4eff;
+    border: 1.5px solid #7a4eff;
+    font-weight: 700;
+    border-radius: 24px;
+    font-size: 13px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
 
 /*연습실상세(zone)******************************/
 .zone {
@@ -55,7 +69,7 @@
     border-radius: 18px;
     box-shadow: 0 6px 24px rgba(229,225,250,0.44);
     object-fit: cover;
-    height: 360px;
+    height: 450px;
     margin-bottom: 20px;
 }
 
@@ -125,7 +139,7 @@
 .zone .room-thumb {
     display: block;
     width: 100%;
-    height: 120px;
+    height: 150px;
     object-fit: cover;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
@@ -190,10 +204,11 @@
 .room-card {
     background: #fff;
     border: 1px solid #dcd9f9;
-    border-radius: 12px;
+    border-radius: 20px;
     overflow: hidden;
     padding: 0;
     width: 100%;
+    height: 230px;
     box-sizing: border-box;
     cursor: pointer;
     transition: transform .12s ease, box-shadow .12s ease;
