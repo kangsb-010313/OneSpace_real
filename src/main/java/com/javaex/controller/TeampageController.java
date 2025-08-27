@@ -95,7 +95,7 @@ public class TeampageController {
 	    if(authUser == null) {
 	        return "redirect:/onespace/loginForm"; // 로그인 안했으면 로그인폼으로
 	    }
-	    
+	     
 	    int userNo = authUser.getUserNo();
 	    
 	    // 팀 생성 + 생성자를 팀원으로 등록
