@@ -31,7 +31,6 @@
                   <section class="pride">
                     <div class="main-head">
                       <h1>팀 자랑</h1>
-                      <button class="write-btn" type="button" onclick="location.href='/pride/teampage/postWriteForm'">글쓰기</button>
                     </div>
 
                     <div class="team-grid">
