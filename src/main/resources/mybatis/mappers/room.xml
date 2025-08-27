@@ -167,7 +167,7 @@
           useGeneratedKeys="true" keyProperty="pictureSno">
     INSERT INTO roomAttachments (
       refType, roomNo, storedFileName, originFileName,
-      filePath, instDtm, uptdDtm
+      filePath, instDtm, updtDtm
     ) VALUES (
       #{refType}, #{refNo}, #{storedFileName}, #{originFileName},
       #{filePath}, NOW(), NOW()

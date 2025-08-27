@@ -58,8 +58,6 @@ public class RoomsVO {
         private String storedFileName;
         private String originFileName;
         private String filePath;
-        private Long fileSize;
-        private String contentType;
         private LocalDateTime instDtm;
         private LocalDateTime updtDtm;
 
@@ -80,12 +78,6 @@ public class RoomsVO {
         
         public String getFilePath() { return filePath; }
         public void setFilePath(String filePath) { this.filePath = filePath; }
-        
-        public Long getFileSize() { return fileSize; }
-        public void setFileSize(Long fileSize) { this.fileSize = fileSize; }
-        
-        public String getContentType() { return contentType; }
-        public void setContentType(String contentType) { this.contentType = contentType; }
         
         public LocalDateTime getInstDtm() { return instDtm; }
         public void setInstDtm(LocalDateTime instDtm) { this.instDtm = instDtm; }
