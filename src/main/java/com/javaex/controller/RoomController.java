@@ -64,6 +64,23 @@ public class RoomController {
                        @RequestParam(value = "photos", required = false) MultipartFile[] photos,
                        
                        RedirectAttributes ra) {
+				        // ★★★★★ 디버깅 코드 추가 ★★★★★
+				        System.out.println("========================================");
+				        System.out.println("[RoomController] /save 요청 진입");
+				        if (photos != null && photos.length > 0) {
+				            System.out.println("전달된 파일 개수: " + photos.length);
+				            for(MultipartFile mf : photos) {
+				                System.out.println(" - 원본 파일명: " + mf.getOriginalFilename());
+				                System.out.println(" - 파일 크기: " + mf.getSize());
+				            }
+				        } else {
+				            System.out.println("전달된 파일이 없습니다.");
+				        }
+				        System.out.println("========================================");
+        
+        
+        
+        
 
         // ★★★★★ 1. 빠져있던 prices 리스트 생성 로직을 여기에 다시 추가합니다. ★★★★★
         List<RoomPriceVO> prices = new ArrayList<>();
