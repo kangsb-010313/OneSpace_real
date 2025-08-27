@@ -79,7 +79,7 @@ public class RoomService {
     public RoomsVO get_detail(Long roomNo) {
         RoomsVO vo = repo.select_room_with_prices(roomNo); // JOIN 한 번
         if (vo == null) return null;
-        vo.setPhotos(repo.select_photos(roomNo));          // 사진은 분리 조회
+        //vo.setPhotos(repo.select_photos(roomNo));          // 사진은 분리 조회
         return vo;
     }
 

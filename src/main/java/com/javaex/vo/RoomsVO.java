@@ -15,7 +15,7 @@ public class RoomsVO {
     private LocalDateTime updtDtm;
 
     private List<RoomPriceVO> prices;
-    private List<RoomsVO.RoomAttachment> photos; // ★ 그대로 유지
+   // private List<RoomsVO.RoomAttachment> photos; // ★ 그대로 유지
 
     public Long getRoomNo() { return roomNo; }
     public void setRoomNo(Long roomNo) { this.roomNo = roomNo; }
@@ -47,8 +47,8 @@ public class RoomsVO {
     public List<RoomPriceVO> getPrices() { return prices; }
     public void setPrices(List<RoomPriceVO> prices) { this.prices = prices; }
     
-    public List<RoomsVO.RoomAttachment> getPhotos() { return photos; }
-    public void setPhotos(List<RoomsVO.RoomAttachment> photos) { this.photos = photos; }
+//    public List<RoomsVO.RoomAttachment> getPhotos() { return photos; }
+//    public void setPhotos(List<RoomsVO.RoomAttachment> photos) { this.photos = photos; }
 
     // ★ 내부클래스 복구 (레포/서비스/컨트롤러와 호환)
     public static class RoomAttachment {
