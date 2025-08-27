@@ -58,7 +58,6 @@ public class RoomService {
                         attachment.setStoredFileName((String) fileInfo.get("saveName"));
                         attachment.setOriginFileName((String) fileInfo.get("orgName"));
                         attachment.setFilePath((String) fileInfo.get("filePath"));
-                        attachment.setFileSize((Long) fileInfo.get("fileSize"));
                         
                         // (6) Repository를 통해 roomAttachments 테이블에 파일 정보를 저장합니다.
                         repo.insert_photo(attachment);
