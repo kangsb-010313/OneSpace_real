@@ -8,43 +8,21 @@
 <head>
   <meta charset="UTF-8">
   <title>원스페이스 | 연습실찜하기</title>
-  <link rel="stylesheet" href="../../assets/css/reset.css">
-  <link rel="stylesheet" href="../../assets/css/practice.css">
-  <link rel="stylesheet" href="../../assets/css/asidedefault.css">
-  <link rel="stylesheet" href="../../assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/practice3_room.css">
   <c:set var="ctx" value="${pageContext.request.contextPath}" />
-  
-<style>
-    /* 간단 레이아웃: 좌/우 */
-    .detail-container { display:flex; gap:32px; align-items:flex-start; padding:24px 0; }
-    .left-col { flex: 1 1 60%; }
-    .right-col { width: 320px; flex: 0 0 320px; }
-
-    .main-photo { width:100%; height:400px; object-fit:cover; border-radius:12px; display:block; }
-    .thumb-row { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
-    .thumb-row img { width:90px; height:66px; object-fit:cover; border-radius:6px; border:1px solid #eee; cursor:pointer; }
-
-    .room-info-card {
-      background:#fff; border:1px solid #eee; padding:16px; border-radius:10px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-    }
-    .room-info-card h3 { margin:0 0 8px 0; font-size:18px; }
-    .room-info-text { white-space: pre-wrap; color:#333; font-size:14px; line-height:1.6; }
-
-    /* 이미지 fallback */
-    .placeholder { background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#bbb; }
-  </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <c:import url="/WEB-INF/views/include/header.jsp" />
-    </header>
+  
+    <!-- 헤더 영역------------------------------------------------ -->
+    <c:import url="/WEB-INF/views/include/header.jsp" />
+    <!-- /헤더 영역------------------------------------------------ -->
 
     <main>
       <div class="container">
-        <h2 style="margin-top:18px;">${room.roomName}</h2>
-        <div style="width:90%; border-bottom:1px solid #e9e9f0; margin-bottom:18px;"></div>
+        <h2 style="margin-top:18px; text-align:center; font-size: 24px;">${room.roomName}</h2>
 				
         <div class="detail-container">
           <!-- LEFT: 대표 이미지 (room.roomInfo 기반) -->
@@ -92,17 +70,28 @@
 			       alt="${room.roomName}"
 			       onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
 			
-			  <%-- 2x2 썸네일 그리드 (메인과 동일한 이미지로 4장) --%>
-			  <div class="thumb-grid">
-			    <c:forEach var="i" begin="0" end="3">
-			      <img class="thumb"
-			           src="${mainSrc}"
-			           data-full="${mainSrc}"
-			           alt="thumb-${i}"
-			           onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"
-			           onclick="swapMainImage(this)"/>
-			    </c:forEach>
-			  </div>
+			  <!-- 2x2 그리드: 각 썸네일은 mainSrc의 사분면을 보여줌 -->
+				<div class="thumb-grid">
+				  <div class="thumb-quad quad-tl" role="button" tabindex="0"
+				       style="background-image: url('${mainSrc}');"
+				       data-full="${mainSrc}" onclick="swapMainImageFromQuad(this)" onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
+				  </div>
+				
+				  <div class="thumb-quad quad-tr" role="button" tabindex="0"
+				       style="background-image: url('${mainSrc}');"
+				       data-full="${mainSrc}" onclick="swapMainImageFromQuad(this)" onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
+				  </div>
+				
+				  <div class="thumb-quad quad-bl" role="button" tabindex="0"
+				       style="background-image: url('${mainSrc}');"
+				       data-full="${mainSrc}" onclick="swapMainImageFromQuad(this)" onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
+				  </div>
+				
+				  <div class="thumb-quad quad-br" role="button" tabindex="0"
+				       style="background-image: url('${mainSrc}');"
+				       data-full="${mainSrc}" onclick="swapMainImageFromQuad(this)" onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
+				  </div>
+				</div>
 			</div>
 
           <!-- 오른쪽: roomInfo(이미지 갤러리 또는 텍스트) -->
@@ -153,7 +142,7 @@
 				    <div class="team-like-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"
 				         data-team-id="${team.teamNo}" data-team-name="${team.teamName}">
 				    <button class="btn-outline btn-w120" type="button" data-team-id="${team.teamNo}">
-				      <c:out value="${team.teamName}" />
+				      팀&nbsp<c:out value="${team.teamName}" />
 				    </button>
 				    <button class="btn-like" type="button"
 				            data-room-no="${room.roomNo}"
@@ -279,13 +268,25 @@
         main.src = full;
         main.onerror = function() { this.onerror = null; this.src = '${ctx}/assets/images/placeholder.jpg'; };
       }
+    
+    function swapMainImageFromQuad(el) {
+        var full = el.getAttribute('data-full') || '';
+        if (!full) return;
+        var main = document.getElementById('mainPhoto');
+        if (!main) return;
+        main.src = full;
+        main.onerror = function() { this.onerror = null; this.src = '${ctx}/assets/images/placeholder.jpg'; };
+
+        // 선택 상태 토글 (한 개만 active)
+        document.querySelectorAll('.thumb-quad').forEach(e => e.classList.remove('active'));
+        el.classList.add('active');
+      }
+    
 	</script>
   </div>
 
   <!-- 푸터 영역------------------------------------------------ -->
-  <footer>
-    <c:import url="/WEB-INF/views/include/footer.jsp" />
-  </footer>
+  <c:import url="/WEB-INF/views/include/footer.jsp" />
   <!-- /푸터 영역------------------------------------------------ -->
 </body>
 </html>

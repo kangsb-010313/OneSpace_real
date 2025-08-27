@@ -112,9 +112,9 @@ public class PracticeroomService {
         return rows > 0;
     }
     
-    public boolean addVoteOption(Map<String, Object> params) {
-        int rows = practiceroomRepository.insertVoteOption(params);
-        return rows > 0;
+ // 날짜 시간 추가
+    public boolean addVoteOption(int userNo, Long roomNo, String voteDate, String voteTime, Integer voteNo) {
+        return practiceroomRepository.insertVoteOption(userNo, roomNo, voteDate, voteTime, voteNo);
     }
     
     

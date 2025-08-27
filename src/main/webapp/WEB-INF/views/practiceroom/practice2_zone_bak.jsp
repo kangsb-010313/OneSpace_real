@@ -8,41 +8,44 @@
   <meta charset="UTF-8">
   <title>원스페이스 | ${zone.spaceName}</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/practice.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/practice2_zone.css">
+
 </head>
 <body>
   <div class="wrap">
     
-    <!-- 헤더 영역 -->
-    <header>
-      <c:import url="/WEB-INF/views/include/header.jsp" />
-    </header>
-
+	<!-- 헤더 영역------------------------------------------------ -->
+	<c:import url="/WEB-INF/views/include/header.jsp" />
+	<!-- /헤더 영역------------------------------------------------ -->
+    
     <main>
       <div class="container">
-        <div class="main-section">
-          <div class="content-area">
-
-            <!-- 상단 버튼 -->
-            <div class="filter-bar">
-			  <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
-			    찜리스트<span style="color:#ff3333;">❤</span>
-			  </button>
-			</div>
+      
+      	<div class="title-box">
+            <div class="spacer"></div>
+            <h2 class="page-title">${zone.spaceName}</h2>
+		    <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
+			  찜리스트<span style="color:#ff3333;">❤</span>
+			</button>
+        </div>
+      	
+			<!-- Main Content -->
+            <div id="main-content" class="zone">
 
             <main class="main">
-              <h2 class="page-title">${zone.spaceName}</h2>
-              <div style="width: 90%; border-bottom: 1px solid #e4e2ef; margin-left: 50px;"></div>
-
-              <div class="detail-main align-start">
+              
+              
+              <!--  <div class="detail-main align-start"> -->
+              <div class="two-col">
                 <!-- 왼쪽: 공간 상세 -->
                 <div class="detail-main-left">
                   <!-- 대표 이미지 -->
                   <c:if test="${not empty zone.spaceLink}">
-                    <div style="border-radius: 22px; overflow: hidden; margin-bottom: 24px; margin-left: 30px; margin-right: 50px;">
-                      <img class="main-photo" src="${zone.spaceLink}" alt="${zone.spaceName} 대표사진">
+                  <c:set var="raw" value="${zone.spaceLink}" />
+                    <!--  <div style="border-radius: 22px; overflow: hidden; margin-bottom: 24px; margin-left: 30px; margin-right: 50px;">-->
+                    <div>
+                      <img class="main-photo" src="${pageContext.request.contextPath}/assets/images/${raw}" alt="${zone.spaceName} 대표사진">
                     </div>
                   </c:if>
 
@@ -100,22 +103,15 @@
                       <div class="room-card">
                         <a href="${pageContext.request.contextPath}/onespace/practice3_room?roomNo=${room.roomNo}">
                           <div class="room-thumb-wrap">
-                            <c:choose>
-                              <c:when test="${fn:startsWith(room.roomInfo, 'http')}">
-                                <img class="room-thumb" src="${room.roomInfo}" alt="${room.roomName}">
-                              </c:when>
-                              <c:otherwise>
-                                <img class="room-thumb" src="${pageContext.request.contextPath}/assets/images/${room.roomInfo}" alt="${room.roomName}">
-                              </c:otherwise>
-                            </c:choose>
+		                    <img class="room-thumb" src="${pageContext.request.contextPath}/assets/images/${raw}" alt="${zone.spaceName} 대표사진">
                             <div class="room-title">${room.roomName}</div>
                           </div>
                           <div class="room-bottom-row">
                             <div>
-                              <div class="room-meta">최대 ${room.capacity}인</div>
-                              <div class="room-price">${room.area}</div>
+                              <div class="room-meta"><span style="font-weight:bold; color:#ACACAC">•  수용 인원&nbsp;&nbsp;&nbsp;</span> 최대 ${room.capacity}인</div>
+                              <div class="room-price"> <span style="font-weight:bold; color:#ACACAC">•  공간 면적&nbsp;&nbsp;&nbsp;</span> ${room.area}</div>
                             </div>
-                            <div class="room-like">♡<span>0</span></div>
+                            <!-- <div class="room-like">♡<span>0</span></div> -->
                           </div>
                         </a>
                       </div>
@@ -126,6 +122,8 @@
                       <div style="padding:16px;color:#888;">등록된 방이 없습니다.</div>
                     </c:if>
                   </div>
+                  
+                  
                 </div>
                 <!-- /zone-right -->
               </div>
@@ -133,14 +131,13 @@
 
           </div>
         </div>
-      </div>
     </main>
-
-    <!-- 푸터 영역 -->
-    <footer>
-      <c:import url="/WEB-INF/views/include/footer.jsp" />
-    </footer>
     
   </div>
+  
+  <!-- 푸터 영역------------------------------------------------ -->
+  <c:import url="/WEB-INF/views/include/footer.jsp" />
+  <!-- /푸터 영역----------------------------------------------- -->
+    
 </body>
 </html>

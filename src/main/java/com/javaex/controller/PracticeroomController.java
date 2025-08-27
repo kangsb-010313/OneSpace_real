@@ -72,6 +72,9 @@ public class PracticeroomController {
 		
 		//userNo 세션에서 꺼낸다
 		UserVO authUser = (UserVO)session.getAttribute("authUser");
+		if(authUser == null) {
+            return "redirect:/onespace/loginForm";
+        }
 		int userNo = authUser.getUserNo();
 		System.out.println("userNo from session: " + userNo);
 		
@@ -160,5 +163,36 @@ public class PracticeroomController {
 	    }
 	}
 	
+	// 날짜 시간 추가
+	@PostMapping("/api/vote-option")
+	@ResponseBody
+	public Map<String, Object> addVoteOption(
+	        @RequestParam Long roomNo,
+	        @RequestParam String voteDate,
+	        @RequestParam String voteTime,
+	        @RequestParam(required = false, defaultValue = "0") Integer voteNo,
+	        HttpSession session) {
+
+	    UserVO authUser = (UserVO) session.getAttribute("authUser");
+	    if (authUser == null) {
+	        return Map.of("success", false, "message", "로그인이 필요합니다.");
+	    }
+
+	    int userNo = authUser.getUserNo();
+
+	    boolean result = practiceroomService.addVoteOption(userNo, roomNo, voteDate, voteTime, voteNo);
+
+	    if (result) {
+	        return Map.of(
+	            "success", true,
+	            "message", "후보가 추가되었습니다.",
+	            "roomNo", roomNo,
+	            "voteDate", voteDate,
+	            "voteTime", voteTime
+	        );
+	    } else {
+	        return Map.of("success", false, "message", "후보 추가 실패");
+	    }
+	}
 	
 }
