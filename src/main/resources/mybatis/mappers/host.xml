@@ -85,8 +85,8 @@
 
   <!-- (선택) 시설 1건 삽입: 실제 테이블명으로 교체 -->
   <insert id="insert_facility" parameterType="map">
-    INSERT INTO spaceFacilities (spacesNo, facilityName)
-    VALUES (#{spacesNo}, #{facilityName})
+    INSERT INTO spacesGuide (spacesNo, facilityNo)
+    VALUES (#{spacesNo}, #{facilityNo})
   </insert>
 
 </mapper>

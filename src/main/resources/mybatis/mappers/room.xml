@@ -128,9 +128,9 @@
   <insert id="insert_room" parameterType="com.javaex.vo.RoomsVO"
           useGeneratedKeys="true" keyProperty="roomNo">
     INSERT INTO rooms
-      (spacesNo, roomName, roomInfo, area, capacity, thumbImg, instDtm, updtDtm)
+      (spacesNo, roomName, roomInfo, area, capacity, thumbImg, instDtm)
     VALUES
-      (#{spacesNo}, #{roomName}, #{roomInfo}, #{area}, #{capacity}, #{thumbImg}, NOW(), NOW())
+      (#{spacesNo}, #{roomName}, #{roomInfo}, #{area}, #{capacity}, #{thumbImg}, NOW())
   </insert>
 
   <update id="update_room" parameterType="com.javaex.vo.RoomsVO">
@@ -139,8 +139,7 @@
         roomInfo = #{roomInfo},
         area     = #{area},
         capacity = #{capacity},
-        thumbImg = #{thumbImg},
-        updtDtm  = NOW()
+        thumbImg = #{thumbImg}
     WHERE roomNo = #{roomNo}
   </update>
 
@@ -171,10 +170,10 @@
           useGeneratedKeys="true" keyProperty="pictureSno">
     INSERT INTO roomAttachments (
       refType, roomNo, storedFileName, originFileName,
-      filePath, fileSize, contentType, instDtm, updtDtm
+      filePath, instDtm
     ) VALUES (
       #{refType}, #{refNo}, #{storedFileName}, #{originFileName},
-      #{filePath}, #{fileSize}, #{contentType}, NOW(), NOW()
+      #{filePath}, NOW()
     )
   </insert>
 

@@ -17,18 +17,13 @@ import com.javaex.vo.RoomsVO.RoomAttachment;
 public class RoomService {
 
     private final RoomRepository repo;
-    @Autowired
-    private AttachService attachService;
+    private final AttachService attachService;
     
-    public RoomService(RoomRepository repo) { this.repo = repo; }
-    
-    /**
-     * [신규] 연습실의 모든 정보(기본, 가격, 사진)를 한 번에 저장/수정하는 통합 메소드
-     * 이 메소드가 이 기능의 핵심입니다.
-     * @param vo          연습실 기본 정보 (roomName, area 등)
-     * @param prices      가공이 완료된 가격 정보 리스트
-     * @param photos      사용자가 첨부한 실제 파일 데이터 배열
-     */
+    public RoomService(RoomRepository repo, AttachService attachService) {
+        this.repo = repo;
+        this.attachService = attachService;
+        }
+
     @Transactional
     public void saveRoomAndDetails(RoomsVO vo, List<RoomPriceVO> prices, MultipartFile[] photos) {
         System.out.println("RoomService.saveRoomAndDetails() - 모든 정보 저장 시작");
