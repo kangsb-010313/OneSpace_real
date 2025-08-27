@@ -11,31 +11,17 @@
 }
 
 .pride .main-head {
-  display: flex;
-  flex-direction: column; /* 제목 위, 버튼 아래 */
   margin-bottom: 20px;
 }
 
 .pride .main-head h1 {
-  text-align: center; /* 제목 가운데 */
-  font-size: 30px;
-  font-weight:bold;
-  margin-bottom: 12px;
+  font-size: 30px; 
+    font-weight: 800; 
+    color: #000; 
+    margin-top: 50px; 
+    margin-bottom: 20px; 
+    text-align: center;
 }
-
-.pride .write-btn {
-  display: inline-block;
-  margin-left: auto; /* 오른쪽 끝 */
-  background-color: #fff;
-  color: #704CE4;
-  border: 1px solid #704CE4;
-  border-radius: 20px;
-  font-size: 17px;
-  font-weight: 600;
-  padding: 5px 20px;
-  transition: background 0.2s;
-}
-.pride .write-btn:hover { background: #D9CCFA; }
 
 /* 카드 그리드 */
 .pride .team-grid {
