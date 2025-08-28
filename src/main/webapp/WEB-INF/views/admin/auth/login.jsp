@@ -36,11 +36,14 @@
 	    <h2 class="login-title">로그인</h2>
 	</div>
 
-  <div class="login-wrap">
-    <button type="button" class="btn-kakao">
-      <img src="${pageContext.request.contextPath}/assets/images/kakaotalk.jpg" alt="카카오톡" />
-      카카오로 로그인
-    </button>
+  	<div class="login-wrap">
+	  <a href="https://kauth.kakao.com/oauth/authorize?client_id=c46b2aca376b12ea792014ccacdcb09a&redirect_uri=http://localhost:8888/auth/kakao/callback&response_type=code"
+	     class="btn-kakao">
+	    <img src="${pageContext.request.contextPath}/assets/images/kakaotalk.jpg" alt="카카오톡" />
+	    카카오로 로그인
+	  </a>
+	</div>
+
 
     <div class="divider"><span>또는</span></div>
 

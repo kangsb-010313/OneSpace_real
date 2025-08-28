@@ -87,5 +87,15 @@ public class UserController {
         }
         return "redirect:/onespace/main";
     }
+    
+    //카카오 로그인
+    @RequestMapping(value = "localhost:8888/onespace/auth/kakao/callback", method = {RequestMethod.GET, RequestMethod.POST})
+    public String kakaoLogin() {
+    	System.out.println("카카오 로그인 성공");
+    	
+    	return "http://localhost:8888/onespace/auth/kakao/callback";
+    }
+    
+    
 
 }
