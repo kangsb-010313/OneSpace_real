@@ -171,6 +171,7 @@ public class PracticeroomController {
 	        @RequestParam String voteDate,
 	        @RequestParam String voteTime,
 	        @RequestParam(required = false, defaultValue = "0") Integer voteNo,
+	        @RequestParam(required = false, defaultValue = "0") int voteStatus,
 	        HttpSession session) {
 
 	    UserVO authUser = (UserVO) session.getAttribute("authUser");
@@ -180,7 +181,7 @@ public class PracticeroomController {
 
 	    int userNo = authUser.getUserNo();
 
-	    boolean result = practiceroomService.addVoteOption(userNo, roomNo, voteDate, voteTime, voteNo);
+	    boolean result = practiceroomService.addVoteOption(userNo, roomNo, voteDate, voteTime, voteNo, voteStatus);
 
 	    if (result) {
 	        return Map.of(
@@ -188,7 +189,8 @@ public class PracticeroomController {
 	            "message", "후보가 추가되었습니다.",
 	            "roomNo", roomNo,
 	            "voteDate", voteDate,
-	            "voteTime", voteTime
+	            "voteTime", voteTime,
+	            "voteStatus", voteStatus
 	        );
 	    } else {
 	        return Map.of("success", false, "message", "후보 추가 실패");

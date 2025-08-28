@@ -22,7 +22,14 @@
 
     <main>
       <div class="container">
-        <h2 style="margin-top:18px; text-align:center; font-size: 24px;">${room.roomName}</h2>
+        
+        <div class="title-box">
+            <div class="spacer"></div>
+            <h2 class="page-title">${room.roomName}</h2>
+		    <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
+			  찜리스트<span style="color:#ff3333;">❤</span>
+			</button>
+        </div>
 				
         <div class="detail-container">
           <!-- LEFT: 대표 이미지 (room.roomInfo 기반) -->

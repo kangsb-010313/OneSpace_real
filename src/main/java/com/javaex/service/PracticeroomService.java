@@ -113,8 +113,8 @@ public class PracticeroomService {
     }
     
  // 날짜 시간 추가
-    public boolean addVoteOption(int userNo, Long roomNo, String voteDate, String voteTime, Integer voteNo) {
-        return practiceroomRepository.insertVoteOption(userNo, roomNo, voteDate, voteTime, voteNo);
+    public boolean addVoteOption(int userNo, Long roomNo, String voteDate, String voteTime, Integer voteNo, int voteStatus) {
+        return practiceroomRepository.insertVoteOption(userNo, roomNo, voteDate, voteTime, voteNo, voteStatus);
     }
     
     

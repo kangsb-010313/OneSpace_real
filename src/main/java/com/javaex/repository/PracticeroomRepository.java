@@ -102,13 +102,14 @@ public class PracticeroomRepository {
     }
     
     // 날짜 시간 추가
-    public boolean insertVoteOption(int userNo, Long roomNo, String voteDate, String voteTime, Integer voteNo) {
+    public boolean insertVoteOption(int userNo, Long roomNo, String voteDate, String voteTime, Integer voteNo, int voteStatus) {
         Map<String, Object> p = new HashMap<>();
         p.put("userNo", userNo);
         p.put("roomNo", roomNo);
         p.put("voteDate", voteDate); // "YYYY-MM-DD"
         p.put("voteTime", voteTime); // "HH:MM~HH:MM"
         p.put("voteNo", (voteNo == null ? 0 : voteNo)); // NOT NULL 대응
+        p.put("voteStatus", 0);
 
         int rows = sqlSession.insert("practiceroom.insertVoteOption", p);
         return rows == 1;

@@ -166,7 +166,7 @@
 	              CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~',-1), ':', 1) AS UNSIGNED),0,0)
 	  WHERE v.userNo = #{userNo}
 	  and v.voteStatus = 0
-	  ORDER BY v.voteDate, startHour, s.spacesNo
+	  ORDER BY v.reservationNo, v.voteDate, startHour, s.spacesNo
 	  ]]>
 	</select>
 	
@@ -224,8 +224,8 @@
   
   <!-- 날짜 시간 추가 -->
   <insert id="insertVoteOption" parameterType="map" useGeneratedKeys="true" keyProperty="reservationNo">
-    INSERT INTO voteOptions (userNo, roomNo, voteDate, voteTime, voteNo)
-    VALUES (#{userNo}, #{roomNo}, #{voteDate}, #{voteTime}, #{voteNo})
+    INSERT INTO voteOptions (userNo, roomNo, voteDate, voteTime, voteNo, voteStatus)
+    VALUES (#{userNo}, #{roomNo}, #{voteDate}, #{voteTime}, #{voteNo}, #{voteStatus})
   </insert>
   
 </mapper>
