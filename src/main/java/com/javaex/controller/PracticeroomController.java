@@ -36,6 +36,9 @@ public class PracticeroomController {
     // 메인
     @RequestMapping(value = "/practice1_main", method = { RequestMethod.GET, RequestMethod.POST })
     public String main(Model model) {
+    	
+    	System.out.println(practiceroomService.getPagedList(0, 8));
+    	
         model.addAttribute("rooms", practiceroomService.getPagedList(0, 8));
         return "practiceroom/practice1_main";
     }

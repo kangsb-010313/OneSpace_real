@@ -22,32 +22,42 @@ public class SpacesVO {
     private LocalDateTime updtDtm;
     private String imageUrl;
     private Long roomNo;
+    private String picturesNo;
     
     //생성자
     public SpacesVO() {
     }
     
-    public SpacesVO(Long spacesNo, Long userNo, String spaceName, String spaceSummary, String spaceInfo,
-                    	String email, String phone, String tel, String spaceLink, String postCode,
-                    	String address, String addressDetail, LocalDateTime instDtm, LocalDateTime updtDtm, Long roomNo) {
-        this.spacesNo = spacesNo;
-        this.userNo = userNo;
-        this.spaceName = spaceName;
-        this.spaceSummary = spaceSummary;
-        this.spaceInfo = spaceInfo;
-        this.email = email;
-        this.phone = phone;
-        this.tel = tel;
-        this.spaceLink = spaceLink;
-        this.postCode = postCode;
-        this.address = address;
-        this.addressDetail = addressDetail;
-        this.instDtm = instDtm;
-        this.updtDtm = updtDtm;
-        this.roomNo = roomNo;
-    }
+
     
-    //메소드gs
+    public SpacesVO(Long spacesNo, Long userNo, String spaceName, String spaceSummary, String spaceInfo, String email,
+			String phone, String tel, String spaceLink, String repImg, String postCode, String address,
+			String addressDetail, LocalDateTime instDtm, LocalDateTime updtDtm, String imageUrl, Long roomNo,
+			String picturesNo) {
+		super();
+		this.spacesNo = spacesNo;
+		this.userNo = userNo;
+		this.spaceName = spaceName;
+		this.spaceSummary = spaceSummary;
+		this.spaceInfo = spaceInfo;
+		this.email = email;
+		this.phone = phone;
+		this.tel = tel;
+		this.spaceLink = spaceLink;
+		this.repImg = repImg;
+		this.postCode = postCode;
+		this.address = address;
+		this.addressDetail = addressDetail;
+		this.instDtm = instDtm;
+		this.updtDtm = updtDtm;
+		this.imageUrl = imageUrl;
+		this.roomNo = roomNo;
+		this.picturesNo = picturesNo;
+	}
+
+
+
+	//메소드gs
     public Long getSpacesNo() {
         return spacesNo;
     }
@@ -178,14 +188,30 @@ public class SpacesVO {
 	public void setRoomNo(Long roomNo) {
 		this.roomNo = roomNo;
 	}
+	
+
+	public String getPicturesNo() {
+		return picturesNo;
+	}
+
+
+
+	public void setPicturesNo(String picturesNo) {
+		this.picturesNo = picturesNo;
+	}
+
+
 
 	@Override
 	public String toString() {
 		return "SpacesVO [spacesNo=" + spacesNo + ", userNo=" + userNo + ", spaceName=" + spaceName + ", spaceSummary="
 				+ spaceSummary + ", spaceInfo=" + spaceInfo + ", email=" + email + ", phone=" + phone + ", tel=" + tel
-				+ ", spaceLink=" + spaceLink + ", postCode=" + postCode + ", address=" + address + ", addressDetail="
-				+ addressDetail + ", instDtm=" + instDtm + ", updtDtm=" + updtDtm + ", imageUrl=" + imageUrl
-				+ ", roomNo=" + roomNo + "]";
+				+ ", spaceLink=" + spaceLink + ", repImg=" + repImg + ", postCode=" + postCode + ", address=" + address
+				+ ", addressDetail=" + addressDetail + ", instDtm=" + instDtm + ", updtDtm=" + updtDtm + ", imageUrl="
+				+ imageUrl + ", roomNo=" + roomNo + ", picturesNo=" + picturesNo + "]";
 	}
-	
+
+
+
+
 }

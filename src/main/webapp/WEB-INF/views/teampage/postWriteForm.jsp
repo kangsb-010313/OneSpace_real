@@ -133,49 +133,53 @@
 								    <div class="form-group vote-list-group">
 								        <label>투표목록</label>
 								        
+								        <%-- 컨트롤러에서 받은 voteCandidates 리스트가 있는지 확인 --%>
 								        <c:choose>
+								            <%-- 리스트가 비어있지 않다면, forEach를 사용해 반복 --%>
 								            <c:when test="${not empty voteCandidates}">
 								                <ol class="vote-items-container">
+								                    <%-- "voteCandidates" 리스트의 각 항목을 "candidate"라는 변수로 반복 --%>
+								                    <c:forEach items="${voteCandidates}" var="candidate">
 								                    
-								                    <c:forEach var="c" items="${voteCandidates}" varStatus="loop">
-													    <li class="vote-item-card">
-													        <div class="card-main-info">
-													            <!-- 이미지 영역 -->
-													            <c:choose>
-													                <c:when test="${not empty c.spaceLink}">
-													                    <img src="${pageContext.request.contextPath}/assets/images/${c.spaceLink}" alt="${c.spaceName}" class="practice-card-img"
-																			onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/images/placeholder.jpg'" />
-													                </c:when>
-													            </c:choose>
-													
-													            <div class="info-left">
-													                <p class="item-title">${loop.count}. ${c.spaceName}</p>
-													                <p class="item-datetime">
-													                    <fmt:formatDate value="${c.voteDate}" pattern="yyyy/MM/dd" />
-													                    ${c.startHour}:00~${c.endHour}:00
-													                </p>
-													            </div>
-													            <div class="info-right">
-													                <p class="item-price">
-													                    <fmt:formatNumber value="${c.totalPrice}" type="number" /> 원
-													                </p>
-													            </div>
-													        </div>
-													        <div class="card-sub-info">
-													            <p class="item-location">
-													                <img src="${CTX}/assets/images/위치아이콘.jpg" class="map-icon">
-													                ${c.address}
-													            </p>
-													        </div>
-													    </li>
-													</c:forEach>
-													
+						                    	        <input type="hidden" name="voteNo" value="${candidate.voteNo}">
+								                    
+								                        <li>
+								                            <div class="vote-item-card">
+								                                <%-- 이미지: candidate 변수의 picturesNo 필드를 사용 --%>
+								                                <img src="${pageContext.request.contextPath}/uploads/${candidate.picturesNo}" alt="후보 이미지">
+								                                <div class="card-content-wrapper">
+								                                    <div class="card-main-info">
+								                                        <div class="info-left">
+								                                            <%-- 연습실 이름과 날짜/시간: candidate 변수의 필드들 사용 --%>
+								                                            <p class="item-title">${candidate.roomName}</p>
+                        													<p class="item-datetime">${candidate.voteDate} ${candidate.startTime} ~ ${candidate.endTime}</p> 
+								                                        </div>
+								                                        <div class="info-right">
+								                                            <%-- 가격: candidate 변수의 totalPrice 필드 사용 --%>
+								                                            <p class="item-price">${candidate.totalPrice} 원</p>
+								                                        </div>
+								                                    </div>
+								                                    <div class="card-sub-info">
+								                                        <%-- 부가정보와 주소: candidate 변수의 필드들 사용 --%>
+													                    <%-- spacesGuideNo 필드에 값이 있을 때만 p 태그를 보여줌 --%>
+													                    <c:if test="${not empty candidate.spacesGuideNo}">
+													                        <p class="item-info">${candidate.spacesGuideNo}</p>
+													                    </c:if>
+								                                        <p class="item-location">
+								                                            <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon">
+								                                            ${candidate.address}
+								                                        </p>
+								                                    </div>
+								                                </div>
+								                            </div>
+								                        </li>
+								                    </c:forEach>
 								                </ol>
 								            </c:when>
+								            <%-- 만약 리스트가 비어있다면, 안내 메시지 표시 --%>
 								            <c:otherwise>
-								                <div style="padding: 20px; text-align: center; color:#888;">
-								                    투표로 만들 후보가 없습니다.<br>
-								                    먼저 '찜 목록'에서 연습실 날짜/시간을 선택하세요.
+								                <div class="wishlist-container" style="padding: 20px; text-align: center;">
+								                    <p>투표로 만들 후보가 없습니다.<br>먼저 '찜 목록'에서 연습실의 날짜와 시간을 선택해주세요.</p>
 								                </div>
 								            </c:otherwise>
 								        </c:choose>
