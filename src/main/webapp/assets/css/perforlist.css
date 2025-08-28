@@ -97,7 +97,7 @@
 /* '더보기' 버튼을 감싸는 컨테이너 */
 .loadmoreWrap {
   text-align: center;   /* 버튼 중앙 정렬 */
-  margin: 25px 25px;     /* 테이블과의 상단 간격 */
+  margin: 25px 25px;     /* 테이블과의 상하단 간격 */
 }
 
 /* '더보기' 버튼 스타일 (id 기준) */
@@ -112,7 +112,6 @@
   border-radius: 25px;  /* 타원형 모양 */
   cursor: pointer;
   transition: all 0.2s ease;
-  line-height: 1;       /* 높이 균일 */
 }
 
 /* hover */
