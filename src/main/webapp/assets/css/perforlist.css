@@ -7,7 +7,7 @@
     font-size: 30px; 
     font-weight: 800;
     margin-top: 50px; 
-    margin-bottom: 28px; 
+    margin-bottom: 20px; 
     color: #000;
 }
 
@@ -77,7 +77,7 @@
 .btn-area { 
     display: flex; 
     justify-content: flex-end; 
-    margin-top: 10px; 
+    margin-bottom: 10px; 
 }
 
 .btn-write {
@@ -93,30 +93,39 @@
 }
 
 
-
-
-/* 페이징 */
-.pagination { 
-    display: flex; 
-    justify-content: center; 
-    gap: 10px; 
-    margin-top: 20px; 
+/* 페이징-더보기버튼 */
+/* '더보기' 버튼을 감싸는 컨테이너 */
+.loadmoreWrap {
+  text-align: center;   /* 버튼 중앙 정렬 */
+  margin: 25px 25px;     /* 테이블과의 상단 간격 */
 }
 
-.page-plain {
-    background: none; 
-    border: none; 
-    font-size: 14px; 
-    cursor: pointer; 
-    padding: 4px;
+/* '더보기' 버튼 스타일 (id 기준) */
+#btnLoadMore,
+.btnloadmore {          /* class로도 동일 스타일 적용 */
+  padding: 10px 45px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #704CE4;
+  background-color: #fff;
+  border: 1px solid #704CE4;
+  border-radius: 25px;  /* 타원형 모양 */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;       /* 높이 균일 */
 }
 
-.page-plain.is-active { 
-    color: #704CE4; 
-    font-weight: 700; 
+/* hover */
+#btnLoadMore:hover,
+.btnloadmore:hover {
+  background-color: #704CE4;
+  color: #fff;
 }
 
-.page-plain[disabled] { 
-    opacity: .4; 
-    cursor: default; 
+/* disabled 시 
+#btnLoadMore:disabled,
+.btnloadmore:disabled {
+  opacity: .6;
+  cursor: default;
 }
+*/

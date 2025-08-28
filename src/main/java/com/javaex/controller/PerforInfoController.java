@@ -27,19 +27,32 @@ public class PerforInfoController {
     @Autowired
     private PerforInfoService service;
 
-    /** ----- 세션 유틸 ----- */
+//    /** ----- 세션 유틸 ----- */
+//    private Long get_userno(HttpSession session) {
+//        Object v = session.getAttribute("authUserNo");
+//        if (v instanceof Long) return (Long) v;
+//        if (v instanceof Integer) return ((Integer) v).longValue();
+//        return null;
+//    }
+//
+//    private String get_username(HttpSession session) {
+//        Object v = session.getAttribute("authUserName");
+//        return (v != null) ? String.valueOf(v) : null;
+//    }
+    
+    /* ========== 세션 유틸 ========== */
     private Long get_userno(HttpSession session) {
         Object v = session.getAttribute("authUserNo");
-        if (v instanceof Long) return (Long) v;
+        if (v instanceof Long)    return (Long) v;
         if (v instanceof Integer) return ((Integer) v).longValue();
         return null;
     }
 
     private String get_username(HttpSession session) {
-        Object v = session.getAttribute("authUserName");
-        return (v != null) ? String.valueOf(v) : null;
+        Object v = session.getAttribute("authUserName"); // 있으면 사용
+        return (v instanceof String) ? (String) v : null;
     }
-
+////////////////////////////////////////////////////////////////
     /** 작성 폼 */
     @GetMapping("/writeForm")
     public String writeForm(HttpSession session) {
@@ -71,26 +84,70 @@ public class PerforInfoController {
         return "redirect:/onespace/perforinfo/view?no=" + postNo;
     }
 
-    /** 목록 */
+//    /** 목록 */
+//    @GetMapping("/list")
+//    public String list(@RequestParam(defaultValue = "1") int page,
+//                       @RequestParam(defaultValue = "10") int size,
+//                       Model model, HttpSession session) {
+//
+//        long total = service.count(); 
+//        int offset = (page - 1) * size;
+//        List<PerforInfoVO> list = service.listPaged(offset, size);
+//
+//        model.addAttribute("list", list);
+//        model.addAttribute("total", total);
+//        model.addAttribute("page", page);
+//        model.addAttribute("size", size);
+//        model.addAttribute("authUserNo", get_userno(session));
+//        model.addAttribute("authUserName", get_username(session));
+//
+//        return "admin/perforinfo/perforlist";
+//    }
+
+    /* ========== 목록(더보기 방식: 최초 size개) ========== */
     @GetMapping("/list")
-    public String list(@RequestParam(defaultValue = "1") int page,
-                       @RequestParam(defaultValue = "10") int size,
+    public String list(@RequestParam(defaultValue = "10") int size,
                        Model model, HttpSession session) {
 
-        long total = service.count();
-        int offset = (page - 1) * size;
+        if (size <= 0) size = 10; 
+        size = Math.min(size, 50);
+
+        long total = service.count();                // 총 개수
+        int offset = 0;                              // 최초 로드
         List<PerforInfoVO> list = service.listPaged(offset, size);
 
-        model.addAttribute("list", list);
-        model.addAttribute("total", total);
-        model.addAttribute("page", page);
-        model.addAttribute("size", size);
-        model.addAttribute("authUserNo", get_userno(session));
+        model.addAttribute("list",   list);
+        model.addAttribute("total",  total);
+        model.addAttribute("size",   size);
+        model.addAttribute("loaded", list.size());   // 현재까지 로드된 행 수
+
+        // 기존 화면에서 사용하던 세션 값 유지
+        model.addAttribute("authUserNo",   get_userno(session));
         model.addAttribute("authUserName", get_username(session));
 
+        // /WEB-INF/views/admin/perforinfo/perforlist.jsp
         return "admin/perforinfo/perforlist";
     }
 
+    /* ========== 더보기(JSON) : _perfor_rows.jsp 없이 사용 ========== */
+    @GetMapping(value = "/more", produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public List<PerforInfoVO> moreJson(@RequestParam int offset,
+                                       @RequestParam int limit) {
+        if (offset < 0) offset = 0;
+        if (limit  <= 0) limit  = 10;
+        
+        long total = service.count();
+        if (offset >= total) return List.of(); // 더 없음
+
+        int remain = (int)Math.max(0, total - offset);
+        int safeLimit = Math.min(limit, remain);
+        
+        return service.listPaged(offset, safeLimit); // Jackson이 자동 직렬화
+    }
+
+   ////////////////////////////////////////////////////////////////// 
+    
     /** 상세 */
     @GetMapping("/view")
     public String view(@RequestParam("no") long no, Model model, HttpSession session) {

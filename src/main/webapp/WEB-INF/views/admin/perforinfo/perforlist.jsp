@@ -6,6 +6,10 @@
 <html lang="ko">
 
   <head>
+  
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  
+  
     <meta charset="UTF-8">
     <title>원스페이스 | 공연 및 대회 정보</title>
     <link rel="stylesheet" href="../../../assets/css/reset.css">
@@ -25,9 +29,20 @@
         <div class="container">
 
           <h2 class="perforlist-title">공연 및 대회 정보</h2>
+          
+          <!-- 글쓰기 버튼: 로그인 사용자에게만 보이게 -->
+          <div class="btn-area">
+            <c:if test="${not empty sessionScope.authUser or not empty sessionScope.authUserNo}">
+              <c:url var="writeFormUrl" value="/onespace/perforinfo/writeForm"/>
+				<a href="${writeFormUrl}" class="btn-write">글쓰기</a>
+            </c:if>
+          </div>
 
           <div class="perforlist-list">
-            <table class="perforlist-table">
+            <table class="perforlist-table"
+            		data-total="${total}"
+            		data-size="${size}"
+            		data-loaded="${loaded}">
               <colgroup>
                 <col style="width:120px" />
                 <col />
@@ -71,46 +86,15 @@
             </table>
           </div>
 
-          <!-- 글쓰기 버튼: 로그인 사용자에게만 보이게 -->
-          <div class="btn-area">
-            <c:if test="${not empty sessionScope.authUser or not empty sessionScope.authUserNo}">
-              <a href="<c:url value='/onespace/perforinfo/writeForm'/>" class="btn-write">글쓰기</a>
-            </c:if>
-          </div>
+          
 
-          <!-- 페이지네이션 -->
-          <nav class="pagination" aria-label="페이지네이션">
-            <c:if test="${hasPrev}">
-              <c:url var="prevUrl" value="/onespace/perforinfo/list">
-                <c:param name="page" value="${page-1}" />
-                <c:param name="size" value="${size}" />
-              </c:url>
-              <a class="page-plain" href="${prevUrl}">◀</a>
-            </c:if>
-
-            <c:forEach var="p" begin="${blockStart}" end="${blockEnd}">
-              <c:choose>
-                <c:when test="${p == page}">
-                  <span class="page-plain is-active">${p}</span>
-                </c:when>
-                <c:otherwise>
-                  <c:url var="pageUrl" value="/onespace/perforinfo/list">
-                    <c:param name="page" value="${p}" />
-                    <c:param name="size" value="${size}" />
-                  </c:url>
-                  <a class="page-plain" href="${pageUrl}">${p}</a>
-                </c:otherwise>
-              </c:choose>
-            </c:forEach>
-
-            <c:if test="${hasNext}">
-              <c:url var="nextUrl" value="/onespace/perforinfo/list">
-                <c:param name="page" value="${page+1}" />
-                <c:param name="size" value="${size}" />
-              </c:url>
-              <a class="page-plain" href="${nextUrl}">▶</a>
-            </c:if>
-          </nav>
+          <!-- 페이징 (더보기) -->
+	      <div class="loadmoreWrap">
+		    <button id="btnLoadMore" class="btnloadmore"
+		     <c:if test="${loaded >= total}">style="display:none"</c:if>>
+		     더보기
+		    </button>
+	   	 </div>
 
         </div>
       </main>
@@ -118,5 +102,52 @@
       <!-- 푸터 -->
       <jsp:include page="/WEB-INF/views/include/footer.jsp" />
     </div>
+    
+    <script>
+	$(function () {
+	  var $table  = $('.perforlist-table');
+	  var $tbody  = $table.find('tbody');
+	  var $btn    = $('#btnLoadMore');
+	
+	  var total  = parseInt($table.data('total')  || 0, 10);
+	  var size   = parseInt($table.data('size')   || 10, 10);
+	  var loaded = parseInt($table.data('loaded') || 0, 10);
+	
+	  $btn.on('click', function () {
+	    $btn.prop('disabled', true);
+	    
+	    // 남은 개수만 요청
+	    var remain = total - loaded;
+	    var limit  = Math.min(size, Math.max(remain, 0)); // 음수 방지
+	
+	    $.getJSON('/onespace/perforinfo/more', { offset: loaded, limit: limit})
+	      .done(function (rows) {
+	        if ($.isArray(rows) && rows.length) {
+	          var html = '';
+	          for (var i=0; i<rows.length; i++) {
+	            var r = rows[i] || {};
+	            var href = '/onespace/perforinfo/view?no=' + encodeURIComponent(r.infoPostNo);
+	            html += '<tr>'
+	                 +    '<td class="cate">[' + (r.infoPostType || '') + ']</td>'
+	                 +    '<td class="tit"><a href="' + href + '">' + (r.infoPostTitle || '') + '</a></td>'
+	                 +    '<td class="date">' + (r.deadlineDate || '') + '</td>'
+	                 +  '</tr>';
+	          }
+	          $tbody.append(html);
+	          loaded += rows.length;
+	        }
+	      })
+	      .always(function () {
+	        if (loaded >= total) {$
+	        	btn.hide();
+	        } 
+	        else {
+	          $btn.prop('disabled', false);
+	        }
+	      });
+	  });
+	});
+</script>
+    
   </body>
 </html>
