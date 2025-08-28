@@ -108,12 +108,19 @@ public class PrideVO {
 		this.instaAccount = instaAccount;
 	}
 	
-	//메소드일반
 	@Override
 	public String toString() {
-		return "PrideVO [teamPostNo=" + teamPostNo + ", teamNo=" + teamNo + ", teamPostType=" + teamPostType
-				+ ", teamPostTitle=" + teamPostTitle + ", teamContent=" + teamContent + ", teamName=" + teamName
-				+ ", instaAccount=" + instaAccount + "]";
+	    return "PrideVO{" +
+	            "teamPostNo=" + teamPostNo +
+	            ", teamNo=" + teamNo +
+	            ", teamPostType='" + teamPostType + '\'' +
+	            ", teamPostTitle='" + teamPostTitle + '\'' +
+	            ", teamContent(len)=" + (teamContent==null?0:teamContent.length()) +
+	            ", teamWriteDate=" + teamWriteDate +
+	            ", teamUpdateDate=" + teamUpdateDate +
+	            ", teamName='" + teamName + '\'' +
+	            ", instaAccount='" + instaAccount + '\'' +
+	            '}';
 	}
 
 	

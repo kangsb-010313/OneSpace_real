@@ -1,46 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.javaex.repository.PrideRepository">
 
-  <!-- 팀자랑 목록 (조인/날짜컬럼 제거: 최소 컬럼만) -->
+  <!-- 팀자랑 목록 (posts + teams 조인) -->
   <select id="selectPridePage" resultType="com.javaex.vo.PrideVO">
     SELECT
-      p.team_post_no   AS teamPostNo,
-      p.team_no        AS teamNo,
-      p.team_post_type AS teamPostType,
-      p.team_post_title AS teamPostTitle,
-      p.team_content   AS teamContent
+      p.teamPostNo     AS teamPostNo,
+      p.teamNo         AS teamNo,
+      p.teamPostType   AS teamPostType,
+      p.teamPostTitle  AS teamPostTitle,
+      p.teamContent    AS teamContent,
+      p.teamWriteDate  AS teamWriteDate,
+      p.teamUpdateDate AS teamUpdateDate,
+      t.teamName       AS teamName,
+      t.instaAccount   AS instaAccount
     FROM posts p
-    WHERE p.team_post_type = 'TEAM_PRIDE'
-    ORDER BY p.team_post_no DESC
-    LIMIT #{offset}, #{size}
+    LEFT JOIN teams t ON t.teamNo = p.teamNo
+    WHERE p.teamPostType = 'TEAM_PRIDE'
+    ORDER BY p.teamPostNo DESC
+    LIMIT #{size} OFFSET #{offset}
   </select>
 
   <!-- 팀자랑 총 개수 -->
   <select id="countPride" resultType="long">
     SELECT COUNT(*)
     FROM posts
-    WHERE team_post_type = 'TEAM_PRIDE'
+    WHERE teamPostType = 'TEAM_PRIDE'
   </select>
 
-  <!-- 팀자랑 상세 (조인/날짜컬럼 제거: 최소 컬럼만) -->
+  <!-- 팀자랑 상세 조회 -->
   <select id="selectPrideOne" resultType="com.javaex.vo.PrideVO">
     SELECT
-      p.team_post_no    AS teamPostNo,
-      p.team_no         AS teamNo,
-      p.team_post_type  AS teamPostType,
-      p.team_post_title AS teamPostTitle,
-      p.team_content    AS teamContent
+      p.teamPostNo     AS teamPostNo,
+      p.teamNo         AS teamNo,
+      p.teamPostType   AS teamPostType,
+      p.teamPostTitle  AS teamPostTitle,
+      p.teamContent    AS teamContent,
+      p.teamWriteDate  AS teamWriteDate,
+      p.teamUpdateDate AS teamUpdateDate,
+      t.teamName       AS teamName,
+      t.instaAccount   AS instaAccount
     FROM posts p
-    WHERE p.team_post_no = #{teamPostNo}
-      AND p.team_post_type = 'TEAM_PRIDE'
+    LEFT JOIN teams t ON t.teamNo = p.teamNo
+    WHERE p.teamPostNo = #{teamPostNo}
+      AND p.teamPostType = 'TEAM_PRIDE'
   </select>
 
   <!-- 팀자랑 등록 -->
   <insert id="insertPride" parameterType="com.javaex.vo.PrideVO"
           useGeneratedKeys="true" keyProperty="teamPostNo">
-    INSERT INTO posts (team_no, team_post_type, team_post_title, team_content, team_write_date)
+    INSERT INTO posts (teamNo, teamPostType, teamPostTitle, teamContent, teamWriteDate)
     VALUES (#{teamNo}, 'TEAM_PRIDE', #{teamPostTitle}, #{teamContent}, NOW())
   </insert>
+
 </mapper>
