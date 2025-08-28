@@ -34,7 +34,14 @@ public class TeampageService {
 	
 	//메소드일반
 	
-	//-- 팀페이지 팀 등록 (가장 기본 방식)
+	//-- 팀페이지 팀 등록 
+	/**
+	 * 새로운 팀을 생성하고, 생성자를 '팀장'으로 팀원 목록에 추가
+	 * 팀 생성 시 환영 게시글을 자동으로 생성
+	 * @param teamVO 팀 생성에 필요한 정보
+	 * @param userNo 팀을 생성하는 유저의 고유 번호
+	 * @return 새로 생성된 팀의 고유 번호(teamNo)
+	 */
 	public int exeAddTeam(TeamVO teamVO, int userNo) {
 		System.out.println("TeampageService.exeAddTeam()");
 		
@@ -70,12 +77,22 @@ public class TeampageService {
 	
 	
     // -- 로그인 유저가 속한 팀 리스트 가져오기 (for teammain aside)
+    /**
+     * 특정 유저가 '승인' 상태로 소속된 모든 팀의 목록을 조회 (사이드바에 사용)
+     * @param userNo 유저의 고유 번호
+     * @return 팀 정보(TeamVO) 리스트
+     */
     public List<TeamVO> exeGetUserTeams(int userNo) {
         System.out.println("TeampageService.exeGetUserTeams()");
         return teampageRepository.selectTeamsByUserNo(userNo);
     }
     
     // -- 로그인 유저가 속한 모든 팀의 게시글 가져오기 (for teammain content)
+    /**
+     * 특정 유저가 소속된 모든 팀의 전체 게시글을 최신순으로 조회 (팀 메인 페이지용)
+     * @param userNo 유저의 고유 번호
+     * @return 게시글 정보(TeamPostVO) 리스트
+     */
     public List<TeamPostVO> exeGetAllUserPosts(int userNo) {
         System.out.println("TeampageService.exeGetAllUserPosts()");
         return teampageRepository.selectPostsByUserTeams(userNo);
@@ -84,6 +101,11 @@ public class TeampageService {
     
 	
     // --팀페이지 전체 리스트 (특정 팀의 리스트)
+	/**
+	 * 특정 팀(teamNo)에 속한 모든 게시글을 조회
+	 * @param teamNo 조회할 팀의 고유 번호
+	 * @return 게시글 정보(TeamPostVO) 리스트
+	 */
     public List<TeamPostVO> exeListByTeam(int teamNo){
     	
         System.out.println("TeampageService.exeListByTeam()");
@@ -95,6 +117,11 @@ public class TeampageService {
 	
 	
     // 팀페이지 글 등록
+	/**
+	 * 새로운 게시글을 등록. 첨부파일과 투표 정보도 함께 처리
+	 * @param teamPostVO 게시글 정보(제목, 내용, 타입, 파일 등)
+	 * @param voteNoList '투표' 글일 경우, 등록할 후보들의 고유 번호 리스트
+	 */
     @Transactional
     public void exeAdd(TeamPostVO teamPostVO, List<Integer> voteNoList) { // 반환타입을 void로 변경-> 리턴 안 시켜줘도 됨
         System.out.println("TeampageService.exeAdd()");
@@ -116,15 +143,15 @@ public class TeampageService {
         }
 
 
-        // [수정] 3. 첨부파일 저장 로직 변경
+        // 3. 첨부파일 저장 로직 변경
         MultipartFile[] files = teamPostVO.getFiles();
         if (files != null && !files[0].getOriginalFilename().isEmpty()) {
             for (MultipartFile file : files) {
                 
-                // (1) AttachService를 호출하여 파일을 실제 폴더에 저장하고, 그 정보를 Map으로 받아옵니다.
+                // (1) AttachService를 호출하여 파일을 실제 폴더에 저장하고, 그 정보를 Map으로 받음
                 Map<String, Object> fileInfo = attachService.saveFile(file);
 
-                // (2) 파일 저장에 성공했다면, DB에 저장할 정보를 TeamAttachmentsVO에 담습니다.
+                // (2) 파일 저장에 성공했다면, DB에 저장할 정보를 TeamAttachmentsVO에 담음
                 if (fileInfo != null) {
                     TeamAttachmentsVO attachmentVO = new TeamAttachmentsVO();
                     attachmentVO.setPostNo(postNo); // 어느 게시글에 속한 파일인지 (FK)
@@ -133,7 +160,7 @@ public class TeampageService {
                     attachmentVO.setTeamFilePath((String) fileInfo.get("filePath"));
                     attachmentVO.setTeamFileSize((Long) fileInfo.get("fileSize"));
 
-                    // (3) TeampageRepository를 통해 'teamAttachments' 테이블에 파일 정보를 저장합니다.
+                    // (3) TeampageRepository를 통해 'teamAttachments' 테이블에 파일 정보를 저장
                     teampageRepository.insertAttachment(attachmentVO);
                 }
             }
@@ -142,6 +169,12 @@ public class TeampageService {
 	
     
     // --팀페이지 등록 글 보기
+	/**
+	 * 게시글 한 개의 상세 정보를 조회
+	 * 게시글의 기본 정보와 함께 첨부파일 목록도 함께 가져오긔
+	 * @param teamPostNo 조회할 게시글의 고유 번호
+	 * @return 게시글 정보(TeamPostVO) 객체
+	 */
     public TeamPostVO exeGetPost(int teamPostNo) {
         System.out.println("TeampageService.exeGetPost()");
         
@@ -160,17 +193,23 @@ public class TeampageService {
         return post;
     }
     
-    /**
-     * 투표 만들기 폼에 필요한 후보 목록을 가져오는 서비스 로직
-     * @param userNo 현재 로그인한 사용자의 번호
-     * @return 투표 후보 정보 리스트
-     */
+	/**
+	 * '투표 만들기' 폼에 보여줄, 유저가 찜한 투표 후보 목록을 조회
+	 * (아직 게시물로 등록되지 않고, voteStatus가 0인 후보들)
+	 * @param userNo 현재 로그인한 유저의 고유 번호
+	 * @return 투표 후보 정보(TeamVotePostVO) 리스트
+	 */
     public List<TeamVotePostVO> exeGetVoteCandidates(int userNo) {
         System.out.println("TeampageService.exeGetVoteCandidates()");
         return teampageRepository.selectVoteCandidates(userNo);
     }
     
-    //투표 등록할 때 후보등록
+	/**
+	 * 특정 '투표' 게시글에 포함된 모든 후보 목록을 조회
+	 * (경쟁팀 수, 예약 완료 여부 등의 추가 정보 포함)
+	 * @param postNo 조회할 '투표' 게시글의 고유 번호
+	 * @return 투표 후보 정보(TeamVotePostVO) 리스트
+	 */
     public List<TeamVotePostVO> getVoteOptions(int postNo) {
         System.out.println("TeampageService.getVoteOptions()");
         return teampageRepository.selectVoteOptionsByPostNo(postNo);
@@ -381,8 +420,9 @@ public class TeampageService {
 	// ==================== 예약 확정 기능 관련 ====================
 
 	/**
-	 * [1단계 조회] '예약 확인' 페이지에 필요한 정보(최다 득표 후보 + 투표자 목록)를 가져오는 서비스
-	 * @param postNo 투표가 진행된 원본 게시글 번호
+	 * '예약 확인' 페이지에 필요한 정보를 조회
+	 * 예약 가능한 후보들 중 최다 득표 후보 1개와 해당 후보의 투표자 목록을 반환
+	 * @param postNo '투표' 게시글의 고유 번호
 	 * @return 최다 득표 후보 정보와 투표자 목록이 담긴 Map
 	 */
 	public Map<String, Object> getReservationInfo(int postNo) {
@@ -411,15 +451,18 @@ public class TeampageService {
 	}
 
 	/**
-	 * [2단계 실행] 실제 결제/저장 로직을 모두 처리하는 서비스 (트랜잭션으로 관리)
-	 * [트랜잭션] '연습일정' 게시글 생성, 영수증 정보 저장, 원본 투표 상태 변경을 하나의 작업 단위로 처리합니다.
-	 * 이 메소드는 '예약 확정' 프로세스의 핵심 실행을 담당합니다.
-	 * @param receiptVO 예약자 정보, 결제 정보, 확정된 voteNo 등이 담긴 VO
-	 * @param teamNo 현재 팀 번호
-	 * @param roomName 게시글 제목에 사용할 연습실 이름
-	 * @param originalPostNo 상태를 변경할 원본 '투표' 게시글 번호
-	 * @param authUser 현재 로그인한 사용자 정보
-	 * @return 최종 생성된 '연습일정' 게시글의 고유 번호(teamPostNo)
+	 * [트랜잭션] 최종 결제를 실행하고 관련 데이터를 모두 업데이트
+	 * 1. '연습일정' 게시글 생성
+	 * 2. 영수증 정보 저장
+	 * 3. 결제된 후보 상태를 2(예약확정)로 변경
+	 * 4. 나머지 후보 상태를 3(투표종료)로 변경
+	 * 5. 원본 투표 게시글 상태를 1(예약완료)로 변경
+	 * @param receiptVO      결제 정보가 담긴 VO
+	 * @param teamNo         현재 팀 번호
+	 * @param roomName       '연습일정' 글 제목에 사용할 연습실 이름
+	 * @param originalPostNo 원본 '투표' 게시글 번호
+	 * @param authUser       로그인 유저 정보
+	 * @return 새로 생성된 '연습일정' 게시글의 고유 번호
 	 */
 	@Transactional
 	public int exeCreateReceiptAndPost(TeamReciptVO receiptVO, int teamNo, String roomName, int originalPostNo, UserVO authUser) {

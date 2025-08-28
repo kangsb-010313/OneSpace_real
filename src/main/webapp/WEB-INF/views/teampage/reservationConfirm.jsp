@@ -41,6 +41,7 @@
                             <input type="hidden" name="roomName" value="${confirmedOption.roomName}">
                             
                             <div class="reservation-page-wrap">
+                            
                                 <!-- 좌측: 확정된 연습실 정보 -->
                                 <div class="left-column">
                                     <h3 class="section-title">#예약하실 연습실 정보</h3>

@@ -23,13 +23,7 @@ public class TeampageRepository {
 	//필드
 	@Autowired
 	private SqlSession sqlSession;
-	
-	//생성자
-	
-	
-	//메소드 gs
-	
-	
+
 	//메소드 일반
 	
 	//-- 팀페이지 팀 등록
@@ -86,6 +80,11 @@ public class TeampageRepository {
     
 	
     // --팀페이지 전체 리스트 (특정 팀의 리스트)
+	/**
+	 * 특정 팀의 모든 게시글을 조회
+	 * @param teamNo 조회할 팀의 고유 번호
+	 * @return 게시글 정보(TeamPostVO) 리스트
+	 */
     public List<TeamPostVO> teampageSelectListByTeamNo(int teamNo){
     	
         System.out.println("TeampageRepository.teampageSelectListByTeamNo()");
@@ -147,6 +146,11 @@ public class TeampageRepository {
     }
     
     //투표 등록할 때 후보등록
+	/**
+	 * '투표' 게시글에 포함된 모든 후보 목록과 관련 정보를 조회
+	 * @param postNo 조회할 게시글의 고유 번호
+	 * @return 투표 후보 정보(TeamVotePostVO) 리스트
+	 */
     public List<TeamVotePostVO> selectVoteOptionsByPostNo(int postNo) {
         System.out.println("TeampageRepository.selectVoteOptionsByPostNo()");
         return sqlSession.selectList("teampage.selectVoteOptionsByPostNo", postNo);
@@ -289,7 +293,11 @@ public class TeampageRepository {
 	}
 	
 	// ==================== 예약 확정 기능 관련 ====================
-    // 예약 가능한 후보 목록을 득표순으로 가져오는 메소드
+    /**
+     * '예약 확인' 시, 예약 가능한 후보 목록을 득표수가 많은 순서대로 정렬하여 조회
+     * @param postNo '투표' 게시글의 고유 번호
+     * @return 예약 가능한 투표 후보 정보(TeamVotePostVO) 리스트
+     */
     public List<TeamVotePostVO> selectAvailableVoteOptionsRanked(int postNo) {
         System.out.println("TeampageRepository.selectAvailableVoteOptionsRanked()");
         return sqlSession.selectList("teampage.selectAvailableVoteOptionsRanked", postNo);
@@ -319,7 +327,12 @@ public class TeampageRepository {
 	    return sqlSession.selectOne("teampage.selectReserverNameByVoteNo", voteNo);
 	}
 	
-	// 결제된 특정 후보(voteNo)의 상태를 변경하는 메소드
+	/**
+	 * 결제된 특정 후보(voteNo)의 상태(voteStatus)를 변경 (주로 2:진짜 예약확정으로 변경 시 사용)
+	 * @param voteNo 상태를 변경할 후보의 고유 번호
+	 * @param status 변경할 상태 값 (ex: 2)
+	 * @return 업데이트된 행의 수
+	 */
 	public int updateVoteStatusByVoteNo(int voteNo, int status) {
 	    System.out.println("TeampageRepository.updateVoteStatusByVoteNo()");
 	    Map<String, Integer> params = new HashMap<>();
@@ -328,7 +341,13 @@ public class TeampageRepository {
 	    return sqlSession.update("teampage.updateVoteStatusByVoteNo", params);
 	}
 
-	// 특정 게시물에서, 특정 후보를 '제외한 나머지' 후보들의 상태를 변경하는 메소드
+	/**
+	 * 특정 게시글에서, 결제된 후보를 제외한 나머지 후보들의 상태를 변경 (주로 3:투표종료로 변경 시 사용)
+	 * @param postNo       게시글의 고유 번호
+	 * @param excludeVoteNo 상태 변경에서 제외할 후보의 고유 번호
+	 * @param status       변경할 상태 값 (ex: 3)
+	 * @return 업데이트된 행의 수
+	 */
 	public int updateOtherVoteStatusInPost(int postNo, int excludeVoteNo, int status) {
 	    System.out.println("TeampageRepository.updateOtherVoteStatusInPost()");
 	    Map<String, Integer> params = new HashMap<>();

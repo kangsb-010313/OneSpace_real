@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/asidedefault.css">
 
     
-        <%-- ▼▼▼▼▼ 글 종류에 따라 다른 CSS 파일 로드 (이 부분을 다시 넣어주세요!) ▼▼▼▼▼ --%>
+        <%-- ▼▼▼▼▼ 글 종류에 따라 다른 CSS 파일 로드 ▼▼▼▼▼ --%>
     <c:choose>
         <c:when test="${param.teamPostType == '일반공지'}">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/teamwriteform.css">
@@ -28,7 +28,6 @@
              <%-- 기본 CSS 또는 에러 처리 (필요하다면 기본 폼을 위한 CSS를 여기에 추가할 수 있습니다) --%>
         </c:otherwise>
     </c:choose>
-    <%-- ▲▲▲▲▲ 여기까지 다시 넣어주시면 됩니다 ▲▲▲▲▲ --%>
     
 </head>
 
@@ -57,7 +56,6 @@
                                 <c:otherwise>게시글 등록 실패</c:otherwise> <%-- 기본값 또는 에러 메시지 --%>
                             </c:choose>
                         </h2>
-                        <%-- ▲▲▲▲▲ 여기까지 ▼▼▼▼▼ --%>
 
                         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   main container 안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
                         <div class="post-register-wrap">
@@ -65,10 +63,6 @@
                             <form action="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/teamwriteadd" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="teamPostType" value="${param.teamPostType}"> <%-- 글 종류 전달 --%>
                                 <input type="hidden" name="teamNo" value="${teamNo}"> 
-                                <%-- 
-                                    여기에 teamNo도 숨겨서 전달하거나, URL PathVariable로 받거나 해야 합니다.
-                                    예: <input type="hidden" name="teamNo" value="${param.teamNo}"> 
-                                --%>
 
                                 <!-- 제목 입력 영역 (공통) -->
                                 <div class="form-group title-group">
@@ -133,7 +127,6 @@
 								        </c:choose>
 								    </div>
 								</c:if>
-								<%-- <-- 여기까지 --> --%>
 
                                 <!-- 글 내용 및 파일 첨부 영역 (공통) -->
                                 <div class="form-group content-group">
