@@ -104,50 +104,59 @@
     </div>
     
     <script>
-	$(function () {
-	  var $table  = $('.perforlist-table');
-	  var $tbody  = $table.find('tbody');
-	  var $btn    = $('#btnLoadMore');
-	
-	  var total  = parseInt($table.data('total')  || 0, 10);
-	  var size   = parseInt($table.data('size')   || 10, 10);
-	  var loaded = parseInt($table.data('loaded') || 0, 10);
-	
-	  $btn.on('click', function () {
-	    $btn.prop('disabled', true);
-	    
-	    // 남은 개수만 요청
-	    var remain = total - loaded;
-	    var limit  = Math.min(size, Math.max(remain, 0)); // 음수 방지
-	
-	    $.getJSON('/onespace/perforinfo/more', { offset: loaded, limit: limit})
-	      .done(function (rows) {
-	        if ($.isArray(rows) && rows.length) {
-	          var html = '';
-	          for (var i=0; i<rows.length; i++) {
-	            var r = rows[i] || {};
-	            var href = '/onespace/perforinfo/view?no=' + encodeURIComponent(r.infoPostNo);
-	            html += '<tr>'
-	                 +    '<td class="cate">[' + (r.infoPostType || '') + ']</td>'
-	                 +    '<td class="tit"><a href="' + href + '">' + (r.infoPostTitle || '') + '</a></td>'
-	                 +    '<td class="date">' + (r.deadlineDate || '') + '</td>'
-	                 +  '</tr>';
-	          }
-	          $tbody.append(html);
-	          loaded += rows.length;
-	        }
-	      })
-	      .always(function () {
-	        if (loaded >= total) {$
-	        	btn.hide();
-	        } 
-	        else {
-	          $btn.prop('disabled', false);
-	        }
-	      });
-	  });
-	});
+$(function () {
+  var $table  = $('.perforlist-table');
+  var $tbody  = $table.find('tbody');
+  var $btn    = $('#btnLoadMore');
+
+  var total  = parseInt($table.data('total')  || 0, 10);
+  var size   = parseInt($table.data('size')   || 10, 10);
+  var loaded = parseInt($table.data('loaded') || 0, 10);
+
+  // 초기에도 다 찼으면 버튼 숨김
+  if (loaded >= total) $btn.hide();
+
+  $btn.on('click', function () {
+    // 남은 수 계산 (프런트만으로도 가능)
+    var remain = total - loaded;
+    if (remain <= 0) { $btn.hide(); return; }
+
+    // 서버는 limit=size로 고정 요청해도 됨(컨트롤러 수정 없이)
+    var limit = Math.min(size, remain);
+
+    $btn.prop('disabled', true);
+
+    $.getJSON('/onespace/perforinfo/more', { offset: loaded, limit: limit })
+      .done(function (rows) {
+        var got = ($.isArray(rows) ? rows.length : 0);
+
+        if (got > 0) {
+          var html = '';
+          for (var i=0; i<got; i++) {
+            var r = rows[i] || {};
+            var href = '/onespace/perforinfo/view?no=' + encodeURIComponent(r.infoPostNo);
+            html += '<tr>'
+                 +    '<td class="cate">[' + (r.infoPostType || '') + ']</td>'
+                 +    '<td class="tit"><a href="' + href + '">' + (r.infoPostTitle || '') + '</a></td>'
+                 +    '<td class="date">' + (r.deadlineDate || '') + '</td>'
+                 +  '</tr>';
+          }
+          $tbody.append(html);
+          loaded += got;  // ★ 로드된 개수 갱신
+        }
+
+        // ★ 서버가 덜 주거나(마지막 페이지) 0개면 버튼 숨김
+        if (loaded >= total || got < limit) {
+          $btn.hide();
+        }
+      })
+      .always(function () {
+        if ($btn.is(':visible')) $btn.prop('disabled', false);
+      });
+  });
+});
 </script>
+
     
   </body>
 </html>
