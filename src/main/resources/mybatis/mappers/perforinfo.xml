@@ -28,7 +28,7 @@
     from infoWrite iw
     left join users u on u.userNo = iw.userNo
     order by iw.infoWriteDate desc, iw.infoPostNo desc
-    limit #{size} offset #{offset}
+    limit #{offset}, #{size}
   </select>
 
   <!-- 단건 조회 -->
