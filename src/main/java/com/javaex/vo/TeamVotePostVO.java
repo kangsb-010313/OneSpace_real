@@ -18,7 +18,8 @@ public class TeamVotePostVO {
     private String spacesGuideNo;   // 편의시설 정보 (ex: "주차/최대15인")
     private String picturesNo;   	// 대표 이미지 경로 
     
-    private int competitionCount; // 경쟁 팀 수를 담을 필드
+    private int competitionCount;	// 경쟁 팀 수를 담을 필드
+    private int isReserved;   	  	// 예약 완료 여부를 담을 필드
 
     
     //생성자
@@ -28,7 +29,7 @@ public class TeamVotePostVO {
 
 	public TeamVotePostVO(int voteNo, int roomNo, String spaceName, String roomName, String address, String voteDate,
 			String startTime, String endTime, String thumbImg, int totalPrice, String spacesGuideNo, String picturesNo,
-			int competitionCount) {
+			int competitionCount, int isReserved) {
 		super();
 		this.voteNo = voteNo;
 		this.roomNo = roomNo;
@@ -43,8 +44,8 @@ public class TeamVotePostVO {
 		this.spacesGuideNo = spacesGuideNo;
 		this.picturesNo = picturesNo;
 		this.competitionCount = competitionCount;
+		this.isReserved = isReserved;
 	}
-
 
 
 
@@ -153,19 +154,24 @@ public class TeamVotePostVO {
 		this.thumbImg = thumbImg;
 	}
 
+	public int getIsReserved() {
+		return isReserved;
+	}
 
+	public void setIsReserved(int isReserved) {
+		this.isReserved = isReserved;
+	}
+
+	
 	//메소드 일반
 	@Override
 	public String toString() {
 		return "TeamVotePostVO [voteNo=" + voteNo + ", roomNo=" + roomNo + ", spaceName=" + spaceName + ", roomName="
 				+ roomName + ", address=" + address + ", voteDate=" + voteDate + ", startTime=" + startTime
 				+ ", endTime=" + endTime + ", thumbImg=" + thumbImg + ", totalPrice=" + totalPrice + ", spacesGuideNo="
-				+ spacesGuideNo + ", picturesNo=" + picturesNo + ", competitionCount=" + competitionCount + "]";
+				+ spacesGuideNo + ", picturesNo=" + picturesNo + ", competitionCount=" + competitionCount
+				+ ", isReserved=" + isReserved + "]";
 	}
-    
-    
-
-    
     
 
     

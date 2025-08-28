@@ -367,6 +367,17 @@
 	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
 	        v.totalPrice,
 	        (select storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) AS picturesNo,
+               /* 이 후보가 이미 예약 완료되었는지 확인하는 플래그 (0: 예약가능, 1: 예약불가) */
+	        (
+	            SELECT IF(COUNT(*) > 0, 1, 0)
+	            FROM voteOptions vo_check
+	            WHERE vo_check.roomNo = r.roomNo
+	              AND vo_check.voteDate = vo.voteDate
+	              AND vo_check.voteStatus = 2 -- '예약확정' 상태인 데이터가
+	              AND vo_check.voteTime IN ( -- 현재 후보의 시간대와 겹치는지 확인
+	                  SELECT voteTime FROM voteOptions WHERE voteNo = v.voteNo
+	              )
+	        ) AS isReserved,
 	        (
 	            select group_concat(
 	                CASE WHEN fi.facilityName = '블루투스 스피커' THEN '스피커' ELSE fi.facilityName END
@@ -390,7 +401,7 @@
 	                  where vo_current.voteNo = v.voteNo -- 현재 후보의 시간 목록과
 	                    and vo_current.voteTime = vo2.voteTime -- 다른 팀 후보의 시간 비교
 	              )
-	        ) + 1 as competitionCount /* 자기 자신을 포함해야 하므로 +1 */
+	        ) as competitionCount /* 자기 자신을 포함해야 하므로 +1 */
 	
 	    from votes v
 	    join voteOptions vo ON v.voteNo = vo.voteNo
@@ -465,13 +476,44 @@
 	<!-- ==================== 예약 확정 기능 관련 쿼리 ==================== -->
 	
 	<!-- [예약 1단계] 특정 '투표' 게시글에서 가장 많은 표를 받은 후보(voteNo)를 1개만 조회  -->
-	<select id="selectTopVotedVoteNo" parameterType="int" resultType="int">
+<!-- 	<select id="selectTopVotedVoteNo" parameterType="int" resultType="int">
 	    select voteNo
 	    from voteResults
 	    where voteNo IN (SELECT voteNo FROM votes WHERE postNo = #{postNo})
 	    group by voteNo
 	    order by count(voteNo) desc
 	    limit 1
+	</select> -->
+	
+	<!-- [예약 1단계] 예약 가능한 후보 목록을 득표순으로 가져오는 쿼리 -->
+	<select id="selectAvailableVoteOptionsRanked" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
+	    SELECT
+	        v.voteNo,
+	        v.totalPrice,
+	        s.spaceName, 
+	        r.roomName, 
+	        r.roomNo,
+	        vo.voteDate, 
+	        MIN(vo.voteTime) AS startTime,
+	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
+	        (SELECT storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) as thumbImg
+	    FROM votes v
+	    JOIN voteOptions vo ON v.voteNo = vo.voteNo
+	    JOIN rooms r ON vo.roomNo = r.roomNo
+	    JOIN spaces s ON r.spacesNo = s.spacesNo
+	    WHERE v.postNo = #{postNo}
+	      /* 이 후보와 시간/장소가 겹치는 '예약확정(2)' 상태의 다른 후보가 없는 경우만 조회 */
+	      AND NOT EXISTS (
+	          SELECT 1
+	          FROM voteOptions vo_check
+	          WHERE vo_check.roomNo = r.roomNo
+	            AND vo_check.voteDate = vo.voteDate
+	            AND vo_check.voteStatus = 2
+	            AND vo_check.voteTime IN (SELECT voteTime FROM voteOptions WHERE voteNo = v.voteNo)
+	      )
+	    GROUP BY v.voteNo
+	    /* 득표수(voteResults 테이블의 개수) 순으로 정렬 */
+	    ORDER BY (SELECT COUNT(*) FROM voteResults WHERE voteNo = v.voteNo) DESC
 	</select>
 	
 	
@@ -505,11 +547,23 @@
 	    values (#{userNo}, #{roomNo}, #{paymentMethod}, #{phoneNum}, #{reservationTime}, #{voteNo})
 	</insert>
 	
-	<!-- [최종 저장 3] 원본 '투표' 게시글에 있던 모든 후보들의 상태를 '예약확정(2)'으로 변경하여 더 이상 투표할 수 없도록 막음 -->
-	<update id="updateAllVoteStatusInPost" parameterType="map">
+	<!-- 결제된 특정 voteNo에 해당하는 voteOptions의 상태를 변경하는 쿼리 -->
+	<update id="updateVoteStatusByVoteNo" parameterType="map">
 	    update voteOptions
 	    set voteStatus = #{status}
-	    where voteNo IN (select voteNo from votes where postNo = #{postNo})
+	    where voteNo = #{voteNo}
+	</update>
+	
+	<!-- 특정 게시물에서, 결제된 후보를 제외한 나머지 후보들의 상태를 변경하는 쿼리 -->
+	<update id="updateOtherVoteStatusInPost" parameterType="map">
+	    update voteOptions
+	    set voteStatus = #{status}
+	    where voteNo IN (
+	        select voteNo 
+	        from votes 
+	        where postNo = #{postNo} 
+	          and voteNo != #{excludeVoteNo}
+	    )
 	</update>
 	
 	<!-- voteNo로 실제 예약자(결제자) 이름 조회 -->

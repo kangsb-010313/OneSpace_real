@@ -229,60 +229,6 @@ public class TeampageController {
 		return "redirect:/onespace/teams/" + teamNo + "/posts/list";
 	}
 	
-//    // 이미지 파일 출력 메소드
-//    @RequestMapping(value="/display/{saveName}", method = RequestMethod.GET)
-//    public void display(@PathVariable("saveName") String saveName,
-//                        HttpServletResponse response) {
-//        
-//        System.out.println("이미지 출력 요청: " + saveName);
-//        
-//        // 1. 이미지가 저장된 폴더 경로를 지정
-//        String saveDir = "C:\\javaStudy\\upload\\";
-//        
-//        // --- 여기부터 수정 ---
-//        String saveDir;
-//        String osName = System.getProperty("os.name").toLowerCase();
-//
-//        // 윈도우일 경우
-//        if (osName.contains("win")) {
-//            // 윈도우 경로
-//            saveDir = "C:\\javaStudy\\upload\\";
-//        }
-//        // 맥 또는 리눅스일 경우
-//        else { 
-//            // 맥 경로 (AttachService와 동일하게 설정)
-//            saveDir = System.getProperty("user.home") + "/upload/";
-//        }
-//        // --- 여기까지 수정 ---
-//        
-//        // 2. 출력할 이미지 파일의 전체 경로
-//        String filePath = saveDir + saveName;
-//        
-//        try {
-//            // 3. 파일에서 데이터를 읽어올 InputStream
-//            FileInputStream fis = new FileInputStream(filePath);
-//            
-//            // 4. 읽어온 데이터를 브라우저로 보낼 OutputStream
-//            OutputStream os = response.getOutputStream();
-//            
-//            byte[] buffer = new byte[1024];
-//            int bytesRead;
-//            
-//            // 5. 파일 끝까지 1KB씩 반복해서 읽고, 읽자마자 브라우저로 쏴줌여
-//            while ((bytesRead = fis.read(buffer)) != -1) {
-//                os.write(buffer, 0, bytesRead);
-//            }
-//            
-//            // 6. 파이프 닫아
-//            os.close();
-//            fis.close();
-//            
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            System.out.println(saveName + " 이미지 파일을 찾을 수 없습니다.");
-//        }
-//    }
-    
     
 	 //--팀페이지 등록 글 보기
 	 // URL: /onespace/teams/{teamNo}/posts/{teamPostNo}

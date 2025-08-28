@@ -289,11 +289,11 @@ public class TeampageRepository {
 	}
 	
 	// ==================== 예약 확정 기능 관련 ====================
-	// 특정 게시글에서 최다 득표한 voteNo 조회
-	public Integer selectTopVotedVoteNo(int postNo) {
-	    System.out.println("TeampageRepository.selectTopVotedVoteNo()");
-	    return sqlSession.selectOne("teampage.selectTopVotedVoteNo", postNo);
-	}
+    // 예약 가능한 후보 목록을 득표순으로 가져오는 메소드
+    public List<TeamVotePostVO> selectAvailableVoteOptionsRanked(int postNo) {
+        System.out.println("TeampageRepository.selectAvailableVoteOptionsRanked()");
+        return sqlSession.selectList("teampage.selectAvailableVoteOptionsRanked", postNo);
+    }
 
 	// 특정 voteNo에 해당하는 후보의 상세 정보 조회
 	public TeamVotePostVO getVoteOptionDetail(int voteNo) {
@@ -313,19 +313,29 @@ public class TeampageRepository {
 	    return sqlSession.insert("teampage.insertReceipt", receiptVO);
 	}
 
-	// 특정 게시글(postNo)에 속한 모든 투표 옵션의 상태(voteStatus)를 변경하는 메소드
-	public int updateAllVoteStatusInPost(int postNo, int status) {
-	    System.out.println("TeampageRepository.updateAllVoteStatusInPost()");
-	    Map<String, Integer> params = new HashMap<>();
-	    params.put("postNo", postNo);
-	    params.put("status", status);
-	    return sqlSession.update("teampage.updateAllVoteStatusInPost", params);
-	}
-
 	// voteNo로 실제 예약자 이름 조회
 	public String selectReserverNameByVoteNo(int voteNo) {
 	    System.out.println("TeampageRepository.selectReserverNameByVoteNo()");
 	    return sqlSession.selectOne("teampage.selectReserverNameByVoteNo", voteNo);
+	}
+	
+	// 결제된 특정 후보(voteNo)의 상태를 변경하는 메소드
+	public int updateVoteStatusByVoteNo(int voteNo, int status) {
+	    System.out.println("TeampageRepository.updateVoteStatusByVoteNo()");
+	    Map<String, Integer> params = new HashMap<>();
+	    params.put("voteNo", voteNo);
+	    params.put("status", status);
+	    return sqlSession.update("teampage.updateVoteStatusByVoteNo", params);
+	}
+
+	// 특정 게시물에서, 특정 후보를 '제외한 나머지' 후보들의 상태를 변경하는 메소드
+	public int updateOtherVoteStatusInPost(int postNo, int excludeVoteNo, int status) {
+	    System.out.println("TeampageRepository.updateOtherVoteStatusInPost()");
+	    Map<String, Integer> params = new HashMap<>();
+	    params.put("postNo", postNo);
+	    params.put("excludeVoteNo", excludeVoteNo);
+	    params.put("status", status);
+	    return sqlSession.update("teampage.updateOtherVoteStatusInPost", params);
 	}
 	
 	

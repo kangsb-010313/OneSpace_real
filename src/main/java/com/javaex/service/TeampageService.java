@@ -388,21 +388,24 @@ public class TeampageService {
 	public Map<String, Object> getReservationInfo(int postNo) {
 	    System.out.println("TeampageService.getReservationInfo()");
 	    
-	    // 최다 득표한 voteNo를 먼저 찾음
-	    Integer topVoteNo = teampageRepository.selectTopVotedVoteNo(postNo);
-	    
-	    if (topVoteNo == null) {
-	        return null; // 아무도 투표 안했으면 null 반환
-	    }
-	    
-	    // voteNo로 상세 정보와 투표자 목록을 각각 조회
-	    TeamVotePostVO topOption = teampageRepository.getVoteOptionDetail(topVoteNo);
-	    List<TeamVoteResultVO> voters = teampageRepository.selectVotersByVoteNo(topVoteNo);
-	    
-	    // 두 정보를 Map에 담아서 Controller로 전달
-	    Map<String, Object> reservationInfo = new HashMap<>();
-	    reservationInfo.put("topOption", topOption);
-	    reservationInfo.put("voters", voters);
+        // 1. '예약 가능한' 후보들을 득표수 순으로 가져옴
+        List<TeamVotePostVO> availableOptions = teampageRepository.selectAvailableVoteOptionsRanked(postNo);
+        
+        // 2. 예약 가능한 후보가 아무도 없으면 null을 반환
+        if (availableOptions == null || availableOptions.isEmpty()) {
+            return null; 
+        }
+        
+        // 3. 목록의 가장 첫 번째 항목이 '예약 가능한 최다 득표 후보'
+        TeamVotePostVO topOption = availableOptions.get(0);
+        
+        // 4. 해당 후보의 상세 정보와 투표자 목록을 조회
+        List<TeamVoteResultVO> voters = teampageRepository.selectVotersByVoteNo(topOption.getVoteNo());
+        
+        // 5. 두 정보를 Map에 담아서 Controller로 전달
+        Map<String, Object> reservationInfo = new HashMap<>();
+        reservationInfo.put("topOption", topOption);
+        reservationInfo.put("voters", voters);
 	    
 	    return reservationInfo;
 	}
@@ -442,10 +445,14 @@ public class TeampageService {
 	    receiptVO.setReservationTime(sdf.format(new Date()));
 	    teampageRepository.insertReceipt(receiptVO);
 	    
-	    // 4. 원본 투표 게시글에 있던 모든 후보(voteOptions)들의 상태를 2(예약확정)로 변경
-	    teampageRepository.updateAllVoteStatusInPost(originalPostNo, 2);
+	    // 4-1. '결제된' 후보(voteNo)의 상태만 2(예약확정)로 변경합니다.
+	    int confirmedVoteNo = receiptVO.getVoteNo();
+	    teampageRepository.updateVoteStatusByVoteNo(confirmedVoteNo, 2);
 	    
-	    // 4. !!!원본 투표 게시글 자체의 상태를 1('예약완료')로 변경
+	    // 4-2. 원본 투표 게시글에 속한 '나머지 모든' 후보들의 상태를 3(투표종료)으로 변경합니다.
+	    teampageRepository.updateOtherVoteStatusInPost(originalPostNo, confirmedVoteNo, 3);
+	    
+	    // 5. !!!원본 투표 게시글 자체의 상태를 1('예약완료')로 변경 (기존 코드 유지)
 	    Map<String, Object> params = new HashMap<>();
 	    params.put("postNo", originalPostNo);
 	    params.put("status", 1);
@@ -453,7 +460,7 @@ public class TeampageService {
 
 	    System.out.println("TeampageService.exeCreateReceiptAndPost() 종료: 새 게시글 번호 " + newPostNo);
 
-	    // 5. 모든 작업이 성공하면, 새로 생성된 게시글 번호를 Controller로 반환
+	    // 6. 모든 작업이 성공하면, 새로 생성된 게시글 번호를 Controller로 반환
 	    return newPostNo;
 	}
 

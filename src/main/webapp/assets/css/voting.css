@@ -327,3 +327,35 @@
     padding-top: 12px;     /* 위아래 여백을 줘서 보기 좋게 만듭니다. */
     padding-bottom: 12px;
 }
+
+
+/* 예약 완료된 후보를 위한 스타일 */
+
+/* 반투명한 회색 오버레이 */
+.reserved-overlay {
+    position: relative; /* 자식 요소의 기준점이 되기 위해 추가 */
+    pointer-events: none; /* 오버레이 아래 요소 클릭 방지 */
+}
+
+.reserved-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(200, 200, 200, 0.6); /* 반투명 회색 */
+    z-index: 10;
+}
+
+/* "예약 완료" 안내 문구 스타일 */
+.vote-action-area.reserved {
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    color: #d9534f; /* 붉은 계열 색상 */
+    background-color: #f2f2f2;
+}
+.vote-action-area.reserved span {
+	margin: 8px auto;
+}

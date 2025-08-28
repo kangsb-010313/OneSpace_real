@@ -88,7 +88,7 @@
 								            </div>
 								        </c:when>
 								
-								        <%-- Case 2: '연습일정' 글일 때 보여줄 특별한 레이아웃 (새로 추가) --%>
+								        <%-- Case 2: '연습일정' 글일 때 보여줄 특별한 레이아웃 --%>
 								        <c:when test="${post.teamPostType == '연습일정'}">
 							            
 								            <div class="reservation-page-wrap">
@@ -155,37 +155,66 @@
 								                        <c:forEach items="${voteOptions}" var="option" varStatus="status">
 								                            <li>
 								                                <div class="vote-option">
-								                                    <a href="#" class="vote-item-card">
-								                                        <div class="favorite-count">🔥 ${option.competitionCount}</div>
-								                                        
-								                                        <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
-								                                        
-								                                        <div class="card-content-wrapper">
-								                                            <div class="card-main-info">
-								                                                <div class="info-left">
-								                                                    <p class="item-title">${status.count}. ${option.roomName}</p>
-								                                                    <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
-								                                                </div>
-								                                                <div class="info-right">
-								                                                    <p class="item-price">${option.totalPrice} 원</p>
+								                                
+   																	<c:choose>
+								                                        <%-- Case 1: 다른 팀이 이미 예약한 후보일 경우 --%>
+								                                        <c:when test="${option.isReserved == 1}">
+								                                            <%-- 카드 전체를 감싸는 div에 'reserved-overlay' 클래스 추가 --%>
+								                                            <div class="vote-item-card reserved-overlay">
+								                                                <div class="favorite-count">🔥 ${option.competitionCount}</div>
+								                                                <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
+								                                                <div class="card-content-wrapper">
+								                                                    <div class="card-main-info">
+								                                                        <div class="info-left">
+								                                                            <p class="item-title">${status.count}. ${option.roomName}</p>
+								                                                            <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
+								                                                        </div>
+								                                                        <div class="info-right">
+								                                                            <p class="item-price">${option.totalPrice} 원</p>
+								                                                        </div>
+								                                                    </div>
 								                                                </div>
 								                                            </div>
-								                                        </div>
-								                                    </a>
-								                                    
-  																	<c:if test="${post.postStatus == 0}">
-                                                                        <!-- postStatus가 0(정상)일 때만 투표 버튼과 명단 영역을 보여줌 -->
-                                                                        <div class="vote-action-area">
-                                                                            <c:set var="isVoted" value="false" />
-                                                                            <c:forEach items="${userVotedList}" var="votedNo">
-                                                                                <c:if test="${votedNo == option.voteNo}">
-                                                                                    <c:set var="isVoted" value="true" />
-                                                                                </c:if>
-                                                                            </c:forEach>
-                                                                            <button type="button" class="btn-vote ${isVoted ? 'active' : ''}" data-voteno="${option.voteNo}">투표</button>
-                                                                            <div class="voter-list" id="voter-list-${option.voteNo}"></div>
-                                                                        </div>
-                                                                    </c:if>
+								                                            <%-- 하단 액션 영역에 안내 메시지 표시 --%>
+								                                            <div class="vote-action-area reserved">
+								                                                <span>예약이 완료된 시간대입니다.</span>
+								                                            </div>
+								                                        </c:when>
+
+								                                        <%-- Case 2: 예약 가능한 후보일 경우 --%>
+								                                        <c:otherwise>
+								                                            <%-- 기존과 동일한 카드 구조 --%>
+								                                            <a href="#" class="vote-item-card">
+								                                                <div class="favorite-count">🔥 ${option.competitionCount}</div>
+								                                                <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
+								                                                <div class="card-content-wrapper">
+								                                                    <div class="card-main-info">
+								                                                        <div class="info-left">
+								                                                            <p class="item-title">${status.count}. ${option.roomName}</p>
+								                                                            <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
+								                                                        </div>
+								                                                        <div class="info-right">
+								                                                            <p class="item-price">${option.totalPrice} 원</p>
+								                                                        </div>
+								                                                    </div>
+								                                                </div>
+								                                            </a>
+								                                            
+								                                            <%-- 투표가 진행 중일 때만 투표 버튼 표시 --%>
+								                                            <c:if test="${post.postStatus == 0}">
+								                                                <div class="vote-action-area">
+								                                                    <c:set var="isVoted" value="false" />
+								                                                    <c:forEach items="${userVotedList}" var="votedNo">
+								                                                        <c:if test="${votedNo == option.voteNo}">
+								                                                            <c:set var="isVoted" value="true" />
+								                                                        </c:if>
+								                                                    </c:forEach>
+								                                                    <button type="button" class="btn-vote ${isVoted ? 'active' : ''}" data-voteno="${option.voteNo}">투표</button>
+								                                                    <div class="voter-list" id="voter-list-${option.voteNo}"></div>
+								                                                </div>
+								                                            </c:if>
+								                                        </c:otherwise>
+								                                    </c:choose>
                                 
                                                                     <c:if test="${post.postStatus == 1}">
                                                                         <!-- postStatus가 1(예약완료)이면, 안내 문구를 보여줌 -->
