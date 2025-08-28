@@ -157,6 +157,7 @@
 	  FROM voteOptions v
 	  JOIN rooms  r ON r.roomNo   = v.roomNo
 	  JOIN spaces s ON s.spacesNo = r.spacesNo
+	  JOIN studioWishlist sw ON v.roomNo = sw.roomNo
 	  LEFT JOIN roomPrices rp
 	         ON rp.roomNo  = r.roomNo
 	        AND rp.dayType = (CASE WHEN DAYOFWEEK(v.voteDate) IN (1,7) THEN '주말' ELSE '평일' END)

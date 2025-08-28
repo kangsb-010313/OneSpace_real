@@ -42,7 +42,6 @@
 								<c:forEach var="space" items="${favoriteSpaces}">
 									<div class="practice-card card-bordered">
 
-										<c:set var="imgUrlRaw" value="${space.imageUrl}" />
 										<c:set var="spaceLink" value="${space.spaceLink}" />
 
 										<c:choose>
@@ -502,6 +501,7 @@
 		      $favList.append($li);
 		      $overlay.hide();
 		      alert(res.message);
+		      location.reload();
 		    } else {
 		      alert(res.message || '저장 실패');
 		    }
@@ -543,7 +543,7 @@
 	        } else {
 	          location.reload(); // 안전 장치
 	        }
-	        alert(res.message || '찜 해제 완료');
+	        location.reload();
 	      } else {
 	        alert(res && res.message ? res.message : '찜 해제 실패');
 	        $btn.prop('disabled', false).text(origText);
