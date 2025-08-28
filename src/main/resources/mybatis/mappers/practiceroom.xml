@@ -129,7 +129,7 @@
 	
 	<!-- 사용자의 찜 후보 목록 조회 -->
 	<select id="selectFavoriteCandidates" parameterType="int" resultType="java.util.Map">
-	  <![CDATA[
+	<![CDATA[
 	  SELECT
 	    s.spaceName,
 	    r.roomNo,
@@ -153,11 +153,23 @@
 	      WHERE vv.roomNo   = v.roomNo
 	        AND vv.voteDate = v.voteDate
 	        AND vv.voteTime = v.voteTime
-	    ) AS hotCount
+	    ) AS hotCount,
+	    COALESCE(
+	      CONCAT(ra.filePath, ra.storedFileName),
+	      CASE
+	        WHEN LOWER(s.spaceLink) REGEXP '^(https?://).*(\\.(jpg|jpeg|png|gif|webp))(\\?.*)?$'
+	          THEN s.spaceLink
+	        WHEN LOWER(s.spaceLink) REGEXP '(\\.(jpg|jpeg|png|gif|webp))$'
+	          THEN CONCAT('/assets/images/', s.spaceLink)
+	        ELSE '/assets/images/placeholder.jpg'
+	      END
+	    ) AS imageUrl,
+	    s.address
 	  FROM voteOptions v
 	  JOIN rooms  r ON r.roomNo   = v.roomNo
 	  JOIN spaces s ON s.spacesNo = r.spacesNo
 	  JOIN studioWishlist sw ON v.roomNo = sw.roomNo
+	  LEFT JOIN roomAttachments ra ON ra.roomNo = r.roomNo
 	  LEFT JOIN roomPrices rp
 	         ON rp.roomNo  = r.roomNo
 	        AND rp.dayType = (CASE WHEN DAYOFWEEK(v.voteDate) IN (1,7) THEN '주말' ELSE '평일' END)
@@ -166,7 +178,7 @@
 	        AND rp.endTime   >= MAKETIME(
 	              CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~',-1), ':', 1) AS UNSIGNED),0,0)
 	  WHERE v.userNo = #{userNo}
-	  and v.voteStatus = 0
+	    AND v.voteStatus = 0
 	  ORDER BY v.reservationNo, v.voteDate, startHour, s.spacesNo
 	  ]]>
 	</select>

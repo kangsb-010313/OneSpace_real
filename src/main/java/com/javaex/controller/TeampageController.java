@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.javaex.service.PracticeroomService;
 import com.javaex.service.TeampageService;
 import com.javaex.vo.TeamPostVO;
 import com.javaex.vo.TeamReciptVO;
@@ -32,6 +33,9 @@ public class TeampageController {
 	//필드
 	@Autowired
 	private TeampageService teampageService;
+	
+	@Autowired
+	private PracticeroomService practiceroomService;
 	
 	
 	//메소드 일반
@@ -193,13 +197,19 @@ public class TeampageController {
 	    int userNo = authUser.getUserNo(); // userNo 가져오기
 	    
 	    // 글쓰기 종류가 '투표'일 경우에만
+	    /*
 	    if ("투표".equals(teamPostType)) {
 	        // 서비스에서 투표 후보 목록을 가져옵니다.
 	        List<TeamVotePostVO> voteCandidates = teampageService.exeGetVoteCandidates(userNo); 
 	        model.addAttribute("voteCandidates", voteCandidates); // 모델에 "voteCandidates" 라는 이름으로 담기
 	        System.out.println("불러온 투표 후보 목록: " + voteCandidates);
 	    }
-		
+		*/
+	    List<Map<String, Object>> voteCandidates = practiceroomService.getFavoriteCandidates(userNo);
+
+	    model.addAttribute("voteCandidates", voteCandidates);
+	    System.out.println("불러온 투표 후보 목록: " + voteCandidates);
+	    
 		model.addAttribute("authUser", authUser);
 		model.addAttribute("teamPostType", teamPostType); // 글 종류 JSP 전달용
         model.addAttribute("teamNo", teamNo); // teamNo도 JSP로 전달 (hidden input에 사용)

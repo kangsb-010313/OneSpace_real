@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!DOCTYPE html>
 
@@ -70,7 +71,7 @@
                                     <input type="text" id="post-title" name="teamPostTitle" placeholder="제목을 입력하세요">
                                 </div>
 
-                                
+                                <!-- 
 								<c:if test="${param.teamPostType == '투표'}">
 								    <div class="form-group vote-list-group">
 								        <label>투표목록</label>
@@ -122,6 +123,59 @@
 								            <c:otherwise>
 								                <div class="wishlist-container" style="padding: 20px; text-align: center;">
 								                    <p>투표로 만들 후보가 없습니다.<br>먼저 '찜 목록'에서 연습실의 날짜와 시간을 선택해주세요.</p>
+								                </div>
+								            </c:otherwise>
+								        </c:choose>
+								    </div>
+								</c:if>
+								-->
+								<c:if test="${param.teamPostType == '투표'}">
+								    <div class="form-group vote-list-group">
+								        <label>투표목록</label>
+								        
+								        <c:choose>
+								            <c:when test="${not empty voteCandidates}">
+								                <ol class="vote-items-container">
+								                    
+								                    <c:forEach var="c" items="${voteCandidates}" varStatus="loop">
+													    <li class="vote-item-card">
+													        <div class="card-main-info">
+													            <!-- 이미지 영역 -->
+													            <c:choose>
+													                <c:when test="${not empty c.spaceLink}">
+													                    <img src="${pageContext.request.contextPath}/assets/images/${c.spaceLink}" alt="${c.spaceName}" class="practice-card-img"
+																			onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/images/placeholder.jpg'" />
+													                </c:when>
+													            </c:choose>
+													
+													            <div class="info-left">
+													                <p class="item-title">${loop.count}. ${c.spaceName}</p>
+													                <p class="item-datetime">
+													                    <fmt:formatDate value="${c.voteDate}" pattern="yyyy/MM/dd" />
+													                    ${c.startHour}:00~${c.endHour}:00
+													                </p>
+													            </div>
+													            <div class="info-right">
+													                <p class="item-price">
+													                    <fmt:formatNumber value="${c.totalPrice}" type="number" /> 원
+													                </p>
+													            </div>
+													        </div>
+													        <div class="card-sub-info">
+													            <p class="item-location">
+													                <img src="${CTX}/assets/images/위치아이콘.jpg" class="map-icon">
+													                ${c.address}
+													            </p>
+													        </div>
+													    </li>
+													</c:forEach>
+													
+								                </ol>
+								            </c:when>
+								            <c:otherwise>
+								                <div style="padding: 20px; text-align: center; color:#888;">
+								                    투표로 만들 후보가 없습니다.<br>
+								                    먼저 '찜 목록'에서 연습실 날짜/시간을 선택하세요.
 								                </div>
 								            </c:otherwise>
 								        </c:choose>

@@ -12,6 +12,7 @@ public class TeamVotePostVO {
     private String startTime; 
     private String endTime;
     private String thumbImg;
+    private String spaceLink;
     
     //다른 테이블에서 가져와야됨
     private int totalPrice;         // 연습실 가격
@@ -161,7 +162,13 @@ public class TeamVotePostVO {
 	public void setIsReserved(int isReserved) {
 		this.isReserved = isReserved;
 	}
-
+	
+	public String getSpaceLink() {
+	    return spaceLink;
+	}
+	public void setSpaceLink(String spaceLink) {
+	    this.spaceLink = spaceLink;
+	}
 	
 	//메소드 일반
 	@Override

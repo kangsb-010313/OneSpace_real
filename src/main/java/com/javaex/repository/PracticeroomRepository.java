@@ -107,8 +107,8 @@ public class PracticeroomRepository {
         p.put("userNo", userNo);
         p.put("roomNo", roomNo);
         p.put("voteDate", voteDate); // "YYYY-MM-DD"
-        p.put("voteTime", voteTime); // "HH:MM~HH:MM"
-        p.put("voteNo", (voteNo == null ? 0 : voteNo)); // NOT NULL 대응
+        p.put("voteTime", voteTime); // "HH:MM~HH:MM" 이거 어떻게 할까..
+        p.put("voteNo", (voteNo == null ? 0 : voteNo));
         p.put("voteStatus", 0);
 
         int rows = sqlSession.insert("practiceroom.insertVoteOption", p);
