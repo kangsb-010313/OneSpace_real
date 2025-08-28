@@ -7,26 +7,96 @@
   <insert id="insert"
           parameterType="com.javaex.vo.UserVO"
           useGeneratedKeys="true" keyProperty="userNo">
-    insert into users
+    INSERT INTO users
       (userId, password, userName, email, createdDate)
-    values
-      (#{userId}, #{password}, #{userName}, #{email}, now())
+    VALUES
+      (#{userId}, #{password}, #{userName}, #{email}, NOW())
   </insert>
 
-  <!-- 로그인: 필요한 컬럼 최소 셋(세션에 쓰는 값) -->
+  <!-- 로그인 -->
   <select id="selectOneByIdPw"
           parameterType="com.javaex.vo.UserVO"
           resultType="com.javaex.vo.UserVO">
-    select
+    SELECT
       userNo,
       userId,
       userName,
       email,
       createdDate
-    from users
-    where userId = #{userId}
-      and password = #{password}
-    limit 1
+    FROM users
+    WHERE userId = #{userId}
+      AND password = #{password}
+    LIMIT 1
   </select>
+
+  <!-- kakaoId로 단건 조회 -->
+  <select id="selectOneByKakaoId"
+          parameterType="string"
+          resultType="com.javaex.vo.UserVO">
+    SELECT
+      userNo,
+      userId,
+      kakaoId,
+      password,
+      userName,
+      email,
+      createdDate
+    FROM users
+    WHERE kakaoId = #{value}
+    LIMIT 1
+  </select>
+
+  <!-- email로 단건 조회 -->
+  <select id="selectOneByEmail"
+          parameterType="string"
+          resultType="com.javaex.vo.UserVO">
+    SELECT
+      userNo,
+      userId,
+      kakaoId,
+      password,
+      userName,
+      email,
+      createdDate
+    FROM users
+    WHERE email = #{value}
+    LIMIT 1
+  </select>
+
+  <!-- 카카오 최초가입 -->
+  <insert id="insertKakao"
+          parameterType="com.javaex.vo.UserVO"
+          useGeneratedKeys="true" keyProperty="userNo">
+    INSERT INTO users
+      (userId, kakaoId, password, userName, email, createdDate)
+    VALUES
+      (
+        CASE
+          WHEN #{userId} IS NOT NULL THEN #{userId}
+          ELSE CONCAT('kakao_', #{kakaoId})
+        END,
+        #{kakaoId},
+        NULL,
+        #{userName},
+        #{email},
+        NOW()
+      )
+  </insert>
+
+  <!-- 기존 회원에 kakaoId 연동 -->
+  <update id="updateKakaoIdByUserNo" parameterType="com.javaex.vo.UserVO">
+    UPDATE users
+    SET kakaoId = #{kakaoId}
+    WHERE userNo = #{userNo}
+  </update>
+
+  <!-- 카카오 로그인 시 프로필(닉네임/이메일) 갱신 -->
+  <update id="updateKakaoProfileByUserNo" parameterType="com.javaex.vo.UserVO">
+    UPDATE users
+    SET
+      userName = COALESCE(#{userName}, userName),
+      email    = COALESCE(#{email},    email)
+    WHERE userNo = #{userNo}
+  </update>
 
 </mapper>

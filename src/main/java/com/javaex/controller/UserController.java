@@ -2,11 +2,10 @@ package com.javaex.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import com.javaex.service.UserService;
 import com.javaex.vo.UserVO;
@@ -25,10 +24,10 @@ public class UserController {
     @RequestMapping(value = {"/signupForm"}, method = { RequestMethod.GET, RequestMethod.POST })
     public String joinForm() {
         System.out.println("UserController.joinForm()");
-        return "admin/auth/signup"; // 뷰 경로: 프로젝트에 맞게 유지
+        return "admin/auth/signup";
     }
 
- // --회원가입
+    // --회원가입
     @RequestMapping(value = "/signup", method = { RequestMethod.GET, RequestMethod.POST })
     public String join(@ModelAttribute UserVO userVO) {
         System.out.println("UserController.join()  param=" + userVO);
@@ -36,8 +35,7 @@ public class UserController {
         try {
             userService.exeJoin(userVO);
             System.out.println("가입 성공");
-            return "admin/auth/signup_complete";  
-
+            return "admin/auth/signup_complete";
         } catch (DuplicateKeyException e) {
             System.out.println("중복아이디: " + e.getMessage());
             return "redirect:/onespace/signupForm";
@@ -47,55 +45,69 @@ public class UserController {
         }
     }
 
-
-    // --로그인폼 
+    // --로그인폼
     @RequestMapping(value = {"/loginForm"}, method = { RequestMethod.GET, RequestMethod.POST })
     public String loginForm() {
         System.out.println("UserController.loginForm()");
         return "admin/auth/login";
     }
 
-    // --로그인 
+    // --로그인
     @RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
     public String login(@ModelAttribute UserVO userVO, HttpSession session) {
         System.out.println("UserController.login");
 
-        // 기대 필드: userId, password
         UserVO authUser = userService.exeLogin(userVO);
         System.out.println("authUser=" + authUser);
 
         if (authUser == null) {
-            // 아이디/비번 불일치 → 폼으로
             return "redirect:/onespace/loginForm?error=1";
         }
 
-        // 세션 로그인 (통째로도 저장 + 필요한 값 따로 저장)
-        session.setAttribute("authUser", authUser); // 객체 전체
-        session.setAttribute("authUserNo", authUser.getUserNo());     // 로그인 유저 번호
-        session.setAttribute("authUserName", authUser.getUserName()); // 로그인 유저 이름
+        session.setAttribute("authUser", authUser);
+        session.setAttribute("authUserNo", authUser.getUserNo());
+        session.setAttribute("authUserName", authUser.getUserName());
 
-        // 로그인 성공 후 이동
         return "redirect:/onespace/main";
     }
-    
+
     // --로그아웃
     @RequestMapping(value = "/logout", method = { RequestMethod.GET, RequestMethod.POST })
     public String logout(HttpSession session) {
         System.out.println("UserController.logout()");
-        if (session != null) {
-            session.invalidate(); // 세션 전체 종료
-        }
+        if (session != null) session.invalidate();
         return "redirect:/onespace/main";
     }
-    
-    //카카오 로그인
-    @RequestMapping(value = "localhost:8888/onespace/auth/kakao/callback", method = {RequestMethod.GET, RequestMethod.POST})
-    public String kakaoLogin() {
-    	System.out.println("카카오 로그인 성공");
-    	
-    	return "http://localhost:8888/onespace/auth/kakao/callback";
-    }
-    
-    
 
+    /* ===================== 카카오 로그인 ===================== */
+
+    /** 로그인 시작: 카카오 authorize로 리다이렉트 (서비스가 URL 생성) */
+    @GetMapping("/auth/kakao/login")
+    public String kakaoLoginStart() {
+        String url = userService.kakaoBuildAuthorizeUrl(); // ★ 서비스에서만 redirect_uri 관리
+        return "redirect:" + url;
+    }
+
+    /** 콜백: code만 받아 서비스에 위임 */
+    @GetMapping("/auth/kakao/callback")
+    public String kakaoCallback(@RequestParam(required = false) String code,
+                                @RequestParam(required = false) String error,
+                                HttpSession session,
+                                Model model) {
+        if (error != null || code == null) {
+            return "redirect:/onespace/loginForm?error=oauth";
+        }
+
+        UserVO authUser = userService.exeLoginKakao(code);
+        if (authUser == null) {
+            return "redirect:/onespace/loginForm?error=oauth2";
+        }
+
+        session.setAttribute("authUser", authUser);
+        session.setAttribute("authUserNo", authUser.getUserNo());
+        session.setAttribute("authUserName", authUser.getUserName());
+        session.setAttribute("authLoginType", "KAKAO");
+
+        return "redirect:/onespace/main";
+    }
 }

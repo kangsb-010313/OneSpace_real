@@ -5,6 +5,7 @@ public class UserVO {
 	// 필드
 	private int userNo;
 	private String userId;
+	private String kakaoId; //카카오
 	private String password;
 	private String userName;
 	private String email;
@@ -38,7 +39,15 @@ public class UserVO {
 	public String getUserId() {
 		return userId;
 	}
-
+	
+	// 카카오
+	public String getKakaoId() { 
+		return kakaoId; 
+	}
+	public void setKakaoId(String kakaoId) { 
+		this.kakaoId = kakaoId; 
+	}
+	//
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}

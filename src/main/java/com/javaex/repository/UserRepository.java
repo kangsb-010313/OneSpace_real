@@ -37,8 +37,39 @@ public class UserRepository {
 			
 		}
 		
+		/* ==================== 카카오 관련 ==================== */
+
+		//--카카오 아이디로 단건 조회
+		public UserVO findByKakaoId(String kakaoId) { // ✅ 서비스/컨트롤러와 통일
+			System.out.println("UserRepository.findByKakaoId()");
+			return sqlSession.selectOne("user.selectOneByKakaoId", kakaoId);
+		}
+
+		//--이메일로 단건 조회(기존회원 탐색/연동용)
+		public UserVO findByEmail(String email) {
+			System.out.println("UserRepository.findByEmail()");
+			return sqlSession.selectOne("user.selectOneByEmail", email);
+		}
+
+		//--카카오 최소정보로 가입(처음 카카오 로그인 시)
+		public int insertKakaoUser(UserVO vo) { // ✅ 서비스/컨트롤러와 통일
+			System.out.println("UserRepository.insertKakaoUser()");
+			return sqlSession.insert("user.insertKakao", vo);
+		}
+
+		//--기존 회원에 kakaoId 연동
+		public int updateKakaoUser(long userNo, String kakaoId) { // ✅ 서비스/컨트롤러와 통일
+			System.out.println("UserRepository.updateKakaoUser()");
+			UserVO param = new UserVO();
+			param.setUserNo((int) userNo); // UserVO가 int 타입이므로 캐스팅
+			param.setKakaoId(kakaoId);
+			return sqlSession.update("user.updateKakaoIdByUserNo", param);
+		}
 		
-		
-	
+		// (2) 프로필 갱신(닉네임/이메일) — ★ Service에서 found(UserVO)로 호출되는 버전
+		public int updateKakaoUser(UserVO vo) {
+			System.out.println("UserRepository.updateKakaoUser(profile)");
+			return sqlSession.update("user.updateKakaoProfileByUserNo", vo);
+		}
 
 }

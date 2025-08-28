@@ -36,42 +36,42 @@
 	    <h2 class="login-title">로그인</h2>
 	</div>
 
-  	<div class="login-wrap">
-	  <a href="https://kauth.kakao.com/oauth/authorize?client_id=c46b2aca376b12ea792014ccacdcb09a&redirect_uri=http://localhost:8888/auth/kakao/callback&response_type=code"
-	     class="btn-kakao">
-	    <img src="${pageContext.request.contextPath}/assets/images/kakaotalk.jpg" alt="카카오톡" />
-	    카카오로 로그인
-	  </a>
-	</div>
+  	<!-- 카카오 로그인 버튼 -->
+<div class="login-wrap">
+  <a href="<c:url value='/onespace/auth/kakao/login'/>" class="btn-kakao">
+    <img src="<c:url value='/assets/images/kakaotalk.jpg'/>" alt="카카오톡" />
+    카카오로 로그인
+  </a>
+</div>
 
+<div class="divider"><span>또는</span></div>
 
-    <div class="divider"><span>또는</span></div>
+<!-- 아이디/비번 로그인 -->
+<form class="login-form"
+      method="post"
+      action="<c:url value='/onespace/login'/>">
 
-    <form class="login-form"
-          method="post"
-          action="${pageContext.request.contextPath}/onespace/login">
+  <input type="text"     placeholder="아이디"   name="userId" />
+  <input type="password" placeholder="비밀번호" name="password" />
 
-	      <input type="text"     placeholder="아이디"   name="userId" />
-	      <input type="password" placeholder="비밀번호" name="password" />
-	
-	      <div class="login-options">
-	        <label class="remember">
-	          <input type="checkbox" /> 로그인 기억하기
-	        </label>
-	        <span class="find-pw">비밀번호 찾기</span>
-	      </div>
-	
-	      <button type="submit" class="btn-login-main">아이디로 로그인하기</button>
-	
-	      <div class="for-join">
-	        아직 One Space 회원이 아니신가요?
-	        <a href="${pageContext.request.contextPath}/onespace/signupForm">회원가입</a>
-	      </div>
-	
-	      <c:if test="${param.error == '1'}">
-	        <p class="error" style="margin-top:10px;">아이디 또는 비밀번호를 확인해주세요.</p>
-	      </c:if>
-    </form>
+  <div class="login-options">
+    <label class="remember">
+      <input type="checkbox" /> 로그인 기억하기
+    </label>
+    <span class="find-pw">비밀번호 찾기</span>
+  </div>
+
+  <button type="submit" class="btn-login-main">아이디로 로그인하기</button>
+
+  <div class="for-join">
+    아직 One Space 회원이 아니신가요?
+    <a href="<c:url value='/onespace/signupForm'/>">회원가입</a>
+  </div>
+
+  <c:if test="${param.error == '1'}">
+    <p class="error" style="margin-top:10px;">아이디 또는 비밀번호를 확인해주세요.</p>
+  </c:if>
+</form>
   </div>
 </div>
 <!-- 로그인 폼 끝 -->
