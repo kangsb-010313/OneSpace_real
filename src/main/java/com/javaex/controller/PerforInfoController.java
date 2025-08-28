@@ -84,26 +84,6 @@ public class PerforInfoController {
         return "redirect:/onespace/perforinfo/view?no=" + postNo;
     }
 
-//    /** 목록 */
-//    @GetMapping("/list")
-//    public String list(@RequestParam(defaultValue = "1") int page,
-//                       @RequestParam(defaultValue = "10") int size,
-//                       Model model, HttpSession session) {
-//
-//        long total = service.count(); 
-//        int offset = (page - 1) * size;
-//        List<PerforInfoVO> list = service.listPaged(offset, size);
-//
-//        model.addAttribute("list", list);
-//        model.addAttribute("total", total);
-//        model.addAttribute("page", page);
-//        model.addAttribute("size", size);
-//        model.addAttribute("authUserNo", get_userno(session));
-//        model.addAttribute("authUserName", get_username(session));
-//
-//        return "admin/perforinfo/perforlist";
-//    }
-
     /* ========== 목록(더보기 방식: 최초 size개) ========== */
     @GetMapping("/list")
     public String list(@RequestParam(defaultValue = "10") int size,

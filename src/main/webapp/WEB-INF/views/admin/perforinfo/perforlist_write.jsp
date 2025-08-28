@@ -72,6 +72,32 @@
 </div>
 
 <script>
+
+  //url 유효성
+  (function () {
+    var form = document.getElementById('perforinfo-write-form');
+    var urlInput = document.querySelector("input[name='infoOutUrl']");
+
+    if (!urlInput || !form) return;
+
+    function normalizeUrl(v) {
+      if (!v) return v;
+      var trimmed = v.trim();
+      var hasScheme = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(trimmed);
+      return hasScheme ? trimmed : "https://" + trimmed.replace(/^\/+/, "");
+    }
+
+    // blur 시 자동 보정
+    urlInput.addEventListener('blur', function () {
+      urlInput.value = normalizeUrl(urlInput.value);
+    });
+
+    // 제출 직전에 최종 보정
+    form.addEventListener('submit', function () {
+      urlInput.value = normalizeUrl(urlInput.value);
+    });
+  })();
+
   // 날짜 placeholder 처리
   (function () {
     var dateInput = document.querySelector('.date-input');
