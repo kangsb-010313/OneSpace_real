@@ -141,22 +141,22 @@
 								                    <%-- "voteCandidates" 리스트의 각 항목을 "candidate"라는 변수로 반복 --%>
 								                    <c:forEach items="${voteCandidates}" var="candidate">
 								                    
-						                    	        <input type="hidden" name="voteNo" value="${candidate.voteNo}">
+						                    	        <input type="hidden" name="voteNo" value="${candidate['voteNo']}">
 								                    
 								                        <li>
 								                            <div class="vote-item-card">
 								                                <%-- 이미지: candidate 변수의 picturesNo 필드를 사용 --%>
-								                                <img src="${pageContext.request.contextPath}/uploads/${candidate.picturesNo}" alt="후보 이미지">
+								                                <img src="${pageContext.request.contextPath}/uploads/${candidate['picturesNo']}" alt="후보 이미지">
 								                                <div class="card-content-wrapper">
 								                                    <div class="card-main-info">
 								                                        <div class="info-left">
 								                                            <%-- 연습실 이름과 날짜/시간: candidate 변수의 필드들 사용 --%>
-								                                            <p class="item-title">${candidate.roomName}</p>
-                        													<p class="item-datetime">${candidate.voteDate} ${candidate.startTime} ~ ${candidate.endTime}</p> 
+								                                            <p class="item-title">${candidate['spaceName']}</p>
+                        													<p class="item-datetime">${candidate['voteDate']} ${candidate['startHour']}:00 ~ ${candidate['endHour']}:00</p> 
 								                                        </div>
 								                                        <div class="info-right">
 								                                            <%-- 가격: candidate 변수의 totalPrice 필드 사용 --%>
-								                                            <p class="item-price">${candidate.totalPrice} 원</p>
+								                                            <p class="item-price"><fmt:formatNumber value="${candidate.totalPrice}" pattern="#,###" /> 원</p>
 								                                        </div>
 								                                    </div>
 								                                    <div class="card-sub-info">
@@ -167,7 +167,7 @@
 													                    </c:if>
 								                                        <p class="item-location">
 								                                            <img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon">
-								                                            ${candidate.address}
+								                                            ${candidate['address']}
 								                                        </p>
 								                                    </div>
 								                                </div>

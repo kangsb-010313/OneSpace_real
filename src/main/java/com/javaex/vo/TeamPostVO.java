@@ -35,55 +35,14 @@ public class TeamPostVO {
 	// 기본생성자
 	public TeamPostVO() {
 	}
-
-	public TeamPostVO(int teamPostNo, int teamNo, int userNo, int voteNo, String teamPostType, String teamPostTitle,
-			String instaAccount, String teamContent, String teamWriteDate, String teamUpdateDate, String userName,
-			String teamName, MultipartFile[] files) {
-		super();
-		this.teamPostNo = teamPostNo;
-		this.teamNo = teamNo;
-		this.userNo = userNo;
-		this.voteNo = voteNo;
-		this.teamPostType = teamPostType;
-		this.teamPostTitle = teamPostTitle;
-		this.instaAccount = instaAccount;
-		this.teamContent = teamContent;
-		this.teamWriteDate = teamWriteDate;
-		this.teamUpdateDate = teamUpdateDate;
-		this.userName = userName;
-		this.teamName = teamName;
-		this.files = files;
-	}
 	
-
-	public TeamPostVO(int teamPostNo, int teamNo, int userNo, int voteNo, String teamPostType, String teamPostTitle,
-			String instaAccount, String teamContent, String teamWriteDate, String teamUpdateDate, String userName,
-			String teamName, MultipartFile[] files, List<TeamAttachmentsVO> attachments) {
-		super();
-		this.teamPostNo = teamPostNo;
-		this.teamNo = teamNo;
-		this.userNo = userNo;
-		this.voteNo = voteNo;
-		this.teamPostType = teamPostType;
-		this.teamPostTitle = teamPostTitle;
-		this.instaAccount = instaAccount;
-		this.teamContent = teamContent;
-		this.teamWriteDate = teamWriteDate;
-		this.teamUpdateDate = teamUpdateDate;
-		this.userName = userName;
-		this.teamName = teamName;
-		this.files = files;
-		this.attachments = attachments;
-	}
-	
-	public TeamPostVO(int teamPostNo, int teamNo, int userNo, int voteNo, String teamPostType, String teamPostTitle,
+	public TeamPostVO(int teamPostNo, int teamNo, int userNo, String teamPostType, String teamPostTitle,
 			String instaAccount, String teamContent, String teamWriteDate, String teamUpdateDate, String userName,
 			String teamName, int postStatus, MultipartFile[] files, List<TeamAttachmentsVO> attachments) {
 		super();
 		this.teamPostNo = teamPostNo;
 		this.teamNo = teamNo;
 		this.userNo = userNo;
-		this.voteNo = voteNo;
 		this.teamPostType = teamPostType;
 		this.teamPostTitle = teamPostTitle;
 		this.instaAccount = instaAccount;
@@ -97,7 +56,9 @@ public class TeamPostVO {
 		this.attachments = attachments;
 	}
 
-	
+
+
+
 	// 메소드 gs
 	public int getTeamPostNo() {
 		return teamPostNo;
@@ -220,8 +181,6 @@ public class TeamPostVO {
 		this.postStatus = postStatus;
 	}
 
-	
-	// 메소드 일반
 	@Override
 	public String toString() {
 		return "TeamPostVO [teamPostNo=" + teamPostNo + ", teamNo=" + teamNo + ", userNo=" + userNo + ", voteNo="
@@ -231,6 +190,11 @@ public class TeamPostVO {
 				+ ", postStatus=" + postStatus + ", files=" + Arrays.toString(files) + ", attachments=" + attachments
 				+ "]";
 	}
+	
+	// 메소드 일반
+
+	
+
 
 	
 }

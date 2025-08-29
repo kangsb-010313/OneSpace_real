@@ -154,21 +154,22 @@
     
 
 	<!-- 새로운 게시글(posts)을 등록 -->
-	<insert id="insert" parameterType="com.javaex.vo.TeamPostVO">
+ 	<insert id="insert" parameterType="com.javaex.vo.TeamPostVO">
 		<![CDATA[
 			insert into posts(teamPostNo, teamNo, teamPostType, teamPostTitle, teamContent, teamWriteDate, userNo)
 			values(null, #{teamNo}, #{teamPostType}, #{teamPostTitle}, #{teamContent}, now(), #{userNo})
 		]]>
-	</insert>
+	</insert> 
+
 	
 	<!-- 특정 유저가 가장 마지막에 등록한 게시글의 번호를 가져오는 쿼리 -->
-	<select id="selectLastPostNo" parameterType="int" resultType="int">
+ 	<select id="selectLastPostNo" parameterType="int" resultType="int">
 	    <![CDATA[
 	        select max(teamPostNo)
 	        from posts
 	        where userNo = #{userNo}
 	    ]]>
-	</select>
+	</select> 
 	
 	<!-- 첨부파일 정보 저장 쿼리 -->
 	<insert id="insertAttachment" parameterType="com.javaex.vo.TeamAttachmentsVO">
@@ -360,7 +361,7 @@
 	
 	<!-- [투표글 상세] 특정 게시글(postNo)에 포함된 모든 후보 목록을 조회 !!!불꽃 카운트!!! -->
     <select id="selectVoteOptionsByPostNo" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
-	    select
+ 	    select
 	        v.voteNo,
 	        s.spaceName,
 	        r.roomName,
@@ -377,12 +378,12 @@
 	            FROM voteOptions vo_check
 	            WHERE vo_check.roomNo = r.roomNo
 	              AND vo_check.voteDate = vo.voteDate
-	              AND vo_check.voteStatus = 2 -- '예약확정' 상태인 데이터가
-	              AND vo_check.voteTime IN ( -- 현재 후보의 시간대와 겹치는지 확인
+	              AND vo_check.voteStatus = 2  /* '예약확정' 상태인 데이터가 */
+	              AND vo_check.voteTime IN ( /* 현재 후보의 시간대와 겹치는지 확인 */
 	                  SELECT voteTime FROM voteOptions WHERE voteNo = v.voteNo
 	              )
 	        ) AS isReserved,
-	        ( 	<!-- 편의시설 정보 -->
+	        ( 	-- 편의시설 정보
 	            select group_concat(
 	                CASE WHEN fi.facilityName = '블루투스 스피커' THEN '스피커' ELSE fi.facilityName END
 	                SEPARATOR ', ')
@@ -390,7 +391,7 @@
 	            where sg.spacesNo = s.spacesNo and fi.facilityName in ('주차', '조명', '블루투스 스피커')
 	        ) as spacesGuideNo,
 	
-	        <!-- [불꽃 카운트] 이 후보의 시간과 겹치는 '다른 팀'의 투표가 몇 개인지 계산 -->
+	        -- [불꽃 카운트] 이 후보의 시간과 겹치는 '다른 팀'의 투표가 몇 개인지 계산
 	        (
 	            select count(DISTINCT v2.userNo)
 	            from votes v2
@@ -402,8 +403,8 @@
 	              and EXISTS (                   /* 겹치는 시간이 하나라도 존재하는 경우 */
 	                  select 1
 	                  from voteOptions vo_current
-	                  where vo_current.voteNo = v.voteNo -- 현재 후보의 시간 목록과
-	                    and vo_current.voteTime = vo2.voteTime -- 다른 팀 후보의 시간 비교
+	                  where vo_current.voteNo = v.voteNo /* 현재 후보의 시간 목록과 */
+	                    and vo_current.voteTime = vo2.voteTime /* 다른 팀 후보의 시간 비교 */
 	              )
 	        ) as competitionCount /* 자기 자신을 포함해야 하므로 +1 */
 	
@@ -414,7 +415,8 @@
 	    	where v.postNo = #{postNo}
 	    group by v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
 	    order by vo.voteDate, startTime
-	</select>
+	</select> 
+	
 	
 
 	<!-- 1. votes 테이블에 postNo 업데이트 -->
@@ -422,19 +424,18 @@
 	    update votes
 	    set postNo = #{postNo}
 	    where voteNo IN
-	    <!-- collection에 Map의 key인 "voteNoList"를 명시 -->
 	    <foreach item="voteNo" index="index" collection="voteNoList" open="(" separator="," close=")">
 	        #{voteNo}
 	    </foreach>
 	</update>
+	
 	
 	<!-- 2. voteOptions 테이블의 status를 1(투표중)로 업데이트 -->
 	<update id="updateStatusInVoteOptions" parameterType="map">
 	    update voteOptions
 	    set voteStatus = 1
 	    where voteNo IN
-	    <!-- collection에 Map의 key인 "voteNoList"를 명시 -->
-	    <foreach item="voteNo" index="index" collection="voteNoList" open="(" separator="," close=")">
+	    <foreach item="voteNo" index="index" collection="voteNoList" open="(" separator="," close=")" >
 	        #{voteNo}
 	    </foreach>
 	</update>

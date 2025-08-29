@@ -166,7 +166,6 @@ public class TeampageService {
             }
         }
     }
-	
     
     // --팀페이지 등록 글 보기
 	/**
