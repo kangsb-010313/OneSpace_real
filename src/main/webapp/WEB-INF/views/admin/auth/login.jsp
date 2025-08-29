@@ -38,9 +38,10 @@
 			
 			  	<!-- 카카오 로그인 버튼 -->
 				<div class="login-wrap">
-				  <a href="<c:url value='/user/auth/kakao/login'/>" class="btn-kakao">
+				  <a class="btn-kakao"
+				    href="${pageContext.request.contextPath}/user/auth/kakao/login">
 				    <img src="<c:url value='/assets/images/kakaotalk.jpg'/>" alt="카카오톡" />
-				    카카오로 로그인
+				     카카오로 로그인
 				  </a>
 				</div>
 			
