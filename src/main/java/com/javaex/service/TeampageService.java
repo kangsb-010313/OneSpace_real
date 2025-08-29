@@ -127,7 +127,7 @@ public class TeampageService {
         System.out.println("TeampageService.exeAdd()");
 
         // 1. 게시글 정보 저장 (posts 테이블)
-        teampageRepository.teampageInsert(teamPostVO);
+        teampageRepository.teampageInsert(teamPostVO); 
 
         // 2. 방금 저장한 게시글의 번호(PK)를 다시 조회해서 가져오기
         int postNo = teampageRepository.selectLastPostNo(teamPostVO.getUserNo());
