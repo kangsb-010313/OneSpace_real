@@ -76,7 +76,7 @@ public class UserController {
         session.setAttribute("authUserNo", authUser.getUserNo()); 		// pk
         session.setAttribute("authUserName", authUser.getUserName()); 	// 이름
 
-        return "redirect:/onespace/main"; // 메인으로 리다이렉트
+        return "redirect:/practice/practice1_main"; // 메인으로 리다이렉트
     }
 
     /* ===================== 로그아웃 ===================== */
@@ -86,7 +86,7 @@ public class UserController {
     public String logout(HttpSession session) {
         System.out.println("UserController.logout()");
         if (session != null) session.invalidate(); // 세션 전체 초기화
-        return "redirect:/onespace/main";
+        return "redirect:/practice/practice1_main";
     }
 
     /* ===================== 카카오 로그인 ===================== */
@@ -132,6 +132,6 @@ public class UserController {
         session.setAttribute("authUserName", authUser.getUserName());
         session.setAttribute("authLoginType", "KAKAO"); // 구분값
 
-        return "redirect:/onespace/main";
+        return "redirect:/practice/practice1_main";
     }
 }
