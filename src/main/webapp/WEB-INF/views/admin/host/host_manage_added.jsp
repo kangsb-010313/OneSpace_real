@@ -6,9 +6,9 @@
 <head>
   <meta charset="UTF-8">
   <title>원스페이스 | 내 공간 관리</title>
-  <link rel="stylesheet" href="../../../assets/css/reset.css">
-  <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
-  <link rel="stylesheet" href="../../../assets/css/host_manage_added.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/host_manage_added.css">
 </head>
 <body>
 <div id="wrap">
@@ -23,9 +23,9 @@
 
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   여기(main container)안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-<c:url var="urlSpacesNew"  value="/onespace/hostcenter/spaces/new"/>
-<c:url var="urlSpacesList" value="/onespace/hostcenter/spaces"/>
-<c:url var="urlSpaceInfo"  value="/onespace/hostcenter/info"/>
+<c:url var="urlSpacesNew"  value="/host/spaces/new"/>
+<c:url var="urlSpacesList" value="/host/spaces"/>
+<c:url var="urlSpaceInfo"  value="/host/info"/>
 
 <!-- 탭 -->
 <div class="tab-btns">
@@ -47,7 +47,7 @@
     <c:otherwise>
       <c:forEach var="space" items="${spaces}">
         <div class="space-item">
-          <!-- ✅ 변경: repimg가 있을 때만 업로드 이미지 출력 (디폴트 이미지 사용 안 함) -->
+          <!-- repimg가 있을 때만 업로드 이미지 출력 (디폴트 이미지 사용 안 함) -->
           <c:if test="${not empty space.repimg}">
 			  <img class="space-thumb"
 			       src="${pageContext.request.contextPath}/uploads/${space.repimg}"
@@ -70,7 +70,7 @@
 
             <div class="space-edit">
              <button class="btn-edit" type="button"
-			        onclick="location.href='${pageContext.request.contextPath}/onespace/hostcenter/rooms/${room.roomNo}/edit?spacesNo=${room.spacesNo}'">
+			        onclick="location.href='${pageContext.request.contextPath}/host/rooms/${room.roomNo}/edit?spacesNo=${room.spacesNo}'">
 			  수정하기
 			</button>
 

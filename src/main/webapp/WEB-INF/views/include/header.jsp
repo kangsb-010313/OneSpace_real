@@ -11,12 +11,12 @@
       <div class="header-right">
         <nav class="nav">
 		    <ul>
-		        <li><a href="${pageContext.request.contextPath}/onespace/teammain">팀페이지</a></li>
+		        <li><a href="${pageContext.request.contextPath}/team/teammain">팀페이지</a></li>
 		        <li><a href="${pageContext.request.contextPath}/practice/practice1_main">연습실찜하기</a></li>
-		        <li><a href="${pageContext.request.contextPath}/onespace/perforinfo/list">공연 및 대회 정보</a></li>
+		        <li><a href="${pageContext.request.contextPath}/perfoinfo/list">공연 및 대회 정보</a></li>
 		        <li><a href="${pageContext.request.contextPath}/pride/list">팀자랑</a></li>
 		    </ul>
-		</nav>
+		</nav> 
 
         <c:choose>
           <%-- 로그인 상태 --%>
@@ -24,8 +24,8 @@
             <div class="header-buttons">
               <span class="username">${sessionScope.authUser.userName} 님</span>
               <div class="host-signup-group">
-                <a href="${pageContext.request.contextPath}/onespace/hostcenter" class="btn-outline host-btn">호스트센터</a>
-                <a href="${pageContext.request.contextPath}/onespace/logout" class="btn-outline login-btn">로그아웃</a>
+                <a href="${pageContext.request.contextPath}/host" class="btn-outline host-btn">호스트센터</a>
+                <a href="${pageContext.request.contextPath}/user/logout" class="btn-outline login-btn">로그아웃</a>
               </div>
             </div>
           </c:when>
@@ -33,10 +33,10 @@
           <%-- 비로그인 상태 --%>
           <c:otherwise>
             <div class="header-buttons">
-              <a href="${pageContext.request.contextPath}/onespace/loginForm" class="btn-outline login-btn">로그인</a>
+              <a href="${pageContext.request.contextPath}/user/loginForm" class="btn-outline login-btn">로그인</a>
               <div class="host-signup-group">
                 <a href="#" class="btn-outline host-btn">호스트센터</a>
-                <a href="${pageContext.request.contextPath}/onespace/signupForm" class="btn-outline signup-btn">회원가입</a>
+                <a href="${pageContext.request.contextPath}/user/signupForm" class="btn-outline signup-btn">회원가입</a>
               </div>
             </div>
           </c:otherwise>

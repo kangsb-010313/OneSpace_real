@@ -25,7 +25,7 @@ import com.javaex.vo.RoomsVO;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/onespace/hostcenter")
+@RequestMapping("/host")
 public class HostController {
 
     @Autowired private HostService hostService;
@@ -43,7 +43,7 @@ public class HostController {
     /* 루트 → /spaces */
     @RequestMapping(value = {"", "/"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String index() {
-        return "redirect:/onespace/hostcenter/spaces";
+        return "redirect:/host/spaces";
     }
 
     /* 내 공간 관리(리스트) */
@@ -75,14 +75,14 @@ public class HostController {
         return "forward:/WEB-INF/views/admin/host/host_info.jsp";
     }
 
-    /** 연습실 수정 폼: /onespace/hostcenter/rooms/{roomNo}/edit */
+    /** 연습실 수정 폼: /host/rooms/{roomNo}/edit */
     @GetMapping("/rooms/{roomNo}/edit")
     public String editRoom(@PathVariable Long roomNo,
                            @RequestParam(required = false) Long spacesNo,
                            Model model) {
         // 반드시 인스턴스 주입된 roomService 사용!
         RoomsVO vo = roomService.get_detail(roomNo);   // room + prices + photos
-        if (vo == null) return "redirect:/onespace/hostcenter/spaces";
+        if (vo == null) return "redirect:/host/spaces";
 
         // spacesNo 파라미터가 안 오면 DB에서 가져온 값 사용
         if (spacesNo == null) spacesNo = vo.getSpacesNo();
@@ -98,9 +98,9 @@ public class HostController {
                                     @RequestParam(required = false) Long spacesNo) {
         // roomNo 없이 들어오면 목록으로 회피 (404 방지)
         if (roomNo == null) {
-            return "redirect:/onespace/hostcenter/spaces";
+            return "redirect:/host/spaces";
         }
-        String url = "/onespace/hostcenter/rooms/" + roomNo + "/edit";
+        String url = "/host/rooms/" + roomNo + "/edit";
         if (spacesNo != null) url += "?spacesNo=" + spacesNo;
         return "redirect:" + url;
     }
@@ -135,7 +135,7 @@ public class HostController {
         
         
         // 저장 후 방 등록으로 이동
-        return "redirect:/onespace/hostcenter/rooms/new?spacesNo=" + vo.getSpacesno();
+        return "redirect:/host/rooms/new?spacesNo=" + vo.getSpacesno();
     }
 
     /* 수정 저장 */
@@ -149,7 +149,7 @@ public class HostController {
         if (userno == null) return "redirect:/user/loginform";
         vo.setUserno(userno);
 
-        // ★★★★★ 신규 저장과 동일한 로직으로 파일 처리를 수행합니다.
+        // ★★★★★ 신규 저장과 동일한 로직으로 파일 처리를 수행합니다. 
         if (repImage != null && !repImage.isEmpty()) {
             Map<String, Object> fileInfo = attachService.saveFile(repImage);
             if (fileInfo != null) {
@@ -163,7 +163,7 @@ public class HostController {
             hostService.replaceFacilities(vo.getSpacesno(), facilityNos);
         }
         
-        return "redirect:/onespace/hostcenter/spaces";
+        return "redirect:/host/spaces";
     }
 
     /* (선택) 단건 보기 */
@@ -173,7 +173,7 @@ public class HostController {
         if (userno == null) return "redirect:/user/loginform";
         HostVO vo = hostService.getSpace(spacesNo);
         if (vo == null || !userno.equals(vo.getUserno())) {
-            return "redirect:/onespace/hostcenter/spaces";
+            return "redirect:/host/spaces";
         }
         model.addAttribute("space", vo);
         return "forward:/WEB-INF/views/admin/host/host_info.jsp";

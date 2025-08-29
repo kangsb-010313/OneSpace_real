@@ -5,9 +5,9 @@
 <head>
   <meta charset="UTF-8">
   <title>원스페이스 | 공연 및 대회 정보</title>
-  <link rel="stylesheet" href="../../../assets/css/reset.css">
-  <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
-  <link rel="stylesheet" href="../../../assets/css/perforlist_write.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/perforlist_write.css">
 </head>
 <body>
 <div id="wrap">
@@ -18,9 +18,9 @@
       <section class="write-container">
         <div class="write-inner">
 
-          <form id="perforinfo-write-form"
+          <form id="perfoinfo-write-form"
                 method="post"
-                action="<c:url value='/onespace/perforinfo/write'/>"
+                action="<c:url value='/perfoinfo/write'/>"
                 enctype="multipart/form-data">
 
             <c:if test="${not empty _csrf}">
@@ -75,7 +75,7 @@
 
   //url 유효성
   (function () {
-    var form = document.getElementById('perforinfo-write-form');
+    var form = document.getElementById('perfoinfo-write-form');
     var urlInput = document.querySelector("input[name='infoOutUrl']");
 
     if (!urlInput || !form) return;

@@ -39,7 +39,7 @@
 
   <div class="signup-wrap">
     <form class="signup-form"
-          action="${pageContext.request.contextPath}/onespace/signup"
+          action="${pageContext.request.contextPath}/user/signup"
           method="post"
           accept-charset="UTF-8">
 

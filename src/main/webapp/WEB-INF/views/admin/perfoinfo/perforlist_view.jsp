@@ -5,9 +5,9 @@
 <head>
   <meta charset="UTF-8">
   <title>원스페이스 | 공연 및 대회 정보</title>
-  <link rel="stylesheet" href="../../../assets/css/reset.css">
-  <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
-  <link rel="stylesheet" href="../../../assets/css/perforlist_view.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/perforlist_view.css">
 </head>
 <body>
 <div id="wrap">
@@ -32,16 +32,16 @@
           <span class="meta-value">${vo.username}</span>
 
           <c:if test="${isOwner}">
-            <a href="${pageContext.request.contextPath}/onespace/perforinfo/modifyForm?no=${vo.infoPostNo}" class="btn-edit">수정하기</a>
+            <a href="${pageContext.request.contextPath}/perfoinfo/modifyForm?no=${vo.infoPostNo}" class="btn-edit">수정하기</a>
           </c:if>
         </div>
       </div>
 
       <div class="infoview-main">
        <c:if test="${not empty vo.infoImg}">
-		  <c:url var="imgUrl" value="/onespace/perforinfo/upload/${vo.infoImg}"/>
+		  <c:url var="imgUrl" value="/perfoinfo/upload/${vo.infoImg}"/>
 		  <div class="infoview-image">
-			<img src="/onespace/perforinfo/upload/${vo.infoImg}" alt="공연 포스터">
+			<img src="/perfoinfo/upload/${vo.infoImg}" alt="공연 포스터">
 		  </div>
 		</c:if>
 

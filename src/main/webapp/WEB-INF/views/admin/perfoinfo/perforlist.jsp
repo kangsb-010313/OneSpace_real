@@ -12,9 +12,9 @@
   
     <meta charset="UTF-8">
     <title>원스페이스 | 공연 및 대회 정보</title>
-    <link rel="stylesheet" href="../../../assets/css/reset.css">
-    <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
-    <link rel="stylesheet" href="../../../assets/css/perforlist.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/perforlist.css">
   </head>
 
   <body>
@@ -33,7 +33,7 @@
           <!-- 글쓰기 버튼: 로그인 사용자에게만 보이게 -->
           <div class="btn-area">
             <c:if test="${not empty sessionScope.authUser or not empty sessionScope.authUserNo}">
-              <c:url var="writeFormUrl" value="/onespace/perforinfo/writeForm"/>
+              <c:url var="writeFormUrl" value="/perfoinfo/writeForm"/>
 				<a href="${writeFormUrl}" class="btn-write">글쓰기</a>
             </c:if>
           </div>
@@ -63,7 +63,7 @@
                       <tr>
                         <td class="cate">[<c:out value="${item.infoPostType}" />]</td>
 
-                        <c:url var="viewUrl" value="/onespace/perforinfo/view">
+                        <c:url var="viewUrl" value="/perfoinfo/view">
                           <c:param name="no" value="${item.infoPostNo}" />
                         </c:url>
                         <td class="tit">
@@ -126,7 +126,7 @@ $(function () {
 
     $btn.prop('disabled', true);
 
-    $.getJSON('/onespace/perforinfo/more', { offset: loaded, limit: limit })
+    $.getJSON('/perfoinfo/more', { offset: loaded, limit: limit })
       .done(function (rows) {
         var got = ($.isArray(rows) ? rows.length : 0);
 
@@ -134,7 +134,7 @@ $(function () {
           var html = '';
           for (var i=0; i<got; i++) {
             var r = rows[i] || {};
-            var href = '/onespace/perforinfo/view?no=' + encodeURIComponent(r.infoPostNo);
+            var href = '/perfoinfo/view?no=' + encodeURIComponent(r.infoPostNo);
             html += '<tr>'
                  +    '<td class="cate">[' + (r.infoPostType || '') + ']</td>'
                  +    '<td class="tit"><a href="' + href + '">' + (r.infoPostTitle || '') + '</a></td>'

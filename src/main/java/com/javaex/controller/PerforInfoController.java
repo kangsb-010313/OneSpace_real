@@ -21,24 +21,12 @@ import com.javaex.service.PerforInfoService;
 import com.javaex.vo.PerforInfoVO;
 
 @Controller
-@RequestMapping("/onespace/perforinfo")
+@RequestMapping("/perfoinfo")
 public class PerforInfoController {
 
     @Autowired
     private PerforInfoService service;
 
-//    /** ----- 세션 유틸 ----- */
-//    private Long get_userno(HttpSession session) {
-//        Object v = session.getAttribute("authUserNo");
-//        if (v instanceof Long) return (Long) v;
-//        if (v instanceof Integer) return ((Integer) v).longValue();
-//        return null;
-//    }
-//
-//    private String get_username(HttpSession session) {
-//        Object v = session.getAttribute("authUserName");
-//        return (v != null) ? String.valueOf(v) : null;
-//    }
     
     /* ========== 세션 유틸 ========== */
     private Long get_userno(HttpSession session) {
@@ -57,9 +45,9 @@ public class PerforInfoController {
     @GetMapping("/writeForm")
     public String writeForm(HttpSession session) {
         if (get_userno(session) == null) {
-            return "redirect:/onespace/loginForm";
+            return "redirect:/user/loginForm";
         }
-        return "admin/perforinfo/perforlist_write";
+        return "admin/perfoinfo/perforlist_write";
     }
 
     /** 작성 처리 (업로드 포함: DB에는 파일명만 저장) */
@@ -68,7 +56,7 @@ public class PerforInfoController {
         Long userno = get_userno(session);
         String username = get_username(session);
         if (userno == null) {
-            return "redirect:/onespace/loginForm";
+            return "redirect:/user/loginForm";
         }
 
         vo.setUserNo(userno);
@@ -81,7 +69,7 @@ public class PerforInfoController {
         }
 
         Long postNo = service.insert(vo);
-        return "redirect:/onespace/perforinfo/view?no=" + postNo;
+        return "redirect:/perfoinfo/view?no=" + postNo;
     }
 
     /* ========== 목록(더보기 방식: 최초 size개) ========== */
@@ -106,7 +94,7 @@ public class PerforInfoController {
         model.addAttribute("authUserName", get_username(session));
 
         // /WEB-INF/views/admin/perforinfo/perforlist.jsp
-        return "admin/perforinfo/perforlist";
+        return "admin/perfoinfo/perforlist";
     }
 
     /* ========== 더보기(JSON) : _perfor_rows.jsp 없이 사용 ========== */
@@ -133,7 +121,7 @@ public class PerforInfoController {
     public String view(@RequestParam("no") long no, Model model, HttpSession session) {
         PerforInfoVO vo = service.get(no);
         if (vo == null) {
-            return "redirect:/onespace/perforinfo/list";
+            return "redirect:/perforinfo/list";
         }
 
         Long loginNo = get_userno(session);
@@ -143,7 +131,7 @@ public class PerforInfoController {
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("authUserNo", loginNo);
 
-        return "admin/perforinfo/perforlist_view";
+        return "admin/perfoinfo/perforlist_view";
     }
 
     /** 업로드 파일 서빙 (경로 탈출 방지 + 서비스와 동일 루트 사용) */

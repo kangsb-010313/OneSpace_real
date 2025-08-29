@@ -38,7 +38,7 @@
 			
 			  	<!-- 카카오 로그인 버튼 -->
 				<div class="login-wrap">
-				  <a href="<c:url value='/onespace/auth/kakao/login'/>" class="btn-kakao">
+				  <a href="<c:url value='/user/auth/kakao/login'/>" class="btn-kakao">
 				    <img src="<c:url value='/assets/images/kakaotalk.jpg'/>" alt="카카오톡" />
 				    카카오로 로그인
 				  </a>
@@ -49,7 +49,7 @@
 				<!-- 아이디/비번 로그인 -->
 				<form class="login-form"
 				      method="post"
-				      action="<c:url value='/onespace/login'/>">
+				      action="<c:url value='/user/login'/>">
 				
 				  <input type="text"     placeholder="아이디"   name="userId" />
 				  <input type="password" placeholder="비밀번호" name="password" />
@@ -65,7 +65,7 @@
 				
 				  <div class="for-join">
 				    아직 One Space 회원이 아니신가요?
-				    <a href="<c:url value='/onespace/signupForm'/>">회원가입</a>
+				    <a href="<c:url value='/user/signupForm'/>">회원가입</a>
 				  </div>
 				
 				  <c:if test="${param.error == '1'}">

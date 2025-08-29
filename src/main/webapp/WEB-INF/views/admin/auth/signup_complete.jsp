@@ -38,7 +38,7 @@
                     <p class="sub-text">하나가 되는 공간 원 스페이스에 오신 걸 환영합니다!</p>
                 
                     <div class="complete-btn-group">
-					    <a href="${pageContext.request.contextPath}/onespace/loginForm" class="btn-complete">로그인 하러 가기</a>
+					    <a href="${pageContext.request.contextPath}/user/loginForm" class="btn-complete">로그인 하러 가기</a>
 					    <a href="${pageContext.request.contextPath}/onespace/main" class="btn-complete">메인으로 돌아가기</a>
 					</div>
                 </div>

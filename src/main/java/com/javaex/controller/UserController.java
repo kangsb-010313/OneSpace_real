@@ -13,7 +13,7 @@ import com.javaex.vo.UserVO;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping(value="/onespace") // 이 컨트롤러는 /onespace 경로 하위로 매핑됨
+@RequestMapping(value="/user")
 public class UserController {
 	
     @Autowired
@@ -40,7 +40,7 @@ public class UserController {
         } catch (DuplicateKeyException e) {
             // 아이디 중복 예외
             System.out.println("중복아이디: " + e.getMessage());
-            return "redirect:/onespace/signupForm";
+            return "redirect:/user/signupForm";
         } catch (Exception e) {
             // 기타 예외
             System.out.println("회원가입 예외: " + e);
@@ -68,7 +68,7 @@ public class UserController {
 
         // 2) 로그인 실패
         if (authUser == null) {
-            return "redirect:/onespace/loginForm?error=1";
+            return "redirect:/user/loginForm?error=1";
         }
 
         // 3) 로그인 성공 → 세션 저장
@@ -115,15 +115,15 @@ public class UserController {
                                 Model model) {
         // 1) 인증 실패
         if (error != null || code == null) {
-            return "redirect:/onespace/loginForm?error=oauth";
+            return "redirect:/user/loginForm?error=oauth";
         }
-
+ 
         // 2) 서비스 위임 → 토큰/유저정보 조회 & DB 처리
         UserVO authUser = userService.exeLoginKakao(code);
 
         // 3) 로그인 실패
         if (authUser == null) {
-            return "redirect:/onespace/loginForm?error=oauth2";
+            return "redirect:/user/loginForm?error=oauth2";
         }
 
         // 4) 로그인 성공 → 세션에 저장

@@ -8,9 +8,9 @@
   <title>원스페이스 | 기본정보</title>
 
   <!-- css 상대경로 유지 -->
-  <link rel="stylesheet" href="../../../assets/css/reset.css">
-  <link rel="stylesheet" href="../../../assets/css/basicdefault.css">
-  <link rel="stylesheet" href="../../../assets/css/host_info.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/basicdefault.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/host_info.css">
 
   <!-- 다음 우편번호(카카오) API -->
   <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -25,14 +25,14 @@
     <div class="container">
 
       <!-- url -->
-      <c:url var="urlSpacesNew"  value="/onespace/hostcenter/spaces/new"/>
-      <c:url var="urlSpacesList" value="/onespace/hostcenter/spaces"/>
+      <c:url var="urlSpacesNew"  value="/host/spaces/new"/>
+      <c:url var="urlSpacesList" value="/host/spaces"/>
       <c:choose>
         <c:when test="${not empty space.spacesno}">
-          <c:url var="urlSaveSpace" value="/onespace/hostcenter/spaces/update"/>
+          <c:url var="urlSaveSpace" value="/host/spaces/update"/>
         </c:when>
         <c:otherwise>
-          <c:url var="urlSaveSpace" value="/onespace/hostcenter/spaces/insert"/>
+          <c:url var="urlSaveSpace" value="/host/spaces/insert"/>
         </c:otherwise>
       </c:choose>
 
