@@ -26,7 +26,7 @@
         <div class="title-box">
             <div class="spacer"></div>
             <h2 class="page-title">${room.roomName}</h2>
-		    <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
+		    <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/practice/practice4_wish'">
 			  찜리스트<span style="color:#ff3333;">❤</span>
 			</button>
         </div>
@@ -203,7 +203,7 @@
 	      btn.textContent = '처리중...';
 	
 	      // --- 여기서 teamId와 roomNo를 함께 서버로 전송 ---
-	      fetch(ctx + '/onespace/api/favorite', {
+	      fetch(ctx + '/practice/api/favorite', {
 	        method: 'POST',
 	        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 	        credentials: 'same-origin',
@@ -216,7 +216,7 @@
 	        if (json && json.success) {
 	          btn.textContent = '찜';
 	          alert(json.message || '찜 추가 완료');
-	          window.location.href = ctx + '/onespace/practice4_list';
+	          window.location.href = ctx + '/practice/practice4_list';
 	        } else {
 	          alert(json.message || '찜 추가 실패');
 	          btn.disabled = false;

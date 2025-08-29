@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpSession;
 
 
 @Controller
-@RequestMapping("/onespace")
+@RequestMapping("/practice")
 public class PracticeroomController {
 
     @Autowired
@@ -72,7 +72,7 @@ public class PracticeroomController {
     }
 
     // 찜 리스트
-    @GetMapping("/practice4_list")
+    @GetMapping("/practice4_wish")
     public String favoritesList(Model model, HttpSession session) {
         UserVO authUser = (UserVO) session.getAttribute("authUser");
         if (authUser == null) return "redirect:/onespace/loginForm";
@@ -81,7 +81,7 @@ public class PracticeroomController {
         model.addAttribute("favoriteSpaces", practiceroomService.getFavoriteSpaces(userNo));
         model.addAttribute("favoriteCandidates", practiceroomService.getFavoriteCandidates(userNo));
         model.addAttribute("allTeams", teampageService.exeGetUserTeams(userNo));
-        return "practiceroom/practice4_list";
+        return "practiceroom/practice4_wish";
     }
 
     // 슬롯 조회

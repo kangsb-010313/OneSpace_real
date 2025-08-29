@@ -12,7 +12,7 @@
         <nav class="nav">
 		    <ul>
 		        <li><a href="${pageContext.request.contextPath}/onespace/teammain">팀페이지</a></li>
-		        <li><a href="${pageContext.request.contextPath}/onespace/practice1_main">연습실찜하기</a></li>
+		        <li><a href="${pageContext.request.contextPath}/practice/practice1_main">연습실찜하기</a></li>
 		        <li><a href="${pageContext.request.contextPath}/onespace/perforinfo/list">공연 및 대회 정보</a></li>
 		        <li><a href="${pageContext.request.contextPath}/pride/list">팀자랑</a></li>
 		    </ul>

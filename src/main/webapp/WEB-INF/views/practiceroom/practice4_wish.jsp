@@ -105,8 +105,8 @@
 						<!-- //two-col -->
 						<br> <br>
 						<div class="cta-row">
-							<button class="btn-outline btn-primary" onclick="location.href='${pageContext.request.contextPath}/onespace/teams/3/posts/writeform?teamPostType=투표'">투표 만들기</button>
-							<button class="btn-outline btn-pill" onclick="location.href='${pageContext.request.contextPath}/onespace/practice1_main'">취소</button>
+							<button class="btn-outline btn-primary" onclick="location.href='${pageContext.request.contextPath}/team/teams/3/posts/writeform?teamPostType=투표'">투표 만들기</button>
+							<button class="btn-outline btn-pill" onclick="location.href='${pageContext.request.contextPath}/practice/practice1_main'">취소</button>
 						</div>
 						<!-- //cta-row -->
 
@@ -271,7 +271,7 @@
 	    console.log('[sched] loadSlots', roomNo, targetDate);
 	    $schedSlots.empty();
 	    $.ajax({
-	        url: ctx + '/onespace/api/room-slots',
+	        url: ctx + '/practice/api/room-slots',
 	        type: 'POST',
 	        data: { roomNo: roomNo, targetDate: targetDate },
 	        dataType: 'json'
@@ -397,7 +397,7 @@
 		  const voteDate = $schedDate.text();
 	
 		  $.ajax({
-		    url: ctx + '/onespace/api/vote-option',
+		    url: ctx + '/practice/api/vote-option',
 		    method: 'POST',
 		    data: {
 		      userNo: 1, // 세션에서 동적으로 가져오도록 수정
@@ -463,7 +463,7 @@
 		  const spaceName = $('.open-schedule[data-room-no="' + roomNo + '"]').closest('.practice-card').find('.practice-card-title').text();
 		
 		  $.ajax({
-		    url: ctx + '/onespace/api/vote-option',
+		    url: ctx + '/practice/api/vote-option',
 		    method: 'POST',
 		    data: { roomNo: roomNo, voteDate: voteDate, voteTime: voteTime },
 		    dataType: 'json'
@@ -518,7 +518,7 @@
 	    $btn.prop('disabled', true).text('처리중...');
 	
 	    $.ajax({
-	      url: ctx + '/onespace/api/favorite/remove',
+	      url: ctx + '/practice/api/favorite/remove',
 	      method: 'POST',
 	      data: { roomNo: roomNo },
 	      dataType: 'json'

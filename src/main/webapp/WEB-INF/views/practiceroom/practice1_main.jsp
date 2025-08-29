@@ -28,7 +28,7 @@
 				<div class="title-box">
 					<div class="spacer"></div>
 					<h2 class="page-title">연습실찜하기</h2>
-					<button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
+					<button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/practice/practice4_wish'">
 						찜리스트<span style="color: #ff3333;">❤</span>
 					</button>
 				</div>
@@ -57,12 +57,12 @@
 						<div class="card-list" id="cardList">
 							<c:forEach var="r" items="${rooms}">
 								<div class="card">
-									<a href="${pageContext.request.contextPath}/onespace/practice2_zone?spacesNo=${r.spacesNo}">
+									<a href="${pageContext.request.contextPath}/practice/practice2_zone?spacesNo=${r.spacesNo}">
 										<div class="card-img-wrap">
 										  <img class="card-img" src="${pageContext.request.contextPath}/uploads/${r.repImg}" alt="${r.spaceName}">
 										</div>
 										<div class="card-content">
-											<a href="${pageContext.request.contextPath}/onespace/practice2_zone?spacesNo=${r.spacesNo}">
+											<a href="${pageContext.request.contextPath}/practice/practice2_zone?spacesNo=${r.spacesNo}">
 												<div class="card-title">${r.spaceName}</div>
 											</a>
 											<div class="card-meta">${r.spaceSummary}</div>
@@ -153,7 +153,7 @@
       }
       
       // 상세 페이지 링크
-      const href = ctx + '/onespace/practice2_zone?spacesNo=' + encodeURIComponent(spacesNo);
+      const href = ctx + '/practice/practice2_zone?spacesNo=' + encodeURIComponent(spacesNo);
       
       const card = document.createElement('div');
       card.className = 'card';
@@ -181,7 +181,7 @@
     if (loading || done) return;
     loading = true;
 
-    const url = ctx + '/onespace/api/practicerooms?page=' + page + '&size=' + size;
+    const url = ctx + '/practice/api/practicerooms?page=' + page + '&size=' + size;
     console.log('[loadMore] page=', page, 'GET', url);
 
     try {

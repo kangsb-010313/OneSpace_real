@@ -25,7 +25,7 @@
       	<div class="title-box">
             <div class="spacer"></div>
             <h2 class="page-title">${zone.spaceName}</h2>
-		    <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
+		    <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/practice/practice4_wish'">
 			  찜리스트<span style="color:#ff3333;">❤</span>
 			</button>
         </div>
@@ -108,7 +108,7 @@
                   <div class="room-list">
                     <c:forEach var="room" items="${rooms}">
                       <div class="room-card">
-                        <a href="${pageContext.request.contextPath}/onespace/practice3_room?roomNo=${room.roomNo}">
+                        <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${room.roomNo}">
                           <div class="room-thumb-wrap">
 		                    <img class="room-thumb" src="${pageContext.request.contextPath}/uploads/${zone.repImg}" alt="${zone.spaceName} 대표사진">
                             <div class="room-title">${room.roomName}</div>
