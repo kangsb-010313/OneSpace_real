@@ -71,6 +71,36 @@ public class PerforInfoController {
         Long postNo = service.insert(vo);
         return "redirect:/perfoinfo/view?no=" + postNo;
     }
+    
+    /* ========== 수정 ========== */
+    /** 수정 폼 */
+    @GetMapping("/modifyForm")
+    public String modifyForm(@RequestParam("no") long no, Model model, HttpSession session) {
+        PerforInfoVO vo = service.get(no);
+        if (vo == null) {
+            return "redirect:/perfoinfo/list";
+        }
+        Long loginNo = get_userno(session);
+        if (loginNo == null || loginNo != vo.getUserNo()) {
+            return "redirect:/perfoinfo/view?no=" + no; // 소유자 아님
+        }
+        model.addAttribute("vo", vo);
+        model.addAttribute("mode", "edit"); // 폼 재사용 플래그
+        return "admin/perfoinfo/perforlist_write";
+    }
+
+    /** 수정 처리 */
+    @PostMapping("/modify")
+    public String modify(@ModelAttribute PerforInfoVO vo, HttpSession session) {
+        Long loginNo = get_userno(session);
+        if (loginNo == null) {
+            return "redirect:/user/loginForm";
+        }
+        vo.setUserNo(loginNo); // where userNo = ? 보호
+        boolean ok = service.update(vo);
+        return "redirect:/perfoinfo/view?no=" + vo.getInfoPostNo();
+    }
+
 
     /* ========== 목록(더보기 방식: 최초 size개) ========== */
     @GetMapping("/list")

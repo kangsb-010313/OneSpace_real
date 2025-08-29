@@ -216,7 +216,7 @@
 	        if (json && json.success) {
 	          btn.textContent = '찜';
 	          alert(json.message || '찜 추가 완료');
-	          window.location.href = ctx + '/practice/practice4_list';
+	          window.location.href = ctx + '/practice/practice4_wish';
 	        } else {
 	          alert(json.message || '찜 추가 실패');
 	          btn.disabled = false;

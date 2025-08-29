@@ -93,4 +93,18 @@ public class PerforInfoService {
     public PerforInfoVO get(long no) {
         return repo.get(no);
     }
+    
+    public boolean update(PerforInfoVO vo) {
+        MultipartFile f = vo.getInfoImgFile();
+        if (f != null && !f.isEmpty()) {
+            String saved = exeUpload(f);
+            if (saved != null) {
+                vo.setInfoImg(saved); // 새 파일 있을 때만 이미지 필드 세팅
+            }
+        } else {
+            vo.setInfoImg(null);     // null 유지 → Mapper <if test="infoImg != null">에서 스킵
+        }
+        return repo.update(vo) > 0;
+    }
+
 }
