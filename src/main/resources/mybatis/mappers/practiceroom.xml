@@ -135,7 +135,7 @@
 	<select id="selectFavoriteCandidates" parameterType="int" resultType="java.util.Map">
 		<![CDATA[
 	     SELECT
-	       v.voteNo,      /* [핵심 수정] 이 한 줄을 추가해서 voteNo를 가져옵니다! */
+	       v.voteNo,
 	       s.spaceName,
 	       r.roomNo,
 	       v.voteDate,
