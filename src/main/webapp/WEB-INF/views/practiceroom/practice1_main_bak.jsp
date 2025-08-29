@@ -28,7 +28,7 @@
 				<div class="title-box">
 					<div class="spacer"></div>
 					<h2 class="page-title">연습실찜하기</h2>
-					<button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
+					<button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/practice/practice4_wish'">
 						찜리스트<span style="color: #ff3333;">❤</span>
 					</button>
 				</div>
@@ -57,26 +57,12 @@
 						<div class="card-list" id="cardList">
 							<c:forEach var="r" items="${rooms}">
 								<div class="card">
-									<a href="${pageContext.request.contextPath}/onespace/practice2_zone?spacesNo=${r.spacesNo}">
+									<a href="${pageContext.request.contextPath}/practice/practice2_zone?spacesNo=${r.spacesNo}">
 										<div class="card-img-wrap">
-											<c:set var="raw" value="${r.spaceLink}" />
-											<c:choose>
-												<%-- 1) http/https로 시작하면 그대로 --%>
-												<c:when test="${fn:startsWith(raw, 'http')}">
-													<img class="card-img" src="${raw}" alt="${r.spaceName}">
-												</c:when>
-												<%-- 2) /로 시작하는 웹 절대경로면 그대로 --%>
-												<c:when test="${fn:startsWith(raw, '/')}">
-													<img class="card-img" src="${raw}" alt="${r.spaceName}">
-												</c:when>
-												<%-- 3) 그 외는 /assets/images/ --%>
-												<c:otherwise>
-													<img class="card-img" src="${ctx}/assets/images/${raw}" alt="${r.spaceName}">
-												</c:otherwise>
-											</c:choose>
+										  <img class="card-img" src="${pageContext.request.contextPath}/uploads/${r.repImg}" alt="${r.spaceName}">
 										</div>
 										<div class="card-content">
-											<a href="${pageContext.request.contextPath}/onespace/practice2_zone?spacesNo=${r.spacesNo}">
+											<a href="${pageContext.request.contextPath}/practice/practice2_zone?spacesNo=${r.spacesNo}">
 												<div class="card-title">${r.spaceName}</div>
 											</a>
 											<div class="card-meta">${r.spaceSummary}</div>
@@ -149,29 +135,36 @@
 
     const list = document.getElementById('cardList');
     const placeholder = ctx + '/assets/images/placeholder.jpg';
-
+    
     arr.forEach(function (r) {
-      // 가능한 필드 이름 후보들 (서버 응답 구조가 조금 달라도 대응)
+    	
       const spacesNo = findField(r, ['spacesNo', 'spaces_no', 'spacesno', 'id', 'spaceId', 'spaceNo']);
       const rawLink = findField(r, ['spaceLink', 'space_link', 'spaceLink', 'link', 'spaceImage', 'spaceImg', 'image']);
+      const repImg   = findField(r, ['repImg', 'rep_img', 'repimage', 'thumbnail']);
       const spaceName = findField(r, ['spaceName', 'space_name', 'name', 'title']) || '';
       const spaceSummary = findField(r, ['spaceSummary', 'space_summary', 'summary']) || '';
       const spaceInfo = findField(r, ['spaceInfo', 'space_info', 'info', 'description']) || '';
-
-      // build href to zone page (like static cards)
-      const href = ctx + '/onespace/practice2_zone?spacesNo=' + encodeURIComponent(spacesNo);
-
-      const src = resolveImg(rawLink || '');
-
+	  
+      let src = placeholder;
+      if (repImg) {
+        src = ctx + '/uploads/' + repImg;   // 업로드 폴더 (C:/onespace_uploads/) 매핑
+      } else if (rawLink) {
+        src = resolveImg(rawLink);          // DB에 spaceLink가 있으면 assets/images/... 처리
+      }
+      
+      // 상세 페이지 링크
+      const href = ctx + '/practice/practice2_zone?spacesNo=' + encodeURIComponent(spacesNo);
+      
       const card = document.createElement('div');
       card.className = 'card';
-
+	  
       // 전체 카드를 하나의 앵커로 감싸서 이미지+제목 모두 같은 링크로 동작
       card.innerHTML = ''
         + '<a href="' + href + '">'
           + '<div class="card-img-wrap">'
             + '<img class="card-img" src="' + src + '" alt="' + escapeHtml(spaceName) + '"'
               + ' onerror="this.onerror=null;this.src=\'' + placeholder + '\';">'
+              
           + '</div>'
           + '<div class="card-content">'
             + '<div class="card-title">' + escapeHtml(spaceName) + '</div>'
@@ -188,7 +181,7 @@
     if (loading || done) return;
     loading = true;
 
-    const url = ctx + '/onespace/api/practicerooms?page=' + page + '&size=' + size;
+    const url = ctx + '/practice/api/practicerooms?page=' + page + '&size=' + size;
     console.log('[loadMore] page=', page, 'GET', url);
 
     try {

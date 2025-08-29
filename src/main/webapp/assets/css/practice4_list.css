@@ -1,18 +1,28 @@
 /* practice4-list.css */
 .zzim .two-col {
-	display: flex;
-	gap: 40px;
-	align-items: flex-start;
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: flex-start;
+    gap: 40px;
+    margin-left: 120px;
 }
 
-
 /* 찜리스트 (왼쪽) ****************************************************************/
+.zzim-title {
+	margin: 0 50px;
+    transform: translateX(40%);
+    font-size: 40px;
+    font-weight: 700;
+}
+
 .zzim .practice-card-list {
-	display: flex;
-	flex-direction: column;
-	gap: 26px;
-	max-width: 640px;
-	width: 100%;
+    flex: 0 0 60%;  /* 6 */
+    min-width: 0;  /* flexbox 축소 허용 */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .zzim .practice-card-list .practice-card {
@@ -75,16 +85,16 @@
 
 /* 연습실후보 (오른쪽) ****************************************************************/
 .zzim .fav-panel {
-    width: 350px;
-    flex: 0 0 350px;
+    flex: 0 0 40%;  /* 4 */
+    min-width: 0;
+    margin: 0 20px 0 10px;
 }
 
 .zzim .fav-panel .fav-title {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
-    margin: 0 0 12px;
+    margin: 10px 70px 12px;
 }
-
 
 .zzim .fav-panel .fav-list {
     list-style: none;

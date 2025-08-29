@@ -25,7 +25,7 @@
       	<div class="title-box">
             <div class="spacer"></div>
             <h2 class="page-title">${zone.spaceName}</h2>
-		    <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/onespace/practice4_list'">
+		    <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/practice/practice4_wish'">
 			  찜리스트<span style="color:#ff3333;">❤</span>
 			</button>
         </div>
@@ -41,14 +41,21 @@
                 <!-- 왼쪽: 공간 상세 -->
                 <div class="detail-main-left">
                   <!-- 대표 이미지 -->
-                  <c:if test="${not empty zone.spaceLink}">
                   <c:set var="raw" value="${zone.spaceLink}" />
                     <!--  <div style="border-radius: 22px; overflow: hidden; margin-bottom: 24px; margin-left: 30px; margin-right: 50px;">-->
                     <div>
-                      <img class="main-photo" src="${pageContext.request.contextPath}/assets/images/${raw}" alt="${zone.spaceName} 대표사진">
+                      <!-- 대표 이미지 -->
+						<c:choose>
+						  <c:when test="${not empty zone.repImg}">
+						    <!-- 업로드된 대표 이미지 -->
+						    <div>
+						      <img class="main-photo" src="${pageContext.request.contextPath}/uploads/${zone.repImg}" alt="${zone.spaceName} 대표사진">
+						    </div>
+						  </c:when>
+						  
+						</c:choose>
                     </div>
-                  </c:if>
-
+                  
                   <div class="section-title">${zone.spaceName}</div>
                   <div class="section-subtitle">${zone.spaceSummary}</div>
 
@@ -101,9 +108,9 @@
                   <div class="room-list">
                     <c:forEach var="room" items="${rooms}">
                       <div class="room-card">
-                        <a href="${pageContext.request.contextPath}/onespace/practice3_room?roomNo=${room.roomNo}">
+                        <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${room.roomNo}">
                           <div class="room-thumb-wrap">
-		                    <img class="room-thumb" src="${pageContext.request.contextPath}/assets/images/${raw}" alt="${zone.spaceName} 대표사진">
+		                    <img class="room-thumb" src="${pageContext.request.contextPath}/uploads/${zone.repImg}" alt="${zone.spaceName} 대표사진">
                             <div class="room-title">${room.roomName}</div>
                           </div>
                           <div class="room-bottom-row">
