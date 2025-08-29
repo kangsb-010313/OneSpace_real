@@ -5,7 +5,7 @@
   <div class="container">
     <div class="header-inner">
       <h1 class="logo">
-        <a class="click" href="${pageContext.request.contextPath}/onespace/main">원 스페이스</a>
+        <a class="click" href="${pageContext.request.contextPath}/practice/practice1_main">원 스페이스</a>
       </h1>
 
       <div class="header-right">
