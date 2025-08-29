@@ -41,7 +41,6 @@
                 <!-- 왼쪽: 공간 상세 -->
                 <div class="detail-main-left">
                   <!-- 대표 이미지 -->
-                  <c:if test="${not empty zone.spaceLink}">
                   <c:set var="raw" value="${zone.spaceLink}" />
                     <!--  <div style="border-radius: 22px; overflow: hidden; margin-bottom: 24px; margin-left: 30px; margin-right: 50px;">-->
                     <div>
@@ -56,8 +55,7 @@
 						  
 						</c:choose>
                     </div>
-                  </c:if>
-
+                  
                   <div class="section-title">${zone.spaceName}</div>
                   <div class="section-subtitle">${zone.spaceSummary}</div>
 
