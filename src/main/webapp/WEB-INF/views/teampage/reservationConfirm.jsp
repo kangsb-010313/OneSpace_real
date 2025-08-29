@@ -33,7 +33,7 @@
                     <div id="main-content">
                         <h2 class="main-content-title">예약 정보 확인 및 결제</h2>
                         
-                        <form id="paymentForm" action="${pageContext.request.contextPath}/onespace/teams/${teamNo}/payment/execute" method="post">
+                        <form id="paymentForm" action="${pageContext.request.contextPath}/team/teams/${teamNo}/payment/execute" method="post">
                             <!-- 서버로 보낼 숨겨진 데이터들 -->
                             <input type="hidden" name="originalPostNo" value="${originalPostNo}">
                             <input type="hidden" name="voteNo" value="${confirmedOption.voteNo}">

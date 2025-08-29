@@ -42,7 +42,7 @@
 
                             <!-- 팀 등록 폼 시작 -->
                             <div class="team-registration-form">
-                                <form action="${pageContext.request.contextPath}/onespace/teamadd" method="get">
+                                <form action="${pageContext.request.contextPath}/team/teamadd" method="get">
                                     <div class="form-group">
                                         <label for="team-name">팀 이름 <span class="red">*</span></label>
                                         <input type="text" id="team-name" name="teamName" placeholder="팀 이름을 입력하세요.">

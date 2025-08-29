@@ -283,7 +283,7 @@
 								                <%-- 1-1: '팀자랑' 글일 때 --%>
 								                <c:when test="${post.teamPostType == '팀자랑'}">
 								                    <button type="button" class="btn-action" id="btn-pride">팀자랑 가서보기</button>
-								                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-action">목록</a>
+								                    <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/list" class="btn-action">목록</a>
 								                </c:when>
 								                
 								                <%-- 1-2: '투표' 글일 때 --%>
@@ -291,20 +291,20 @@
                                                     <!-- postStatus가 0(정상)일 때만 '바로 예약하기' 버튼을 보여줌 -->
                                                     <c:if test="${post.postStatus == 0}">
                                                     	<button type="button" class="btn-action btn-share" id="kakao-share-btn">공유하기</button>
-								                        <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/confirm" class="btn-action">바로 예약하기</a>
+								                        <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/${post.teamPostNo}/confirm" class="btn-action">바로 예약하기</a>
                                                     </c:if>
 								                </c:when>
 								                
 								                <%-- '연습일정'일 때 버튼 --%>
                                                 <c:when test="${post.teamPostType == '연습일정'}">
                                                     <button type="button" class="btn-action btn-share" id="kakao-share-btn">공유하기</button>
-								                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-action">목록</a>
+								                    <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/list" class="btn-action">목록</a>
                                                 </c:when>
 								
 								                <%-- 1-3: '일반 공지' 또는 그 외 모든 글일 때 --%>
 								                <c:otherwise>
 								                    <button type="button" class="btn-action btn-share" id="kakao-share-btn">공유하기</button>
-								                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-action">목록</a>
+								                    <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/list" class="btn-action">목록</a>
 								                </c:otherwise>
 								            </c:choose>
 								        </c:when>
@@ -312,7 +312,7 @@
 								        <%-- Case 2: 팀 멤버가 아닌 경우 --%>
 										<c:otherwise>
 										   
-										    <form action="${pageContext.request.contextPath}/onespace/teams/${teamNo}/join" method="post">
+										    <form action="${pageContext.request.contextPath}/team/teams/${teamNo}/join" method="post">
 										        <button type="submit" class="btn-action" onclick="return confirm('이 팀에 가입을 신청하시겠습니까?');">팀원 가입 신청</button>
 										    </form>
 										</c:otherwise>
@@ -320,8 +320,8 @@
 
                                     <%-- 작성자만 수정/삭제 버튼 보이도록 (공통) --%>
                                     <c:if test="${sessionScope.authUser.userNo == post.userNo && post.teamPostType != '투표' && post.teamPostType != '연습일정'}">
-                                        <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/modifyform" class="btn-action">수정</a>
-										<a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}/delete" 
+                                        <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/${post.teamPostNo}/modifyform" class="btn-action">수정</a>
+										<a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/${post.teamPostNo}/delete" 
 										   onclick="return confirm('정말로 이 게시글을 삭제하시겠습니까?');" 
 										   class="btn-action">삭제</a>
 
@@ -408,7 +408,7 @@
             if ($button.hasClass('active')) {
                 // === 투표 취소 로직 ===
                 $.ajax({
-                    url: "${pageContext.request.contextPath}/onespace/api/removevote",
+                    url: "${pageContext.request.contextPath}/team/api/removevote",
                     type: "POST",
                     data: { voteNo: voteNo },
                     success: function(result) {
@@ -427,7 +427,7 @@
             } else {
                 // === 투표하기 로직 ===
                 $.ajax({
-                    url: "${pageContext.request.contextPath}/onespace/api/addvote",
+                    url: "${pageContext.request.contextPath}/team/api/addvote",
                     type: "POST", 
                     data: { 
                         voteNo: voteNo, 
@@ -451,7 +451,7 @@
         // 투표자 목록을 가져와서 화면에 뿌려주는 함수
         function fetchVoters(voteNo) {
             $.ajax({
-                url: "${pageContext.request.contextPath}/onespace/api/getvoters",
+                url: "${pageContext.request.contextPath}/team/api/getvoters",
                 type: "GET", 
                 data: { voteNo: voteNo },
                 success: function(voterList) {

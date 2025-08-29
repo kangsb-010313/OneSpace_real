@@ -61,7 +61,7 @@
                         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   main container 안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
                         <div class="post-register-wrap">
                             <%-- ▼▼▼▼▼ form action과 method 변경 및 숨겨진 필드 추가 ▼▼▼▼▼ --%>
-                            <form action="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/teamwriteadd" method="post" enctype="multipart/form-data">
+                            <form action="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/teamwriteadd" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="teamPostType" value="${param.teamPostType}"> <%-- 글 종류 전달 --%>
                                 <input type="hidden" name="teamNo" value="${teamNo}"> 
 
@@ -204,7 +204,7 @@
 
                                 <!-- 하단 버튼 영역 (공통) -->
                                 <div class="form-actions">
-                                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/list" class="btn-cancel">취소</a>
+                                    <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/list" class="btn-cancel">취소</a>
                                     <button type="submit" class="btn-submit">등록</button>
                                 </div>
                             </form>

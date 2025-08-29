@@ -53,7 +53,7 @@
                         </h2>
                         
                         <div class="post-register-wrap">
-                            <form action="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/modify" method="post">
+                            <form action="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/modify" method="post">
                                 <input type="hidden" name="teamPostNo" value="${post.teamPostNo}">
                                 <input type="hidden" name="teamPostType" value="${post.teamPostType}">
                                 <input type="hidden" name="teamNo" value="${teamNo}">
@@ -112,7 +112,7 @@
 
                                 <!-- 하단 버튼 영역 -->
                                 <div class="form-actions">
-                                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${post.teamPostNo}" class="btn-cancel">취소</a>
+                                    <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/${post.teamPostNo}" class="btn-cancel">취소</a>
                                     <button type="submit" class="btn-submit">수정</button>
                                 </div>
                             </form>

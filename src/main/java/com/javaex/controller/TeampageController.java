@@ -54,7 +54,7 @@ public class TeampageController {
         // 1. 로그인 체크
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null) {
-            return "redirect:/onespace/loginForm";
+            return "redirect:/user/loginForm";
         }
         
         int userNo = authUser.getUserNo();
@@ -88,7 +88,7 @@ public class TeampageController {
 	    // aside에 팀 목록을 표시하기 위해 현재 로그인한 유저의 팀 리스트를 전달
 	    UserVO authUser = (UserVO)session.getAttribute("authUser");
 	    if(authUser == null) {
-	        return "redirect:/onespace/loginForm";
+	        return "redirect:/user/loginForm";
 	    }
 	    
 	    int userNo = authUser.getUserNo();
@@ -114,7 +114,7 @@ public class TeampageController {
 
 	    UserVO authUser = (UserVO)session.getAttribute("authUser");
 	    if(authUser == null) {
-	        return "redirect:/onespace/loginForm"; // 로그인 안했으면 로그인폼으로
+	        return "redirect:/user/loginForm"; // 로그인 안했으면 로그인폼으로
 	    }
 	     
 	    int userNo = authUser.getUserNo();
@@ -123,7 +123,7 @@ public class TeampageController {
 	    int newTeamNo = teampageService.exeAddTeam(teamVO, userNo);
 	    
 	    // 팀 생성이 완료되면 방금 만든 팀의 게시글 리스트 페이지로 이동
-	    return "redirect:/onespace/teams/" + newTeamNo + "/posts/list";
+	    return "redirect:/team/teams/" + newTeamNo + "/posts/list";
 	}
     
 	
@@ -144,7 +144,7 @@ public class TeampageController {
         //로그인 체크
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null) {
-            return "redirect:/onespace/loginForm";
+            return "redirect:/user/loginForm";
         }
        
         // 서비스로부터 특정 팀의 게시글 목록과 팀 정보를 가져옴
@@ -191,7 +191,7 @@ public class TeampageController {
 		UserVO authUser = (UserVO)session.getAttribute("authUser");
 		
 		if(authUser==null) {
-			return "redirect:/onespace/loginForm";
+			return "redirect:/user/loginForm";
 		}
 		
 	    int userNo = authUser.getUserNo(); // userNo 가져오기
@@ -270,7 +270,7 @@ public class TeampageController {
 		UserVO authUser = (UserVO)session.getAttribute("authUser");
 		
         if(authUser == null) {
-            return "redirect:/onespace/loginForm";
+            return "redirect:/user/loginForm";
         }
 		
 		int userNo = authUser.getUserNo();
@@ -280,7 +280,7 @@ public class TeampageController {
 		
 		teampageService.exeAdd(teamPostVO, voteNoList);
 		
-		return "redirect:/onespace/teams/" + teamNo + "/posts/list";
+		return "redirect:/team/teams/" + teamNo + "/posts/list";
 	}
 	
     
@@ -303,7 +303,7 @@ public class TeampageController {
 	     System.out.println("TeampageController.viewPost() for teamPostNo: " + teamPostNo);
 	     
 	     UserVO authUser = (UserVO)session.getAttribute("authUser");
-	     if(authUser == null) { return "redirect:/onespace/loginForm"; }
+	     if(authUser == null) { return "redirect:/user/loginForm"; }
 	     
 	     // --- 기본 정보 조회 및 모델에 추가 ---
 	     int userNo = authUser.getUserNo();
@@ -374,7 +374,7 @@ public class TeampageController {
         // 로그인 체크 (필수) 등록자만 수정 가능
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null) {
-            return "redirect:/onespace/loginForm";
+            return "redirect:/user/loginForm";
         }
 
         // 기존 게시글 정보 가져오기
@@ -382,7 +382,7 @@ public class TeampageController {
 
         // 작성자 본인인지 확인 (보안 강화)
         if (post == null || post.getUserNo() != authUser.getUserNo()) {
-            return "redirect:/onespace/teams/" + teamNo + "/posts/" + teamPostNo; // 상세 페이지로 돌려보냄
+            return "redirect:/team/teams/" + teamNo + "/posts/" + teamPostNo; // 상세 페이지로 돌려보냄
         }
         
         model.addAttribute("post", post); // 수정할 게시글 정보
@@ -415,7 +415,7 @@ public class TeampageController {
         // 로그인 체크 (필수)
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null) {
-            return "redirect:/onespace/loginForm";
+            return "redirect:/user/loginForm";
         }
         
         // 작성자 userNo 설정 (보안: 세션에서 가져와 다시 설정)
@@ -427,7 +427,7 @@ public class TeampageController {
         teampageService.exeModify(teamPostVO); // 서비스 호출하여 DB 업데이트
 
         // 수정 후 해당 게시글 상세 페이지로 리다이렉트
-        return "redirect:/onespace/teams/" + teamNo + "/posts/" + teamPostVO.getTeamPostNo();
+        return "redirect:/team/teams/" + teamNo + "/posts/" + teamPostVO.getTeamPostNo();
     }
     
 	
@@ -443,7 +443,7 @@ public class TeampageController {
         // 로그인한 사용자인지 확인
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null) {
-            return "redirect:/onespace/loginForm"; // 로그인 안 했으면 로그인 페이지로
+            return "redirect:/user/loginForm"; // 로그인 안 했으면 로그인 페이지로
         }
         
         // 서비스에 삭제 요청
@@ -452,7 +452,7 @@ public class TeampageController {
         teampageService.exeDelete(teamPostNo, userNo);
 
         // 삭제 후 해당 팀의 게시글 리스트로 리다이렉트
-        return "redirect:/onespace/teams/" + teamNo + "/posts/list";
+        return "redirect:/team/teams/" + teamNo + "/posts/list";
     }
 
 	
@@ -467,7 +467,7 @@ public class TeampageController {
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null || !teampageService.isUserTeamLeader(authUser.getUserNo(), teamNo)) {
             // 팀장이 아니면, 해당 팀 게시글 목록으로 돌려보냄 -> 어느 페이지로 보내는가 나을까.. 일단 이렇게 간다
-            return "redirect:/onespace/teams/" + teamNo + "/posts/list";
+            return "redirect:/team/teams/" + teamNo + "/posts/list";
         }
         
         Map<String, Object> manageInfo = teampageService.exeGetMemberInfo(teamNo);
@@ -491,12 +491,12 @@ public class TeampageController {
         
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null || !teampageService.isUserTeamLeader(authUser.getUserNo(), teamNo)) {
-            return "redirect:/onespace/teams/" + teamNo + "/posts/list";
+            return "redirect:/team/teams/" + teamNo + "/posts/list";
         }
         
         teampageService.exeApproveMember(teamNo, userNo);
         
-        return "redirect:/onespace/teams/" + teamNo + "/manage";
+        return "redirect:/team/teams/" + teamNo + "/manage";
     }
 
     // -- 가입 신청 거부, 팀원 삭제 처리 -> 거부, 삭제 같은 개념
@@ -508,12 +508,12 @@ public class TeampageController {
         
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if(authUser == null || !teampageService.isUserTeamLeader(authUser.getUserNo(), teamNo)) {
-            return "redirect:/onespace/teams/" + teamNo + "/posts/list";
+            return "redirect:/team/teams/" + teamNo + "/posts/list";
         }
         
         teampageService.exeRemoveMember(teamNo, userNo);
         
-        return "redirect:/onespace/teams/" + teamNo + "/manage";
+        return "redirect:/team/teams/" + teamNo + "/manage";
     }
 	
 
@@ -526,7 +526,7 @@ public class TeampageController {
         UserVO authUser = (UserVO)session.getAttribute("authUser");
         if (authUser == null) {
             // 로그인 안 했으면 로그인 페이지로 (보통은 여기까지 못 옴)
-            return "redirect:/onespace/loginForm";
+            return "redirect:/user/loginForm";
         }
         int userNo = authUser.getUserNo();
         
@@ -534,7 +534,7 @@ public class TeampageController {
         teampageService.exeRequestJoin(teamNo, userNo);
         
         // 3. 신청 완료 후 메인 페이지로 이동(팀이 없으면 아무 리스트도 안 보임)
-        return "redirect:/onespace/teammain";
+        return "redirect:/team/teammain";
     }
 	
 	 // ==================== 투표/예약 관련 API ====================
@@ -599,7 +599,7 @@ public class TeampageController {
         // Aside를 위한 팀 목록 조회 로직 ---
         UserVO authUser = (UserVO) session.getAttribute("authUser");
         if(authUser == null) {
-            return "redirect:/onespace/loginForm"; // 로그인 안했으면 바로 로그인폼으로
+            return "redirect:/user/loginForm"; // 로그인 안했으면 바로 로그인폼으로
         }
         // 서비스 호출해서 현재 유저의 팀 목록 가져오기
         List<TeamVO> userTeamList = teampageService.exeGetUserTeams(authUser.getUserNo());
@@ -612,7 +612,7 @@ public class TeampageController {
         // 만약 확정된 후보가 없으면 (아무도 투표 안했으면) 원래 투표 페이지로 돌려보냄
         if(reservationInfo == null || reservationInfo.get("topOption") == null) {
             System.out.println("투표자가 없어 예약 페이지로 이동할 수 없습니다.");
-            return "redirect:/onespace/teams/" + teamNo + "/posts/" + postNo;
+            return "redirect:/team/teams/" + teamNo + "/posts/" + postNo;
         }
         
         // JSP(View)로 데이터 전달
@@ -646,7 +646,7 @@ public class TeampageController {
         
         UserVO authUser = (UserVO) session.getAttribute("authUser");
         if(authUser == null) {
-            return "redirect:/onespace/loginForm"; // 로그인 안했으면 로그인폼으로
+            return "redirect:/user/loginForm"; // 로그인 안했으면 로그인폼으로
         }
         
         // 폼 데이터에 없는 추가 정보(세션의 userNo)를 VO에 설정
@@ -656,7 +656,7 @@ public class TeampageController {
         int newPracticePostNo = teampageService.exeCreateReceiptAndPost(receiptVO, teamNo, roomName, originalPostNo, authUser);
         
         //결제 확인 모달창에서 확인 누르고 이동
-        return "/onespace/teams/" + teamNo + "/posts/" + newPracticePostNo;
+        return "/team/teams/" + teamNo + "/posts/" + newPracticePostNo;
     }
 
 

@@ -60,7 +60,7 @@
                                                 <tr>
                                                     <td>${post.teamName}</td>
                                                     <td>
-                                                        <a href="${pageContext.request.contextPath}/onespace/teams/${post.teamNo}/posts/${post.teamPostNo}">${post.teamPostTitle}</a>
+                                                        <a href="${pageContext.request.contextPath}/team/teams/${post.teamNo}/posts/${post.teamPostNo}">${post.teamPostTitle}</a>
                                                     </td>
                                                     <td>${post.teamWriteDate}</td>
                                                 </tr>

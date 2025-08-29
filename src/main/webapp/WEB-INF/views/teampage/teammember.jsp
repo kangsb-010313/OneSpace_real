@@ -71,17 +71,17 @@
 						                                            <c:choose>
 						                                                <%-- Case 1: 신청자(보류 상태)일 경우 '거부', '승인' 버튼 --%>
 						                                                <c:when test="${member.status == '보류'}">
-						                                                    <form action="${pageContext.request.contextPath}/onespace/teams/${teamInfo.teamNo}/remove/${member.userNo}" method="post" style="display:inline;">
+						                                                    <form action="${pageContext.request.contextPath}/team/teams/${teamInfo.teamNo}/remove/${member.userNo}" method="post" style="display:inline;">
 						                                                        <button type="submit" class="btn-manage">거부</button>
 						                                                    </form>
-						                                                    <form action="${pageContext.request.contextPath}/onespace/teams/${teamInfo.teamNo}/approve/${member.userNo}" method="post" style="display:inline;">
+						                                                    <form action="${pageContext.request.contextPath}/team/teams/${teamInfo.teamNo}/approve/${member.userNo}" method="post" style="display:inline;">
 						                                                        <button type="submit" class="btn-manage">승인</button>
 						                                                    </form>
 						                                                </c:when>
 						                                                
 						                                                <%-- Case 2: 일반 팀원(승인 상태)일 경우 '삭제' 버튼 --%>
 						                                                <c:when test="${member.position == '팀원' && member.status == '승인'}">
-						                                                    <form action="${pageContext.request.contextPath}/onespace/teams/${teamInfo.teamNo}/remove/${member.userNo}" method="post" style="display:inline;">
+						                                                    <form action="${pageContext.request.contextPath}/team/teams/${teamInfo.teamNo}/remove/${member.userNo}" method="post" style="display:inline;">
 						                                                        <button type="submit" class="btn-manage">삭제</button>
 						                                                    </form>
 						                                                </c:when>

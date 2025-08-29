@@ -42,13 +42,13 @@
                             <h2>팀 ${teamName}</h2>
 
                             <div class="team-management-links">
-                                <a href="${pageContext.request.contextPath}/onespace/teamaddform"><img src="${pageContext.request.contextPath}/assets/images/톱니바퀴아이콘.jpg" class="team-setting">팀관리</a>
-                                <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/manage"><img src="${pageContext.request.contextPath}/assets/images/톱니바퀴아이콘.jpg" class="team-setting">팀원관리</a>
+                                <a href="${pageContext.request.contextPath}/team/teamaddform"><img src="${pageContext.request.contextPath}/assets/images/톱니바퀴아이콘.jpg" class="team-setting">팀관리</a>
+                                <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/manage"><img src="${pageContext.request.contextPath}/assets/images/톱니바퀴아이콘.jpg" class="team-setting">팀원관리</a>
                             </div>
                             <!-- 일반공지/팀자랑 등록 링크 -->
                             <div class="registration-links">
-                                <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/writeform?teamPostType=일반공지">일반공지등록</a>
-                                <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/writeform?teamPostType=팀자랑">팀자랑 등록하기</a>
+                                <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/writeform?teamPostType=일반공지">일반공지등록</a>
+                                <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/writeform?teamPostType=팀자랑">팀자랑 등록하기</a>
                             </div>
 
                             <div id="team-search-voting">
@@ -60,7 +60,7 @@
                                 </div>
 
                                 <div class="btn-area">
-                                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/writeform?teamPostType=투표" class="btn-make">투표만들기</a>
+                                    <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/writeform?teamPostType=투표" class="btn-make">투표만들기</a>
                                 </div>
                             </div>
 
@@ -86,7 +86,7 @@
 	                                            <td>${teamPostVO.teamPostType}</td> <%-- 글 종류 (카테고리) --%>
 	                                            <td>
                                                     <%-- ▼▼▼▼▼ 글보기 링크 추가 ▼▼▼▼▼ --%>
-                                                    <a href="${pageContext.request.contextPath}/onespace/teams/${teamNo}/posts/${teamPostVO.teamPostNo}">${teamPostVO.teamPostTitle}</a>
+                                                    <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/${teamPostVO.teamPostNo}">${teamPostVO.teamPostTitle}</a>
                                                 </td> 
 	                                            <td>${teamPostVO.teamWriteDate}</td> <%-- 작성일 --%>
 	                                        </tr>
