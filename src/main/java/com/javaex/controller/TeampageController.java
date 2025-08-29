@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpSession;
 
  
 @Controller
-@RequestMapping(value="/onespace")
+@RequestMapping(value="/team")
 public class TeampageController {
 
 	//필드
