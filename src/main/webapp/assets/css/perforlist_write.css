@@ -225,6 +225,13 @@
   text-overflow: ellipsis; /* 길면 ... 처리 */
 }
 
+  /* ===== 파일 미리보기 ===== */
+.textarea-wrap .file-preview img{
+  display:block;
+  max-height:250px;
+  max-width:100%;
+}
+
   
   /* ===== 버튼 공통 ===== */
   .btn {
@@ -254,3 +261,5 @@
   .submit-btn {
     padding: 0 26px;
   }
+
+  

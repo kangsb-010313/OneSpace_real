@@ -51,9 +51,9 @@
               <textarea class="inp-textarea-line" name="infoContent" placeholder="전하고 싶은 내용을 입력해 주세요!" rows="12" required></textarea>
 
               <label class="btn-solid attach-btn">
-                파일첨부
-                <input type="file" name="infoImgFile" id="infoImgFile" hidden>
-              </label>
+			    파일첨부
+			    <input type="file" name="infoImgFile" id="infoImgFile" accept="image/*" hidden>
+			  </label>
 
               <div id="filename-preview" class="file-preview"></div>
             </div>
@@ -114,15 +114,54 @@
     }
   })();
 
-  // 파일첨부 → 파일명 미리보기
+  // 파일첨부 → 이미지 미리보기 (ajax)
   document.addEventListener("DOMContentLoaded", function () {
-    const fileInput = document.querySelector("input[name='infoImgFile']");
-    const preview = document.getElementById("filename-preview");
-    if (fileInput && preview) {
-      fileInput.addEventListener("change", function (e) {
-        const fileName = e.target.files && e.target.files[0] ? e.target.files[0].name : "";
-        preview.innerText = fileName ? ("첨부된 파일: " + fileName) : "";
-        console.log("selected file:", fileName);
+    var form     = document.getElementById('perfoinfo-write-form');
+    var fileInput= document.querySelector("input[name='infoImgFile']");
+    var preview  = document.getElementById("filename-preview");
+    var textarea = document.querySelector(".inp-textarea-line");
+    var objectUrl= null;
+
+    if (!fileInput || !preview || !textarea) return;
+
+    function clearPreview(){
+      if (objectUrl){
+        URL.revokeObjectURL(objectUrl);
+        objectUrl = null;
+      }
+      preview.innerHTML = "";
+      // 겹치지 않게 하단 패딩을 원래대로
+      textarea.style.paddingBottom = "8px";
+    }
+
+    fileInput.addEventListener("change", function (e) {
+      clearPreview();
+
+      var file = e.target.files && e.target.files[0];
+      if (!file){
+        return; // 선택 취소
+      }
+
+      // 이미지면 썸네일, 아니면 파일명 텍스트
+      if (file.type && file.type.indexOf("image/") === 0){
+        objectUrl = URL.createObjectURL(file);
+        preview.innerHTML = '<img src="'+ objectUrl +'" alt="첨부 이미지 미리보기">';
+        // 미리보기가 텍스트 영역을 가리지 않도록 하단 패딩만 "살짝" 확보
+        textarea.style.paddingBottom = "120px";
+      } else {
+        preview.textContent = "첨부된 파일: " + file.name;
+        textarea.style.paddingBottom = "36px"; // 텍스트 한 줄 정도 공간
+      }
+    });
+
+    // 폼 제출/리셋 시 정리
+    if (form){
+      form.addEventListener("reset", clearPreview);
+      form.addEventListener("submit", function(){
+        if (objectUrl){
+          URL.revokeObjectURL(objectUrl);
+          objectUrl = null;
+        }
       });
     }
   });
