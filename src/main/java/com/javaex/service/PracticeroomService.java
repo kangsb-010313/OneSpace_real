@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.javaex.repository.PracticeroomRepository;
 import com.javaex.vo.ReserveInfoVO;
@@ -103,15 +104,27 @@ public class PracticeroomService {
             Map.of("success", false, "message", "찜 해제 실패");
     }
     
-    // 후보 추가
+    //후보 추가
+    @Transactional
     public Map<String, Object> addVoteOption(Long roomNo, String voteDate, String voteTime, Integer voteNo, int voteStatus, HttpSession session) {
         UserVO authUser = (UserVO) session.getAttribute("authUser");
         if (authUser == null) return Map.of("success", false, "message", "로그인 필요");
 
-        boolean result = practiceroomRepository.insertVoteOption(authUser.getUserNo(), roomNo, voteDate, voteTime, voteNo, voteStatus);
-        return result ?
-            Map.of("success", true, "message", "후보가 추가되었습니다.",
-                   "roomNo", roomNo, "voteDate", voteDate, "voteTime", voteTime, "voteStatus", voteStatus) :
-            Map.of("success", false, "message", "후보 추가 실패");
+        // 1) votes 테이블에 한 줄 생성
+        Long generatedVoteNo = practiceroomRepository.insertVote(authUser.getUserNo(), null, null);
+
+        // 2) voteOptions 테이블에 후보 저장
+        boolean ok = practiceroomRepository.insertVoteOption(
+            authUser.getUserNo(),
+            roomNo,
+            voteDate,
+            voteTime,
+            generatedVoteNo.intValue(),
+            voteStatus
+        );
+
+        return ok
+            ? Map.of("success", true, "message", "후보가 추가되었습니다.", "voteNo", generatedVoteNo)
+            : Map.of("success", false, "message", "후보 추가 실패");
     }
 }

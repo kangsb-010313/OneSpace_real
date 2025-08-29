@@ -210,33 +210,39 @@
       		area
     	FROM rooms
     	WHERE roomNo = #{roomNo}
-  </select>
-  
-  <!-- 찜 목록에 새 항목 삽입 -->
-  <insert id="insertStudioWishlist" parameterType="map" useGeneratedKeys="true" keyProperty="studioWishlistNo">
-	INSERT INTO studioWishlist (userNo, roomNo)
-	VALUES (#{userNo}, #{roomNo})
-  </insert>
-  
-  <!-- 사용자 소속 팀 리스트 조회 -->
-  <select id="selectTeamsByUser" parameterType="int" resultType="com.javaex.vo.TeamVO">
-    SELECT teamNo, userNo, teamName
-    FROM teams
-    WHERE userNo = #{userNo}
-    ORDER BY teamNo
-  </select>
-  
-  <!-- 찜 목록 삭제 -->
-  <delete id="deleteStudioWishlist" parameterType="map">
-    DELETE FROM studioWishlist
-    WHERE userNo = #{userNo}
-      AND roomNo = #{roomNo}
-  </delete>
-  
-  <!-- 날짜 시간 추가 -->
-  <insert id="insertVoteOption" parameterType="map" useGeneratedKeys="true" keyProperty="reservationNo">
-    INSERT INTO voteOptions (userNo, roomNo, voteDate, voteTime, voteNo, voteStatus)
-    VALUES (#{userNo}, #{roomNo}, #{voteDate}, #{voteTime}, #{voteNo}, #{voteStatus})
-  </insert>
-  
+  	</select>
+  	
+  	<!-- 찜 목록에 새 항목 삽입 -->
+  	<insert id="insertStudioWishlist" parameterType="map" useGeneratedKeys="true" keyProperty="studioWishlistNo">
+		INSERT INTO studioWishlist (userNo, roomNo)
+		VALUES (#{userNo}, #{roomNo})
+  	</insert>
+  	
+  	<!-- 사용자 소속 팀 리스트 조회 -->
+  	<select id="selectTeamsByUser" parameterType="int" resultType="com.javaex.vo.TeamVO">
+    	SELECT teamNo, userNo, teamName
+    	FROM teams
+    	WHERE userNo = #{userNo}
+    	ORDER BY teamNo
+  	</select>
+  	
+  	<!-- 찜 목록 삭제 -->
+  	<delete id="deleteStudioWishlist" parameterType="map">
+	    DELETE FROM studioWishlist
+	    WHERE userNo = #{userNo}
+      	AND roomNo = #{roomNo}
+  	</delete>
+  	
+  	<!-- 투표 추가 -->
+	<insert id="insertVote" parameterType="map" useGeneratedKeys="true" keyProperty="voteNo">
+	    INSERT INTO votes (userNo, totalPrice)
+	    VALUES (#{userNo}, #{totalPrice})
+	</insert>
+	
+  	<!-- 날짜 시간 추가 -->
+  	<insert id="insertVoteOption" parameterType="map" useGeneratedKeys="true" keyProperty="reservationNo">
+	    INSERT INTO voteOptions (userNo, roomNo, voteDate, voteTime, voteNo, voteStatus)
+	    VALUES (#{userNo}, #{roomNo}, #{voteDate}, #{voteTime}, #{voteNo}, #{voteStatus})
+  	</insert>
+  	
 </mapper>

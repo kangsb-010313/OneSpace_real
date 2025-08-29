@@ -396,7 +396,7 @@
 	  	});
 		
 	  	// 닫기/선택
-	  	//$schedClose.on('click', function(){ $overlay.hide(); });
+	  	$schedClose.on('click', function(){ $overlay.hide(); });
 	  	$schedSubmit.on('click', function(){
 		  	const $selected = $schedSlots.find('.slot.selected');
 		  	if ($selected.length === 0) {

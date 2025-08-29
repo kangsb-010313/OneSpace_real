@@ -108,10 +108,22 @@ public class PracticeroomRepository {
         p.put("roomNo", roomNo);
         p.put("voteDate", voteDate); // "YYYY-MM-DD"
         p.put("voteTime", voteTime); // "HH:MM~HH:MM" 이거 어떻게 할까..
-        p.put("voteNo", (voteNo == null ? 0 : voteNo));
+        p.put("voteNo", voteNo);
         p.put("voteStatus", 0);
 
         int rows = sqlSession.insert("practiceroom.insertVoteOption", p);
         return rows == 1;
     }
+    
+    public Long insertVote(int userNo, Long totalPrice, Long postNo) {
+        Map<String, Object> p = new HashMap<>();
+        p.put("userNo", userNo);
+        p.put("totalPrice", totalPrice);
+        p.put("postNo", postNo); // null 가능
+        sqlSession.insert("practiceroom.insertVote", p);
+        // useGeneratedKeys 로 p에 voteNo가 들어옴
+        Object key = p.get("voteNo");
+        return (key == null) ? null : ((Number) key).longValue();
+    }
+    
 }
