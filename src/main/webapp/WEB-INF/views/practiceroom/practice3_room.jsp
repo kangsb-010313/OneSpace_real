@@ -32,111 +32,77 @@
         </div>
 				
         <div class="detail-container">
-          <!-- LEFT: 대표 이미지 (room.roomInfo 기반) -->
+          <!-- 왼쪽 대표 이미지 (room.roomInfo) -->
           <div class="left-col">
-			  <%-- mainSrc 계산: 1) zone.spaceLink 우선 2) room.roomInfo 첫번째 3) placeholder --%>
-			  <c:choose>
-			    <c:when test="${not empty zone && not empty zone.spaceLink}">
-			      <c:set var="z" value="${fn:trim(zone.spaceLink)}"/>
-			      <c:choose>
-			        <c:when test="${fn:startsWith(z,'http')}">
-			          <c:set var="mainSrc" value="${z}" />
-			        </c:when>
-			        <c:when test="${fn:startsWith(z,'/')}">
-			          <c:set var="mainSrc" value="${z}" />
-			        </c:when>
-			        <c:otherwise>
-			          <c:set var="mainSrc" value="${ctx}/assets/images/${z}" />
-			        </c:otherwise>
-			      </c:choose>
-			    </c:when>
-			
-			    <c:when test="${not empty room.roomInfo}">
-			      <c:set var="firstRaw" value="${fn:trim(fn:split(room.roomInfo, ',')[0])}" />
-			      <c:choose>
-			        <c:when test="${fn:startsWith(firstRaw,'http')}">
-			          <c:set var="mainSrc" value="${firstRaw}" />
-			        </c:when>
-			        <c:when test="${fn:startsWith(firstRaw,'/')}">
-			          <c:set var="mainSrc" value="${firstRaw}" />
-			        </c:when>
-			        <c:otherwise>
-			          <c:set var="mainSrc" value="${ctx}/assets/images/${firstRaw}" />
-			        </c:otherwise>
-			      </c:choose>
-			    </c:when>
-			
-			    <c:otherwise>
-			      <c:set var="mainSrc" value="${ctx}/assets/images/placeholder.jpg" />
-			    </c:otherwise>
-			  </c:choose>
-			
-			  <%-- 메인 이미지 --%>
 			  <img id="mainPhoto" class="main-photo"
-			       src="${mainSrc}"
-			       alt="${room.roomName}"
-			       onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
+			       src="${ctx}/uploads/${zone.repImg}"
+			       alt="${room.roomName}"/>
 			
-			  <!-- 2x2 그리드: 각 썸네일은 mainSrc의 사분면을 보여줌 -->
-				<div class="thumb-grid">
-				  <div class="thumb-quad quad-tl" role="button" tabindex="0"
-				       style="background-image: url('${mainSrc}');"
-				       data-full="${mainSrc}" onclick="swapMainImageFromQuad(this)" onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
-				  </div>
-				
-				  <div class="thumb-quad quad-tr" role="button" tabindex="0"
-				       style="background-image: url('${mainSrc}');"
-				       data-full="${mainSrc}" onclick="swapMainImageFromQuad(this)" onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
-				  </div>
-				
-				  <div class="thumb-quad quad-bl" role="button" tabindex="0"
-				       style="background-image: url('${mainSrc}');"
-				       data-full="${mainSrc}" onclick="swapMainImageFromQuad(this)" onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
-				  </div>
-				
-				  <div class="thumb-quad quad-br" role="button" tabindex="0"
-				       style="background-image: url('${mainSrc}');"
-				       data-full="${mainSrc}" onclick="swapMainImageFromQuad(this)" onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
-				  </div>
-				</div>
+			  <!-- 2x2 그리드 -->
+			  <div class="thumb-grid">
+			    <div class="thumb-quad quad-tl" role="button" tabindex="0"
+			         style="background-image: url('${ctx}/uploads/${zone.repImg}');"
+			         data-full="${ctx}/uploads/${zone.repImg}" 
+			         onclick="swapMainImageFromQuad(this)" 
+			         onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
+			    </div>
+			    <div class="thumb-quad quad-tr" role="button" tabindex="0"
+			         style="background-image: url('${ctx}/uploads/${zone.repImg}');"
+			         data-full="${ctx}/uploads/${zone.repImg}" 
+			         onclick="swapMainImageFromQuad(this)" 
+			         onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
+			    </div>
+			    <div class="thumb-quad quad-bl" role="button" tabindex="0"
+			         style="background-image: url('${ctx}/uploads/${zone.repImg}');"
+			         data-full="${ctx}/uploads/${zone.repImg}" 
+			         onclick="swapMainImageFromQuad(this)" 
+			         onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
+			    </div>
+			    <div class="thumb-quad quad-br" role="button" tabindex="0"
+			         style="background-image: url('${ctx}/uploads/${zone.repImg}');"
+			         data-full="${ctx}/uploads/${zone.repImg}" 
+			         onclick="swapMainImageFromQuad(this)" 
+			         onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
+			    </div>
+			  </div>
 			</div>
 
-          <!-- 오른쪽: roomInfo(이미지 갤러리 또는 텍스트) -->
-          <div class="right-col">
-            <div class="room-info-card">
-              <h3>방 정보</h3>
-
-              <c:choose>
-                <%-- 만약 roomInfo에 이미지 확장자가 포함되어 있으면 이미지 목록으로 표시 --%>
-                <c:when test="${not empty rawAll and (fn:contains(rawAll,'.jpg') or fn:contains(rawAll,'.jpeg') or fn:contains(rawAll,'.png') or fn:contains(rawAll,'.gif'))}">
-                  <div style="display:flex; flex-direction:column; gap:8px;">
-                    <c:forEach var="img" items="${fn:split(rawAll, ',')}">
-                      <c:set var="iTrim" value="${fn:trim(img)}" />
-                      <c:choose>
-                        <c:when test="${fn:startsWith(iTrim,'http')}">
-                          <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
-                               src="${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
-                        </c:when>
-                        <c:when test="${fn:startsWith(iTrim,'/')}">
-                          <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
-                               src="${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
-                        </c:when>
-                        <c:otherwise>
-                          <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
-                               src="${ctx}/assets/images/${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
-                        </c:otherwise>
-                      </c:choose>
-                    </c:forEach>
-                  </div>
-                </c:when>
-
-                <c:otherwise>
-                  <%-- 텍스트(줄바꿈 유지) --%>
-                  <div class="room-info-text">
-                    <c:out value="${room.roomInfo}" />
-                  </div>
-                </c:otherwise>
-              </c:choose>
+	          <!-- 오른쪽: roomInfo -->
+	          <div class="right-col">
+	            <div class="room-info-card">
+	              <h3>방 정보</h3>
+	
+	              <c:choose>
+	                <%-- 만약 roomInfo에 이미지 확장자가 포함되어 있으면 이미지 목록으로 표시 --%>
+	                <c:when test="${not empty rawAll and (fn:contains(rawAll,'.jpg') or fn:contains(rawAll,'.jpeg') or fn:contains(rawAll,'.png') or fn:contains(rawAll,'.gif'))}">
+	                  <div style="display:flex; flex-direction:column; gap:8px;">
+	                    <c:forEach var="img" items="${fn:split(rawAll, ',')}">
+	                      <c:set var="iTrim" value="${fn:trim(img)}" />
+	                      <c:choose>
+	                        <c:when test="${fn:startsWith(iTrim,'http')}">
+	                          <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
+	                               src="${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
+	                        </c:when>
+	                        <c:when test="${fn:startsWith(iTrim,'/')}">
+	                          <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
+	                               src="${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
+	                        </c:when>
+	                        <c:otherwise>
+	                          <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
+	                               src="${ctx}/assets/images/${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
+	                        </c:otherwise>
+	                      </c:choose>
+	                    </c:forEach>
+	                  </div>
+	                </c:when>
+	
+	                <c:otherwise>
+	                  <%-- 텍스트(줄바꿈 유지) --%>
+	                  <div class="room-info-text">
+	                    <c:out value="${room.roomInfo}" />
+	                  </div>
+	                </c:otherwise>
+	              </c:choose>
 
               <!-- 추가 정보(예: 수용인원/면적) -->
               <hr style="margin:12px 0 10px;">

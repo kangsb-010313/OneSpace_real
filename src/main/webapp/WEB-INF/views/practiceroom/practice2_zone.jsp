@@ -45,7 +45,16 @@
                   <c:set var="raw" value="${zone.spaceLink}" />
                     <!--  <div style="border-radius: 22px; overflow: hidden; margin-bottom: 24px; margin-left: 30px; margin-right: 50px;">-->
                     <div>
-                      <img class="main-photo" src="${pageContext.request.contextPath}/assets/images/${raw}" alt="${zone.spaceName} 대표사진">
+                      <!-- 대표 이미지 -->
+						<c:choose>
+						  <c:when test="${not empty zone.repImg}">
+						    <!-- 업로드된 대표 이미지 -->
+						    <div>
+						      <img class="main-photo" src="${pageContext.request.contextPath}/uploads/${zone.repImg}" alt="${zone.spaceName} 대표사진">
+						    </div>
+						  </c:when>
+						  
+						</c:choose>
                     </div>
                   </c:if>
 
@@ -103,7 +112,7 @@
                       <div class="room-card">
                         <a href="${pageContext.request.contextPath}/onespace/practice3_room?roomNo=${room.roomNo}">
                           <div class="room-thumb-wrap">
-		                    <img class="room-thumb" src="${pageContext.request.contextPath}/assets/images/${raw}" alt="${zone.spaceName} 대표사진">
+		                    <img class="room-thumb" src="${pageContext.request.contextPath}/uploads/${zone.repImg}" alt="${zone.spaceName} 대표사진">
                             <div class="room-title">${room.roomName}</div>
                           </div>
                           <div class="room-bottom-row">

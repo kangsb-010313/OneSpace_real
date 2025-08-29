@@ -102,6 +102,7 @@
 	      s.phone,
 	      s.tel,
 	      s.spaceLink,
+	      s.repImg,
 	      s.postCode,
 	      s.address,
 	      s.addressDetail,
