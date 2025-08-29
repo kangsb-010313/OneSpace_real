@@ -64,5 +64,25 @@
        CONVERT_TZ(UTC_TIMESTAMP(),'UTC','Asia/Seoul'),
        CONVERT_TZ(UTC_TIMESTAMP(),'UTC','Asia/Seoul'))
   </insert>
+  
+    <!-- 수정 -->
+  <update id="update" parameterType="com.javaex.vo.PerforInfoVO">
+    update infoWrite
+    <set>
+      <if test="infoPostTitle != null">infoPostTitle = #{infoPostTitle},</if>
+      <if test="agencyName    != null">agencyName    = #{agencyName},</if>
+      <if test="infoContent   != null">infoContent   = #{infoContent},</if>
+      <if test="infoOutUrl    != null">infoOutUrl    = #{infoOutUrl},</if>
+      <if test="infoPostType  != null">infoPostType  = #{infoPostType},</if>
+      <if test="deadlineDate  != null">deadlineDate  = #{deadlineDate},</if>
+      <if test="infoArea      != null">infoArea      = #{infoArea},</if>
+      <!-- 새 파일을 올린 경우에만 이미지 갱신 -->
+      <if test="infoImg       != null">infoImg       = #{infoImg},</if>
+
+      infoUpdateDate = CONVERT_TZ(UTC_TIMESTAMP(),'UTC','Asia/Seoul')
+    </set>
+    where infoPostNo = #{infoPostNo}
+      and userNo     = #{userNo}
+  </update>
 
 </mapper>

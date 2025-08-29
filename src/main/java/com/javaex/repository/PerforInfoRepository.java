@@ -35,4 +35,8 @@ public class PerforInfoRepository {
     public int insert(PerforInfoVO vo) {
         return sqlSession.insert(NS + "insert", vo);
     }
+    
+    public int update(PerforInfoVO vo) {
+        return sqlSession.update(NS + "update", vo);
+    }
 }
