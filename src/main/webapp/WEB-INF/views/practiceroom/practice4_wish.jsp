@@ -68,10 +68,8 @@
 								</c:if>
 
 							</div>
+							
 							<!-- //practice-card-list -->
-
-
-
 							<section class="fav-panel">
 								<div class="fav-title">#내가 찜한 연습실 후보</div>
 								<ol class="fav-list">
@@ -101,6 +99,7 @@
 								</ol>
 							</section>
 							<!-- //fav-panel -->
+							
 						</div>
 						<!-- //two-col -->
 						<br> <br>
