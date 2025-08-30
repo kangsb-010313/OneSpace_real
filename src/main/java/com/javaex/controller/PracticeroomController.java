@@ -94,29 +94,34 @@ public class PracticeroomController {
     // 찜 추가
     @PostMapping("/api/favorite")
     @ResponseBody
-    public Map<String, Object> addFavorite(@RequestParam Long roomNo, 
-                                           @RequestParam String teamName, 
-                                           HttpSession session) {
-        return practiceroomService.addFavorite(roomNo, teamName, session);
+    public Map<String, Object> addFavorite(@RequestParam Long roomNo, HttpSession session) {
+        return practiceroomService.addFavorite(roomNo, session);
     }
-
+    
     // 찜 삭제
     @PostMapping("/api/favorite/remove")
     @ResponseBody
     public Map<String, Object> removeFavorite(@RequestParam Long roomNo, HttpSession session) {
         return practiceroomService.removeFavorite(roomNo, session);
     }
-
+    
     // 후보 추가
     @PostMapping("/api/vote-option")
     @ResponseBody
-    public Map<String, Object> addVoteOption(@RequestParam Long roomNo,
+    public Map<String, Object> addVoteOption(@RequestParam int roomNo,
                                              @RequestParam String voteDate,
                                              @RequestParam String voteTime,
-                                             @RequestParam(required = false, defaultValue = "0") Integer voteNo,
+                                             @RequestParam(required = false, defaultValue = "0") Long voteNo,
                                              @RequestParam(required = false, defaultValue = "0") int voteStatus,
                                              HttpSession session) {
         return practiceroomService.addVoteOption(roomNo, voteDate, voteTime, voteNo, voteStatus, session);
+    }
+    
+    // 후보 삭제
+    @PostMapping("/api/vote-option/remove")
+    @ResponseBody
+    public Map<String, Object> removeVoteOption(@RequestParam long reservationNo, HttpSession session) {
+        return practiceroomService.removeVoteOption(reservationNo, session);
     }
 	
 }

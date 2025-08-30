@@ -390,4 +390,22 @@
     height: 36px;
 }
 
+/* 삭제 버튼 */
+.zzim .btn-remove-fav {
+    margin-left: 8px;
+    background: #f33;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.zzim .btn-remove-fav:hover {
+    background: #d22; /* hover 시 살짝 어둡게 */
+}
+
 

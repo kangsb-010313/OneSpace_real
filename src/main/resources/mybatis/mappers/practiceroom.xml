@@ -135,6 +135,7 @@
 	<select id="selectFavoriteCandidates" parameterType="int" resultType="java.util.Map">
 		<![CDATA[
 	     SELECT
+	       v.reservationNo,
 	       v.voteNo,
 	       s.spaceName,
 	       r.roomNo,
@@ -245,4 +246,11 @@
 	    VALUES (#{userNo}, #{roomNo}, #{voteDate}, #{voteTime}, #{voteNo}, #{voteStatus})
   	</insert>
   	
+  	<!-- 후보 삭제 -->
+  	<delete id="deleteVoteOption" parameterType="map">
+	    DELETE FROM voteOptions
+	    WHERE reservationNo = #{reservationNo}
+	</delete>
+	
+	
 </mapper>

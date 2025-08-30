@@ -102,19 +102,20 @@ public class PracticeroomRepository {
     }
     
     // 날짜 시간 추가
-    public boolean insertVoteOption(int userNo, Long roomNo, String voteDate, String voteTime, Integer voteNo, int voteStatus) {
+    public boolean insertVoteOption(int userNo, int roomNo, String voteDate, String voteTime, long voteNo, int voteStatus) {
         Map<String, Object> p = new HashMap<>();
         p.put("userNo", userNo);
-        p.put("roomNo", roomNo);
-        p.put("voteDate", voteDate); // "YYYY-MM-DD"
-        p.put("voteTime", voteTime); // "HH:MM~HH:MM" 이거 어떻게 할까..
-        p.put("voteNo", voteNo);
-        p.put("voteStatus", 0);
+        p.put("roomNo", roomNo);      // Long
+        p.put("voteDate", voteDate);
+        p.put("voteTime", voteTime);
+        p.put("voteNo", voteNo);      // Long
+        p.put("voteStatus", voteStatus);
 
         int rows = sqlSession.insert("practiceroom.insertVoteOption", p);
         return rows == 1;
     }
     
+    // 후보 추가
     public Long insertVote(int userNo, Long totalPrice, Long postNo) {
         Map<String, Object> p = new HashMap<>();
         p.put("userNo", userNo);
@@ -124,6 +125,16 @@ public class PracticeroomRepository {
         // useGeneratedKeys 로 p에 voteNo가 들어옴
         Object key = p.get("voteNo");
         return (key == null) ? null : ((Number) key).longValue();
+    }
+    
+    // 후보 삭제
+    public boolean deleteVoteOption(int userNo, long reservationNo) {
+    	Map<String, Object> p = new HashMap<>();
+        p.put("userNo", userNo);
+        p.put("reservationNo", reservationNo);
+        int rows = sqlSession.delete("practiceroom.deleteVoteOption", p);
+        System.out.println("[삭제 실행] reservationNo=" + reservationNo + ", userNo=" + userNo + ", rows=" + rows);
+        return rows == 1;
     }
     
 }

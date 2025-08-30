@@ -83,13 +83,13 @@ public class PracticeroomService {
     }
     
     // 찜 추가
-    public Map<String, Object> addFavorite(Long roomNo, String teamName, HttpSession session) {
+    public Map<String, Object> addFavorite(Long roomNo, HttpSession session) {
         UserVO authUser = (UserVO) session.getAttribute("authUser");
         if (authUser == null) return Map.of("success", false, "message", "로그인 필요");
 
         boolean result = practiceroomRepository.insertStudioWishlist(authUser.getUserNo(), roomNo) > 0;
         return result ?
-            Map.of("success", true, "message", "팀 " + teamName + "에 대한 찜이 추가되었습니다.") :
+            Map.of("success", true, "message", "찜이 추가되었습니다.") :
             Map.of("success", false, "message", "찜 추가 실패");
     }
     
@@ -106,25 +106,59 @@ public class PracticeroomService {
     
     //후보 추가
     @Transactional
-    public Map<String, Object> addVoteOption(Long roomNo, String voteDate, String voteTime, Integer voteNo, int voteStatus, HttpSession session) {
+    public Map<String, Object> addVoteOption(int roomNo, String voteDate, String voteTime, Long voteNo, int voteStatus, HttpSession session) {
         UserVO authUser = (UserVO) session.getAttribute("authUser");
         if (authUser == null) return Map.of("success", false, "message", "로그인 필요");
 
-        // 1) votes 테이블에 한 줄 생성
-        Long generatedVoteNo = practiceroomRepository.insertVote(authUser.getUserNo(), null, null);
+        // 1) 금액 계산
+        ReserveInfoVO reserveInfoVO = new ReserveInfoVO();
+        reserveInfoVO.setRoomNo(roomNo);
+        reserveInfoVO.setTargetDate(voteDate);
 
-        // 2) voteOptions 테이블에 후보 저장
+        List<RoomPriceVO> roomPriceList = practiceroomRepository.selectRoomPricesByDate(reserveInfoVO);
+
+        int startHour = Integer.parseInt(voteTime.split("~")[0].split(":")[0]);
+        int endHour   = Integer.parseInt(voteTime.split("~")[1].split(":")[0]);
+
+        long totalPrice = 0L;
+        for (RoomPriceVO priceRule : roomPriceList) {
+            int start = Integer.parseInt(priceRule.getStartTime().substring(0, 2));
+            int end   = Integer.parseInt(priceRule.getEndTime().substring(0, 2));
+            int price = priceRule.getHourlyPrice();
+
+            for (int h = startHour; h < endHour; h++) {
+                if (h >= start && h < end) {
+                    totalPrice += price;
+                }
+            }
+        }
+
+        // 2) votes 테이블 insert (totalPrice 포함)
+        Long generatedVoteNo = practiceroomRepository.insertVote(authUser.getUserNo(), totalPrice, null);
+
+        // 3) voteOptions insert
         boolean ok = practiceroomRepository.insertVoteOption(
             authUser.getUserNo(),
             roomNo,
             voteDate,
             voteTime,
-            generatedVoteNo.intValue(),
+            generatedVoteNo,
             voteStatus
         );
 
         return ok
-            ? Map.of("success", true, "message", "후보가 추가되었습니다.", "voteNo", generatedVoteNo)
+            ? Map.of("success", true, "message", "후보가 추가되었습니다.", "voteNo", voteNo, "totalPrice", totalPrice)
             : Map.of("success", false, "message", "후보 추가 실패");
+    }
+    
+    // 후보 삭제
+    public Map<String, Object> removeVoteOption(long reservationNo, HttpSession session) {
+        UserVO authUser = (UserVO) session.getAttribute("authUser");
+        if (authUser == null) return Map.of("success", false, "message", "로그인 필요");
+
+        boolean ok = practiceroomRepository.deleteVoteOption(authUser.getUserNo(), reservationNo);
+        return ok
+            ? Map.of("success", true, "message", "후보가 삭제되었습니다.")
+            : Map.of("success", false, "message", "후보 삭제 실패");
     }
 }

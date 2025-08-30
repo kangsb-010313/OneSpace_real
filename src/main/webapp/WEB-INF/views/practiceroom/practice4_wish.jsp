@@ -88,11 +88,14 @@
 											</div>
 											<div class="fav-right">
 												<%-- 현재 후보 찜 인원 수 --%>
-												<div class="fav-hot">🔥<b>${c.hotCount}</b></div>
+												<div class="fav-hot"><%-- 🔥<b>${c.hotCount}</b> --%></div>
 												<%-- 총 가격 --%>
 												<div class="fav-price">
 													가격:
 													<fmt:formatNumber value="${c.totalPrice}" type="number" />
+													<button class="btn-remove-fav" data-reservation-no="${c.reservationNo}">
+													    삭제
+													</button>
 												</div>
 											</div>
 										</li>
@@ -199,9 +202,10 @@
 	</div>
 
 	<script>
-	$(document).ready(function(){
+	const ctx = '${pageContext.request.contextPath}';
 	
-	  	const ctx = '${pageContext.request.contextPath}';
+	$(document).ready(function(){
+	  	
 	  	const $overlay = $('#scheduleModal');   // 모달
 	    const $schedDays = $('#schedDays');     // 날짜 출력 영역
 	    const $schedTitle = $('#schedTitle');   // 타이틀(월)
@@ -560,6 +564,35 @@
 	    	});
 		});
 	}); // document.ready
+	
+	// 후보 삭제
+	$(document).off('click', '.btn-remove-fav').on('click', '.btn-remove-fav', function(e){
+	    e.preventDefault();
+	    if (!confirm("정말 이 후보를 삭제하시겠습니까?")) return;
+
+	    const $btn = $(this);
+	    const reservationNo = $btn.data('reservation-no');
+		
+	    console.log("삭제 요청 reservationNo=", reservationNo);
+	    
+	    $.ajax({
+	        url: ctx + '/practice/api/vote-option/remove',
+	        method: 'POST',
+	        data: { reservationNo: reservationNo },
+	        dataType: 'json'
+	    }).done(function(res){
+	    	console.log("삭제 응답:", res);
+	        if (res.success) {
+	            $btn.closest('.fav-item').slideUp(200, function(){ $(this).remove(); });
+	            alert(res.message);
+	        } else {
+	            alert(res.message);
+	        }
+	    }).fail(function(xhr, status, err){
+	        console.error('삭제 실패', status, err);
+	        alert('서버 오류가 발생했습니다.');
+	    });
+	});
 	</script>
 
 </body>
