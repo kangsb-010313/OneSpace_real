@@ -105,7 +105,7 @@
 								                                        <p class="item-datetime">${confirmedOption.voteDate} ${confirmedOption.startTime} ~ ${confirmedOption.endTime}</p>
 								                                    </div>
 								                                    <div class="info-right">
-								                                        <p class="item-price">${confirmedOption.totalPrice} 원</p>
+								                                        <p class="item-price"><fmt:formatNumber value="${confirmedOption.totalPrice}" pattern="#,###" /> 원</p>
 								                                    </div>
 								                                </div>
 								                            </div>
@@ -126,7 +126,7 @@
 								                        <ul class="reservation-info-list">
 								                            <li><span class="label">예약자명</span><span class="value">${reserverName}</span></li>
 								                            <li><span class="label">참여인원</span><span class="value">${fn:length(voters)}명</span></li>
-								                            <li><span class="label">예약날짜</span><span class="value">${confirmedOption.voteDate} ${confirmedOption.startTime}~${confirmedOption.endTime}</span></li>
+								                            <li><span class="label">예약날짜</span><span class="value">${confirmedOption.voteDate} ${confirmedOption.startTime} ~ ${confirmedOption.endTime}</span></li>
 								                        </ul>
 								                    </div>
 								                    <div class="refund-policy">
@@ -175,7 +175,7 @@
 													                                                <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
 													                                            </div>
 													                                            <div class="info-right">
-													                                                <p class="item-price">${option.totalPrice} 원</p>
+													                                                <p class="item-price"><fmt:formatNumber value="${option.totalPrice}" pattern="#,###" /> 원</p>
 													                                            </div>
 													                                        </div>
 													                                    </div>

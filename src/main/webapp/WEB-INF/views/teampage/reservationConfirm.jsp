@@ -55,7 +55,7 @@
                                                         <p class="item-datetime">${confirmedOption.voteDate} ${confirmedOption.startTime} ~ ${confirmedOption.endTime}</p>
                                                     </div>
                                                     <div class="info-right">
-                                                        <p class="item-price">${confirmedOption.totalPrice} 원</p>
+                                                        <p class="item-price"><fmt:formatNumber value="${confirmedOption.totalPrice}" pattern="#,###" /> 원</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -77,7 +77,7 @@
                                         <ul class="reservation-info-list">
                                             <li><span class="label">예약자명</span><span class="value">${sessionScope.authUser.userName}</span></li>
                                             <li><span class="label">참여인원</span><span class="value">${fn:length(voters)}명</span></li>
-                                            <li><span class="label">예약날짜</span><span class="value">${confirmedOption.voteDate} ${confirmedOption.startTime}~${confirmedOption.endTime}</span></li>
+                                            <li><span class="label">예약날짜</span><span class="value">${confirmedOption.voteDate} ${confirmedOption.startTime} ~ ${confirmedOption.endTime}</span></li>
                                             <li>
                                                 <span class="label">연락처</span>
                                                 <input type="text" name="phoneNum" value="" placeholder="연락처를 입력하세요">
@@ -102,7 +102,7 @@
                             </div>
                             
                             <div class="post-actions" style="justify-content: right; margin-top: 30px;">
-                                <button type="submit" class="btn-action">총 ${confirmedOption.totalPrice}원 결제하기</button>
+                                <button type="submit" class="btn-action">총 <fmt:formatNumber value="${confirmedOption.totalPrice}" pattern="#,###" />원 결제하기</button>
                             </div>
                         </form>
                     </div>

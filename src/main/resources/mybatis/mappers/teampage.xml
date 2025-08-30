@@ -368,8 +368,8 @@
 	        r.roomNo,
 	        SUBSTRING_INDEX(SUBSTRING_INDEX(s.address, ' ', 2), ' ', -1) AS address,
 	        vo.voteDate,
-	        min(vo.voteTime) as startTime,
-	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
+			TIME_FORMAT(min(vo.voteTime), '%H:%i') as startTime,
+       		TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
 	        v.totalPrice,
 	        (select storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) AS picturesNo,
                /* 이 후보가 이미 예약 완료되었는지 확인하는 플래그 (0: 예약가능, 1: 예약불가) */
@@ -488,7 +488,7 @@
 	        r.roomName, 
 	        r.roomNo,
 	        vo.voteDate, 
-	        MIN(vo.voteTime) AS startTime,
+	        TIME_FORMAT(MIN(vo.voteTime), '%H:%i') AS startTime,
 	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
 	        (SELECT storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) as thumbImg
 	    FROM votes v
@@ -517,7 +517,7 @@
 	        v.voteNo, s.spaceName, r.roomName, r.roomNo,
 	        SUBSTRING_INDEX(SUBSTRING_INDEX(s.address, ' ', 2), ' ', -1) AS address,
 	        vo.voteDate, 
-	        min(vo.voteTime) as startTime,
+	        TIME_FORMAT(min(vo.voteTime), '%H:%i') as startTime,
 	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
 	        v.totalPrice,
 	        (select storedFileName from roomAttachments where roomNo = r.roomNo LIMIT 1) as thumbImg
