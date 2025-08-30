@@ -63,7 +63,7 @@ public class PracticeroomController {
     @GetMapping("/practice3_room")
     public String room(@RequestParam("roomNo") Long roomNo, HttpSession session, Model model) {
         UserVO authUser = (UserVO) session.getAttribute("authUser");
-        if (authUser == null) return "redirect:/onespace/loginForm";
+        if (authUser == null) return "redirect:/user/loginForm";
 
         model.addAttribute("room", practiceroomService.getRoomByNo(roomNo));
         model.addAttribute("zone", practiceroomService.getZoneDetailByRoom(roomNo));
@@ -75,7 +75,7 @@ public class PracticeroomController {
     @GetMapping("/practice4_wish")
     public String favoritesList(Model model, HttpSession session) {
         UserVO authUser = (UserVO) session.getAttribute("authUser");
-        if (authUser == null) return "redirect:/onespace/loginForm";
+        if (authUser == null) return "redirect:/user/loginForm";
 
         int userNo = authUser.getUserNo();
         model.addAttribute("favoriteSpaces", practiceroomService.getFavoriteSpaces(userNo));

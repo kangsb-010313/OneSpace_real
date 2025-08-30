@@ -1,4 +1,10 @@
 /* practice4-list.css */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;  /* 브라우저 중앙 정렬 */
+}
+
 .zzim .two-col {
     display: flex;
     width: 100%;
@@ -149,8 +155,9 @@
 .zzim .cta-row {
     display: flex;
     gap: 12px;
-    margin: 10px 0 24px;
+    margin: 10px auto 24px;
     justify-content: center;
+    margin-left: 300px;
 }
 
 .zzim .cta-row .btn-primary {
@@ -382,6 +389,11 @@
     padding: 10px 0;
     font-weight: 700;
 }
+
+.zzim .btn-primary:hover {
+    background: #5e36c8; /* hover 시 살짝 어둡게 */
+}
+
 
 .zzim .btn-pill {
     width: 120px;
