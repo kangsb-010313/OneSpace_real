@@ -21,7 +21,7 @@ public class MainController {
 	public String main() {
 		System.out.println("MainController.main()테스트");
 		
-		return "main/main";
+		return "practiceroom/practice1_main";
 	}
 	
 
