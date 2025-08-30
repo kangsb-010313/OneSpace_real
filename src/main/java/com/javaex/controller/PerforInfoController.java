@@ -72,7 +72,7 @@ public class PerforInfoController {
         return "redirect:/perfoinfo/view?no=" + postNo;
     }
     
-    /* ========== 수정 ========== */
+    /* +========== 수정 ==========+ */
     /** 수정 폼 */
     @GetMapping("/modifyForm")
     public String modifyForm(@RequestParam("no") long no, Model model, HttpSession session) {
