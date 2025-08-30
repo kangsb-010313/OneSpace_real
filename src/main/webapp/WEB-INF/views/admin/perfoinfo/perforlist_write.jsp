@@ -18,7 +18,7 @@
       <section class="write-container">
         <div class="write-inner">
 
-          <c:set var="isEdit" value="${mode eq 'edit'}"/>
+          <c:set var="isEdit" value="${mode eq 'edit'}"/> 
           <c:choose>
             <c:when test="${isEdit}">
               <c:url var="formAction" value="/perfoinfo/modify"/>
