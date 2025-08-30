@@ -1,56 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.javaex.repository.PrideRepository">
 
-  <!-- 리스트: 모든 posts 노출 (타입 필터 없음) -->
-  <select id="selectPridePage" resultType="com.javaex.vo.PrideVO">
+  <!-- 목록 -->
+  <select id="selectPrideCards" resultType="com.javaex.vo.PrideVO">
     SELECT
-      p.teamPostNo     AS teamPostNo,
-      p.teamNo         AS teamNo,
-      p.teamPostType   AS teamPostType,
-      p.teamPostTitle  AS teamPostTitle,
-      p.teamContent    AS teamContent,
-      p.teamWriteDate  AS teamWriteDate,
-      p.teamUpdateDate AS teamUpdateDate,
-      t.teamName       AS teamName,
-      t.instaAccount   AS instaAccount
+      p.teamPostNo      AS teamPostNo,
+      p.teamNo          AS teamNo,
+      p.teamPostTitle   AS teamPostTitle,
+      p.teamContent     AS teamContent,
+      t.teamName        AS teamName,
+      COALESCE(t.instaAccount, '') AS instaAccount
     FROM posts p
     LEFT JOIN teams t ON t.teamNo = p.teamNo
-    ORDER BY p.teamWriteDate DESC, p.teamPostNo DESC
-    LIMIT #{size} OFFSET #{offset}
+    WHERE p.teamPostType = #{teamPostType}
+    ORDER BY p.teamPostNo DESC
+    LIMIT #{limit} OFFSET #{offset}
   </select>
 
-  <!-- 총 개수: 필터 없음 -->
-  <select id="countPride" resultType="long">
-    SELECT COUNT(*) FROM posts
+  <!-- 총 개수 -->
+  <select id="countPride" resultType="int">
+    SELECT COUNT(*)
+    FROM posts p
+    WHERE p.teamPostType = #{teamPostType}
   </select>
 
-  <!-- 상세: 필터 없음 (리스트가 필터 없으니 상세도 맞춰줌) -->
-  <select id="selectPrideOne" resultType="com.javaex.vo.PrideVO">
+  <!-- 상세 -->
+  <select id="selectPrideDetail" resultType="com.javaex.vo.PrideVO">
     SELECT
-      p.teamPostNo     AS teamPostNo,
-      p.teamNo         AS teamNo,
-      p.teamPostType   AS teamPostType,
-      p.teamPostTitle  AS teamPostTitle,
-      p.teamContent    AS teamContent,
-      p.teamWriteDate  AS teamWriteDate,
-      p.teamUpdateDate AS teamUpdateDate,
-      t.teamName       AS teamName,
-      t.instaAccount   AS instaAccount
+      p.teamPostNo      AS teamPostNo,
+      p.teamNo          AS teamNo,
+      p.teamPostTitle   AS teamPostTitle,
+      p.teamContent     AS teamContent,
+      p.teamWriteDate   AS teamWriteDate,
+      p.teamUpdateDate  AS teamUpdateDate,
+      t.teamName        AS teamName,
+      t.instaAccount    AS instaAccount
     FROM posts p
     LEFT JOIN teams t ON t.teamNo = p.teamNo
-    WHERE p.teamPostNo = #{teamPostNo}
+    WHERE p.teamPostType = #{teamPostType}
+      AND p.teamPostNo = #{id}
+    LIMIT 1
   </select>
-
-  <!-- INSERT: 팀자랑 글은 타입을 TEAM_PRIDE로 고정 -->
-  <insert id="insertPride" parameterType="com.javaex.vo.PrideVO"
-          useGeneratedKeys="true" keyProperty="teamPostNo">
-    INSERT INTO posts (
-      teamNo, userNo, teamPostType, teamPostTitle, teamContent, teamWriteDate
-    ) VALUES (
-      #{teamNo}, #{userNo}, 'TEAM_PRIDE', #{teamPostTitle}, #{teamContent}, NOW()
-    )
-  </insert>
+ <!-- PrideRepository.xml -->
+<select id="selectPrideImages" resultType="string">
+  SELECT CONCAT('/upload/', teamFilePath, '/', teamStoredFileName) AS url
+  FROM teamAttachments
+  WHERE postNo = #{id}
+  ORDER BY teamFileNo ASC
+</select>
 
 </mapper>

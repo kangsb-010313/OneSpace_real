@@ -8,9 +8,9 @@
     <head>
         <meta charset="UTF-8">
         <title>원스페이스-팀자랑</title>
-        <link rel="stylesheet" href="../../assets/css/reset.css">
-        <link rel="stylesheet" href="../../assets/css/basicdefault.css">
-        <link rel="stylesheet" href="../../assets/css/pridepage.css">
+        <link rel="stylesheet" href="<c:url value='/assets/css/reset.css'/>">
+        <link rel="stylesheet" href="<c:url value='/assets/css/basicdefault.css'/>">
+        <link rel="stylesheet" href="<c:url value='/assets/css/pridepage.css'/>">
     </head>
 
     <body>
@@ -25,55 +25,46 @@
 
 
             <!-- 컨텐츠 영역---------------------------------------------- -->
-            <main>
-                <div class="container">
-
-                  <section class="pride-detail">
-                <h1 class="page-title">팀 자랑</h1>
-
-                <!-- 글제목/정보 -->
-                
-                <div class="post-meta">
-                <div class="post-title">
-                    <span class="post-label-title">제목</span>
-                    <span class="post-value-title">원밀리언 연습 후기</span>
-                    <span></span>
-                </div>
-
-                <div class="post-team">
-                    <span class="post-label-team">작성팀</span>
-                    <span class="post-value-team">팀 원밀리언 <span class="team-id">@1milliondance</span></span>
-                    <span></span>
-                </div>
-
-                <div class="post-date">
-                    <span class="post-label-date">작성일</span>
-                    <span class="post-value-date">2025-08-01</span>
-                    <span></span>
-                </div>
-                </div>
-                <!--사진-->
-                <div class="media-grid">
-                    <img src="../../assets/images/팀자랑사진01.jpg" alt="사진1">
-                    <img src="../../assets/images/팀자랑사진02.jpg" alt="사진2">
-                    <img src="../../assets/images/팀자랑사진03.jpg" alt="사진2">
-                    
-                </div>
-
-                <!-- 본문 -->
-                <div class="post-body">
-                    <p>
-                    홍대 N 스튜디오 연습실 조명이 좋아서 어떤 동영상도 예쁘게 나와요!<br>
-                    이번에도 3인팀으로 모여서 춤 연습과 준비 중이에요! 많은 관심 부탁드려요!<br>
-                    자세한 내용은 인스타그램의 공식계정을 확인해주세요 :)
-                    </p>
-                </div>
-                </section>  
-
-                </div>
-                <!-- container -->
-
-            </main>
+		    <main>
+		    <div class="container">
+		      <section class="pride-detail">
+		        <h1 class="page-title">팀 자랑</h1>
+		
+		        <div class="post-meta">
+		          <div class="post-title">
+		            <span class="post-label-title">제목</span>
+		            <span class="post-value-title"><c:out value="${pride.teamPostTitle}"/></span>
+		          </div>
+		
+		          <div class="post-team">
+		            <span class="post-label-team">작성팀</span>
+		            <span class="post-value-team">
+		              <c:out value="${pride.teamName}"/>
+		              <span class="team-id">@<c:out value="${pride.instaAccount}"/></span>
+		            </span>
+		          </div>
+		
+		          <div class="post-date">
+		            <span class="post-label-date">작성일</span>
+		            <span class="post-value-date"><c:out value="${pride.teamWriteDate}"/></span>
+		          </div>
+		        </div>
+		        
+		        <div class="media-grid">
+            <c:forEach var="img" items="${images}">
+              <img loading="lazy" src="<c:url value='${img}'/>" alt="첨부 이미지">
+            </c:forEach>
+            <c:if test="${empty images}">
+              <img src="<c:url value='/assets/images/default_team.jpg'/>" alt="기본 이미지">
+            </c:if>
+          </div>
+		
+		        <div class="post-body">
+		          <c:out value="${pride.teamContent}"/>
+		        </div>
+		      </section>
+		    </div>
+		  </main>
             <!-- /컨텐츠 영역---------------------------------------------- -->
 
 
