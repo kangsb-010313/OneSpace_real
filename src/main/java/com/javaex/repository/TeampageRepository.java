@@ -133,6 +133,14 @@ public class TeampageRepository {
         return post;
     }
     
+    
+    // 여러 개의 첨부파일 번호를 리스트로 받아 한 번에 삭제
+    public int deleteAttachmentsByNos(List<Integer> fileNos) {
+        System.out.println("TeampageRepository.deleteAttachmentsByNos() for " + fileNos.size() + " files.");
+        // sqlSession.delete()를 호출하여 mybatis 쿼리를 실행합니다.
+        return sqlSession.delete("teampage.deleteAttachmentsByNos", fileNos);
+    }
+    
     /**
      * 투표 만들기 폼에 필요한 후보 목록을 조회합니다.
      * (아직 게시물로 등록되지 않은, 사용자의 투표 후보 목록)

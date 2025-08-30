@@ -226,6 +226,15 @@
 	        where postNo = #{postNo}
 	    ]]>
 	</delete>
+	
+	<!-- 여러 개의 첨부파일 번호를 리스트로 받아 삭제하는 쿼리 -->
+	<delete id="deleteAttachmentsByNos" parameterType="java.util.List">
+	    delete from teamAttachments
+	    where teamFileNo IN
+	    <foreach item="fileNo" collection="list" open="(" separator="," close=")">
+	        #{fileNo}
+	    </foreach>
+	</delete>
     
     <!-- ==================== 찜리스트 -> 투표 기능 관련 쿼리 ==================== -->
     

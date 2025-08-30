@@ -234,10 +234,43 @@ public class TeampageService {
     }
 	
     // -- 팀페이지 등록글 수정 처리
-    public int exeModify(TeamPostVO teamPostVO) {
+//    public int exeModify(TeamPostVO teamPostVO) {
+//        System.out.println("TeampageService.exeModify()");
+//        int count = teampageRepository.teampageUpdate(teamPostVO);
+//        return count;
+//    }
+    
+ // -- 팀페이지 등록글 수정 처리
+    @Transactional // 여러 DB 작업을 하므로 트랜잭션 처리 필수
+    public void exeModify(TeamPostVO teamPostVO, List<Integer> deletedFileNos) { // 파라미터 추가
         System.out.println("TeampageService.exeModify()");
-        int count = teampageRepository.teampageUpdate(teamPostVO);
-        return count;
+
+        // 1. 삭제하기로 선택한 기존 첨부파일들을 DB에서 삭제
+        if (deletedFileNos != null && !deletedFileNos.isEmpty()) {
+            teampageRepository.deleteAttachmentsByNos(deletedFileNos);
+        }
+        
+        // 2. 게시글의 텍스트 정보(제목, 내용 등) 업데이트
+        teampageRepository.teampageUpdate(teamPostVO);
+
+        // 3. 새로 추가된 파일이 있다면 저장 (exeAdd의 로직 재사용)
+        MultipartFile[] newFiles = teamPostVO.getFiles();
+        if (newFiles != null && !newFiles[0].getOriginalFilename().isEmpty()) {
+            for (MultipartFile file : newFiles) {
+                Map<String, Object> fileInfo = attachService.saveFile(file);
+
+                if (fileInfo != null) {
+                    TeamAttachmentsVO attachmentVO = new TeamAttachmentsVO();
+                    attachmentVO.setPostNo(teamPostVO.getTeamPostNo()); // 현재 수정 중인 게시글 번호
+                    attachmentVO.setTeamOriginFileName((String) fileInfo.get("orgName"));
+                    attachmentVO.setTeamStoredFileName((String) fileInfo.get("saveName"));
+                    attachmentVO.setTeamFilePath((String) fileInfo.get("filePath"));
+                    attachmentVO.setTeamFileSize((Long) fileInfo.get("fileSize"));
+
+                    teampageRepository.insertAttachment(attachmentVO);
+                }
+            }
+        }
     }
     
     

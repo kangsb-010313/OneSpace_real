@@ -30,6 +30,13 @@
         </c:otherwise>
     </c:choose>
     
+    <style>
+        #unified-preview-zone { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; padding: 10px;  min-height: 140px; }
+        .file-item { position: relative; width: 150px; height: 150px; }
+        .file-item img { width: 100%; height: 100%; object-fit: cover; }
+        .delete-btn { position: absolute; top: 5px; right: 5px; cursor: pointer; background: rgba(255, 0, 0, 0.7); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; line-height: 20px; }
+    </style>
+    
 </head>
 
 <body>
@@ -147,7 +154,6 @@
 								                            <div class="vote-item-card">
 								                                <%-- 이미지: candidate 변수의 picturesNo 필드를 사용 --%>
 								                                <img src="${pageContext.request.contextPath}/uploads/${candidate['picturesNo']}" alt="후보 이미지">
-								                                <p>이미지 URL: ${pageContext.request.contextPath}/uploads/${candidate['picturesNo']}</p>
 								                                <div class="card-content-wrapper">
 								                                    <div class="card-main-info">
 								                                        <div class="info-left">
@@ -192,14 +198,14 @@
                                     <div class="content-header">
                                         <label for="post-content">글내용</label>
                                         <div class="file-attach-section">
-                                            <label for="file-upload" class="btn-file-attach">파일첨부</label>
-                                            <input type="file" id="file-upload" name="files" multiple="multiple" >
+                                            <label for="files-input" class="btn-file-attach">파일첨부</label>
                                         </div>
                                     </div>
                                     
                                     <div class="content-box">
                                         <textarea id="post-content" name="teamContent" placeholder="내용을 입력하세요"></textarea>
-                                        <div id="file-preview-zone"></div>
+                                        <input type="file" id="files-input" name="files" multiple style="display: none;">
+                                        <div id="unified-preview-zone"></div>
                                     </div>
                                 </div>
 
@@ -224,31 +230,60 @@
     <!-- 파일 미리보기 -->
 	<script>
 	    document.addEventListener('DOMContentLoaded', function() {
-	        const fileInput = document.getElementById('file-upload');
-	        const previewZone = document.getElementById('file-preview-zone');
+	        const filesInput = document.getElementById('files-input');
+	        const previewZone = document.getElementById('unified-preview-zone');
 	
-	        if (fileInput && previewZone) {
-	            fileInput.addEventListener('change', function(event) {
-	                const files = event.target.files;
-	                previewZone.innerHTML = ""; // 기존 미리보기 지우기
+	        filesInput.addEventListener('change', function(event) {
+	            renderPreviews();
+	        });
 	
-	                Array.from(files).forEach(file => {
-	                    if (file.type.startsWith('image/')) {
-	                        const reader = new FileReader();
-	                        reader.onload = function(e) {
-	                            const img = document.createElement('img');
-	                            img.src = e.target.result;
-	                            img.style.maxWidth = '120px';
-	                            img.style.maxHeight = '120px';
-	                            img.style.margin = '5px';
-	                            previewZone.appendChild(img);
-	                        };
-	                        reader.readAsDataURL(file);
+	        previewZone.addEventListener('click', function(event) {
+	            if (event.target.classList.contains('delete-btn')) {
+	                const button = event.target;
+	                const fileNameToRemove = button.dataset.filename;
+	                const dt = new DataTransfer();
+	                const { files } = filesInput;
+	
+	                for (let i = 0; i < files.length; i++) {
+	                    if (files[i].name !== fileNameToRemove) {
+	                        dt.items.add(files[i]);
 	                    }
-	                });
+	                }
+	                
+	                filesInput.files = dt.files;
+	                renderPreviews();
+	            }
+	        });
+	
+	        function renderPreviews() {
+	            previewZone.innerHTML = ''; // 미리보기 영역을 항상 비우고 다시 그림
+	            
+	            const { files } = filesInput;
+	            Array.from(files).forEach(file => {
+	                if (file.type.startsWith('image/')) {
+	                    const reader = new FileReader();
+	                    reader.onload = function(e) {
+	                        const fileItem = document.createElement('div');
+	                        fileItem.className = 'file-item';
+	                        
+	                        const img = document.createElement('img');
+	                        img.src = e.target.result;
+	                        
+	                        const deleteBtn = document.createElement('button');
+	                        deleteBtn.type = 'button';
+	                        deleteBtn.className = 'delete-btn';
+	                        deleteBtn.textContent = 'X';
+	                        deleteBtn.dataset.filename = file.name;
+	
+	                        fileItem.appendChild(img);
+	                        fileItem.appendChild(deleteBtn);
+	                        previewZone.appendChild(fileItem);
+	                    };
+	                    reader.readAsDataURL(file);
+	                }
 	            });
 	        }
 	    });
-	</script>
+    </script>
 </body>
 </html>

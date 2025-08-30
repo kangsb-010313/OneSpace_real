@@ -409,8 +409,10 @@ public class TeampageController {
     @RequestMapping(value="/teams/{teamNo}/posts/modify", method= {RequestMethod.GET, RequestMethod.POST}) // 수정 처리는 POST로 받음
     public String modify(@PathVariable("teamNo") int teamNo,
                          TeamPostVO teamPostVO, // 폼에서 넘어온 데이터 (teamPostNo, teamPostType, teamPostTitle, teamContent)
+                         @RequestParam(value="deletedFileNos", required=false) List<Integer> deletedFileNos,
                          HttpSession session) {
         System.out.println("TeampageController.modify()");
+        System.out.println("삭제할 파일 번호: " + deletedFileNos); // 삭제할 파일 번호 넘어오는지 확인
 
         // 로그인 체크 (필수)
         UserVO authUser = (UserVO)session.getAttribute("authUser");
@@ -423,8 +425,9 @@ public class TeampageController {
         
         // teamNo 설정
         teamPostVO.setTeamNo(teamNo);
-
-        teampageService.exeModify(teamPostVO); // 서비스 호출하여 DB 업데이트
+        
+        // 서비스 호출 시 삭제할 파일 목록도 함께 전달
+        teampageService.exeModify(teamPostVO, deletedFileNos); 
 
         // 수정 후 해당 게시글 상세 페이지로 리다이렉트
         return "redirect:/team/teams/" + teamNo + "/posts/" + teamPostVO.getTeamPostNo();
