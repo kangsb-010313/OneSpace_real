@@ -53,8 +53,8 @@
 
                             <div id="team-search-voting">
                                 <div class="team-schedule-search-box">
-                                    <form class="team-schedule-search-form">
-                                        <input type="text" placeholder="검색어를 입력해주세요." class="team-schedule-input">
+                                    <form class="team-schedule-search-form" method="get" action="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/list">
+                                        <input type="text" name="keyword" placeholder="검색어를 입력해주세요." class="team-schedule-input">
                                         <button type="submit" class="team-schedule-btn">검색</button>
                                     </form>
                                 </div>
@@ -81,16 +81,37 @@
                                         </tr>
                                     </thead>
                                     <tbody id="post-list-body">
-	                                    <c:forEach items="${teamPostList}" var="teamPostVO">
+<%-- 	                                    <c:forEach items="${teamPostList}" var="teamPostVO">
 	                                        <tr>
-	                                            <td>${teamPostVO.teamPostType}</td> <%-- 글 종류 (카테고리) --%>
+	                                            <td>${teamPostVO.teamPostType}</td> 글 종류 (카테고리)
 	                                            <td>
-                                                    <%-- ▼▼▼▼▼ 글보기 링크 추가 ▼▼▼▼▼ --%>
+                                                    ▼▼▼▼▼ 글보기 링크 추가 ▼▼▼▼▼
                                                     <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/${teamPostVO.teamPostNo}">${teamPostVO.teamPostTitle}</a>
                                                 </td> 
-	                                            <td>${teamPostVO.teamWriteDate}</td> <%-- 작성일 --%>
+	                                            <td class="date-column">${teamPostVO.teamWriteDate}</td> 작성일
 	                                        </tr>
-	                                    </c:forEach>
+	                                    </c:forEach> --%>
+	                                    <c:choose>
+									        <%-- 1. 리스트에 내용이 있을 경우 (when) --%>
+									        <c:when test="${not empty teamPostList}">
+									            <c:forEach items="${teamPostList}" var="teamPostVO">
+									                <tr>
+									                    <td>${teamPostVO.teamPostType}</td>
+									                    <td>
+									                        <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/${teamPostVO.teamPostNo}">${teamPostVO.teamPostTitle}</a>
+									                    </td> 
+									                    <td class="date-column">${teamPostVO.teamWriteDate}</td>
+									                </tr>
+									            </c:forEach>
+									        </c:when>
+									        
+									        <%-- 2. 리스트가 비어있을 경우 (otherwise) --%>
+	                                        <c:otherwise>
+	                                            <tr>
+	                                                <td colspan="3">아직 작성된 게시글이 없습니다.</td>
+	                                            </tr>
+	                                        </c:otherwise>
+									    </c:choose>
                                     </tbody>
 
                                 </table>

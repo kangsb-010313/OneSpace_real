@@ -90,6 +90,11 @@
     text-align: right;
 }
 
+/* 맥에서 틀어지지 않게 추가 */
+.date-column {
+    white-space: nowrap; /* 이 한 줄을 추가 */
+}
+
 
 /* 페이징-더보기버튼 */
 /* '더보기' 버튼을 감싸는 컨테이너 */

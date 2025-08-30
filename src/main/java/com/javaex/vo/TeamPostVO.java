@@ -31,18 +31,22 @@ public class TeamPostVO {
 	
     // 이 게시글에 달린 첨부파일 목록을 담을 리스트
     private List<TeamAttachmentsVO> attachments;
+    
+    // 검색용 필드 추가 
+    private String keyword; // 검색어
 
 	// 기본생성자
 	public TeamPostVO() {
 	}
 	
-	public TeamPostVO(int teamPostNo, int teamNo, int userNo, String teamPostType, String teamPostTitle,
+	public TeamPostVO(int teamPostNo, int teamNo, int userNo, int voteNo, String teamPostType, String teamPostTitle,
 			String instaAccount, String teamContent, String teamWriteDate, String teamUpdateDate, String userName,
-			String teamName, int postStatus, MultipartFile[] files, List<TeamAttachmentsVO> attachments) {
+			String teamName, int postStatus, MultipartFile[] files, List<TeamAttachmentsVO> attachments, String keyword) {
 		super();
 		this.teamPostNo = teamPostNo;
 		this.teamNo = teamNo;
 		this.userNo = userNo;
+		this.voteNo = voteNo;
 		this.teamPostType = teamPostType;
 		this.teamPostTitle = teamPostTitle;
 		this.instaAccount = instaAccount;
@@ -54,7 +58,10 @@ public class TeamPostVO {
 		this.postStatus = postStatus;
 		this.files = files;
 		this.attachments = attachments;
+		this.keyword = keyword;
 	}
+
+
 
 
 
@@ -180,7 +187,17 @@ public class TeamPostVO {
 	public void setPostStatus(int postStatus) {
 		this.postStatus = postStatus;
 	}
+	
+	public String getKeyword() {
+		return keyword;
+	}
 
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+	
+	
+	// 메소드 일반
 	@Override
 	public String toString() {
 		return "TeamPostVO [teamPostNo=" + teamPostNo + ", teamNo=" + teamNo + ", userNo=" + userNo + ", voteNo="
@@ -188,13 +205,8 @@ public class TeamPostVO {
 				+ instaAccount + ", teamContent=" + teamContent + ", teamWriteDate=" + teamWriteDate
 				+ ", teamUpdateDate=" + teamUpdateDate + ", userName=" + userName + ", teamName=" + teamName
 				+ ", postStatus=" + postStatus + ", files=" + Arrays.toString(files) + ", attachments=" + attachments
-				+ "]";
+				+ ", keyword=" + keyword + "]";
 	}
-	
-	// 메소드 일반
-
-	
-
 
 	
 }

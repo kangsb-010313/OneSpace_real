@@ -33,8 +33,8 @@
                     <div id="main-content">
                         <h2>팀 일정</h2>
                         <div class="team-schedule-search-box">
-                            <form class="team-schedule-search-form">
-                                <input type="text" placeholder="검색어를 입력해주세요." class="team-schedule-input">
+                            <form class="team-schedule-search-form" method="get" action="${pageContext.request.contextPath}/team/teammain">
+                                <input type="text" name="keyword" placeholder="검색어를 입력해주세요." class="team-schedule-input">
                                 <button type="submit" class="team-schedule-btn">검색</button>
                             </form>
                         </div>
@@ -62,7 +62,7 @@
                                                     <td>
                                                         <a href="${pageContext.request.contextPath}/team/teams/${post.teamNo}/posts/${post.teamPostNo}">${post.teamPostTitle}</a>
                                                     </td>
-                                                    <td>${post.teamWriteDate}</td>
+                                                    <td class="date-column">${post.teamWriteDate}</td>
                                                 </tr>
                                             </c:forEach>
                                         </c:when>

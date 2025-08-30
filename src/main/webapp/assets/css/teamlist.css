@@ -157,6 +157,11 @@
     text-align: right;
 }
 
+/* 맥에서 틀어지지 않게 추가 */
+.date-column {
+    white-space: nowrap; /* 이 한 줄을 추가 */
+}
+
 /* 버튼 영역 */
 .btn-area {
     margin-top: 15px;

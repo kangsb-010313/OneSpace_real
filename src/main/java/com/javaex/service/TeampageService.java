@@ -93,11 +93,15 @@ public class TeampageService {
      * @param userNo 유저의 고유 번호
      * @return 게시글 정보(TeamPostVO) 리스트
      */
-    public List<TeamPostVO> exeGetAllUserPosts(int userNo) {
+//    public List<TeamPostVO> exeGetAllUserPosts(int userNo) {
+//        System.out.println("TeampageService.exeGetAllUserPosts()");
+//        return teampageRepository.selectPostsByUserTeams(userNo);
+//    }
+    // 로그인 유저가 속한 모든 팀의 게시글 가져오기
+    public List<TeamPostVO> exeGetAllUserPosts(TeamPostVO teamPostVO) { // 파라미터 변경
         System.out.println("TeampageService.exeGetAllUserPosts()");
-        return teampageRepository.selectPostsByUserTeams(userNo);
-    }
-    
+        return teampageRepository.selectPostsByUserTeams(teamPostVO); // 객체 전달
+    }    
     
 	
     // --팀페이지 전체 리스트 (특정 팀의 리스트)
@@ -106,13 +110,18 @@ public class TeampageService {
 	 * @param teamNo 조회할 팀의 고유 번호
 	 * @return 게시글 정보(TeamPostVO) 리스트
 	 */
-    public List<TeamPostVO> exeListByTeam(int teamNo){
-    	
+//    public List<TeamPostVO> exeListByTeam(int teamNo){
+//    	
+//        System.out.println("TeampageService.exeListByTeam()");
+//        
+//        List<TeamPostVO> teamPostList = teampageRepository.teampageSelectListByTeamNo(teamNo);
+//        
+//        return teamPostList;
+//    }
+    // 특정 팀의 리스트
+    public List<TeamPostVO> exeListByTeam(TeamPostVO teamPostVO){ // 파라미터 변경
         System.out.println("TeampageService.exeListByTeam()");
-        
-        List<TeamPostVO> teamPostList = teampageRepository.teampageSelectListByTeamNo(teamNo);
-        
-        return teamPostList;
+        return teampageRepository.teampageSelectListByTeamNo(teamPostVO); // 객체 전달
     }
 	
 	
@@ -123,14 +132,14 @@ public class TeampageService {
 	 * @param voteNoList '투표' 글일 경우, 등록할 후보들의 고유 번호 리스트
 	 */
     @Transactional
-    public void exeAdd(TeamPostVO teamPostVO, List<Integer> voteNoList) { // 반환타입을 void로 변경-> 리턴 안 시켜줘도 됨
+    public int exeAdd(TeamPostVO teamPostVO, List<Integer> voteNoList) { // 반환타입을 void로 변경-> 리턴 안 시켜줘도 됨
         System.out.println("TeampageService.exeAdd()");
 
         // 1. 게시글 정보 저장 (posts 테이블)
         teampageRepository.teampageInsert(teamPostVO); 
 
-        // 2. 방금 저장한 게시글의 번호(PK)를 다시 조회해서 가져오기
-        int postNo = teampageRepository.selectLastPostNo(teamPostVO.getUserNo());
+        // 2. XML 수정으로 인해 이제 teamPostVO에서 바로 PK값을 가져올 수 있음 (더 안정적인 방식)
+        int postNo = teamPostVO.getTeamPostNo();
         System.out.println("방금 저장된 게시글의 번호는: " + postNo);
         
         if ("투표".equals(teamPostVO.getTeamPostType()) && voteNoList != null && !voteNoList.isEmpty()) {
@@ -165,6 +174,8 @@ public class TeampageService {
                 }
             }
         }
+        
+        return postNo; 
     }
     
     // --팀페이지 등록 글 보기
