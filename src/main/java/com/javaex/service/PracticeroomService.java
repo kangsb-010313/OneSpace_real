@@ -161,4 +161,10 @@ public class PracticeroomService {
             ? Map.of("success", true, "message", "후보가 삭제되었습니다.")
             : Map.of("success", false, "message", "후보 삭제 실패");
     }
+    
+    // 검색
+    public List<SpacesVO> searchSpaces(String keyword) {
+        return practiceroomRepository.searchSpaces(keyword);
+    }
+    
 }

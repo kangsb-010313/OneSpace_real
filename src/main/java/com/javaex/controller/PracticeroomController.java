@@ -123,5 +123,12 @@ public class PracticeroomController {
     public Map<String, Object> removeVoteOption(@RequestParam long reservationNo, HttpSession session) {
         return practiceroomService.removeVoteOption(reservationNo, session);
     }
+    
+    // 검색
+    @GetMapping("/api/search")
+    @ResponseBody
+    public List<SpacesVO> search(@RequestParam String keyword) {
+        return practiceroomService.searchSpaces(keyword);
+    }
 	
 }

@@ -38,7 +38,8 @@
 						
 						<!-- 검색/필터 영역 -->
                         <div class="search-row">
-                            <input class="search-hash" type="text" placeholder="#찾는 공간이 있나요?" />
+                            <input id="searchInput" class="search-hash" type="text" placeholder="#찾는 공간이 있나요?" />
+                            <!-- 
                             <div class="filter-select-group">
                                 <select class="custom-select">
                                     <option>지역</option>
@@ -52,6 +53,7 @@
                                     <option>6~10명</option>
                                 </select>
                             </div>
+                            -->
                         </div>
 
                         <!-- 카드 그리드: DB에서 rooms 리스트 출력 -->
@@ -212,7 +214,7 @@
          	// 첫 로딩 시 1회 호출
             document.addEventListener('DOMContentLoaded', loadMore);
 			
-         	// IntersectionObserver로 sentinel 감지 → 무한 스크롤
+         	// IntersectionObserver로 sentinel 감지 -> 무한 스크롤
             const sentinel = document.getElementById('sentinel');
             const observer = new IntersectionObserver(entries => {
                 if (entries[0].isIntersecting && !loading && !done) {
@@ -220,6 +222,30 @@
                 }
             });
             if (sentinel) observer.observe(sentinel);
+        	
+            
+            // 검색
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+		    if (e.key === 'Enter') {
+		        const keyword = this.value.trim();
+		        if (keyword) {
+		            fetch(`${ctx}/practice/api/search?keyword=` + encodeURIComponent(keyword), {
+		                headers: { 'Accept': 'application/json' }
+		            })
+		            .then(res => res.json())
+		            .then(data => {
+		                console.log('[search result]', data);
+		                document.getElementById('cardList').innerHTML = ''; 
+		                appendCards(data);
+		
+		                // 검색 모드에서는 무한 스크롤 종료
+		                done = true;
+		            })
+		            .catch(err => console.error(err));
+		        }
+		    }
+		});
+            
         </script>
 
     </div>

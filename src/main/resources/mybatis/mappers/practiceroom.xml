@@ -51,6 +51,30 @@
 	  LIMIT #{offset,jdbcType=INTEGER}, #{size,jdbcType=INTEGER}
 	</select>
     
+    <!-- 연습실 검색 -->
+	<select id="searchSpaces" parameterType="string" resultType="com.javaex.vo.SpacesVO">
+	  SELECT
+	    spacesNo,
+	    userNo,
+	    spaceName,
+	    spaceSummary,
+	    spaceInfo,
+	    email,
+	    phone,
+	    tel,
+	    spaceLink,
+	    repImg,
+	    postCode,
+	    address,
+	    addressDetail,
+	    instDtm,
+	    updtDtm
+	  FROM spaces
+	  WHERE spaceName LIKE #{_parameter}
+	     OR spaceSummary LIKE #{_parameter}
+	  ORDER BY spacesNo DESC
+	</select>
+	
     <!-- 공간 상세 조회 -->
     <select id="selectZoneDetail" parameterType="long" resultType="com.javaex.vo.SpacesVO">
         SELECT

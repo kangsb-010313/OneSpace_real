@@ -137,4 +137,9 @@ public class PracticeroomRepository {
         return rows == 1;
     }
     
+    // 검색
+    public List<SpacesVO> searchSpaces(String keyword) {
+        return sqlSession.selectList("practiceroom.searchSpaces", "%" + keyword + "%");
+    }	
+    
 }
