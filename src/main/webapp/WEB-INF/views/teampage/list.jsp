@@ -81,16 +81,6 @@
                                         </tr>
                                     </thead>
                                     <tbody id="post-list-body">
-<%-- 	                                    <c:forEach items="${teamPostList}" var="teamPostVO">
-	                                        <tr>
-	                                            <td>${teamPostVO.teamPostType}</td> 글 종류 (카테고리)
-	                                            <td>
-                                                    ▼▼▼▼▼ 글보기 링크 추가 ▼▼▼▼▼
-                                                    <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/${teamPostVO.teamPostNo}">${teamPostVO.teamPostTitle}</a>
-                                                </td> 
-	                                            <td class="date-column">${teamPostVO.teamWriteDate}</td> 작성일
-	                                        </tr>
-	                                    </c:forEach> --%>
 	                                    <c:choose>
 									        <%-- 1. 리스트에 내용이 있을 경우 (when) --%>
 									        <c:when test="${not empty teamPostList}">

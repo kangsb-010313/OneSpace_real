@@ -71,14 +71,10 @@ public class TeampageRepository {
         return sqlSession.selectList("teampage.selectTeamsByUserNo", userNo);
     }
     
-    // -- 유저 번호로 해당 유저가 속한 모든 팀의 게시물 조회
-//    public List<TeamPostVO> selectPostsByUserTeams(int userNo) {
-//        System.out.println("TeampageRepository.selectPostsByUserTeams()");
-//        return sqlSession.selectList("teampage.selectPostsByUserTeams", userNo);
-//    }
     // 유저가 속한 모든 팀의 게시물 조회
     public List<TeamPostVO> selectPostsByUserTeams(TeamPostVO teamPostVO) { // 파라미터 변경
         System.out.println("TeampageRepository.selectPostsByUserTeams()");
+        
         return sqlSession.selectList("teampage.selectPostsByUserTeams", teamPostVO); // 객체 전달
     }
     
@@ -89,15 +85,6 @@ public class TeampageRepository {
 	 * @param teamNo 조회할 팀의 고유 번호
 	 * @return 게시글 정보(TeamPostVO) 리스트
 	 */
-//    public List<TeamPostVO> teampageSelectListByTeamNo(int teamNo){
-//    	
-//        System.out.println("TeampageRepository.teampageSelectListByTeamNo()");
-//        
-//        // teamNo를 파라미터로 전달
-//        List<TeamPostVO> teamPostList = sqlSession.selectList("teampage.selectListByTeamNo", teamNo);
-//        
-//        return teamPostList;
-//    }
     // 특정 팀의 모든 게시글 조회
     public List<TeamPostVO> teampageSelectListByTeamNo(TeamPostVO teamPostVO){ // 파라미터 변경
         System.out.println("TeampageRepository.teampageSelectListByTeamNo()");

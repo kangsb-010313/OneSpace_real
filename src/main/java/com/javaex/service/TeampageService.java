@@ -93,13 +93,10 @@ public class TeampageService {
      * @param userNo 유저의 고유 번호
      * @return 게시글 정보(TeamPostVO) 리스트
      */
-//    public List<TeamPostVO> exeGetAllUserPosts(int userNo) {
-//        System.out.println("TeampageService.exeGetAllUserPosts()");
-//        return teampageRepository.selectPostsByUserTeams(userNo);
-//    }
     // 로그인 유저가 속한 모든 팀의 게시글 가져오기
     public List<TeamPostVO> exeGetAllUserPosts(TeamPostVO teamPostVO) { // 파라미터 변경
         System.out.println("TeampageService.exeGetAllUserPosts()");
+        
         return teampageRepository.selectPostsByUserTeams(teamPostVO); // 객체 전달
     }    
     
@@ -110,17 +107,10 @@ public class TeampageService {
 	 * @param teamNo 조회할 팀의 고유 번호
 	 * @return 게시글 정보(TeamPostVO) 리스트
 	 */
-//    public List<TeamPostVO> exeListByTeam(int teamNo){
-//    	
-//        System.out.println("TeampageService.exeListByTeam()");
-//        
-//        List<TeamPostVO> teamPostList = teampageRepository.teampageSelectListByTeamNo(teamNo);
-//        
-//        return teamPostList;
-//    }
     // 특정 팀의 리스트
     public List<TeamPostVO> exeListByTeam(TeamPostVO teamPostVO){ // 파라미터 변경
         System.out.println("TeampageService.exeListByTeam()");
+        
         return teampageRepository.teampageSelectListByTeamNo(teamPostVO); // 객체 전달
     }
 	

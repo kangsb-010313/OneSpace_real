@@ -47,31 +47,6 @@ public class TeampageController {
 	 * @param model   View로 데이터를 전달하기 위한 모델
 	 * @return "teampage/teammain" 팀 메인 페이지 경로
 	 */
-//    @RequestMapping(value="/teammain", method= {RequestMethod.GET, RequestMethod.POST})
-//    public String teamMain(HttpSession session, Model model) {
-//        System.out.println("TeampageController.teamMain()");
-//        
-//        // 1. 로그인 체크
-//        UserVO authUser = (UserVO)session.getAttribute("authUser");
-//        if(authUser == null) {
-//            return "redirect:/user/loginForm";
-//        }
-//        
-//        int userNo = authUser.getUserNo();
-//        
-//        // 2. 서비스로부터 데이터 가져오기
-//        //   - 로그인한 유저가 속한 모든 팀 리스트 (Aside)
-//        //   - 해당 팀들의 모든 게시글 리스트 (Main Content)
-//        List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
-//        List<TeamPostVO> allPostsList = teampageService.exeGetAllUserPosts(userNo);
-//        
-//        // 3. 모델에 데이터 담기
-//        // View에 데이터 전달
-//        model.addAttribute("allTeams", userTeamList); 
-//        model.addAttribute("allPostsList", allPostsList);
-//        
-//        return "teampage/teammain";
-//    }
 	@RequestMapping(value="/teammain", method= {RequestMethod.GET, RequestMethod.POST})
 	public String teamMain(HttpSession session, Model model,
 	                       @RequestParam(value="keyword", required=false, defaultValue="") String keyword) {
@@ -158,41 +133,6 @@ public class TeampageController {
 	 * @param model   View로 데이터를 전달하기 위한 모델
 	 * @return "teampage/list" 특정 팀 게시글 리스트 페이지 경로
 	 */
-//    @RequestMapping(value="/teams/{teamNo}/posts/list", method= {RequestMethod.GET, RequestMethod.POST})
-//    public String list(@PathVariable("teamNo") int teamNo, 
-//    				   HttpSession session, 
-//    				   Model model) {
-//        System.out.println("TeampageController.list() for teamNo: " + teamNo);
-//        
-//        //로그인 체크
-//        UserVO authUser = (UserVO)session.getAttribute("authUser");
-//        if(authUser == null) {
-//            return "redirect:/user/loginForm";
-//        }
-//       
-//        // 서비스로부터 특정 팀의 게시글 목록과 팀 정보를 가져옴
-//        List<TeamPostVO> teamPostList = teampageService.exeListByTeam(teamNo);	
-//        model.addAttribute("teamPostList", teamPostList);
-//        
-//        
-//        // 특정 팀 정보 가져오기 (팀 이름 등)
-//        TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
-//        if (currentTeam != null) {
-//            model.addAttribute("teamName", currentTeam.getTeamName());
-//        } else {
-//            model.addAttribute("teamName", "알 수 없는 팀"); // 팀 정보가 없을 경우 대비
-//        }
-//        
-//        model.addAttribute("teamNo", teamNo); // 현재 보고 있는 팀의 teamNo를 JSP로 전달
-//        
-//        // 사이드바를 위한 유저의 전체 팀 목록
-//        int userNo = authUser.getUserNo();
-//        List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
-//        model.addAttribute("allTeams", userTeamList); 
-//
-//        return "teampage/list"; 
-//    }
-	
     @RequestMapping(value="/teams/{teamNo}/posts/list", method= {RequestMethod.GET, RequestMethod.POST})
     public String list(@PathVariable("teamNo") int teamNo, 
     				   @RequestParam(value="keyword", required=false, defaultValue="") String keyword,
