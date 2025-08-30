@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="com.javaex.repository.PrideRepository">
 
-  <!-- 팀자랑 목록 (posts + teams 조인) -->
+  <!-- 리스트: 모든 posts 노출 (타입 필터 없음) -->
   <select id="selectPridePage" resultType="com.javaex.vo.PrideVO">
     SELECT
       p.teamPostNo     AS teamPostNo,
@@ -18,19 +17,16 @@
       t.instaAccount   AS instaAccount
     FROM posts p
     LEFT JOIN teams t ON t.teamNo = p.teamNo
-    WHERE p.teamPostType = 'TEAM_PRIDE'
-    ORDER BY p.teamPostNo DESC
+    ORDER BY p.teamWriteDate DESC, p.teamPostNo DESC
     LIMIT #{size} OFFSET #{offset}
   </select>
 
-  <!-- 팀자랑 총 개수 -->
+  <!-- 총 개수: 필터 없음 -->
   <select id="countPride" resultType="long">
-    SELECT COUNT(*)
-    FROM posts
-    WHERE teamPostType = 'TEAM_PRIDE'
+    SELECT COUNT(*) FROM posts
   </select>
 
-  <!-- 팀자랑 상세 조회 -->
+  <!-- 상세: 필터 없음 (리스트가 필터 없으니 상세도 맞춰줌) -->
   <select id="selectPrideOne" resultType="com.javaex.vo.PrideVO">
     SELECT
       p.teamPostNo     AS teamPostNo,
@@ -45,14 +41,16 @@
     FROM posts p
     LEFT JOIN teams t ON t.teamNo = p.teamNo
     WHERE p.teamPostNo = #{teamPostNo}
-      AND p.teamPostType = 'TEAM_PRIDE'
   </select>
 
-  <!-- 팀자랑 등록 -->
+  <!-- INSERT: 팀자랑 글은 타입을 TEAM_PRIDE로 고정 -->
   <insert id="insertPride" parameterType="com.javaex.vo.PrideVO"
           useGeneratedKeys="true" keyProperty="teamPostNo">
-    INSERT INTO posts (teamNo, teamPostType, teamPostTitle, teamContent, teamWriteDate)
-    VALUES (#{teamNo}, 'TEAM_PRIDE', #{teamPostTitle}, #{teamContent}, NOW())
+    INSERT INTO posts (
+      teamNo, userNo, teamPostType, teamPostTitle, teamContent, teamWriteDate
+    ) VALUES (
+      #{teamNo}, #{userNo}, 'TEAM_PRIDE', #{teamPostTitle}, #{teamContent}, NOW()
+    )
   </insert>
 
 </mapper>

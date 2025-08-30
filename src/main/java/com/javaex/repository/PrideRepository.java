@@ -11,18 +11,8 @@ import com.javaex.vo.PrideVO;
 public interface PrideRepository {
 
     
-     // 팀자랑 게시글 목록 조회 (페이징)
-     
-    List<PrideVO> selectPridePage(@Param("offset") int offset, @Param("size") int size); 
-    
-    //팀자랑 게시글 총 개수 조회
-    long countPride();                                                                    
-
-    
-     //특정 게시글 상세 조회
-    PrideVO selectPrideOne(@Param("teamPostNo") Long teamPostNo);                       
-
-    
-    //게시글 등록
-    int insertPride(PrideVO pride);                                                       
+	List<PrideVO> selectPridePage(@Param("offset") int offset, @Param("size") int size);
+	long countPride();
+	PrideVO selectPrideOne(@Param("teamPostNo") Long teamPostNo);
+	void insertPride(PrideVO pride);
 }
