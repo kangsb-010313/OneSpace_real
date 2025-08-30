@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping(value="/onespace")
+@RequestMapping(value="onespace")
 public class MainController {
 	
 	//필드
@@ -21,7 +21,7 @@ public class MainController {
 	public String main() {
 		System.out.println("MainController.main()테스트");
 		
-		return "practiceroom/practice1_main";
+		return "redirect:/practice/practice1_main";
 	}
 	
 
