@@ -38,34 +38,6 @@
                         
                         
                         <div id="main-content">
-                        
-                        
-                        
-                        
-<%--                             <h2>팀 등록하기</h2>
-
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   main container 안에 본인꺼 짜시면 됩니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-
-                            <!-- 팀 등록 폼 시작 -->
-                            <div class="team-registration-form">
-                                <form action="${pageContext.request.contextPath}/team/teamadd" method="get">
-                                    <div class="form-group">
-                                        <label for="team-name">팀 이름 <span class="red">*</span></label>
-                                        <input type="text" id="team-name" name="teamName" placeholder="팀 이름을 입력하세요.">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="team-insta">팀 인스타계정</label>
-                                        <input type="text" id="team-insta" name="instaAccount" placeholder="팀 인스타 계정을 첨부해주세요.">
-                                    </div>
-                                    <div class="form-actions">
-                                        <button type="submit" class="btn-submit">등록</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- 팀 등록 폼 끝 -->
-
- --%>
- 
 						     <%-- ▼▼▼ 제목 동적 변경 ▼▼▼ --%>
 						    <c:choose>
 						        <c:when test="${not empty teamVO}">
