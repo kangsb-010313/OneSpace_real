@@ -55,6 +55,13 @@ public class TeampageRepository {
         sqlSession.insert("teampage.insertTeamMember", params);
     }
     
+    //팀 정보 수정 
+    public void updateTeam(TeamVO teamVO) {
+        System.out.println("TeampageRepository.updateTeam()");
+        sqlSession.update("teampage.updateTeam", teamVO);
+    }
+
+    
     // 특정 팀에 특정 유저가 몇 명 있는지 카운트 (0 또는 1)
     public int selectMemberCount(int userNo, int teamNo) {
         System.out.println("TeampageRepository.selectMemberCount()");

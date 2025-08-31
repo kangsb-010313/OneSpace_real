@@ -74,6 +74,12 @@ public class TeampageService {
 	}
 	
 	
+	//팀 정보 수정 
+	public void exeUpdateTeam(TeamVO teamVO) {
+	    System.out.println("TeampageService.exeUpdateTeam()");
+	    teampageRepository.updateTeam(teamVO);
+	}
+
 	
 	
     // -- 로그인 유저가 속한 팀 리스트 가져오기 (for teammain aside)

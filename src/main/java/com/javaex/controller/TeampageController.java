@@ -123,6 +123,40 @@ public class TeampageController {
 	    // 팀 생성이 완료되면 방금 만든 팀의 게시글 리스트 페이지로 이동
 	    return "redirect:/team/teams/" + newTeamNo + "/posts/list";
 	}
+	
+	// -- 팀 정보 수정 폼
+	@RequestMapping(value="/teams/{teamNo}/modifyform", method=RequestMethod.GET)
+	public String teamModifyForm(@PathVariable("teamNo") int teamNo, Model model, HttpSession session) {
+	    System.out.println("TeampageController.teamModifyForm()");
+
+	    // 로그인 체크 + 팀장 권한 체크 등 필요시 추가
+
+	    // 1. 서비스에서 기존 팀 정보를 가져옴
+	    TeamVO teamVO = teampageService.exeGetTeamInfo(teamNo);
+
+	    // 2. 모델에 "teamVO" 라는 이름으로 담아서 JSP로 전달
+	    model.addAttribute("teamVO", teamVO);
+
+	    // (사이드바를 위한 로직)
+	    UserVO authUser = (UserVO)session.getAttribute("authUser");
+	    if(authUser != null) {
+	        model.addAttribute("allTeams", teampageService.exeGetUserTeams(authUser.getUserNo()));
+	    }
+
+	    // 3. 기존의 팀 등록 폼을 재사용
+	    return "teampage/teamadd"; 
+	}
+	
+	// -- 팀 정보 수정 처리
+	@RequestMapping(value="/teams/modify", method=RequestMethod.POST)
+	public String teamModify(@ModelAttribute TeamVO teamVO) { // teamNo, teamName, instaAccount가 담겨있음
+	    System.out.println("TeampageController.teamModify()");
+
+	    teampageService.exeUpdateTeam(teamVO);
+
+	    // 수정 완료 후, 해당 팀의 리스트 페이지로 리다이렉트
+	    return "redirect:/team/teams/" + teamVO.getTeamNo() + "/posts/list";
+	}
     
 	
     // --팀페이지 전체 리스트 (특정 팀의 리스트)

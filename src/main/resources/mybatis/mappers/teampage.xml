@@ -23,6 +23,14 @@
             #{userNo}     
         )
     </insert>
+    
+    <!-- 팀 정보 업데이트 -->
+	<update id="updateTeam" parameterType="com.javaex.vo.TeamVO">
+	    UPDATE teams
+	    SET teamName = #{teamName},
+	        instaAccount = #{instaAccount}
+	    WHERE teamNo = #{teamNo}
+	</update>
 
     <!-- 특정 사용자가 가장 마지막에 만든 팀의 ID(teamNo)를 조회하는 쿼리 -->
     <select id="selectNewTeamNo" parameterType="int" resultType="int">

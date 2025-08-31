@@ -42,7 +42,7 @@
                             <h2>팀 ${teamName}</h2>
 
                             <div class="team-management-links">
-                                <a href="${pageContext.request.contextPath}/team/teamaddform"><img src="${pageContext.request.contextPath}/assets/images/톱니바퀴아이콘.jpg" class="team-setting">팀관리</a>
+                                <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/modifyform"><img src="${pageContext.request.contextPath}/assets/images/톱니바퀴아이콘.jpg" class="team-setting">팀관리</a>
                                 <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/manage"><img src="${pageContext.request.contextPath}/assets/images/톱니바퀴아이콘.jpg" class="team-setting">팀원관리</a>
                             </div>
                             <!-- 일반공지/팀자랑 등록 링크 -->
