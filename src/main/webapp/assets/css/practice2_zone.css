@@ -67,12 +67,13 @@
 /* 공간 상세 */
 .zone .main-photo {
     width: 800px;
+    height: 450px;
     border-radius: 18px;
     box-shadow: 0 6px 24px rgba(229,225,250,0.44);
     object-fit: cover;
-    height: 450px;
     margin-bottom: 30px;
     margin-top: 24px;
+    display: block;
 }
 
 .zone .section-title {

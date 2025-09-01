@@ -21,6 +21,7 @@
         <main>
             <div class="container">
 				
+				<!-- 상단 타이틀 영역 -->
                 <div class="title-box">
                     <div class="spacer"></div>
                     <h2 class="page-title">${zone.spaceName}</h2>
@@ -48,6 +49,12 @@
                                                 <img class="main-photo" src="${pageContext.request.contextPath}/uploads/${zone.repImg}" alt="${zone.spaceName} 대표사진">
                                             </div>
                                         </c:when>
+                                        <c:otherwise>
+							            <!-- 이미지 없을 때도 동일한 높이의 빈 박스 -->
+							            <div class="main-photo placeholder-photo">
+							                이미지가 없습니다
+							            </div>
+							        </c:otherwise>
                                     </c:choose>
                                 </div>
                                 
@@ -119,6 +126,7 @@
                                         <div class="room-card">
                                             <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${room.roomNo}">
                                                 <div class="room-thumb-wrap">
+                                                	<%-- 방 썸네일 (대표 이미지 재사용... 이거 바꿔야하나) --%>
                                                     <img class="room-thumb" src="${pageContext.request.contextPath}/uploads/${zone.repImg}" alt="${zone.spaceName} 대표사진">
                                                     <div class="room-title">${room.roomName}</div>
                                                 </div>
@@ -133,8 +141,6 @@
                                                             ${room.area}
                                                         </div>
                                                     </div>
-                                                    <%-- 추후 찜하기/좋아요 버튼 영역 --%>
-                                                    <!-- <div class="room-like">♡<span>0</span></div> -->
                                                 </div>
                                             </a>
                                         </div>

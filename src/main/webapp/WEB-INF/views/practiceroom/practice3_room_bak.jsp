@@ -107,26 +107,12 @@
                             <div><strong>면적:</strong> ${room.area}</div>
                             
                             <div class="team-like-list" style="margin-top:12px;">
-                                <c:if test="${not empty teams}">
-                                    <c:forEach var="team" items="${teams}">
-                                        <div class="team-like-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"
-                                            data-team-id="${team.teamNo}" data-team-name="${team.teamName}">
-                                            <button class="btn-outline btn-w120" type="button" data-team-id="${team.teamNo}">
-                                                팀&nbsp<c:out value="${team.teamName}" />
-                                            </button>
-                                            <button class="btn-like" type="button"
-                                                data-room-no="${room.roomNo}"
-                                                data-team-id="${team.teamNo}"
-                                                data-team-name="${team.teamName}">
-                                                찜하기
-                                            </button>
-                                        </div>
-                                    </c:forEach>
-                                </c:if>
-                                <c:if test="${empty teams}">
-                                    <div style="color:#888;">선택 가능한 팀이 없습니다.</div>
-                                    </c:if>
-                            </div>
+							    <!-- 팀 선택 기능 제거 -->
+							    <button class="btn-like" type="button"
+							        data-room-no="${room.roomNo}">
+							        찜하기
+							    </button>
+							</div>
                         </div>
                     </div>
                 </div>
@@ -160,73 +146,53 @@
     
     // --- 찜하기 AJAX 핸들러 ---
     document.addEventListener('DOMContentLoaded', function() {
-        // ctx는 JSP 상단에서 c:set으로 선언되어 있으므로 여기서 사용
-        var ctx = '${ctx}';
-        
-        // 찜 버튼(각 팀 행 안에 있는 .btn-like[data-room-no])
-        const likeBtns = document.querySelectorAll('.btn-like[data-room-no]');
-        console.log('찜하기 버튼 개수:', likeBtns.length);
-        
-        likeBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                // 이미 처리중이면 무시
-                if (btn.disabled) return;
-                
-                // 버튼이 속한 행(row)과 팀 아이디 읽기
-                const row = btn.closest('.team-like-row');
-                const teamId = row ? row.getAttribute('data-team-id') : '';
-                const teamName = row ? (row.getAttribute('data-team-name') || (row.querySelector('.btn-outline')?.textContent.trim() || '')) : '';
-                const roomNo = btn.getAttribute('data-room-no');
-                if (!teamId) { alert('팀을 먼저 선택하거나, 팀이 존재하는지 확인하세요.'); return; }
-                if (!roomNo) { alert('roomNo가 없습니다'); return; }
-                
-                // 팀이 선택되어야 하는 로직(선택 요구하면 확인)
-                // 만약 팀 선택과 무관하게 바로 보내고 싶으면 아래 체크를 제거하세요.
-                if (!teamId) {
-                    // 선택된 row에 data-team-id가 없으면 안내
-                    alert('팀을 먼저 선택하거나, 팀이 존재하는지 확인하세요.');
-                    return;
-                }
-            
-                if (!roomNo) {
-                    alert('roomNo가 없습니다');
-                    return;
-                }
-                
-                // UI: 처리중 표시
-                const originalText = btn.textContent;
-                btn.disabled = true;
-                btn.textContent = '처리중...';
-                
-                // --- 여기서 teamId와 roomNo를 함께 서버로 전송 ---
-                fetch(ctx + '/practice/api/favorite', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    credentials: 'same-origin',
-                    body: 'roomNo=' + encodeURIComponent(roomNo) +
-                          '&teamId=' + encodeURIComponent(teamId) +
-                          '&teamName=' + encodeURIComponent(teamName)
-                })
-                .then(res => res.json())
-                .then(json => {
-                    if (json && json.success) {
-                        btn.textContent = '찜';
-                        alert(json.message || '찜 추가 완료');
-                        window.location.href = ctx + '/practice/practice4_wish';
-                    } else {
-                        alert(json.message || '찜 추가 실패');
-                        btn.disabled = false;
-                        btn.textContent = originalText || '찜하기';
-                    }
-                })
-                .catch(err => {
-                    console.error('찜 요청 실패', err);
-                    alert('네트워크/서버 오류');
-                    btn.disabled = false;
-                    btn.textContent = originalText || '찜하기';
-                });
-            });
-        });
+	    var ctx = '${ctx}';
+	    
+	    // 찜 버튼(팀 구분 없음, roomNo만 사용)
+	    const likeBtns = document.querySelectorAll('.btn-like[data-room-no]');
+	    console.log('찜하기 버튼 개수:', likeBtns.length);
+	    
+	    likeBtns.forEach(btn => {
+	        btn.addEventListener('click', function() {
+	            if (btn.disabled) return;
+	            
+	            const roomNo = btn.getAttribute('data-room-no');
+	            if (!roomNo) {
+	                alert('roomNo가 없습니다');
+	                return;
+	            }
+	            
+	            const originalText = btn.textContent;
+	            btn.disabled = true;
+	            btn.textContent = '처리중...';
+	            
+	            // roomNo만 서버로 전송
+	            fetch(ctx + '/practice/api/favorite', {
+	                method: 'POST',
+	                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	                credentials: 'same-origin',
+	                body: 'roomNo=' + encodeURIComponent(roomNo)
+	            })
+	            .then(res => res.json())
+	            .then(json => {
+	                if (json && json.success) {
+	                    btn.textContent = '찜';
+	                    alert(json.message || '찜 추가 완료');
+	                    window.location.href = ctx + '/practice/practice4_wish';
+	                } else {
+	                    alert(json.message || '찜 추가 실패');
+	                    btn.disabled = false;
+	                    btn.textContent = originalText || '찜하기';
+	                }
+	            })
+	            .catch(err => {
+	                console.error('찜 요청 실패', err);
+	                alert('네트워크/서버 오류');
+	                btn.disabled = false;
+	                btn.textContent = originalText || '찜하기';
+	            });
+	        });
+	    });
 	});
     
     function swapMainImage(thumbEl) {
