@@ -3,52 +3,109 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.javaex.repository.PrideRepository">
 
-  <!-- 목록 -->
-  <select id="selectPrideCards" resultType="com.javaex.vo.PrideVO">
-    SELECT
-      p.teamPostNo      AS teamPostNo,
-      p.teamNo          AS teamNo,
-      p.teamPostTitle   AS teamPostTitle,
-      p.teamContent     AS teamContent,
-      t.teamName        AS teamName,
-      COALESCE(t.instaAccount, '') AS instaAccount
-    FROM posts p
-    LEFT JOIN teams t ON t.teamNo = p.teamNo
-    WHERE p.teamPostType = #{teamPostType}
-    ORDER BY p.teamPostNo DESC
-    LIMIT #{limit} OFFSET #{offset}
-  </select>
-
-  <!-- 총 개수 -->
-  <select id="countPride" resultType="int">
-    SELECT COUNT(*)
-    FROM posts p
-    WHERE p.teamPostType = #{teamPostType}
-  </select>
-
-  <!-- 상세 -->
-  <select id="selectPrideDetail" resultType="com.javaex.vo.PrideVO">
-    SELECT
-      p.teamPostNo      AS teamPostNo,
-      p.teamNo          AS teamNo,
-      p.teamPostTitle   AS teamPostTitle,
-      p.teamContent     AS teamContent,
-      p.teamWriteDate   AS teamWriteDate,
-      p.teamUpdateDate  AS teamUpdateDate,
-      t.teamName        AS teamName,
-      t.instaAccount    AS instaAccount
-    FROM posts p
-    LEFT JOIN teams t ON t.teamNo = p.teamNo
-    WHERE p.teamPostType = #{teamPostType}
-      AND p.teamPostNo = #{id}
-    LIMIT 1
-  </select>
- <!-- PrideRepository.xml -->
-<select id="selectPrideImages" resultType="string">
-  SELECT CONCAT('/upload/', teamFilePath, '/', teamStoredFileName) AS url
-  FROM teamAttachments
-  WHERE postNo = #{id}
-  ORDER BY teamFileNo ASC
+  <!-- 카드 목록 -->
+<select id="selectPrideCards" resultType="com.javaex.vo.PrideVO">
+  SELECT
+    p.teamPostNo      AS teamPostNo,
+    p.teamNo          AS teamNo,
+    p.teamPostTitle   AS teamPostTitle,
+    p.teamContent     AS teamContent,
+    p.teamWriteDate   AS teamWriteDate,
+    p.teamUpdateDate  AS teamUpdateDate,
+    t.teamName        AS teamName,
+    COALESCE(t.instaAccount,'') AS instaAccount,
+    /* 썸네일(있으면 1장) */
+    (
+      SELECT CONCAT('/uploads/', 
+                    CASE
+                      WHEN a.teamFilePath IS NULL OR a.teamFilePath = '' 
+                        THEN a.teamStoredFileName
+                      WHEN SUBSTRING_INDEX(REPLACE(a.teamFilePath,'\\','/'), '/', -1) = a.teamStoredFileName
+                        THEN a.teamStoredFileName
+                      ELSE CONCAT(TRIM(BOTH '/' FROM REPLACE(a.teamFilePath,'\\','/')), '/', a.teamStoredFileName)
+                    END)
+      FROM teamAttachments a
+      WHERE a.postNo = p.teamPostNo
+      ORDER BY a.teamFileNo ASC
+      LIMIT 1
+    ) AS thumbnailUrl
+  FROM posts p
+  LEFT JOIN teams t ON t.teamNo = p.teamNo
+  WHERE 1=1
+    <if test="teamNo != null">
+      AND p.teamNo = #{teamNo}
+    </if>
+    <choose>
+      <!-- type 파라미터가 오면 그 값만 -->
+      <when test="teamPostType != null and teamPostType != ''">
+        AND p.teamPostType = #{teamPostType}
+      </when>
+      <!-- type 비면: TEAM_PRIDE/팀자랑/NULL 모두 포함 -->
+      <otherwise>
+        AND (p.teamPostType IN ('TEAM_PRIDE','팀자랑') OR p.teamPostType IS NULL)
+      </otherwise>
+    </choose>
+  ORDER BY p.teamPostNo DESC
+  <!-- MySQL 5/8 모두 호환되게 하려면 아래 둘 중 하나만 사용 -->
+  LIMIT #{limit} OFFSET #{offset}
+  <!-- 또는: LIMIT #{offset}, #{limit} -->
 </select>
+
+<!-- 총 개수: ★ 목록과 WHERE 완전히 동일해야 함 -->
+<select id="countPride" resultType="int">
+  SELECT COUNT(1)
+  FROM posts p
+  WHERE 1=1
+    <if test="teamNo != null">
+      AND p.teamNo = #{teamNo}
+    </if>
+    <choose>
+      <when test="teamPostType != null and teamPostType != ''">
+        AND p.teamPostType = #{teamPostType}
+      </when>
+      <otherwise>
+        AND (p.teamPostType IN ('TEAM_PRIDE','팀자랑') OR p.teamPostType IS NULL)
+      </otherwise>
+    </choose>
+</select>
+
+  <select id="selectPrideDetail" resultType="com.javaex.vo.PrideVO">
+  SELECT
+    p.teamPostNo, p.teamNo, p.teamPostTitle, p.teamContent,
+    p.teamWriteDate, p.teamUpdateDate, t.teamName, t.instaAccount
+  FROM posts p
+  LEFT JOIN teams t ON t.teamNo = p.teamNo
+  WHERE p.teamPostNo = #{id}
+    <choose>
+      <when test="teamPostType != null and teamPostType != ''">
+        AND p.teamPostType = #{teamPostType}
+      </when>
+      <otherwise>
+        AND (p.teamPostType IN ('TEAM_PRIDE','팀자랑') OR p.teamPostType IS NULL)
+      </otherwise>
+    </choose>
+  LIMIT 1
+</select>
+
+  <!-- 상세 이미지 목록 -->
+  <select id="selectPrideImages" resultType="string">
+    SELECT CONCAT(
+             '/uploads/',
+             CASE
+               WHEN teamFilePath IS NULL OR teamFilePath = ''
+                 THEN teamStoredFileName
+               WHEN RIGHT(REPLACE(teamFilePath,'\\','/'), LENGTH(teamStoredFileName)) = teamStoredFileName
+                 THEN teamStoredFileName
+               ELSE CONCAT(
+                      TRIM(BOTH '/' FROM REPLACE(teamFilePath,'\\','/')),
+                      '/',
+                      teamStoredFileName
+                    )
+             END
+           ) AS url
+    FROM teamAttachments
+    WHERE postNo = #{id}
+    ORDER BY teamFileNo ASC
+  </select>
 
 </mapper>
