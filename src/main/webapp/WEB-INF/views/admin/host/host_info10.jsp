@@ -72,21 +72,21 @@
             <label for="space-name">공간명</label>
             <span class="char-count">1자/18자</span>
             <input id="space-name" name="spacename" type="text" maxlength="18"
-                   value="" placeholder="예: 인디워커스 하이브 회의실" required>
+                   value="${space.spacename}" placeholder="예: 인디워커스 하이브 회의실" required>
           </div>
 
           <div class="input-group">
             <label for="space-desc">공간 한 줄 소개</label>
             <span class="char-count">0자/200자</span>
             <input id="space-desc" name="spacesummary" type="text" maxlength="500"
-                   value="" placeholder="공간의 특징점을 한 문장으로 작성해주세요.">
+                   value="${space.spacesummary}" placeholder="공간의 특징점을 한 문장으로 작성해주세요.">
           </div>
 
           <div class="input-group">
             <label for="space-detail">공간소개</label>
             <span class="char-count">0자/500자(최소 20자)</span>
             <textarea id="space-detail" name="spaceinfo" rows="4" maxlength="500"
-                      placeholder="게스트들에게 필요한 공간 정보를 상세하게 소개해주세요."></textarea>
+                      placeholder="게스트들에게 필요한 공간 정보를 상세하게 소개해주세요.">${space.spaceinfo}</textarea>
           </div>
         </section>
 
@@ -95,7 +95,7 @@
           <div class="section-title">시설 안내</div>
           <div class="facility-list">
 			<!-- facilityList는 컨트롤러에서 미리 조회해서 모델에 담아줘야 합니다. -->
-			<c:forEach var="facility" items="${requestScope.facilityInfoList}">
+			<c:forEach var="facility" items="${facilityList}">
 			  <label>
 			    <!-- ★★★ name="facilityNos", value="시설의 숫자 ID" 가 핵심입니다. -->
 			    <input type="checkbox" name="facilityNos" value="${facility.facilityNo}">

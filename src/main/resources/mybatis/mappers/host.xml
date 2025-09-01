@@ -24,6 +24,36 @@
     updtDtm       AS updt_dt
   </sql>
 
+  <!-- 단건 조회 -->
+  <select id="space_by_userNo" parameterType="long" resultType="com.javaex.vo.HostVO">
+    SELECT <include refid="space_cols"/>
+    FROM spaces
+    WHERE userNo = #{userNo}
+  </select>
+
+  <!-- [추가] 전체 시설 목록을 조회하는 쿼리 -->
+  <select id="selectAllFacilities" resultType="com.javaex.vo.FacilityInfoVO">
+      SELECT
+          facilityNo,
+          facilityName
+      FROM facilityInfo
+      ORDER BY facilityNo ASC
+  </select>
+
+
+  <!-- 선택한 시설관리 -->
+  <select id="selectCheckedFacilities" parameterType="long"  resultType="com.javaex.vo.FacilityInfoVO">
+      select  f.facilityNo,
+	          f.facilityName,
+        	  s.spacesGuideNo
+	  from facilityInfo f left join (select spacesGuideNo,
+			        						facilityNo
+							         from spacesGuide
+							         where spacesNo = #{spacesNo}) s
+      on f.facilityNo = s.facilityNo
+  </select>
+
+
   <!-- 로그인 사용자별 목록 -->
   <select id="spaces_by_user" parameterType="long" resultType="com.javaex.vo.HostVO">
     SELECT <include refid="space_cols"/>
@@ -31,6 +61,8 @@
     WHERE userNo = #{value}
     ORDER BY spacesNo DESC
   </select>
+
+
 
   <!-- 단건 조회 -->
   <select id="space_by_no" parameterType="long" resultType="com.javaex.vo.HostVO">
@@ -77,20 +109,7 @@
     WHERE spacesNo = #{spacesno}
   </update>
 
-  <!-- (선택) 시설 전체 삭제: 실제 테이블명으로 교체 -->
-  <delete id="delete_facilities_by_spacesno" parameterType="long">
-    DELETE FROM spacesGuide
-    WHERE spacesNo = #{value}
-  </delete>
 
-  <!-- [추가] 전체 시설 목록을 조회하는 쿼리 -->
-  <select id="selectAllFacilities" resultType="com.javaex.vo.FacilityInfoVO">
-      SELECT
-          facilityNo,
-          facilityName
-      FROM facilityInfo
-      ORDER BY facilityNo ASC
-  </select>
 
   <!-- (선택) 시설 1건 삽입: 실제 테이블명으로 교체 -->
   <insert id="insert_facility" parameterType="map">

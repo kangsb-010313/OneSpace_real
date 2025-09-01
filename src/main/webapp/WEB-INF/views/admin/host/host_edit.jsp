@@ -57,14 +57,6 @@
 
       <!-- 폼 -->
       <form id="spaceForm" action="${urlSaveSpace}" method="post" enctype="multipart/form-data">
-        <c:if test="${not empty space.spacesno}">
-          <input type="hidden" name="spacesno" value="${space.spacesno}">
-        </c:if>
-        <input type="hidden" name="facilities" id="facilitiesHidden"/>
-
-        <c:if test="${_csrf != null}">
-          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-        </c:if>
 
         <!-- 공간정보 -->
         <section class="form-section">
@@ -72,21 +64,21 @@
             <label for="space-name">공간명</label>
             <span class="char-count">1자/18자</span>
             <input id="space-name" name="spacename" type="text" maxlength="18"
-                   value="" placeholder="예: 인디워커스 하이브 회의실" required>
+                   value="${requestScope.space.spacename}" placeholder="예: 인디워커스 하이브 회의실" required>
           </div>
 
           <div class="input-group">
             <label for="space-desc">공간 한 줄 소개</label>
             <span class="char-count">0자/200자</span>
             <input id="space-desc" name="spacesummary" type="text" maxlength="500"
-                   value="" placeholder="공간의 특징점을 한 문장으로 작성해주세요.">
+                   value="${requestScope.space.spacesummary}" placeholder="공간의 특징점을 한 문장으로 작성해주세요.">
           </div>
 
           <div class="input-group">
             <label for="space-detail">공간소개</label>
             <span class="char-count">0자/500자(최소 20자)</span>
             <textarea id="space-detail" name="spaceinfo" rows="4" maxlength="500"
-                      placeholder="게스트들에게 필요한 공간 정보를 상세하게 소개해주세요."></textarea>
+                 placeholder="게스트들에게 필요한 공간 정보를 상세하게 소개해주세요.">${requestScope.space.spaceinfo}</textarea>
           </div>
         </section>
 
@@ -95,13 +87,26 @@
           <div class="section-title">시설 안내</div>
           <div class="facility-list">
 			<!-- facilityList는 컨트롤러에서 미리 조회해서 모델에 담아줘야 합니다. -->
-			<c:forEach var="facility" items="${requestScope.facilityInfoList}">
-			  <label>
-			    <!-- ★★★ name="facilityNos", value="시설의 숫자 ID" 가 핵심입니다. -->
-			    <input type="checkbox" name="facilityNos" value="${facility.facilityNo}">
-			    ${facility.facilityName}
-			  </label>
+			  
+			<c:forEach var="checkedFacilityVo" items="${requestScope.space.checkedFacilityList}">
+			  	<c:if test="${not empty checkedFacilityVo.spacesGuideNo}">
+			  		 <label>
+			    		<!-- ★★★ name="facilityNos", value="시설의 숫자 ID" 가 핵심입니다. -->
+			    		<input type="checkbox" name="facilityNos" value="${checkedFacilityVo.facilityNo}" checked="checked">
+			    		${checkedFacilityVo.facilityName}
+			  		</label>
+			  	</c:if>
+			  	<c:if test="${empty checkedFacilityVo.spacesGuideNo}">
+			  		 <label>
+			    		<!-- ★★★ name="facilityNos", value="시설의 숫자 ID" 가 핵심입니다. -->
+			    		<input type="checkbox" name="facilityNos" value="${checkedFacilityVo.facilityNo}">
+			    		${checkedFacilityVo.facilityName}
+			  		</label>
+			  	</c:if>
+			  
 			</c:forEach>
+			  
+			 
           </div>
         </section>
 
@@ -115,9 +120,6 @@
                 <li>- 이용 전날~당일: 환불 불가</li>
               </ul>
             </div>
-            <label class="refund-check">
-              <input type="checkbox" required> 환불 규정을 확인하고 이해했습니다.
-            </label>
           </div>
         </section>
 
@@ -165,16 +167,16 @@
           <div class="addr-row">
             <!-- 주소는 검색으로만 채우도록 readonly 권장 -->
             <input type="text" class="addr-input-long" id="address" name="address"
-                   value="${space.address}" placeholder="실제 서비스되는 공간의 주소를 입력해주세요." required readonly>
+                   value="${requestScope.space.address}" placeholder="실제 서비스되는 공간의 주소를 입력해주세요." required readonly>
             <button class="addr-btn" type="button" id="btnFindAddr">주소 등록</button>
           </div>
 
           <input type="text" class="addr-detail" id="addressDetail" name="addressdetail"
-                 value="${space.addressdetail}" placeholder="상세 주소">
+                 value="${requestScope.space.addressdetail}" placeholder="상세 주소">
 
           <!-- 우편번호는 hidden으로 유지하되 JS에서 채움 -->
-          <input type="hidden" id="postcode" name="postcode"  value="${space.postcode}">
-          <input type="hidden" name="spacelink" value="${space.spacelink}">
+          <input type="hidden" id="postcode" name="postcode"  value="">
+          <input type="hidden" name="spacelink" value="${requestScope.space.postcode}">
         </section>
 
         <!-- 연락처 (이메일 구조/클래스 원본 유지) -->
@@ -199,7 +201,7 @@
                   <option>nate.com</option>
                   <option>icloud.com</option>
                 </select>
-                <input type="hidden" name="email" id="emailFull" value="${space.email}">
+                <input type="hidden" name="email" id="emailFull" value="${requestScope.space.email}">
               </div>
             </div>
           </div>
@@ -208,7 +210,7 @@
           <div class="phone-flex-row">
             <div class="phone-col">
               <label>휴대폰</label>
-              <input type="text" name="phone" value="${space.phone}" placeholder="하이픈 빼고 입력해주세요.">
+              <input type="text" name="phone" value="${requestScope.space.phone}" placeholder="하이픈 빼고 입력해주세요.">
             </div>
             <div class="phone-col">
               <label class="phone-label-bold">
