@@ -9,12 +9,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AttachService {
 
+	
+    @Value("${file.upload-dir}")
+    private String saveDir;
+	
     /**
      * 이 메소드가 이제 모든 파일 저장을 담당합니다.
      * @param file Controller로부터 전달받은 파일
@@ -35,7 +40,7 @@ public class AttachService {
         // String saveDir = "/home/ubuntu/onespace_uploads/";
 
         // 2. 윈도우 로컬 개발 환경
-        String saveDir = "C:\\onespace_uploads\\";
+        //String saveDir = "C:\\onespace_uploads\\";
         // ===================================================================
         
         // 지정된 경로에 폴더가 없으면 자동으로 생성합니다.
