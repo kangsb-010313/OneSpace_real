@@ -50,6 +50,7 @@
 /*연습실상세(zone)******************************/
 .zone {
 	margin-bottom: 20px;
+	
 }
 .zone .two-col {
     display: flex;
@@ -70,7 +71,8 @@
     box-shadow: 0 6px 24px rgba(229,225,250,0.44);
     object-fit: cover;
     height: 450px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    margin-top: 24px;
 }
 
 .zone .section-title {
@@ -212,6 +214,7 @@
     box-sizing: border-box;
     cursor: pointer;
     transition: transform .12s ease, box-shadow .12s ease;
+    margin-top: 24px;
 }
 
 .room-card:hover {
