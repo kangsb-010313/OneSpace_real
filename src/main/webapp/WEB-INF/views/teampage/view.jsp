@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 
 
 <!DOCTYPE html>
@@ -96,7 +97,7 @@
 								                <div class="left-column">
 								                    <h3 class="section-title">#확정된 연습실 정보</h3>
 								                    <div class="vote-option">
-								                        <a href="#" class="vote-item-card">
+								                        <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${confirmedOption.roomNo}" class="vote-item-card">
 								                            <img src="${pageContext.request.contextPath}/uploads/${confirmedOption.thumbImg}" alt="연습실 이미지">
 								                            <div class="card-content-wrapper">
 								                                <div class="card-main-info">
@@ -149,23 +150,27 @@
 								            </div>
 								            
 								            <%-- '투표' 타입일 때만 투표 옵션 표시 --%>
-								            <c:if test="${post.teamPostType == '투표'}">
+<%-- 								            <c:if test="${post.teamPostType == '투표'}">
 								                <div class="vote-section-wrap">
 								                    <ol class="vote-items-container">
 								                        <c:forEach items="${voteOptions}" var="option" varStatus="status">
 								                            <li>
 								                                <div class="vote-option">
 								                                
-													                <%-- 하나의 큰 <c:choose> 블록으로 모든 경우의 수를 처리합니다. --%>
+													                하나의 큰 <c:choose> 블록으로 모든 경우의 수를 처리합니다.
 													                <c:choose>
-													                    <%-- [우선순위 1] 게시물 자체가 마감된 경우 (postStatus == 1) --%>
+													                    [우선순위 1] 게시물 자체가 마감된 경우 (postStatus == 1)
 													                    <c:when test="${post.postStatus == 1}">
-													                        <%-- 이 안에서 다시 분기: 예약된 후보인가 아닌가 --%>
+													                        이 안에서 다시 분기: 예약된 후보인가 아닌가
 													                        <c:choose>
-													                            <%-- 1-1. '예약된 후보'이면서 '투표가 마감'된 경우 --%>
+													                            1-1. '예약된 후보'이면서 '투표가 마감'된 경우
 													                            <c:when test="${option.isReserved == 1}">
 													                                <div class="vote-item-card reserved-overlay">
-													                                    <%-- 카드 내용은 동일 --%>
+													                                
+													                                
+													                                    카드 내용은 동일
+													                                     <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${option.roomNo}"
+													                                      class="vote-item-card ${option.isReserved == 1 ? 'reserved-overlay' : ''}">
 													                                    <div class="favorite-count">🔥 ${option.competitionCount}</div>
 													                                    <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
 													                                    <div class="card-content-wrapper">
@@ -179,16 +184,19 @@
 													                                            </div>
 													                                        </div>
 													                                    </div>
+													                                    </a>
+													                                    
+													                                    
 													                                </div>
 													                                <div class="vote-action-area reserved">
-													                                    <%-- '예약 완료'가 더 중요한 정보이므로 이것만 표시 --%>
+													                                    '예약 완료'가 더 중요한 정보이므로 이것만 표시
 													                                    <span>예약이 완료된 시간대입니다.</span>
 													                                </div>
 													                            </c:when>
-													                            <%-- 1-2. '예약되지 않았지만' '투표가 마감'된 경우 --%>
+													                            1-2. '예약되지 않았지만' '투표가 마감'된 경우
 													                            <c:otherwise>
 													                                <a href="#" class="vote-item-card">
-													                                    <%-- 카드 내용은 동일 --%>
+													                                    카드 내용은 동일
 													                                    <div class="favorite-count">🔥 ${option.competitionCount}</div>
 													                                    <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
 													                                    <div class="card-content-wrapper">
@@ -210,10 +218,10 @@
 													                        </c:choose>
 													                    </c:when>
 													
-													                    <%-- [우선순위 2] 게시물은 진행 중이지만, 이 후보만 예약된 경우 (postStatus == 0 && option.isReserved == 1) --%>
+													                    [우선순위 2] 게시물은 진행 중이지만, 이 후보만 예약된 경우 (postStatus == 0 && option.isReserved == 1)
 													                    <c:when test="${option.isReserved == 1}">
 													                        <div class="vote-item-card reserved-overlay">
-													                            <%-- 카드 내용은 동일 --%>
+													                            카드 내용은 동일
 													                            <div class="favorite-count">🔥 ${option.competitionCount}</div>
 													                            <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
 													                            <div class="card-content-wrapper">
@@ -233,7 +241,7 @@
 													                        </div>
 													                    </c:when>
 													
-													                    <%-- [우선순위 3] 투표 가능한 정상 상태일 경우 --%>
+													                    [우선순위 3] 투표 가능한 정상 상태일 경우
 													                    <c:otherwise>
 													                        <a href="#" class="vote-item-card">
 													                            <div class="favorite-count">🔥 ${option.competitionCount}</div>
@@ -267,7 +275,97 @@
 								                        </c:forEach>
 								                    </ol>
 								                </div>
-								            </c:if>
+								            </c:if> --%>
+								            
+								            
+								            
+								            
+                                            <%-- '투표' 타입일 때만 투표 옵션 표시 --%>
+                                            <c:if test="${post.teamPostType == '투표'}">
+                                                <div class="vote-section-wrap">
+                                                    <ol class="vote-items-container">
+                                                        <c:forEach items="${voteOptions}" var="option" varStatus="status">
+                                                            <li>
+                                                                <div class="vote-option">
+                                                                
+                                                                    <c:choose>
+                                                                        <%-- Case 1 & 2: 마감되었거나, 다른 팀이 예약한 경우 --%>
+                                                                        <c:when test="${post.postStatus == 1 or option.isReserved == 1}">
+                                                                            <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${option.roomNo}" 
+                                                                               class="vote-item-card ${option.isReserved == 1 or post.postStatus == 1 ? 'reserved-overlay' : ''}">
+                                                                                
+                                                                                <%-- 카드 내부 컨텐츠는 기존과 동일하게 유지합니다. --%>
+                                                                                <div class="favorite-count">🔥 ${option.competitionCount}</div>
+                                                                                <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
+                                                                                <div class="card-content-wrapper">
+                                                                                    <div class="card-main-info">
+                                                                                        <div class="info-left">
+                                                                                            <p class="item-title">${status.count}. ${option.roomName}</p>
+                                                                                            <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
+                                                                                        </div>
+                                                                                        <div class="info-right">
+                                                                                            <p class="item-price"><fmt:formatNumber value="${option.totalPrice}" pattern="#,###" /> 원</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+                                                                            
+                                                                            <%-- 상태 표시 메시지 영역 (이 부분은 a 태그 밖에 위치해야 링크에 영향을 주지 않습니다) --%>
+                                                                            <div class="vote-action-area reserved">
+                                                                                <c:choose>
+                                                                                    <%-- [설명]: option.isReserved가 1이면 '예약 완료' 메시지를 최우선으로 보여줍니다. --%>
+                                                                                    <c:when test="${option.isReserved == 1}">
+                                                                                        <span>예약이 완료된 시간대입니다.</span>
+                                                                                    </c:when>
+                                                                                    <%-- [설명]: 예약은 안됐지만 게시글 자체가 마감(post.postStatus == 1)이면 '투표 마감' 메시지를 보여줍니다. --%>
+                                                                                    <c:when test="${post.postStatus == 1}">
+                                                                                        <span>투표진행이 완료된 항목입니다.</span>
+                                                                                    </c:when>
+                                                                                </c:choose>
+                                                                            </div>
+                                                                        </c:when>
+                                                                        
+                                                                        <%-- Case 3: 투표 가능한 정상 상태일 경우 --%>
+                                                                        <c:otherwise>
+                                                                            <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${option.roomNo}" class="vote-item-card">
+                                                                                
+                                                                                <%-- 카드 내부 컨텐츠는 기존과 동일하게 유지합니다. --%>
+                                                                                <div class="favorite-count">🔥 ${option.competitionCount}</div>
+                                                                                <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
+                                                                                <div class="card-content-wrapper">
+                                                                                    <div class="card-main-info">
+                                                                                        <div class="info-left">
+                                                                                            <p class="item-title">${status.count}. ${option.roomName}</p>
+                                                                                            <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
+                                                                                        </div>
+                                                                                        <div class="info-right">
+                                                                                            <p class="item-price"><fmt:formatNumber value="${option.totalPrice}" pattern="#,###" /> 원</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+                                                                            
+                                                                            <%-- 투표 버튼 및 투표자 목록 영역 (이 부분은 a 태그 밖에 위치) --%>
+                                                                            <div class="vote-action-area">
+                                                                                <c:set var="isVoted" value="false" />
+                                                                                <c:forEach items="${userVotedList}" var="votedNo">
+                                                                                    <c:if test="${votedNo == option.voteNo}">
+                                                                                        <c:set var="isVoted" value="true" />
+                                                                                    </c:if>
+                                                                                </c:forEach>
+                                                                                <button type="button" class="btn-vote ${isVoted ? 'active' : ''}" data-voteno="${option.voteNo}">투표</button>
+                                                                                <div class="voter-list" id="voter-list-${option.voteNo}"></div>
+                                                                            </div>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </div>
+                                                            </li>
+                                                        </c:forEach>
+                                                    </ol>
+                                                </div>
+                                            </c:if>
+                                            <%-- ========================================================================================= --%>
+								            
 								        </c:otherwise>
 								    </c:choose>
                                     <%-- 투표 전용 섹션 끝 --%>
@@ -282,7 +380,8 @@
 								            <c:choose>
 								                <%-- 1-1: '팀자랑' 글일 때 --%>
 								                <c:when test="${post.teamPostType == '팀자랑'}">
-								                    <button type="button" class="btn-action" id="btn-pride">팀자랑 가서보기</button>
+								                    <!-- <button type="button" class="btn-action" id="btn-pride">팀자랑 가서보기</button> -->
+								                    <a href="${pageContext.request.contextPath}/pride/${post.teamPostNo}" class="btn-action" id="btn-pride">팀자랑 가서보기</a>
 								                    <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/posts/list" class="btn-action">목록</a>
 								                </c:when>
 								                
