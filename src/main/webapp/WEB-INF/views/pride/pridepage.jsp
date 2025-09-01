@@ -40,7 +40,7 @@
 		            <span class="post-label-team">작성팀</span>
 		            <span class="post-value-team">
 		              <c:out value="${pride.teamName}"/>
-		              <span class="team-id">@<c:out value="${pride.instaAccount}"/></span>
+		              <span class="team-id"><c:out value="${pride.instaAccount}"/></span>
 		            </span>
 		          </div>
 		
@@ -51,13 +51,13 @@
 		        </div>
 		        
 		        <div class="media-grid">
-            <c:forEach var="img" items="${images}">
-              <img loading="lazy" src="<c:url value='${img}'/>" alt="첨부 이미지">
-            </c:forEach>
-            <c:if test="${empty images}">
-              <img src="<c:url value='/assets/images/default_team.jpg'/>" alt="기본 이미지">
-            </c:if>
-          </div>
+				<c:forEach var="img" items="${images}">
+				  <img loading="lazy" src="<c:url value='${img}'/>" alt="첨부 이미지">
+				</c:forEach>
+				<c:if test="${empty images}">
+				  <img src="<c:url value='/assets/images/default_team.jpg'/>" alt="기본 이미지">
+				</c:if>
+         		</div>
 		
 		        <div class="post-body">
 		          <c:out value="${pride.teamContent}"/>

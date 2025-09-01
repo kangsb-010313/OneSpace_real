@@ -40,7 +40,7 @@
                             <img src="<c:url value='/assets/images/default_team.jpg'/>" alt="팀 이미지"/>
                             <div class="team-info">
                                 <h2 class="team-title">${item.teamPostTitle}</h2>
-                                <p class="team-id">@${item.instaAccount}</p>
+                                <p class="team-id">${item.instaAccount}</p>
                                 <p class="team-desc">${item.teamContent}</p>
                             </div>
                         </article>
