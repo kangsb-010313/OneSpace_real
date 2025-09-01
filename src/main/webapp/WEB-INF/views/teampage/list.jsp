@@ -39,7 +39,7 @@
                     
 
                         <div id="main-content">
-                            <h2>팀 ${teamName}</h2>
+                            <h2>울팀 ${teamName}</h2>
 
                             <div class="team-management-links">
                                 <a href="${pageContext.request.contextPath}/team/teams/${teamNo}/modifyform"><img src="${pageContext.request.contextPath}/assets/images/톱니바퀴아이콘.jpg" class="team-setting">팀관리</a>
