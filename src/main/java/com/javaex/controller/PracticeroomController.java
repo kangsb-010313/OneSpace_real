@@ -18,6 +18,7 @@ import com.javaex.service.TeampageService;
 import com.javaex.vo.ReserveInfoVO;
 import com.javaex.vo.SlotVO;
 import com.javaex.vo.SpacesVO;
+import com.javaex.vo.TeamVO;
 import com.javaex.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -81,6 +82,14 @@ public class PracticeroomController {
         model.addAttribute("favoriteSpaces", practiceroomService.getFavoriteSpaces(userNo));
         model.addAttribute("favoriteCandidates", practiceroomService.getFavoriteCandidates(userNo));
         model.addAttribute("allTeams", teampageService.exeGetUserTeams(userNo));
+        
+        List<TeamVO> teams = teampageService.exeGetUserTeams(userNo);
+        model.addAttribute("allTeams", teams);
+        
+        if (!teams.isEmpty()) {
+            model.addAttribute("teamNo", teams.get(0).getTeamNo());
+        }
+        
         return "practiceroom/practice4_wish";
     }
 
