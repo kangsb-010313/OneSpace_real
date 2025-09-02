@@ -70,7 +70,9 @@
                                 <%-- 주소 표시 --%>
                                 <div class="section-title">주소</div>
                                 <div class="address">${zone.address} ${zone.addressDetail}</div>
-
+                                
+                                console.log("googleMapsApiKey from JSP: ${googleMapsApiKey}");
+                                
                                 <!-- 구글 지도 -->
                                 <div class="map-wrap">
                                 	<!-- 지도 출력 영역 -->
