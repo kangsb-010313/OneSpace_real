@@ -3,13 +3,13 @@ package com.javaex.vo;
 public class ReserveInfoVO {
 
 	private String targetDate;
-	private int roomNo;
+	private Long roomNo;
 
 	public ReserveInfoVO() {
 		super();
 	}
 
-	public ReserveInfoVO(String targetDate, int roomNo) {
+	public ReserveInfoVO(String targetDate, Long roomNo) {
 		super();
 		this.targetDate = targetDate;
 		this.roomNo = roomNo;
@@ -23,12 +23,12 @@ public class ReserveInfoVO {
 		this.targetDate = targetDate;
 	}
 
-	public int getRoomNo() {
+	public Long getRoomNo() {
 		return roomNo;
 	}
 
-	public void setRoomNo(int roomNo) {
-		this.roomNo = roomNo;
+	public void setRoomNo(long roomNo2) {
+		this.roomNo = roomNo2;
 	}
 
 	@Override
