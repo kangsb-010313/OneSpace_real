@@ -76,8 +76,9 @@
                                 	<!-- 지도 출력 영역 -->
                                     <div id="map" style="width:100%;height:400px"></div>
                                     <script>
-                                        function getLatLngFromAddress(address, callback) {
-                                            const apiKey = "${googleMapsApiKey}";
+                                    	const apiKey = "${googleMapsApiKey}";
+                                        
+                                    	function getLatLngFromAddress(address, callback) {
                                             const url = `https://maps.googleapis.com/maps/api/geocode/json?address=\${encodeURIComponent(address)}&key=\${apiKey}`;
                                          	
                                             // fetch로 API 호출
@@ -114,7 +115,8 @@
                                         }
                                     </script>
                                     <!-- Google Maps JavaScript API 호출 -->
-                                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZfZ-aDUeEP3W-VW_n2FEVSDzuiK8k5iE&callback=initMap" async defer></script>
+                                    <script src="https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&callback=initMap" async defer></script>
+                                    
                                 </div>
                                 
                             </div>
