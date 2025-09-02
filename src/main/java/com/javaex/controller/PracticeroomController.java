@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpSession;
 public class PracticeroomController {
 	
 	@Value("${google.maps.api.key}")
-	private String googleMapsApikey;
+	private String googleMapsApiKey;
 	
     @Autowired
     private PracticeroomService practiceroomService;
