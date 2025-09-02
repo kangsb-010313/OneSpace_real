@@ -115,8 +115,7 @@
                                         }
                                     </script>
                                     <!-- Google Maps JavaScript API 호출 -->
-                                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZfZ-aDUeEP3W-VW_n2FEVSDzuiK8k5iE&callback=initMap" async defer></script>
-                                    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&callback=initMap" async defer></script> -->
+                                    <script src="https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&callback=initMap" async defer></script>
                                     
                                 </div>
                                 
