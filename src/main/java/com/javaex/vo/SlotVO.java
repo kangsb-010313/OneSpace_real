@@ -2,7 +2,7 @@ package com.javaex.vo;
 
 public class SlotVO {
 
-	private long roomNo;
+	private int roomNo;
 	private String targetDate;
 	private int slotNo;
 	private int price;
@@ -10,14 +10,14 @@ public class SlotVO {
 	public SlotVO() {
 	}
 
-	public SlotVO(long roomNo, String targetDate, int slotNo, int price) {
+	public SlotVO(int roomNo, String targetDate, int slotNo, int price) {
 		this.roomNo = roomNo;
 		this.targetDate = targetDate;
 		this.slotNo = slotNo;
 		this.price = price;
 	}
 
-	public long getRoomNo() {
+	public int getRoomNo() {
 		return roomNo;
 	}
 

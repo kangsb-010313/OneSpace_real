@@ -105,13 +105,7 @@ public class PracticeroomController {
     @PostMapping("/api/room-slots")
     @ResponseBody
     public List<SlotVO> getRoomSlots(ReserveInfoVO reserveInfoVO) {
-    	System.out.println(">>> roomNo=" + reserveInfoVO.getRoomNo() + ", targetDate=" + reserveInfoVO.getTargetDate());
-        List<SlotVO> slots = practiceroomService.getRoomSlots(reserveInfoVO);
-        System.out.println(">>> slots=" + slots);
-        return slots;
-    	
-    	//return practiceroomService.getRoomSlots(reserveInfoVO);
-        
+        return practiceroomService.getRoomSlots(reserveInfoVO);
     }
 
     // 찜 추가

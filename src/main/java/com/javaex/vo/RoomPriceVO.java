@@ -8,7 +8,7 @@ public class RoomPriceVO {
     private String dayType;       // WEEKDAY / WEEKEND / MON ... 등
     private String startTime;     // 'HH:mm:ss'
     private String endTime;       // 'HH:mm:ss'
-    private int hourlyPrice;
+    private Integer hourlyPrice;
     private LocalDateTime instDtm;
     private LocalDateTime updtDtm;
 
