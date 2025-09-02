@@ -188,10 +188,6 @@
 	         (select storedFileName from roomAttachments where roomNo = r.roomNo LIMIT 1), /* [수정] 이미지 경로 수정 */
 	         '/assets/images/placeholder.jpg'
 	       ) AS picturesNo, /* [수정] 컬럼 별칭을 picturesNo로 맞춰줍니다. */
-	       COALESCE(
-			  (select CONCAT('/uploads/', storedFileName) from roomAttachments where roomNo = r.roomNo LIMIT 1),
-			  '/assets/images/placeholder.jpg'
-			) AS imageUrl,
 	       s.address
 	     FROM voteOptions v
 	     JOIN rooms  r ON r.roomNo   = v.roomNo
