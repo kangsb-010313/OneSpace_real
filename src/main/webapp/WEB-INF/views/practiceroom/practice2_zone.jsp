@@ -98,6 +98,7 @@
                                         }
                                         // Google Map 초기화
                                         function initMap() {
+                                        	console.log("DB에서 전달된 주소 값:", "${zone.address}");
                                             getLatLngFromAddress("${zone.address}", function(lat, lng) {
                                                 var center = { lat: lat, lng: lng };
                                                 
