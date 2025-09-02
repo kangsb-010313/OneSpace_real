@@ -57,6 +57,11 @@ public class PracticeroomController {
     public String zone(@RequestParam("spacesNo") Long spacesNo, Model model) {
         model.addAttribute("zone", practiceroomService.getZoneDetail(spacesNo));
         model.addAttribute("rooms", practiceroomService.getRoomsBySpace(spacesNo));
+
+        Object googleMapsApiKey = "AIzaSyDq607FhWdqsevJGMzU8dzKJCZiQ3f8Js8";
+		// Model에 Google Maps API 키를 "googleMapsApiKey"라는 이름으로 추가하여 JSP로 전달
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey );
+        
         return "practiceroom/practice2_zone";
     }
 
