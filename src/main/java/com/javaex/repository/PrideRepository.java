@@ -9,19 +9,22 @@ import java.util.List;
 public interface PrideRepository {
 
     // 목록(페이징) — teamNo 필터 포함
-    List<PrideVO> selectPrideCards(@Param("teamPostType") String teamPostType,
-                                   @Param("teamNo") Long teamNo,
-                                   @Param("limit") int limit,
-                                   @Param("offset") int offset);
+	List<PrideVO> selectPrideCards(
+	        @Param("teamPostType") String teamPostType,
+	        @Param("teamNo")       Long teamNo,
+	        @Param("limit")        int limit,
+	        @Param("offset")       int offset
+	    );
 
-    // 총 개수 — teamNo 필터 포함
-    int countPride(@Param("teamPostType") String teamPostType,
-                   @Param("teamNo") Long teamNo);
+	    int countPride(
+	        @Param("teamPostType") String teamPostType,
+	        @Param("teamNo")       Long teamNo
+	    );
 
-    // 상세(단건)
-    PrideVO selectPrideDetail(@Param("teamPostType") String teamPostType,
-                              @Param("id") Long id);
+	    PrideVO selectPrideDetail(
+	        @Param("teamPostType") String teamPostType,
+	        @Param("id")           Long id
+	    );
 
-    // 상세 이미지 URL 목록
-    List<String> selectPrideImages(@Param("id") Long id);
+	    List<String> selectPrideImages(@Param("id") Long id);
 }

@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="<c:url value='/assets/css/reset.css'/>">
     <link rel="stylesheet" href="<c:url value='/assets/css/basicdefault.css'/>">
     <link rel="stylesheet" href="<c:url value='/assets/css/pride.css'/>">
+
+    <!-- 페이지네이션 disabled 스타일 (필요 시 pride.css로 옮겨도 됨) -->
+    <style>
+      .page-link.disabled{ pointer-events:none; opacity:.45; }
+    </style>
 </head>
 
 <body>
@@ -74,7 +79,7 @@
 
                 <!-- 페이지네이션 -->
                 <div class="pagination">
-                    <!-- 처음 / 이전 -->
+                    <!-- 처음 / 이전 : 1페이지면 안 보임 -->
                     <c:if test="${page > 1}">
                         <c:url var="firstUrl" value="/pride/list">
                             <c:param name="page" value="1"/>
@@ -93,18 +98,28 @@
                         <a class="page-link" href="${prevUrl}">‹ 이전</a>
                     </c:if>
 
-                    <!-- 페이지 블록: startPage ~ endPage -->
-                    <c:forEach var="p" begin="${startPage}" end="${endPage}">
-                        <c:url var="pageUrl" value="/pride/list">
-                            <c:param name="page" value="${p}"/>
-                            <c:param name="size" value="${size}"/>
-                            <c:if test="${not empty teamPostType}"><c:param name="type" value="${teamPostType}"/></c:if>
-                            <c:if test="${not empty teamNo}"><c:param name="teamNo" value="${teamNo}"/></c:if>
-                        </c:url>
-                        <a class="page-link ${p==page ? 'active' : ''}" href="${pageUrl}">${p}</a>
+                    <%-- 숫자 5개 고정 블록: startPage 기준으로 5칸 표시 --%>
+                    <c:set var="blockEnd" value="${startPage + 4}"/>
+                    <c:forEach var="p" begin="${startPage}" end="${blockEnd}">
+                        <c:choose>
+                            <%-- 존재하는 페이지면 링크 --%>
+                            <c:when test="${p <= totalPages}">
+                                <c:url var="pageUrl" value="/pride/list">
+                                    <c:param name="page" value="${p}"/>
+                                    <c:param name="size" value="${size}"/>
+                                    <c:if test="${not empty teamPostType}"><c:param name="type" value="${teamPostType}"/></c:if>
+                                    <c:if test="${not empty teamNo}"><c:param name="teamNo" value="${teamNo}"/></c:if>
+                                </c:url>
+                                <a class="page-link ${p==page ? 'active' : ''}" href="${pageUrl}">${p}</a>
+                            </c:when>
+                            <%-- 없는 페이지면 비활성 숫자 출력 --%>
+                            <c:otherwise>
+                                <span class="page-link disabled">${p}</span>
+                            </c:otherwise>
+                        </c:choose>
                     </c:forEach>
 
-                    <!-- 다음 / 마지막 -->
+                    <!-- 다음 / 마지막 : 마지막 페이지면 안 보임 -->
                     <c:if test="${page < totalPages}">
                         <c:url var="nextUrl" value="/pride/list">
                             <c:param name="page" value="${page+1}"/>

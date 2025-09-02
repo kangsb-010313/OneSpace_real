@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * [Service] 팀자랑(Pride)
- * - 기본: teamPostType 고정(원래처럼 팀자랑만 보이게)
+ * - 기본: 타입 필터 비적용(= 모든 글 포함). type 파라미터가 오면 그 값으로 필터.
  * - teamNo 필터(선택) 지원
  * - 목록/상세 + 이미지 번들
  */
@@ -21,44 +21,49 @@ public class PrideService {
 
     private final PrideRepository repo;
 
-    // ⚠️ DB에 저장된 실제 값으로 맞추세요. ("TEAM_PRIDE" 또는 "팀자랑")
+    /** 필요 시 쓸 기본 타입 (DB가 'TEAM_PRIDE' 또는 '팀자랑') — 기본에선 사용하지 않음 */
     private static final String DEFAULT_TYPE = "TEAM_PRIDE";
 
     public PrideService(PrideRepository repo) {
         this.repo = repo;
     }
 
-    /** type 파라미터가 비면 기본값으로 고정 */
+    /** type 파라미터가 비면 필터 끔(null) — 목록/상세 모두 안전 */
     private String normalizeType(String type) {
         return (type == null || type.isBlank()) ? null : type;
+    }
+
+    /** 페이지당 개수: 기본 5, 최대 5 */
+    private int coerceSize(int size) {
+        return (size <= 0) ? 5 : Math.min(size, 5);
     }
 
     /* =======================
      *  목록(카드)
      * ======================= */
 
-    /** 카드 리스트 (팀 필터 없음) */
+    /** 카드 리스트 (팀 필터 없음, 타입 필터도 기본 미적용) */
     public List<PrideVO> getCards(int page, int size) {
-        return getCards(null, page, size, DEFAULT_TYPE);
+        return getCards(null, page, size, null);
     }
 
-    /** 카드 리스트 (팀 필터/타입 지원) */
+    /** 카드 리스트 (teamNo/type 필터 지원) */
     public List<PrideVO> getCards(Long teamNo, int page, int size, String type) {
-        int safeSize = (size <= 0) ? 12 : size;
+        int safeSize = coerceSize(size);
         int safePage = (page <= 0) ? 1 : page;
         int offset   = (safePage - 1) * safeSize;
         String t     = normalizeType(type);
         return repo.selectPrideCards(t, teamNo, safeSize, offset);
     }
 
-    /** 총 개수 (팀 필터/타입 반영) */
+    /** 총 개수 (teamNo/type 반영) */
     public int getTotalCount(Long teamNo, String type) {
         return repo.countPride(normalizeType(type), teamNo);
     }
 
-    /** API용 페이징 응답 */
+    /** 목록 API 응답 */
     public Map<String, Object> pageApiModel(Long teamNo, int page, int size, String type) {
-        int safeSize = (size <= 0) ? 12 : size;
+        int safeSize = coerceSize(size);
         int safePage = (page <= 0) ? 1 : page;
         int offset   = (safePage - 1) * safeSize;
         String t     = normalizeType(type);
@@ -78,7 +83,7 @@ public class PrideService {
     /** JSP 렌더링용 페이징 모델 */
     public Map<String, Object> getPridePage(String type, Long teamNo, int page, int size) {
         String t     = normalizeType(type);
-        int safeSize = (size <= 0) ? 12 : size;
+        int safeSize = coerceSize(size);
 
         int total = repo.countPride(t, teamNo);
         int totalPages = Math.max(1, (int) Math.ceil(total / (double) safeSize));
@@ -87,6 +92,7 @@ public class PrideService {
 
         List<PrideVO> content = repo.selectPrideCards(t, teamNo, safeSize, offset);
 
+        // 페이지 블록(1~5, 6~10 ...)
         int blockSize = 5;
         int startPage = ((safePage - 1) / blockSize) * blockSize + 1;
         int endPage   = Math.min(startPage + blockSize - 1, totalPages);
@@ -110,14 +116,14 @@ public class PrideService {
      *  상세 + 이미지
      * ======================= */
 
+    /** 상세 (type이 오면 필터, 아니면 전체 허용) */
     public PrideVO getDetail(String type, Long id) {
         return repo.selectPrideDetail(normalizeType(type), id);
     }
 
-    
-
+    /** 상세 (기본: 타입 필터 끔) */
     public PrideVO getDetail(Long id) {
-        return getDetail(DEFAULT_TYPE, id);  // ★ 여기! null 넘기지 말고 기본값으로
+        return getDetail(null, id);
     }
 
     public List<String> getImages(Long id) {
