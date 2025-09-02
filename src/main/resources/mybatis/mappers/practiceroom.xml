@@ -214,7 +214,7 @@
 	    dayType,
 	    startTime,
 	    endTime,
-	    CAST(hourlyPrice AS SIGNED) AS hourlyPrice
+	    CAST(COALESCE(hourlyPrice, '0') AS SIGNED) AS hourlyPrice
 	  FROM roomPrices
 	  WHERE roomNo = #{roomNo}
 	    AND dayType = CASE
