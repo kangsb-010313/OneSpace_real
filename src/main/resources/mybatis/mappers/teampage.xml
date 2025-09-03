@@ -366,15 +366,20 @@
                 join facilityInfo fi on sg.facilityNo = fi.facilityNo
                 where sg.spacesNo = s.spacesNo and fi.facilityName in ('주차', '조명', '블루투스 스피커')
             ) as spacesGuideNo,
-            (
-                select count(DISTINCT v2.userNo) 
-                from voteOptions vo2 
-                join votes v2 ON vo2.voteNo = v2.voteNo
-                where vo2.roomNo = vo.roomNo 
-                and vo2.voteDate = vo.voteDate 
-                and vo2.voteTime = vo.voteTime 
-                and v2.postNo is not null
-            ) as competitionCount
+		    (
+		        select count(DISTINCT v2.userNo)
+		        from votes v2
+		        join voteOptions vo2 ON v2.voteNo = vo2.voteNo
+		        where v2.postNo IS NOT NULL      /* 이미 등록된 투표 중에서 */
+		          and vo2.roomNo = r.roomNo      /* 현재 후보와 같은 연습실, */
+		          and vo2.voteDate = vo.voteDate /* 같은 날짜에 */
+		          and EXISTS (                   /* 겹치는 시간이 하나라도 존재하는 경우 */
+		              select 1
+		              from voteOptions vo_current
+		              where vo_current.voteNo = v.voteNo /* 현재 후보의 시간 목록과 */
+		                and vo_current.voteTime = vo2.voteTime /* 다른 팀 후보의 시간 비교 */
+		          )
+		    ) as competitionCount
         from votes v
         join voteOptions vo ON v.voteNo = vo.voteNo
         join rooms r ON vo.roomNo = r.roomNo
@@ -432,8 +437,8 @@
 	                  where vo_current.voteNo = v.voteNo /* 현재 후보의 시간 목록과 */
 	                    and vo_current.voteTime = vo2.voteTime /* 다른 팀 후보의 시간 비교 */
 	              )
-	        ) as competitionCount /* 자기 자신을 포함해야 하므로 +1 */
-	
+	        ) as competitionCount 
+		
 	    from votes v
 	    join voteOptions vo ON v.voteNo = vo.voteNo
 	    join rooms r ON vo.roomNo = r.roomNo
