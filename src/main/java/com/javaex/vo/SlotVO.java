@@ -6,15 +6,24 @@ public class SlotVO {
 	private String targetDate;
 	private int slotNo;
 	private int price;
+	private int state; // 2번 결제완료
 
 	public SlotVO() {
 	}
-
+	
 	public SlotVO(int roomNo, String targetDate, int slotNo, int price) {
 		this.roomNo = roomNo;
 		this.targetDate = targetDate;
 		this.slotNo = slotNo;
 		this.price = price;
+	}
+
+	public SlotVO(int roomNo, String targetDate, int slotNo, int price, int state) {
+		this.roomNo = roomNo;
+		this.targetDate = targetDate;
+		this.slotNo = slotNo;
+		this.price = price;
+		this.state = state;
 	}
 
 	public int getRoomNo() {
@@ -49,10 +58,18 @@ public class SlotVO {
 		this.price = price;
 	}
 
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
 	@Override
 	public String toString() {
 		return "SlotVO [roomNo=" + roomNo + ", targetDate=" + targetDate + ", slotNo=" + slotNo + ", price=" + price
-				+ "]";
+				+ ", state=" + state + "]";
 	}
 
 }

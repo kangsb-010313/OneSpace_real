@@ -3,7 +3,7 @@
 
 
 <mapper namespace="practiceroom">
-	
+
 	<!-- 모든 연습실 공간 목록 조회 -->
 	<select id="selectList" resultType="com.javaex.vo.SpacesVO">
 		<![CDATA[
@@ -26,139 +26,164 @@
 		FROM spaces
 		ORDER BY spacesNo DESC
 	    ]]>
-    </select>
-    
-    <!-- 페이징된 연습실 공간 목록 조회 -->
-    <select id="selectPaged" parameterType="map" resultType="com.javaex.vo.SpacesVO">
-	  SELECT
-	    spacesNo,
-        userNo,
-        spaceName,
-        spaceSummary,
-        spaceInfo,
-	    email,
-        phone,
-        tel,
-        spaceLink,
-        repImg,
-        postCode,
-        address,
-        addressDetail,
-	    instDtm,
-        updtDtm
-	  FROM spaces
-	  ORDER BY spacesNo DESC
-	  LIMIT #{offset,jdbcType=INTEGER}, #{size,jdbcType=INTEGER}
 	</select>
-    
-    <!-- 연습실 검색 -->
-	<select id="searchSpaces" parameterType="string" resultType="com.javaex.vo.SpacesVO">
-	  SELECT
-	    spacesNo,
-	    userNo,
-	    spaceName,
-	    spaceSummary,
-	    spaceInfo,
-	    email,
-	    phone,
-	    tel,
-	    spaceLink,
-	    repImg,
-	    postCode,
-	    address,
-	    addressDetail,
-	    instDtm,
-	    updtDtm
-	  FROM spaces
-	  WHERE spaceName LIKE #{_parameter}
-	     OR spaceSummary LIKE #{_parameter}
-	  ORDER BY spacesNo DESC
-	</select>
-	
-    <!-- 공간 상세 조회 -->
-    <select id="selectZoneDetail" parameterType="long" resultType="com.javaex.vo.SpacesVO">
-        SELECT
-          spacesNo,
-          userNo,
-          spaceName,
-          spaceSummary,
-          spaceInfo,
-          email,
-          phone,
-          tel,
-          spaceLink,
-          repImg,
-          postCode,
-          address,
-          addressDetail,
-          instDtm,
-          updtDtm
-        FROM spaces
-        WHERE spacesNo = #{spacesNo}
-    </select>
 
-    <!-- 공간의 방 리스트 조회 -->
-    <select id="selectRoomsBySpace" parameterType="long" resultType="com.javaex.vo.RoomsVO">
-        SELECT
-          roomNo,
-          spacesNo,
-          roomName,
-          roomInfo,
-          area,
-          capacity,
-          instDtm,
-          updtDtm
-        FROM rooms
-        WHERE spacesNo = #{spacesNo}
-        ORDER BY roomNo
-    </select>
-    
-    <!-- 사용자가 찜한 공간 목록 조회 -->
-    <select id="selectFavoriteSpaces" parameterType="int" resultType="com.javaex.vo.SpacesVO">
-	  SELECT
-	      r.roomNo,
-	      s.spacesNo,
-	      s.userNo,
-	      r.roomName spaceName,
-	      s.spaceSummary,
-	      s.spaceInfo,
-	      s.email,
-	      s.phone,
-	      s.tel,
-	      s.spaceLink,
-	      s.repImg,
-	      s.repImg as picturesNo,
-	      s.postCode,
-	      s.address,
-	      s.addressDetail,
-	      s.instDtm,
-	      s.updtDtm,
-	      COALESCE(
-	        CONCAT(ra.filePath, ra.storedFileName),
-	        CASE
-	          WHEN LOWER(s.spaceLink) REGEXP '^(https?://).*(\\.(jpg|jpeg|png|gif|webp))(\\?.*)?$'
-	            THEN s.spaceLink
-	          WHEN LOWER(s.spaceLink) REGEXP '(\\.(jpg|jpeg|png|gif|webp))$'
-	            THEN CONCAT('/assets/images/', s.spaceLink)
-	          ELSE '/assets/images/연습실찜하기사진01.jpg'
-	        END
-	      ) AS imageUrl
-	  FROM studioWishlist sw
-	  JOIN rooms r   ON r.roomNo   = sw.roomNo
-	  JOIN spaces s  ON s.spacesNo = r.spacesNo
-	  LEFT JOIN (
-	      SELECT roomNo, MIN(picturesNo) AS minPic
-	      FROM roomAttachments
-	      GROUP BY roomNo
-	  ) pick ON pick.roomNo = r.roomNo
-	  LEFT JOIN roomAttachments ra ON ra.picturesNo = pick.minPic
-	  WHERE sw.userNo = #{userNo}
-	  ORDER BY sw.studioWishlistNo DESC
+	<!-- 페이징된 연습실 공간 목록 조회 -->
+	<select id="selectPaged" parameterType="map" resultType="com.javaex.vo.SpacesVO">
+		SELECT
+		spacesNo,
+		userNo,
+		spaceName,
+		spaceSummary,
+		spaceInfo,
+		email,
+		phone,
+		tel,
+		spaceLink,
+		repImg,
+		postCode,
+		address,
+		addressDetail,
+		instDtm,
+		updtDtm
+		FROM spaces
+		ORDER BY spacesNo DESC
+		LIMIT #{offset,jdbcType=INTEGER}, #{size,jdbcType=INTEGER}
 	</select>
-	
+
+	<!-- 연습실 검색 -->
+	<select id="searchSpaces" parameterType="string" resultType="com.javaex.vo.SpacesVO">
+		SELECT
+		spacesNo,
+		userNo,
+		spaceName,
+		spaceSummary,
+		spaceInfo,
+		email,
+		phone,
+		tel,
+		spaceLink,
+		repImg,
+		postCode,
+		address,
+		addressDetail,
+		instDtm,
+		updtDtm
+		FROM spaces
+		WHERE spaceName LIKE #{_parameter}
+		OR spaceSummary LIKE #{_parameter}
+		ORDER BY spacesNo DESC
+	</select>
+
+	<!-- 공간 상세 조회 -->
+	<select id="selectZoneDetail" parameterType="long" resultType="com.javaex.vo.SpacesVO">
+		SELECT
+		spacesNo,
+		userNo,
+		spaceName,
+		spaceSummary,
+		spaceInfo,
+		email,
+		phone,
+		tel,
+		spaceLink,
+		repImg,
+		postCode,
+		address,
+		addressDetail,
+		instDtm,
+		updtDtm
+		FROM spaces
+		WHERE spacesNo = #{spacesNo}
+	</select>
+
+	<!-- 공간의 방 리스트 조회 -->
+	<select id="selectRoomsBySpace" parameterType="long" resultType="com.javaex.vo.RoomsVO">
+		SELECT
+			roomNo,
+			spacesNo,
+			roomName,
+			roomInfo,
+			area,
+			capacity,
+			thumbImg,
+			instDtm,
+			updtDtm
+		FROM rooms
+		WHERE spacesNo = #{spacesNo}
+		ORDER BY roomNo
+	</select>
+
+	<!-- 사용자가 찜한 공간 목록 조회 -->
+	<select id="selectFavoriteSpaces" parameterType="int" resultType="com.javaex.vo.SpacesVO">
+		SELECT
+		r.roomNo,
+		s.spacesNo,
+		s.userNo,
+		r.roomName spaceName,
+		s.spaceSummary,
+		s.spaceInfo,
+		s.email,
+		s.phone,
+		s.tel,
+		s.spaceLink,
+		s.repImg,
+		s.repImg as picturesNo,
+		s.postCode,
+		s.address,
+		s.addressDetail,
+		s.instDtm,
+		s.updtDtm,
+		COALESCE(
+		CONCAT(ra.filePath, ra.storedFileName),
+		CASE
+		WHEN LOWER(s.spaceLink) REGEXP '^(https?://).*(\\.(jpg|jpeg|png|gif|webp))(\\?.*)?$'
+		THEN s.spaceLink
+		WHEN LOWER(s.spaceLink) REGEXP '(\\.(jpg|jpeg|png|gif|webp))$'
+		THEN CONCAT('/assets/images/', s.spaceLink)
+		ELSE '/assets/images/연습실찜하기사진01.jpg'
+		END
+		) AS imageUrl
+		FROM studioWishlist sw
+		JOIN rooms r ON r.roomNo = sw.roomNo
+		JOIN spaces s ON s.spacesNo = r.spacesNo
+		LEFT JOIN (
+		SELECT roomNo, MIN(picturesNo) AS minPic
+		FROM roomAttachments
+		GROUP BY roomNo
+		) pick ON pick.roomNo = r.roomNo
+		LEFT JOIN roomAttachments ra ON ra.picturesNo = pick.minPic
+		WHERE sw.userNo = #{userNo}
+		ORDER BY sw.studioWishlistNo DESC
+	</select>
+
 	<!-- 사용자의 찜 후보 목록 조회 -->
 	<select id="selectFavoriteCandidates" parameterType="int" resultType="java.util.Map">
-		<![CDATA[
+		 <![CDATA[
+		 	select   r.roomNo,
+			         r.spacesNo,
+			         r.roomName,
+			         v.voteNo,
+			         v.minTime,
+			         v.maxTime,
+			         v.count,
+			         v.voteDate,
+			         vo.totalPrice
+			from rooms r, ( select voteNo,
+			                        min(voteTime) minTime,
+			                        max(voteTime)+1 maxTime,
+			                        count(voteTime) count,
+			                        voteDate,
+			                        roomNo
+			                 from voteOptions
+			                 where userNo = #{userNo}
+			                 group by voteNo ) v,
+			      votes vo           
+			where r.roomNo = v.roomNo
+			and vo.voteNo = v.voteNo
+		 ]]>
+		 <!-- 
+		 <![CDATA[
 	     SELECT
 	       v.reservationNo,
 	       v.voteNo,
@@ -210,94 +235,216 @@
 	     WHERE v.userNo = #{userNo}
 	       AND v.voteStatus = 0
 	     ORDER BY v.reservationNo, v.voteDate, startHour, s.spacesNo
-	     ]]>
-	   </select>
-	
+          ]]>
+         -->	     
+        
+	</select>
+
 	<!-- 시간대/요일별 요금 조회 -->
 	<select id="selectRoomPricesByDate" parameterType="com.javaex.vo.ReserveInfoVO" resultType="com.javaex.vo.RoomPriceVO">
-	  SELECT
-	    pricesNo,
-	    roomNo,
-	    dayType,
-	    startTime,
-	    endTime,
-	    hourlyPrice
-	  FROM roomPrices
-	  WHERE roomNo = #{roomNo}
-	    AND dayType = CASE
-	      WHEN DAYOFWEEK(#{targetDate}) IN (1, 7) THEN '주말'
-	      ELSE '평일'
-	    END
-	  ORDER BY startTime
+		SELECT
+		pricesNo,
+		roomNo,
+		dayType,
+		startTime,
+		endTime,
+		hourlyPrice
+		FROM roomPrices
+		WHERE roomNo = #{roomNo}
+		AND dayType = CASE
+		WHEN DAYOFWEEK(#{targetDate}) IN (1, 7) THEN '주말'
+		ELSE '평일'
+		END
+		ORDER BY startTime
+	</select>
+
+	
+	<!-- 투표 추가 -->
+	<insert id="insertVotes" parameterType="com.javaex.vo.VoteVO">
+		<![CDATA[
+			INSERT INTO votes (userNo, totalPrice)
+			VALUES (#{userNo}, #{totalPrice})
+		]]>
+		<selectKey keyProperty="voteNo" resultType="long" order="AFTER">	
+	    <![CDATA[
+			select last_insert_id()
+        ]]>
+		</selectKey>
+		
+	</insert>
+
+
+	<!-- 예약시간저장하기 -->
+	<insert id="insertVotesOption" parameterType="com.javaex.vo.VoteOptionVO">
+		<![CDATA[
+			INSERT INTO voteOptions (userNo, voteNo, roomNo, voteDate, voteTime, voteStatus)
+			VALUES (#{userNo}, #{voteNo}, #{roomNo}, #{voteDate}, #{voteTime}, 0)
+		]]>
+	</insert>
+
+
+
+	<!-- 시간대/요일별 요금 규칙조회-->
+	<select id="selectRoomPrices" parameterType="long" resultType="com.javaex.vo.RoomPriceVO">
+		select   pricesNo,
+		         roomNo,
+		         dayType,
+		         startTime,
+		         endTime,
+		         hourlyPrice,
+		         instDtm,
+		         updtDtm
+		from roomPrices r
+		where r.roomNo = #{roomNo}
+		order by dayType asc, startTime asc
 	</select>
 	
-	<!-- 방 정보 조회 -->
-    <select id="selectRoomByNo" parameterType="long" resultType="com.javaex.vo.RoomsVO">
-    	SELECT
-      		roomNo,
-      		spacesNo,
-      		roomName,
-      		roomInfo,
-      		capacity,
-      		area
-    	FROM rooms
-    	WHERE roomNo = #{roomNo}
-  	</select>
-  	
-  	<!-- 찜 목록에 새 항목 삽입 -->
-  	<insert id="insertStudioWishlist" parameterType="map" useGeneratedKeys="true" keyProperty="studioWishlistNo">
-		INSERT INTO studioWishlist (userNo, roomNo)
-		VALUES (#{userNo}, #{roomNo})
-  	</insert>
-  	
-  	<!-- 사용자 소속 팀 리스트 조회 -->
-  	<select id="selectTeamsByUser" parameterType="int" resultType="com.javaex.vo.TeamVO">
-    	SELECT teamNo, userNo, teamName
-    	FROM teams
-    	WHERE userNo = #{userNo}
-    	ORDER BY teamNo
-  	</select>
-  	
-  	<!-- 찜 목록 삭제 -->
-  	<delete id="deleteStudioWishlist" parameterType="map">
-	    DELETE FROM studioWishlist
-	    WHERE userNo = #{userNo}
-      	AND roomNo = #{roomNo}
-  	</delete>
-  	
-  	<!-- 투표 추가 -->
-	<insert id="insertVote" parameterType="map" useGeneratedKeys="true" keyProperty="voteNo">
-	    INSERT INTO votes (userNo, totalPrice)
-	    VALUES (#{userNo}, #{totalPrice})
-	</insert>
 	
-  	<!-- 날짜 시간 추가 -->
-  	<insert id="insertVoteOption" parameterType="map" useGeneratedKeys="true" keyProperty="reservationNo">
-	    INSERT INTO voteOptions (userNo, roomNo, voteDate, voteTime, voteNo, voteStatus)
-	    VALUES (#{userNo}, #{roomNo}, #{voteDate}, #{voteTime}, #{voteNo}, #{voteStatus})
-  	</insert>
-  	
-  	<!-- 후보 삭제 -->
-  	<delete id="deleteVoteOption" parameterType="map">
-	    DELETE FROM voteOptions
-	    WHERE reservationNo = #{reservationNo}
+	<!-- 특정일 특정방의 예약현황(시간)-->
+	<select id="selectReservation" parameterType="com.javaex.vo.ReserveInfoVO" resultType="com.javaex.vo.ReservationVO">
+		select reservationNo,
+                userNo,
+                voteNo,
+                roomNo,
+                reciptNo,
+                voteDate,
+                voteStatus,
+                voteTime
+        from voteOptions
+        where voteStatus = 2
+        and roomNo = #{roomNo}
+        and voteDate = #{targetDate}
+	</select>
+
+
+
+	<!-- 방 정보 조회 -->
+	<select id="selectRoomByNo" parameterType="long" resultType="com.javaex.vo.RoomsVO">
+		SELECT
+			roomNo,
+			spacesNo,
+			roomName,
+			roomInfo,
+			area,
+			capacity,
+			thumbImg,
+			instDtm,
+			updtDtm
+		FROM rooms
+		WHERE roomNo = #{roomNo}
+	</select>
+
+	<!-- 찜 목록에 새 항목 삽입 -->
+	<insert id="insertStudioWishlist" parameterType="map" useGeneratedKeys="true" keyProperty="studioWishlistNo">
+		INSERT INTO studioWishlist (userNo, roomNo)
+		VALUES (#{userNo},
+		#{roomNo})
+	</insert>
+
+	<!-- 사용자 소속 팀 리스트 조회 -->
+	<select id="selectTeamsByUser" parameterType="int" resultType="com.javaex.vo.TeamVO">
+		SELECT teamNo, userNo, teamName
+		FROM teams
+		WHERE userNo = #{userNo}
+		ORDER BY teamNo
+	</select>
+
+	<!-- 찜 목록 삭제 -->
+	<delete id="deleteStudioWishlist" parameterType="map">
+		DELETE FROM studioWishlist
+		WHERE userNo = #{userNo}
+		AND roomNo = #{roomNo}
+	</delete>
+
+	<!-- 투표 추가 -->
+	<insert id="insertVote" parameterType="map" useGeneratedKeys="true" keyProperty="voteNo">
+		INSERT INTO votes (userNo, totalPrice)
+		VALUES (#{userNo}, #{totalPrice})
+	</insert>
+
+	<!-- 날짜 시간 추가 -->
+	<insert id="insertVoteOption" parameterType="map" useGeneratedKeys="true" keyProperty="reservationNo">
+		INSERT INTO voteOptions (userNo, roomNo, voteDate, voteTime, voteNo, voteStatus)
+		VALUES (#{userNo}, #{roomNo}, #{voteDate}, #{voteTime}, #{voteNo}, #{voteStatus})
+	</insert>
+
+	<!-- 후보 삭제 -->
+	<delete id="deleteVote" parameterType="map">
+		DELETE FROM votes
+		WHERE voteNo = #{voteNo}
 	</delete>
 	
+	
+	<!-- 후보 삭제 -->
+	<delete id="deleteVoteOption" parameterType="long">
+		DELETE FROM voteOptions
+		WHERE voteNo = #{voteNo}
+	</delete>
+	
+	
+
 	<!-- 방 상세 이미지 조회 -->
 	<select id="selectRoomAttachments" parameterType="long" resultType="map">
-	  SELECT 
-		  picturesNo,
-		  refType,
-		  roomNo AS refNo,
-		  storedFileName,
-		  originFileName,
-		  filePath,
-		  instDtm,
-		  updtDtm
+		SELECT
+		picturesNo,
+		refType,
+		roomNo AS refNo,
+		storedFileName,
+		originFileName,
+		filePath,
+		instDtm,
+		updtDtm
 		FROM roomAttachments
 		WHERE roomNo = #{roomNo}
 		ORDER BY picturesNo ASC
 	</select>
+
+	<!-- 선택한 시설관리 -->
+	<select id="selectCheckedFacilities" parameterType="long" resultType="com.javaex.vo.FacilityInfoVO">
+		select f.facilityNo,
+		f.facilityName,
+		s.spacesGuideNo
+		from facilityInfo f, (select spacesGuideNo,
+									 facilityNo
+							  from spacesGuide
+							  where spacesNo = #{spacesNo}) s
+		where f.facilityNo = s.facilityNo
+	</select>
+
+	<!-- 찜리스트 가져오기 -->
+	<select id="selectFavoritesList" parameterType="long" resultType="com.javaex.vo.FavoriteVO">
+		select  sw.studioWishlistNo,
+		        sw.userNo,
+		        sw.roomNo,
+		        r.spacesNo,
+		        r.roomName,
+		        r.roomInfo,
+		        r.area,
+		        r.capacity,
+		        r.thumbImg,
+		        s.spaceName,
+		        s.spaceSummary,
+		        s.spaceInfo,
+		        s.email,
+		        s.phone,
+		        s.tel,
+		        s.postCode,
+		        s.address,
+		        s.addressDetail,
+		        s.repImg,
+		        hp.minPrice,
+		        hp.maxPrice
+		from studioWishlist sw, rooms r, spaces s, (select  min(hourlyPrice) as minPrice
+		                                                    ,max(hourlyPrice) as maxPrice
+		                                                    ,rp.roomNo
+		                                            from roomPrices rp
+		                                            group by roomNo) hp
+		where sw.roomNo = r.roomNo
+		and s.spacesNo = r.spacesNo
+		and sw.userNo = #{roomNo}
+		and r.roomNo = hp.roomNo
+	</select>
 	
-	
+
+
 </mapper>

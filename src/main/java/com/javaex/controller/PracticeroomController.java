@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.service.PracticeroomService;
 import com.javaex.service.TeampageService;
+import com.javaex.vo.FavoriteVO;
 import com.javaex.vo.ReserveInfoVO;
 import com.javaex.vo.SlotVO;
 import com.javaex.vo.SpacesVO;
@@ -62,6 +63,8 @@ public class PracticeroomController {
         model.addAttribute("zone", practiceroomService.getZoneDetail(spacesNo));
         model.addAttribute("rooms", practiceroomService.getRoomsBySpace(spacesNo));
 
+        System.out.println(practiceroomService.getZoneDetail(spacesNo));
+        
 		// Model에 Google Maps API 키를 "googleMapsApiKey"라는 이름으로 추가하여 JSP로 전달
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         
@@ -71,15 +74,16 @@ public class PracticeroomController {
     // room 상세
     @GetMapping("/practice3_room")
     public String room(@RequestParam("roomNo") Long roomNo, HttpSession session, Model model) {
-        UserVO authUser = (UserVO) session.getAttribute("authUser");
-        if (authUser == null) return "redirect:/user/loginForm";
+        //UserVO authUser = (UserVO) session.getAttribute("authUser");
 
         model.addAttribute("room", practiceroomService.getRoomByNo(roomNo));
-        model.addAttribute("zone", practiceroomService.getZoneDetailByRoom(roomNo));
-        model.addAttribute("teams", practiceroomService.getTeamsForUser(authUser.getUserNo()));
-        
+        //model.addAttribute("zone", practiceroomService.getZoneDetailByRoom(roomNo));
+        //model.addAttribute("teams", practiceroomService.getTeamsForUser(authUser.getUserNo()));
         model.addAttribute("attachments", practiceroomService.getRoomAttachments(roomNo));
-        System.out.println("attachments = " + practiceroomService.getRoomAttachments(roomNo));
+        
+        
+        System.out.println(practiceroomService.getRoomByNo(roomNo));
+        
         return "practiceroom/practice3_room";
     }
 
@@ -90,16 +94,22 @@ public class PracticeroomController {
         if (authUser == null) return "redirect:/user/loginForm";
 
         int userNo = authUser.getUserNo();
-        model.addAttribute("favoriteSpaces", practiceroomService.getFavoriteSpaces(userNo));
+        
+        List<FavoriteVO> favoritesList = practiceroomService.exeFavoritesList(userNo);
+        
+        model.addAttribute("favoritesList", favoritesList);
+        
+        
+        //model.addAttribute("favoriteSpaces", practiceroomService.getFavoriteSpaces(userNo));
         model.addAttribute("favoriteCandidates", practiceroomService.getFavoriteCandidates(userNo));
-        model.addAttribute("allTeams", teampageService.exeGetUserTeams(userNo));
+        //model.addAttribute("allTeams", teampageService.exeGetUserTeams(userNo));
         
-        List<TeamVO> teams = teampageService.exeGetUserTeams(userNo);
-        model.addAttribute("allTeams", teams);
+        //List<TeamVO> teams = teampageService.exeGetUserTeams(userNo);
+        //model.addAttribute("allTeams", teams);
         
-        if (!teams.isEmpty()) {
-            model.addAttribute("teamNo", teams.get(0).getTeamNo());
-        }
+        //if (!teams.isEmpty()) {
+        //    model.addAttribute("teamNo", teams.get(0).getTeamNo());
+        //}
         
         return "practiceroom/practice4_wish";
     }
@@ -128,20 +138,28 @@ public class PracticeroomController {
     // 후보 추가
     @PostMapping("/api/vote-option")
     @ResponseBody
-    public Map<String, Object> addVoteOption(@RequestParam int roomNo,
+    public long addVoteOption(@RequestParam int roomNo,
                                              @RequestParam String voteDate,
                                              @RequestParam String voteTime,
                                              @RequestParam(required = false, defaultValue = "0") Long voteNo,
                                              @RequestParam(required = false, defaultValue = "0") int voteStatus,
                                              HttpSession session) {
-        return practiceroomService.addVoteOption(roomNo, voteDate, voteTime, voteNo, voteStatus, session);
+    	
+    	UserVO authUser = (UserVO) session.getAttribute("authUser");
+    	if (authUser == null) {
+			return -1;
+    	} else {
+    		voteNo = practiceroomService.addVoteOption(roomNo, voteDate, voteTime, voteNo, voteStatus, authUser.getUserNo());
+    		return voteNo;
+    	}
+    	
     }
     
     // 후보 삭제
     @PostMapping("/api/vote-option/remove")
     @ResponseBody
-    public Map<String, Object> removeVoteOption(@RequestParam long reservationNo, HttpSession session) {
-        return practiceroomService.removeVoteOption(reservationNo, session);
+    public Map<String, Object> removeVoteOption(@RequestParam long voteNo, HttpSession session) {
+        return practiceroomService.removeVoteOption(voteNo, session);
     }
     
     // 검색

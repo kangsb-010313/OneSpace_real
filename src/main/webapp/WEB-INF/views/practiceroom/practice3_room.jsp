@@ -36,7 +36,7 @@
                     <div class="left-col">
                         <!-- <img id="mainPhoto" class="main-photo" src="${ctx}/uploads/${zone.repImg}" alt="${room.roomName}"/> -->
                         <div id="mainPhoto" class="main-photo"
-						     style="background-image:url('${ctx}/uploads/${zone.repImg}'); background-size:cover; background-position:center;" onclick="resetMainImage()">
+						     style="background-image:url('${ctx}/uploads/${room.thumbImg}'); background-size:cover; background-position:center;" onclick="resetMainImage()">
 						</div>
 
                         <!-- 2x2 그리드 -->
@@ -82,41 +82,15 @@
                         <div class="room-info-card">
                             <h3>방 정보</h3>
                             
-                            <c:choose>
-                                <%-- 만약 roomInfo에 이미지 확장자가 포함되어 있으면 이미지 목록으로 표시 --%>
-                                <c:when test="${not empty rawAll and (fn:contains(rawAll,'.jpg') or fn:contains(rawAll,'.jpeg') or fn:contains(rawAll,'.png') or fn:contains(rawAll,'.gif'))}">
-                                    <div style="display:flex; flex-direction:column; gap:8px;">
-                                        <c:forEach var="img" items="${fn:split(rawAll, ',')}">
-                                            <c:set var="iTrim" value="${fn:trim(img)}" />
-                                            <c:choose>
-                                                <c:when test="${fn:startsWith(iTrim,'http')}">
-                                                    <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
-                                                        src="${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
-                                                </c:when>
-                                                <c:when test="${fn:startsWith(iTrim,'/')}">
-                                                    <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
-                                                        src="${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <img style="width:100%; height:120px; object-fit:cover; border-radius:6px;"
-                                                        src="${ctx}/assets/images/${iTrim}" alt="room image" onerror="this.onerror=null;this.src='${ctx}/assets/images/placeholder.jpg'"/>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
-                                    </div>
-                                </c:when>
-                                <c:otherwise>
-                                    <%-- 텍스트(줄바꿈 유지) --%>
-                                    <div class="room-info-text">
-                                        <c:out value="${room.roomInfo}" />
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
-                            
                             <!-- 추가 정보(예: 수용인원/면적) -->
                             <hr style="margin:12px 0 10px;">
+                            <div><strong>연습실 소개:</strong> ${room.roomInfo}</div>
                             <div><strong>수용인원:</strong> ${room.capacity}명</div>
                             <div><strong>면적:</strong> ${room.area}</div>
+                            
+                            <c:forEach items="${room.prices}"  var="roomPriceVO">
+                            	${roomPriceVO.dayType}, ${roomPriceVO.startTime}~${roomPriceVO.endTime}, ${roomPriceVO.hourlyPrice}
+                            </c:forEach>
                             
                             <div class="team-like-list" style="margin-top:12px;">
 							    <!-- 팀 선택 기능 제거 -->

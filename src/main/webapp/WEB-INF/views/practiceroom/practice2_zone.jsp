@@ -65,7 +65,15 @@
                                 <%-- 상세 설명 (공간 정보) --%>
                                 <div class="desc-box">
                                     ${zone.spaceInfo}
-                                </div>
+                                </div>                                
+                                
+                                <%-- 시설안내 --%>
+                                <div class="section-title">시설안내</div>
+                                <c:forEach var="facilityVO" items="${zone.checkedFacilityList}">
+                                	 <div class="section-subtitle">${facilityVO.facilityName}</div>
+                                </c:forEach>
+                               
+                                
                                 
                                 <%-- 주소 표시 --%>
                                 <div class="section-title">주소</div>
@@ -133,7 +141,7 @@
                                             <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${room.roomNo}">
                                                 <div class="room-thumb-wrap">
                                                 	<%-- 방 썸네일 (대표 이미지 재사용... 이거 바꿔야하나) --%>
-                                                    <img class="room-thumb" src="${pageContext.request.contextPath}/uploads/${zone.repImg}" alt="${zone.spaceName} 대표사진">
+                                                    <img class="room-thumb" src="${pageContext.request.contextPath}/uploads/${room.thumbImg}" alt="${zone.spaceName} 대표사진">
                                                     <div class="room-title">${room.roomName}</div>
                                                 </div>
                                                 <div class="room-bottom-row">

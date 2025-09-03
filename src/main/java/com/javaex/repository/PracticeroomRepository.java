@@ -8,11 +8,16 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.javaex.vo.FacilityInfoVO;
+import com.javaex.vo.FavoriteVO;
+import com.javaex.vo.ReservationVO;
 import com.javaex.vo.ReserveInfoVO;
 import com.javaex.vo.RoomPriceVO;
 import com.javaex.vo.RoomsVO;
 import com.javaex.vo.SpacesVO;
 import com.javaex.vo.TeamVO;
+import com.javaex.vo.VoteOptionVO;
+import com.javaex.vo.VoteVO;
 
 
 @Repository
@@ -68,10 +73,40 @@ public class PracticeroomRepository {
     
     // 룸 가격 리스트 가져오기
     public List<RoomPriceVO> selectRoomPricesByDate(ReserveInfoVO reserveInfoVO) {
-    	System.out.println("PracticeroomRepository.selectRoomPricesByDate()");
+    	System.out.println("PracticeroomRepository.selectRoomPricesByDate()"+reserveInfoVO);
     	
         return sqlSession.selectList("practiceroom.selectRoomPricesByDate", reserveInfoVO);
     }
+    
+    //예약된 시간 가져오기
+    public List<ReservationVO> selectReservation(ReserveInfoVO reserveInfoVO) {
+    	System.out.println("PracticeroomRepository.selectReservation()"+reserveInfoVO);
+    	
+        return sqlSession.selectList("practiceroom.selectReservation", reserveInfoVO);
+    }
+    
+    //투표저장하기
+    public int insertVotes(VoteVO voteVO ) {
+    	System.out.println("PracticeroomRepository.insertVotes()");
+    	
+        return sqlSession.insert("practiceroom.insertVotes", voteVO);
+    }
+ 
+    
+    //예약시간저장하기
+    public int insertVotesOption(VoteOptionVO voteOptionVO) {
+    	System.out.println("PracticeroomRepository.insertVotesOption()");
+    	
+        return sqlSession.insert("practiceroom.insertVotesOption", voteOptionVO);
+    }
+ 
+    
+    
+    
+    
+    
+    
+    
     
     // 방 정보 조회
     public RoomsVO selectRoomByNo(Long roomNo) {
@@ -127,15 +162,24 @@ public class PracticeroomRepository {
         return (key == null) ? null : ((Number) key).longValue();
     }
     
+    
     // 후보 삭제
-    public boolean deleteVoteOption(int userNo, long reservationNo) {
+    public boolean deleteVote(int userNo, long voteNo) {
     	Map<String, Object> p = new HashMap<>();
         p.put("userNo", userNo);
-        p.put("reservationNo", reservationNo);
-        int rows = sqlSession.delete("practiceroom.deleteVoteOption", p);
-        System.out.println("[삭제 실행] reservationNo=" + reservationNo + ", userNo=" + userNo + ", rows=" + rows);
+        p.put("voteNo", voteNo);
+        int rows = sqlSession.delete("practiceroom.deleteVote", p);
+        //System.out.println("[삭제 실행] reservationNo=" + reservationNo + ", userNo=" + userNo + ", rows=" + rows);
         return rows == 1;
     }
+    
+    // 후보 옵션 삭제
+    public boolean deleteVoteOption(long voteNo) {
+        int rows = sqlSession.delete("practiceroom.deleteVoteOption", voteNo);
+        //System.out.println("[삭제 실행] reservationNo=" + reservationNo + ", userNo=" + userNo + ", rows=" + rows);
+        return rows == 1;
+    }
+    
     
     // 검색
     public List<SpacesVO> searchSpaces(String keyword) {
@@ -146,5 +190,29 @@ public class PracticeroomRepository {
     public List<Map<String, Object>> selectRoomAttachments(Long roomNo) {
         return sqlSession.selectList("practiceroom.selectRoomAttachments", roomNo);
     }
+    
+    
+	/* 선택한 시설관리 */
+    public List<FacilityInfoVO> selectCheckedFacilities(long spaceNo) {
+        // "host" 네임스페이스에 있는 "selectAllFacilities" 쿼리를 호출합니다.
+    	
+        return sqlSession.selectList("practiceroom.selectCheckedFacilities", spaceNo);
+    }
+    
+	/* 시간대/요일별 요금 규칙조회 */
+    public List<RoomPriceVO> selectRoomPrices(long roomNo) {
+    	
+        return sqlSession.selectList("practiceroom.selectRoomPrices", roomNo);
+    }
+
+    
+    //찜리스트 가져오기
+    public List<FavoriteVO> selectFavoritesList(long userNo){
+    	
+    	List<FavoriteVO> favoritesList = sqlSession.selectList("practiceroom.selectFavoritesList", userNo);
+    	System.out.println(favoritesList);
+    	return favoritesList;
+    }
+    
     
 }

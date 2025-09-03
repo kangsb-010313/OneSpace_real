@@ -37,28 +37,34 @@
 							<!-- 좌측: 찜한 공간 카드 리스트 -->
 							<div class="practice-card-list">
 								 <h2 class="zzim-title">찜 리스트</h2>
-								<c:forEach var="space" items="${favoriteSpaces}">
+								 <c:forEach var="favoriteVO" items="${favoritesList}">
 									<div class="practice-card card-bordered">
 										
 										<%-- 대표 이미지 --%>
-										<img src="${CTX}/uploads/${space.repImg}"
-									     alt="${space.spaceName}"
+										<img src="${CTX}/uploads/${favoriteVO.thumbImg}"
+									     alt="${favoriteVO.roomName}"
 									     class="practice-card-img"
 									     style="width:100%; height:200px; object-fit:cover;"/>
 										
 										<!-- 카드 내용 -->
 										<div class="practice-card-body">
-											<div class="practice-card-title">${space.spaceName}</div>
-											<div class="practice-card-meta">${space.address}</div>
+											<div class="practice-card-title">${favoriteVO.roomName}</div>
+											<div class="practice-card-meta">${favoriteVO.address}</div>
 											<div class="practice-card-price">
-												<span class="price-highlight">7,000~12,000</span> 원/시간 <span class="price-sub">&nbsp; 실외화 가능/주차/최대7인</span>
+												<span class="price-highlight">${favoriteVO.minPrice}~${favoriteVO.maxPrice}</span> 원/시간 
+												<span class="price-sub">&nbsp; 
+													<c:forEach items="${favoriteVO.selectedFacilityInfoList}" var="facilityVO">
+														${facilityVO.facilityName}
+													</c:forEach>
+													최대${favoriteVO.capacity}인
+												</span>
 											</div>
 										</div>
 										
 										<!-- 카드 액션 버튼 -->
 										<div class="card-actions">
-											<button class="btn-outline btn-pill-sm open-schedule" data-spaces-no="${space.spacesNo}" data-room-no="${space.roomNo}">날짜 시간 추가</button>
-											<button class="btn-like btn-pill-sm" type="button" data-spaces-no="${space.spacesNo}" data-room-no="${space.roomNo}">찜해제</button>
+											<button class="btn-outline btn-pill-sm open-schedule" data-spaces-no="${favoriteVO.spacesNo}" data-room-no="${favoriteVO.roomNo}">날짜 시간 추가</button>
+											<button class="btn-like btn-pill-sm" type="button" data-spaces-no="${favoriteVO.spacesNo}" data-room-no="${favoriteVO.roomNo}">찜해제</button>
 										</div>
 									</div>
 								</c:forEach>
@@ -77,13 +83,13 @@
 									<c:forEach var="c" items="${favoriteCandidates}" varStatus="loop">
 										<li class="fav-item">
 											<div>
-												<div class="fav-item-title">${loop.count}.${c.spaceName}</div>
+												<div class="fav-item-title">${loop.count}.${c.roomName}</div>
 												<div class="fav-item-meta">
 													<%-- 후보 날짜 --%>
 													<fmt:formatDate value="${c.voteDate}" pattern="yyyy/MM/dd" />
 													<%-- 시작시간 ~ 종료시간 --%>
-													<span class="fav-time">${c.startHour}:00~${c.endHour}:00</span>
-													<span class="fav-duration">${c.durationHours}시간</span>
+													<span class="fav-time">${c.minTime}:00~${c.maxTime}:00</span>
+													<span class="fav-duration">${c.count}시간</span>
 												</div>
 											</div>
 											<div class="fav-right">
@@ -93,7 +99,7 @@
 												<div class="fav-price">
 													가격:
 													<fmt:formatNumber value="${c.totalPrice}" type="number" />
-													<button class="btn-remove-fav" data-reservation-no="${c.reservationNo}">
+													<button class="btn-remove-fav" data-voteno="${c.voteNo}">
 													    삭제
 													</button>
 												</div>
@@ -321,20 +327,32 @@
 	    	if (price === 0) return; // 가격이 0인 슬롯은 표시하지 않음
 	    	const end = (start + 1) % 24; // 23 다음은 24로 설정
 			
-	    	const $li = $('<li>')
-	        	.addClass('slot')
+	    	if(slotVO.state == 1){
+	    		const $li = $('<li>')
+	        	.addClass('slot reserv')
 	        	.attr('data-start', start)
 	        	.attr('data-end', end)
 	        	.attr('data-price', price)
-	        	.html(pad2(start) + '~' + pad2(end) + '<span>(' + price.toLocaleString() + ')</span>');
+	        	.html(pad2(start) + '~' + pad2(end) + '<span>(' + price.toLocaleString() + ')</span>' + slotVO.state);
 			
-	    	$schedSlots.append($li);
+	    		$schedSlots.append($li);
+	    	}else{
+	    		const $li = $('<li>')
+	        	.addClass('slot active')
+	        	.attr('data-start', start)
+	        	.attr('data-end', end)
+	        	.attr('data-price', price)
+	        	.html(pad2(start) + '~' + pad2(end) + '<span>(' + price.toLocaleString() + ')</span>' + slotVO.state);
+			
+	    		$schedSlots.append($li);
+	    	}
+	    	
 	  	}
 		
 	  	/* ------------------ 슬롯 클릭/선택 로직 ------------------ */
 	  	function bindSlotClick(){
-		    $schedSlots.off('click', '.slot');
-	    	$schedSlots.on('click', '.slot', function(){
+		    $schedSlots.off('click', '.slot.active');
+	    	$schedSlots.on('click', '.slot.active', function(){
 	      		$(this).toggleClass('selected');
 				
 	      		const starts = $schedSlots.find('.slot.selected').map(function(){ return +this.dataset.start; }).get().sort((a,b)=>a-b);
@@ -427,6 +445,8 @@
 		    	},
 		    	dataType: 'json'
 		  	}).done(function(res){
+		  		console.log("=================================");
+		  		
 		    	if (res.success) {
 		      		const $newItem = $('<li class="fav-item">').append(
 		        	$('<div>').append(
@@ -455,7 +475,7 @@
 		      		alert(res.message || '투표 옵션 추가 완료');
 		    	} else {
 		      		alert(res.message || '투표 옵션 추가 실패');
-		    	}
+		    	} 
 		 	}).fail(function(xhr, status, err){
 		    	console.error('투표 옵션 추가 실패', status, err);
 		    	alert('서버 오류가 발생했습니다.');
@@ -487,9 +507,12 @@
 		    	data: { roomNo: roomNo, voteDate: voteDate, voteTime: voteTime },
 		    	dataType: 'json'
 		  	})
-		  	.done(function(res){
-		    	if (res.success) {
+			.done(function(voteNo){
+		    	console.log(voteNo);
+		    	
+				if (voteNo > 0) {
 		      		// 오른쪽 후보 리스트에 추가
+		      		/*
 		      		const $favList = $('.fav-list');
 		      		const count = $favList.children('li').length + 1;
 		      		const $li = $('<li class="fav-item">').append(
@@ -509,6 +532,7 @@
 		      		$favList.append($li);
 		      		$overlay.hide();
 		      		alert(res.message);
+		      		*/
 		      		location.reload();
 		    	} else {
 		      		alert(res.message || '저장 실패');
@@ -571,14 +595,14 @@
 	    if (!confirm("정말 이 후보를 삭제하시겠습니까?")) return;
 
 	    const $btn = $(this);
-	    const reservationNo = $btn.data('reservation-no');
+	    const voteNo = $btn.data('voteno');
 		
-	    console.log("삭제 요청 reservationNo=", reservationNo);
+	    console.log("삭제 요청 voteNo=", voteNo);
 	    
 	    $.ajax({
 	        url: ctx + '/practice/api/vote-option/remove',
 	        method: 'POST',
-	        data: { reservationNo: reservationNo },
+	        data: { voteNo: voteNo },
 	        dataType: 'json'
 	    }).done(function(res){
 	    	console.log("삭제 응답:", res);
