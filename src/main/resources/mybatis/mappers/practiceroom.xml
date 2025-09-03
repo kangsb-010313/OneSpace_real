@@ -119,7 +119,7 @@
 	      r.roomNo,
 	      s.spacesNo,
 	      s.userNo,
-	      s.spaceName,
+	      r.roomName spaceName,
 	      s.spaceSummary,
 	      s.spaceInfo,
 	      s.email,
@@ -162,7 +162,7 @@
 	     SELECT
 	       v.reservationNo,
 	       v.voteNo,
-	       s.spaceName,
+	       r.roomName spaceName,
 	       r.roomNo,
 	       v.voteDate,
 	       CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(v.voteTime,'~', 1), ':', 1) AS UNSIGNED) AS startHour,
