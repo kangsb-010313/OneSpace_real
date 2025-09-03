@@ -96,7 +96,7 @@ public class RoomsVO {
 	}
 
 	public static class RoomAttachment {
-		private Long pictureSno;
+		private Long picturesNo;
 		private String refType;
 		private Long refNo;
 		private String storedFileName;
@@ -105,12 +105,12 @@ public class RoomsVO {
 		private String instDtm;
 		private String updtDtm;
 
-		public Long getPictureSno() {
-			return pictureSno;
+		public Long getPicturesNo() {
+			return picturesNo;
 		}
 
-		public void setPictureSno(Long pictureSno) {
-			this.pictureSno = pictureSno;
+		public void setPicturesNo(Long picturesNo) {
+			this.picturesNo = picturesNo;
 		}
 
 		public String getRefType() {
@@ -167,6 +167,16 @@ public class RoomsVO {
 
 		public void setUpdtDtm(String updtDtm) {
 			this.updtDtm = updtDtm;
+		}
+		
+		private List<RoomAttachment> attachments;
+
+		public List<RoomAttachment> getAttachments() {
+		    return attachments;
+		}
+
+		public void setAttachments(List<RoomAttachment> attachments) {
+		    this.attachments = attachments;
 		}
 	}
 

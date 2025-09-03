@@ -167,4 +167,9 @@ public class PracticeroomService {
         return practiceroomRepository.searchSpaces(keyword);
     }
     
+    // 방리스트
+    public List<Map<String, Object>> getRoomAttachments(Long roomNo) {
+        return practiceroomRepository.selectRoomAttachments(roomNo);
+    }
+    
 }

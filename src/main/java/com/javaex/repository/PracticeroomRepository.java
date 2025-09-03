@@ -140,6 +140,11 @@ public class PracticeroomRepository {
     // 검색
     public List<SpacesVO> searchSpaces(String keyword) {
         return sqlSession.selectList("practiceroom.searchSpaces", "%" + keyword + "%");
-    }	
+    }
+    
+    // 방리스트
+    public List<Map<String, Object>> selectRoomAttachments(Long roomNo) {
+        return sqlSession.selectList("practiceroom.selectRoomAttachments", roomNo);
+    }
     
 }

@@ -77,6 +77,9 @@ public class PracticeroomController {
         model.addAttribute("room", practiceroomService.getRoomByNo(roomNo));
         model.addAttribute("zone", practiceroomService.getZoneDetailByRoom(roomNo));
         model.addAttribute("teams", practiceroomService.getTeamsForUser(authUser.getUserNo()));
+        
+        model.addAttribute("attachments", practiceroomService.getRoomAttachments(roomNo));
+        System.out.println("attachments = " + practiceroomService.getRoomAttachments(roomNo));
         return "practiceroom/practice3_room";
     }
 

@@ -41,6 +41,7 @@
 
                         <!-- 2x2 그리드 -->
                         <div class="thumb-grid">
+                        <!-- 
                             <div class="thumb-quad quad-tl" role="button" tabindex="0"
                                 style="background-image: url('${ctx}/uploads/${zone.repImg}');"
                                 data-full="${ctx}/uploads/${zone.repImg}" 
@@ -65,6 +66,14 @@
                                 onclick="swapMainImageFromQuad(this)" 
                                 onkeydown="if(event.key==='Enter') swapMainImageFromQuad(this)">
                             </div>
+                        -->
+                        <c:forEach var="att" items="${attachments}">
+                            <div class="thumb-quad"
+					             style="background-image: url('${ctx}/uploads/${att.storedFileName}');"
+					             data-full="${ctx}/uploads/${att.storedFileName}"
+					             onclick="swapMainImageFromQuad(this)">
+					        </div>
+					    </c:forEach>
                         </div>
                     </div>
 

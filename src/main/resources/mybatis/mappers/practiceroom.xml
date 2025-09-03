@@ -283,5 +283,21 @@
 	    WHERE reservationNo = #{reservationNo}
 	</delete>
 	
+	<!-- 방 상세 이미지 조회 -->
+	<select id="selectRoomAttachments" parameterType="long" resultType="map">
+	  SELECT 
+		  picturesNo,
+		  refType,
+		  roomNo AS refNo,
+		  storedFileName,
+		  originFileName,
+		  filePath,
+		  instDtm,
+		  updtDtm
+		FROM roomAttachments
+		WHERE roomNo = #{roomNo}
+		ORDER BY picturesNo ASC
+	</select>
+	
 	
 </mapper>
