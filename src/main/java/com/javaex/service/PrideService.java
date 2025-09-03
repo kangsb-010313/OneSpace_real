@@ -14,6 +14,7 @@ import java.util.Map;
  * - 기본: 타입 필터 비적용(= 모든 글 포함). type 파라미터가 오면 그 값으로 필터.
  * - teamNo 필터(선택) 지원
  * - 목록/상세 + 이미지 번들
+ * - 페이지당 개수: 기본 8, 최대 8
  */
 @Service
 @Transactional(readOnly = true)
@@ -24,6 +25,13 @@ public class PrideService {
     /** 필요 시 쓸 기본 타입 (DB가 'TEAM_PRIDE' 또는 '팀자랑') — 기본에선 사용하지 않음 */
     private static final String DEFAULT_TYPE = "TEAM_PRIDE";
 
+    /** 페이지 크기(기본/최대) */
+    private static final int DEFAULT_PAGE_SIZE = 8;
+    private static final int MAX_PAGE_SIZE     = 8;
+
+    /** 페이지네이션 블록 크기 (1~5, 6~10 ...) */
+    private static final int PAGE_BLOCK_SIZE   = 5;
+
     public PrideService(PrideRepository repo) {
         this.repo = repo;
     }
@@ -33,9 +41,9 @@ public class PrideService {
         return (type == null || type.isBlank()) ? null : type;
     }
 
-    /** 페이지당 개수: 기본 5, 최대 5 */
+    /** 페이지당 개수: 기본 8, 최대 8 */
     private int coerceSize(int size) {
-        return (size <= 0) ? 5 : Math.min(size, 5);
+        return (size <= 0) ? DEFAULT_PAGE_SIZE : Math.min(size, MAX_PAGE_SIZE);
     }
 
     /* =======================
@@ -93,9 +101,8 @@ public class PrideService {
         List<PrideVO> content = repo.selectPrideCards(t, teamNo, safeSize, offset);
 
         // 페이지 블록(1~5, 6~10 ...)
-        int blockSize = 5;
-        int startPage = ((safePage - 1) / blockSize) * blockSize + 1;
-        int endPage   = Math.min(startPage + blockSize - 1, totalPages);
+        int startPage = ((safePage - 1) / PAGE_BLOCK_SIZE) * PAGE_BLOCK_SIZE + 1;
+        int endPage   = Math.min(startPage + PAGE_BLOCK_SIZE - 1, totalPages);
 
         Map<String, Object> model = new HashMap<>();
         model.put("content", content);

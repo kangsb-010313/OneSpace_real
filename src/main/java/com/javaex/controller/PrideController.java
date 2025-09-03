@@ -30,7 +30,7 @@ public class PrideController {
     public String list(@RequestParam(name = "type",   required = false) String type,   // 서비스에서 기본 타입 보정
                        @RequestParam(name = "teamNo", required = false) Long teamNo,
                        @RequestParam(name = "page",   defaultValue = "1")  int page,
-                       @RequestParam(name = "size",   defaultValue = "5")  int size,   // ★ 기본 5
+                       @RequestParam(name = "size",   defaultValue = "8")  int size,   // ★ 기본 5
                        Model model) {
 
         // 서비스가 size를 최대 5로 보정하므로 여기서는 그대로 위임
@@ -48,7 +48,7 @@ public class PrideController {
                          @RequestParam(name = "type",   required = false) String type,
                          @RequestParam(name = "teamNo", required = false) Long teamNo,
                          @RequestParam(name = "page",   defaultValue = "1") int page,
-                         @RequestParam(name = "size",   defaultValue = "5") int size,   // ★ 기본 5
+                         @RequestParam(name = "size",   defaultValue = "8") int size,   // ★ 기본 5
                          Model model) {
 
         Map<String, Object> m = prideService.getDetailModel(type, id);
@@ -76,7 +76,7 @@ public class PrideController {
     @ResponseBody
     public Map<String, Object> listApi(@RequestParam(name = "teamNo", required = false) Long teamNo,
                                        @RequestParam(name = "page",   defaultValue = "1") int page,
-                                       @RequestParam(name = "size",   defaultValue = "5") int size,   // ★ 기본 5
+                                       @RequestParam(name = "size",   defaultValue = "8") int size,   // ★ 기본 5
                                        @RequestParam(name = "type",   required = false) String type) {
         return prideService.pageApiModel(teamNo, page, size, type);
     }
