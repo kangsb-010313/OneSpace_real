@@ -68,11 +68,6 @@
 										</div>
 									</div>
 								</c:forEach>
-
-								<c:if test="${empty favoriteSpaces}">
-									<div style="padding: 16px; color: #888;">찜한 연습실이 없습니다.</div>
-								</c:if>
-
 							</div>
 							
 							
