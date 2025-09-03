@@ -41,6 +41,18 @@ public class HostRepository {
     public int insertSpace(HostVO vo) {
         return sqlSession.insert(NS + "insert_space", vo);
     }
+    
+    /** update */
+    public int updateSpace(HostVO vo) {
+    	System.out.println("-------");
+    	System.out.println(vo);
+    	return sqlSession.update(NS + "update_space", vo);
+    }
+    
+    /** delete facility */
+    public int deleteFacility(Long spacesNo) {
+    	return sqlSession.delete(NS + "delect_facility", spacesNo); 
+    }
 
     /** 시설체크박스 저장 */
     public int insertFacility(FacilityInfoVO vo) {

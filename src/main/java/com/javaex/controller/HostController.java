@@ -117,4 +117,17 @@ public class HostController {
     	
     }
 
+    // 수정(update)
+    
+    @PostMapping("/spaces/update")
+    public String update(@ModelAttribute HostVO vo,
+                         @RequestParam(value = "repImage", required = false) MultipartFile repImagFile,
+                         @RequestParam(value = "facilityNos", required = false) List<Long> facilityNos, 
+                         HttpSession session) {
+    	
+    	hostService.updateSpace(vo, repImagFile, facilityNos);
+		return "redirect:/host/spaces/new";
+    	
+    }
+
 }

@@ -6,6 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.javaex.vo.RoomAttachmentVO;
+import com.javaex.vo.RoomPriceVO;
 import com.javaex.vo.RoomVO;
 
 @Repository
@@ -22,6 +24,49 @@ public class RoomRepository {
 		return roomList;
 	}
 
+	// UserNo 로 SpaceNo 조회
+	public Long selectSpacesNoByUserNo(long userNo) {
+		System.out.println("RoomRepository.selectSpacesNoByUserNo()");
+		Long spacesNo = sqlSession.selectOne("room.selectSpacesNoByUserNo", userNo);
+
+		return spacesNo;
+	}
+	
+	
+	//연습실 등록
+	public int insertRoom(RoomVO roomVO){
+		System.out.println("RoomService.insertRoom()");
+      
+		int count = sqlSession.insert("room.insertRoom", roomVO);
+		return count;
+	}
+	
+	
+	//이용요금 등록
+	public int insertRoomPrices(RoomPriceVO roomPriceVO){
+		System.out.println("RoomService.insertRoomPrices()");
+      
+		int count = sqlSession.insert("room.insertRoomPrices", roomPriceVO);
+		return count;
+	}
+	
+	//연습실에 대표 이미지경로 업데이트
+	public int updateThumbImg(RoomVO roomVO){
+		System.out.println("RoomService.updateThumbImg()");
+      
+		int count = sqlSession.insert("room.updateThumbImg", roomVO);
+		return count;
+	}
+	
+	//연습실 사진 등록
+	public int insertRoomPhoto(RoomAttachmentVO roomAttachmentVO){
+		System.out.println("RoomService.insertRoomPhoto()");
+      
+		int count = sqlSession.insert("room.insertRoomPhoto", roomAttachmentVO);
+		return count;
+	}
+	
+	
 	/*
 	 * // 조회 public RoomsVO select_room_with_prices(Long roomNo) { return
 	 * sql.selectOne("room.select_room_with_prices", roomNo); } public

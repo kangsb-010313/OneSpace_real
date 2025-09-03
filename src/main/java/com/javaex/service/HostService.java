@@ -1,10 +1,12 @@
 package com.javaex.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.repository.HostRepository;
 import com.javaex.vo.FacilityInfoVO;
@@ -15,6 +17,9 @@ public class HostService {
 
 	@Autowired
 	private HostRepository hostRepository;
+	
+	@Autowired
+	private AttachService attachService;
 
 	/** 단건 조회 by userNo */
 	public HostVO getSpaceByUserNo(Long userNo) {
@@ -66,6 +71,33 @@ public class HostService {
 		return 1;
 	}
 
+	// update
+	
+	public int updateSpace(HostVO vo, MultipartFile repImagFile, List<Long> facilityNos) {
+    	//이미지 수정
+    	if(!repImagFile.isEmpty()) {
+    	    //이미지가 있으면 
+    		//--> 이미지복사, 이미지정보추출(이름)
+    		Map<String, Object> fileInfo = attachService.saveFile(repImagFile);
+    	}
+    	
+    	//건물정보 수정
+    	int count= hostRepository.updateSpace(vo);
+    	
+    	//건물 시설옵션 수정
+    	//   기존 옵션 삭제
+    	hostRepository.deleteFacility(vo.getSpacesno());
+    	//   새로운 옵션을 등록
+    	for (int i=0; i<facilityNos.size(); i++) {
+    		FacilityInfoVO facilityInfoVo = new FacilityInfoVO();
+    		facilityInfoVo.setSpacesNo(vo.getSpacesno());
+    		facilityInfoVo.setFacilityNo(facilityNos.get(i));
+    		
+    		hostRepository.insertFacility(facilityInfoVo);
+    	}
+    
+    	return count;
+	}
 	/* --------------------- 내부 유틸 --------------------- */
 
 	private void normalize(HostVO vo) {

@@ -59,6 +59,7 @@
       <!-- 폼 -->
       <form id="spaceForm" action="${urlSaveSpace}" method="post" enctype="multipart/form-data">
 
+	  	<input type="text" name="spacesno" value="${requestScope.space.spacesno}">
         <!-- 공간정보 -->
         <section class="form-section">
           <div class="input-group">
@@ -176,8 +177,8 @@
                  value="${requestScope.space.addressdetail}" placeholder="상세 주소">
 
           <!-- 우편번호는 hidden으로 유지하되 JS에서 채움 -->
-          <input type="hidden" id="postcode" name="postcode"  value="">
-          <input type="hidden" name="spacelink" value="${requestScope.space.postcode}">
+          <input type="hidden" id="postcode" name="postcode"  value="${requestScope.space.postcode}">
+          <input type="hidden" name="spacelink" value="">
         </section>
 
         <!-- 연락처 (이메일 구조/클래스 원본 유지) -->
@@ -230,7 +231,7 @@
         <!-- 버튼 -->
         <div class="btn-row">
           <button class="btn prev-btn" type="button" onclick="location.href='${urlSpacesList}'">이전</button>
-          <button class="btn save-btn" type="submit">저장</button>
+          <button class="btn save-btn" type="submit">수정</button>
         </div>
       </form>
 

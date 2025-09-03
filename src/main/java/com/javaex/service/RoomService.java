@@ -1,11 +1,16 @@
 package com.javaex.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.repository.RoomRepository;
+import com.javaex.vo.RoomAttachmentVO;
+import com.javaex.vo.RoomPriceVO;
 import com.javaex.vo.RoomVO;
 
 @Service
@@ -13,6 +18,9 @@ public class RoomService {
 
 	@Autowired
 	private RoomRepository roomRepository;
+	
+	@Autowired
+	private AttachService attachService;
 
 	// 연습실(방) 전체 리스트
 	public List<RoomVO> exeSelectRoomList(long userNo) {
@@ -24,8 +32,85 @@ public class RoomService {
 	}
 	
 	
-	
-	
+   //UserNo 로 SpaceNo 조회
+   public Long exeSelectSpacesNoByUserNo(long userNo){
+      System.out.println("RoomService.selectSpacesNoByUserNo()");
+      
+      Long spacesNo = roomRepository.selectSpacesNoByUserNo(userNo);
+      
+      return spacesNo;
+   }
+	   
+
+   //연습실 등록
+   @Transactional
+   public Long exeRoomAdd(RoomVO roomVO){
+      System.out.println("RoomService.exeRoomAdd()");
+      
+      long count = 0;
+      System.out.println("==연습실 등록전VO================================");
+      System.out.println(roomVO);
+      System.out.println("-----------------------------------------------");
+      //방기본정보 저장
+      roomRepository.insertRoom(roomVO);
+      System.out.println("==연습실 등록후VO================================");
+      System.out.println(roomVO);
+      System.out.println("-----------------------------------------------");
+      
+     
+      //roomPrices저장
+      for(int i=0; i<roomVO.getHourlyPrices().size(); i++) {
+    	  
+    	  //이용요금VO 만들기
+    	  RoomPriceVO roomPriceVO = new RoomPriceVO();
+    	  roomPriceVO.setRoomNo(roomVO.getRoomNo());
+    	  roomPriceVO.setDayType(roomVO.getDayTypes().get(i));
+    	  roomPriceVO.setStartTime(roomVO.getStartTimes().get(i));
+    	  roomPriceVO.setEndTime(roomVO.getEndTimes().get(i));;
+    	  roomPriceVO.setHourlyPrice(roomVO.getHourlyPrices().get(i));
+
+    	  System.out.println("==이용요금VO================================");
+    	  System.out.println(roomPriceVO);
+    	  System.out.println("-----------------------------------------------");
+    	      
+    	  
+    	  //이용요금저장하기
+    	  count = roomRepository.insertRoomPrices(roomPriceVO);
+      }
+            
+ 
+      // 대표이미지 업데이트
+      MultipartFile thumbFile = roomVO.getThumbFile();
+      Map<String, Object> thumbFileInfo = attachService.saveFile(thumbFile);
+      roomVO.setThumbImg((String)thumbFileInfo.get("saveName"));
+	  
+      System.out.println("==연습실 대표이미지 파일명 있는지================================");
+	  System.out.println(roomVO);
+	  System.out.println("-----------------------------------------------");
+      
+      count = roomRepository.updateThumbImg(roomVO);
+      
+      
+      // 나머지이미지 저장
+      for(int i=0; i<roomVO.getPhotos().size(); i++) {
+    	  Map<String, Object> photoInfo = attachService.saveFile(roomVO.getPhotos().get(i));
+    	  RoomAttachmentVO roomAttachmentVO = new RoomAttachmentVO();
+    	  roomAttachmentVO.setRoomNo(roomVO.getRoomNo());
+    	  roomAttachmentVO.setRefType("ROOM");
+    	  roomAttachmentVO.setStoredFileName((String)photoInfo.get("saveName"));
+    	  roomAttachmentVO.setOriginFileName((String)photoInfo.get("orgName"));
+    	  roomAttachmentVO.setFilePath((String)photoInfo.get("filePath"));
+    	  
+          System.out.println("==나머지 이미지VO================================");
+    	  System.out.println(roomAttachmentVO);
+    	  System.out.println("-----------------------------------------------");
+      
+    	  count = roomRepository.insertRoomPhoto(roomAttachmentVO);
+      }
+      
+      return count;
+   }
+	   
 	
 	
 	

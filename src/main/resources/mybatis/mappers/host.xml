@@ -110,6 +110,13 @@
   </update>
 
 
+  <!-- 시설 삭제 -->
+  <delete id="delect_facility" parameterType="long">
+	  <![CDATA[
+	  delete from spacesGuide
+	  where spacesNo = #{spacesNo};
+	  ]]>
+  </delete>
 
   <!-- (선택) 시설 1건 삽입 -->
   <insert id="insert_facility" parameterType="com.javaex.vo.FacilityInfoVO">

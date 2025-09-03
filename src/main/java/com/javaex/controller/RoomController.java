@@ -10,11 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.service.RoomService;
-import com.javaex.vo.HostVO;
 import com.javaex.vo.RoomVO;
 import com.javaex.vo.UserVO;
 
@@ -62,42 +59,61 @@ public class RoomController {
 
 	}
 
-	/** 신규 등록 폼 + 수정폼 */
-	@GetMapping("/rooms/new")
-	public String formNew(Model model) {
-		model.addAttribute("spacesNo", 1);
-		return "admin/host/host_info2"; // 화면 경로에 맞게 수정
-	}
-	
-	//저장(insert)
-	
-	
-/*
-	@PostMapping("/rooms/insert")
-	public String insert(@ModelAttribute RoomsVO vo,
-			@RequestParam(value = "dayType", required = false) List<String> dayType,
-			@RequestParam(value = "startTime", required = false) List<String> startTime,
-			@RequestParam(value = "endTime", required = false) List<String> endTime,
-			@RequestParam(value = "hourlyPrice", required = false) List<String> hourlyPrice,
-			@RequestParam(value = "photos", required = false) MultipartFile photos,
+	//연습실(룸) 등록폼
+	@GetMapping("/new")
+	public String formNew(HttpSession session, Model model) {
+		System.out.println("RoomController.formNew()");
 
-			RedirectAttributes ra) {
-		// ★★★★★ 디버깅 코드 추가 ★★★★★
-		System.out.println("========================================");
-		System.out.println("[RoomController] /save 요청 진입");
-		if (photos != null && photos.length > 0) {
-			System.out.println("전달된 파일 개수: " + photos.length);
-			for (MultipartFile mf : photos) {
-				System.out.println(" - 원본 파일명: " + mf.getOriginalFilename());
-				System.out.println(" - 파일 크기: " + mf.getSize());
-			}
+		// 세션에서 회원번호 구하기
+		UserVO authUser = (UserVO) session.getAttribute("authUser");
+		
+		if (authUser == null) {
+			// 세션값이 없으면(로그인 안하면)
+			// 로그인폼으로 리다이렉트
+			return "redirect:/user/loginForm";
+
 		} else {
-			System.out.println("전달된 파일이 없습니다.");
+			// 세션값이 있으면(로그인 했으면)
+			long userNo = authUser.getUserNo();
+			Long spacesNo = roomService.exeSelectSpacesNoByUserNo(userNo);
+			
+			if(spacesNo == null ) {
+				//건물등록을 안했으면 건물등록폼으로
+				return "redirect:/host/spaces/new";
+				
+			}else {
+				//건물등록을 했으면 등록폼으로
+				return "admin/host/host_info2"; // 화면 경로에 맞게 수정
+			}
 		}
-		System.out.println("========================================");
-
-		return null;
-
 	}
-*/
+	
+	
+	//연습실(룸) 등록
+	@PostMapping("/save")
+	public String insert(@ModelAttribute RoomVO roomVO, HttpSession session) {
+		System.out.println("RoomController.insert()");
+		
+		// 세션에서 회원번호 구하기
+		UserVO authUser = (UserVO) session.getAttribute("authUser");
+		
+		if (authUser == null) {
+			// 세션값이 없으면(로그인 안하면)
+			// 로그인폼으로 리다이렉트
+			return "redirect:/user/loginForm";
+
+		} else {
+			// 세션값이 있으면(로그인 했으면)
+			long userNo = authUser.getUserNo();
+			Long spacesNo = roomService.exeSelectSpacesNoByUserNo(userNo);
+			
+			//현재 로그인 사용자의 건물번호를 넣어준다
+			roomVO.setSpacesNo(spacesNo);
+			
+			roomService.exeRoomAdd(roomVO);
+			return "redirect:/host/rooms/list";
+		}
+		
+	}
+
 }

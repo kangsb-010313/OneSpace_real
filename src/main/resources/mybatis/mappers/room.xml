@@ -96,6 +96,84 @@
 	</select>
 
 
+	<!-- 유저번호로 건물번호 알아오기 -->
+	<select id="selectSpacesNoByUserNo" parameterType="long" resultType="long">
+		<![CDATA[
+			SELECT	spacesNo
+			FROM spaces
+			where userNo = ${userNo}
+		]]>
+	</select>
+
+
+	<!-- 연습실(방) 등록 -->
+	<insert id="insertRoom" parameterType="com.javaex.vo.RoomVO">
+		<![CDATA[
+			insert into rooms
+			values(null, 
+				   #{spacesNo}, 
+				   #{roomName},
+				   #{roomInfo},
+				   #{area},
+				   #{capacity},
+				   #{thumbImg},
+				   now(),
+				   now()
+			)
+		]]>
+		<selectKey keyProperty="roomNo" resultType="long" order="AFTER">	
+	    	<![CDATA[
+				select last_insert_id()
+            ]]>
+		</selectKey>
+	</insert>
+
+
+	<!-- 이용요금 등록 -->
+	<insert id="insertRoomPrices" parameterType="com.javaex.vo.RoomPriceVO">
+		<![CDATA[
+        	insert into roomPrices
+         	values(	null, 
+               		#{roomNo}, 
+               		#{dayType},
+               		#{startTime},
+               		#{endTime},
+               		#{hourlyPrice},
+               		now(),
+               		now()
+         	)
+      	]]>
+	</insert>
+
+
+	<!-- 연습실에 대표 이미지경로 업데이트 -->
+	<insert id="updateThumbImg" parameterType="com.javaex.vo.RoomVO">
+      	<![CDATA[
+      		update rooms
+         	set thumbImg = #{thumbImg}
+         	where roomNo = #{roomNo}
+      	]]>
+	</insert>
+
+
+
+	<!-- 연습실 사진 등록 -->
+	<insert id="insertRoomPhoto" parameterType="com.javaex.vo.RoomAttachmentVO">
+      	<![CDATA[
+        	insert into roomAttachments
+         	values(	null, 
+         			#{refType},
+               		#{roomNo}, 
+               		#{storedFileName},
+               		#{originFileName},
+               		#{filePath},
+               		now(),
+               		now()
+         	)
+      	]]>
+	</insert>
+
+
 
 
 
