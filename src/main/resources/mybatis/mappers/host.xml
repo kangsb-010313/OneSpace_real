@@ -111,8 +111,8 @@
 
 
 
-  <!-- (선택) 시설 1건 삽입: 실제 테이블명으로 교체 -->
-  <insert id="insert_facility" parameterType="map">
+  <!-- (선택) 시설 1건 삽입 -->
+  <insert id="insert_facility" parameterType="com.javaex.vo.FacilityInfoVO">
     INSERT INTO spacesGuide (spacesNo, facilityNo)
     VALUES (#{spacesNo}, #{facilityNo})
   </insert>

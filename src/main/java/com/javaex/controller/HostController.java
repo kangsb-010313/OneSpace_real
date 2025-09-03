@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +19,7 @@ import com.javaex.service.HostService;
 import com.javaex.service.RoomService;
 import com.javaex.vo.FacilityInfoVO;
 import com.javaex.vo.HostVO;
-import com.javaex.vo.RoomsVO;
+import com.javaex.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -28,154 +27,94 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/host")
 public class HostController {
 
-    @Autowired private HostService hostService;
-    @Autowired private AttachService attachService;
-    @Autowired private RoomService roomService;
+	@Autowired
+	private HostService hostService;
+	@Autowired
+	private AttachService attachService;
+	@Autowired
+	private RoomService roomService;
 
-    /* --------------------- 세션 유틸 --------------------- */
-    private Long get_login_userno(HttpSession session) {
-        Object v = session.getAttribute("authUserNo");
-        if (v instanceof Long)    return (Long) v;
-        if (v instanceof Integer) return ((Integer) v).longValue();
-        return null;
-    }
+	/* --------------------- 세션 유틸 --------------------- */
+	private Long get_login_userno(HttpSession session) {
+		Object v = session.getAttribute("authUserNo");
+		if (v instanceof Long)
+			return (Long) v;
+		if (v instanceof Integer)
+			return ((Integer) v).longValue();
+		return null;
+	}
 
-    /* 루트 → /spaces */
-    @RequestMapping(value = {"", "/"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String index() {
-        return "redirect:/host/spaces";
-    }
+	/* 루트 → /spaces */
+	@RequestMapping(value = { "", "/" }, method = { RequestMethod.GET, RequestMethod.POST })
+	public String index() {
+		return "redirect:/host/spaces";
+	}
 
-    /* 내 공간 관리(리스트) */
-    @GetMapping("/spaces")
-    public String spaces(Model model, HttpSession session) {
-        Long userno = get_login_userno(session);
-        if (userno == null) return "redirect:/user/loginform";
-        List<HostVO> list = hostService.getSpacesByUser(userno);
+	// 건물///////////////////////////////////////////////////////////////////////
+	/* 신규 등록 폼 + 수정폼 */
+	@GetMapping("/spaces/new")
+	public String form_new(Model model, HttpSession session) {
+		// 세션에서 회원번호 구하기
+		UserVO authUser = (UserVO) session.getAttribute("authUser");
+		// 세션값이 없으면(로그인 안하면)
+		if (authUser == null) {
+			// 로그인폼으로 리다이렉트
+			return "redirect:/user/loginForm";
 
-        // 기존: model.addAttribute("list", list);
-        model.addAttribute("spaces", list);   
+		} else {
+			long userno = authUser.getUserNo();
+			HostVO hostVO = hostService.getSpaceByUserNo(userno);
 
-        return "forward:/WEB-INF/views/admin/host/host_manage_added.jsp";
-    }
+			if (hostVO == null) {
+				System.out.println("등록폼으로 이동");
+				// 시설안내 리스트
+				List<FacilityInfoVO> facilityInfoList = hostService.getAllFacilities();
+				model.addAttribute("facilityInfoList", facilityInfoList);
+				return "admin/host/host_info";
+			} else {
+				System.out.println("수정폼으로 이동");
+				model.addAttribute("space", hostVO);
+				return "admin/host/host_edit";
+			}
+		}
 
-    /* 신규 등록 폼 */
-    @GetMapping("/spaces/new")
-    public String form_new(Model model, HttpSession session) {
-        Long userno = get_login_userno(session);
-        if (userno == null) return "redirect:/user/loginform";
-        HostVO empty = new HostVO();
-        empty.setUserno(userno);
-        model.addAttribute("space", empty);
-        
-        // ★★★ HostService를 통해 전체 시설 목록을 조회합니다.
-        List<FacilityInfoVO> facilityList = hostService.getAllFacilities();
-        model.addAttribute("facilityList", facilityList);
-        
-        return "forward:/WEB-INF/views/admin/host/host_info.jsp";
-    }
-
-    /** 연습실 수정 폼: /host/rooms/{roomNo}/edit */
-    @GetMapping("/rooms/{roomNo}/edit")
-    public String editRoom(@PathVariable Long roomNo,
-                           @RequestParam(required = false) Long spacesNo,
-                           Model model) {
-        // 반드시 인스턴스 주입된 roomService 사용!
-        RoomsVO vo = roomService.get_detail(roomNo);   // room + prices + photos
-        if (vo == null) return "redirect:/host/spaces";
-
-        // spacesNo 파라미터가 안 오면 DB에서 가져온 값 사용
-        if (spacesNo == null) spacesNo = vo.getSpacesNo();
-
-        model.addAttribute("vo", vo);           // ★ info2.jsp는 ${vo.*}로 프리필
-        model.addAttribute("spacesNo", spacesNo);
-        return "admin/host/host_info2";        // 연습실 폼
-    }
-
-    /** (신규) 잘못 들어온 /rooms/edit → 정상 경로로 리다이렉트 */
-    @GetMapping("/rooms/edit")
-    public String roomsEditRedirect(@RequestParam(required = false) Long roomNo,
-                                    @RequestParam(required = false) Long spacesNo) {
-        // roomNo 없이 들어오면 목록으로 회피 (404 방지)
-        if (roomNo == null) {
-            return "redirect:/host/spaces";
-        }
-        String url = "/host/rooms/" + roomNo + "/edit";
-        if (spacesNo != null) url += "?spacesNo=" + spacesNo;
-        return "redirect:" + url;
-    }
-
-    /* 신규 저장 */
+	}
+	
+	//저장
     @PostMapping("/spaces/insert")
     public String insert(@ModelAttribute HostVO vo,
                          @RequestParam(value = "repImage", required = false) MultipartFile repImage,
                          @RequestParam(value = "facilityNos", required = false) List<Long> facilityNos, 
                          HttpSession session) {
+    	
+    	// 세션에서 회원번호 구하기
+		UserVO authUser = (UserVO) session.getAttribute("authUser");
+		// 세션값이 없으면(로그인 안하면)
+		if (authUser == null) {
+			// 로그인폼으로 리다이렉트
+			return "redirect:/user/loginForm";
 
-        Long userno = get_login_userno(session);
-        if (userno == null) return "redirect:/user/loginform";
-        vo.setUserno(userno);
-
-        // ★★★★★ 2. 파일 처리 로직을 AttachService에 위임합니다.
-        if (repImage != null && !repImage.isEmpty()) {
-            // (1) 공용 AttachService를 호출하여 파일을 저장하고, 그 정보를 Map으로 받습니다.
-            Map<String, Object> fileInfo = attachService.saveFile(repImage);
-            
-            // (2) 파일 저장이 성공했다면, 저장된 파일명(saveName)을 HostVO의 repimg 필드에 세팅합니다.
-            if (fileInfo != null) {
-                vo.setRepimg((String) fileInfo.get("saveName"));
-            }
-        }
-
-        hostService.createSpace(vo); // useGeneratedKeys -> vo.spacesno
-        
-        if (vo.getSpacesno() != null && facilityNos != null) {
-            hostService.replaceFacilities(vo.getSpacesno(), facilityNos);
-        }
-        
-        
-        // 저장 후 방 등록으로 이동
-        return "redirect:/host/rooms/new?spacesNo=" + vo.getSpacesno();
+		} else {
+			long userno = authUser.getUserNo();
+			vo.setUserno(userno);
+			
+	        // ★★★★★ 2. 파일 처리 로직을 AttachService에 위임합니다.
+	        if (repImage != null && !repImage.isEmpty()) {
+	            // (1) 공용 AttachService를 호출하여 파일을 저장하고, 그 정보를 Map으로 받습니다.
+	            Map<String, Object> fileInfo = attachService.saveFile(repImage);
+	            
+	            // (2) 파일 저장이 성공했다면, 저장된 파일명(saveName)을 HostVO의 repimg 필드에 세팅합니다.
+	            if (fileInfo != null) {
+	                vo.setRepimg((String) fileInfo.get("saveName"));
+	            }
+	        }
+	      
+	        hostService.createSpace(vo); // useGeneratedKeys -> vo.spacesno
+			
+	        // 저장 후 방 등록으로 이동
+	        return "redirect:/host/spaces/new";
+		}
+    	
     }
 
-    /* 수정 저장 */
-    @PostMapping("/spaces/update")
-    public String update(@ModelAttribute HostVO vo,
-                         @RequestParam(value = "repImage", required = false) MultipartFile repImage,
-                         @RequestParam(value = "facilityNos", required = false) List<Long> facilityNos, 
-                         HttpSession session) {
-
-        Long userno = get_login_userno(session);
-        if (userno == null) return "redirect:/user/loginform";
-        vo.setUserno(userno);
-
-        // ★★★★★ 신규 저장과 동일한 로직으로 파일 처리를 수행합니다. 
-        if (repImage != null && !repImage.isEmpty()) {
-            Map<String, Object> fileInfo = attachService.saveFile(repImage);
-            if (fileInfo != null) {
-                vo.setRepimg((String) fileInfo.get("saveName"));
-            }
-        }
-
-        hostService.updateSpace(vo);
-        
-        if (vo.getSpacesno() != null && facilityNos != null) {
-            hostService.replaceFacilities(vo.getSpacesno(), facilityNos);
-        }
-        
-        return "redirect:/host/spaces";
-    }
-
-    /* (선택) 단건 보기 */
-    @GetMapping("/spaces/{spacesNo}")
-    public String view(@PathVariable Long spacesNo, Model model, HttpSession session) {
-        Long userno = get_login_userno(session);
-        if (userno == null) return "redirect:/user/loginform";
-        HostVO vo = hostService.getSpace(spacesNo);
-        if (vo == null || !userno.equals(vo.getUserno())) {
-            return "redirect:/host/spaces";
-        }
-        model.addAttribute("space", vo);
-        return "forward:/WEB-INF/views/admin/host/host_info.jsp";
-    }
 }

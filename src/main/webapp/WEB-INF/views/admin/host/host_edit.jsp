@@ -38,9 +38,10 @@
 
       <!-- 탭 -->
       <div class="tab-btns">
-        <button class="tab active" type="button" onclick="location.href='${urlSpacesNew}'">기본 정보 관리</button>
-        <button class="tab"        type="button" onclick="location.href='${urlSpacesList}'">내 공간 관리</button>
+	      <button class="tab active" type="button" onclick="location.href='${pageContext.request.contextPath}/host/spaces/new'">기본 정보 관리</button>
+	      <button class="tab"        type="button" onclick="location.href='${pageContext.request.contextPath}/host/rooms/list'">내 공간 관리</button>
       </div>
+
 
       <!-- 타이틀 -->
       <div class="main-title-box"><h2 class="main-title">기본정보</h2></div>

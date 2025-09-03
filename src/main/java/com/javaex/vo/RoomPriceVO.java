@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class RoomPriceVO {
     private Long pricesNo;
     private Long roomNo;
-    private String dayType;       // WEEKDAY / WEEKEND / MON ... 등
+    private String dayType;       // WEEKDAY / WEEKEND 
     private String startTime;     // 'HH:mm:ss'
     private String endTime;       // 'HH:mm:ss'
     private Integer hourlyPrice;

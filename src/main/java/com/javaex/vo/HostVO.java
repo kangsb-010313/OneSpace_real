@@ -20,7 +20,10 @@ public class HostVO {
 	private String updt_dt;
 	private String repimg;
 
-	// 선택한 시설리스트
+	// 화면에서 선택해서 저장할때
+	private List<Integer> facilityNos;
+
+	// 선택한 시설리스트 db에 가져올때
 	private List<FacilityInfoVO> checkedFacilityList;
 
 	public HostVO() {
@@ -29,7 +32,7 @@ public class HostVO {
 
 	public HostVO(Long spacesno, Long userno, String spacename, String spacesummary, String spaceinfo, String email,
 			String phone, String tel, String spacelink, String postcode, String address, String addressdetail,
-			String facilities, String inst_dt, String updt_dt, String repimg,
+			String facilities, String inst_dt, String updt_dt, String repimg, List<Integer> facilityNos,
 			List<FacilityInfoVO> checkedFacilityList) {
 		super();
 		this.spacesno = spacesno;
@@ -48,6 +51,7 @@ public class HostVO {
 		this.inst_dt = inst_dt;
 		this.updt_dt = updt_dt;
 		this.repimg = repimg;
+		this.facilityNos = facilityNos;
 		this.checkedFacilityList = checkedFacilityList;
 	}
 
@@ -179,6 +183,14 @@ public class HostVO {
 		this.repimg = repimg;
 	}
 
+	public List<Integer> getFacilityNos() {
+		return facilityNos;
+	}
+
+	public void setFacilityNos(List<Integer> facilityNos) {
+		this.facilityNos = facilityNos;
+	}
+
 	public List<FacilityInfoVO> getCheckedFacilityList() {
 		return checkedFacilityList;
 	}
@@ -193,7 +205,8 @@ public class HostVO {
 				+ spacesummary + ", spaceinfo=" + spaceinfo + ", email=" + email + ", phone=" + phone + ", tel=" + tel
 				+ ", spacelink=" + spacelink + ", postcode=" + postcode + ", address=" + address + ", addressdetail="
 				+ addressdetail + ", facilities=" + facilities + ", inst_dt=" + inst_dt + ", updt_dt=" + updt_dt
-				+ ", repimg=" + repimg + ", checkedFacilityList=" + checkedFacilityList + "]";
+				+ ", repimg=" + repimg + ", facilityNos=" + facilityNos + ", checkedFacilityList=" + checkedFacilityList
+				+ "]";
 	}
 
 }

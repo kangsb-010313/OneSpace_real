@@ -24,7 +24,7 @@
             <div class="header-buttons">
               <span class="username">${sessionScope.authUser.userName} 님</span>
               <div class="host-signup-group">
-                <a href="${pageContext.request.contextPath}/host" class="btn-outline host-btn">호스트센터</a>
+                <a href="${pageContext.request.contextPath}/host/spaces/new" class="btn-outline host-btn">호스트센터</a>
                 <a href="${pageContext.request.contextPath}/user/logout" class="btn-outline login-btn">로그아웃</a>
               </div>
             </div>
@@ -35,7 +35,7 @@
             <div class="header-buttons">
               <a href="${pageContext.request.contextPath}/user/loginForm" class="btn-outline login-btn">로그인</a>
               <div class="host-signup-group">
-                <a href="#" class="btn-outline host-btn">호스트센터</a>
+                <a href="${pageContext.request.contextPath}/host/spaces/new" class="btn-outline host-btn">호스트센터</a>
                 <a href="${pageContext.request.contextPath}/user/signupForm" class="btn-outline signup-btn">회원가입</a>
               </div>
             </div>

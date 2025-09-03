@@ -2,6 +2,7 @@ package com.javaex.vo;
 
 public class FacilityInfoVO {
 
+	private Long spacesNo;
 	private Long spacesGuideNo;
 	private Long facilityNo;
 	private String facilityName;
@@ -10,11 +11,20 @@ public class FacilityInfoVO {
 		super();
 	}
 
-	public FacilityInfoVO(Long spacesGuideNo, Long facilityNo, String facilityName) {
+	public FacilityInfoVO(Long spacesNo, Long spacesGuideNo, Long facilityNo, String facilityName) {
 		super();
+		this.spacesNo = spacesNo;
 		this.spacesGuideNo = spacesGuideNo;
 		this.facilityNo = facilityNo;
 		this.facilityName = facilityName;
+	}
+
+	public Long getSpacesNo() {
+		return spacesNo;
+	}
+
+	public void setSpacesNo(Long spacesNo) {
+		this.spacesNo = spacesNo;
 	}
 
 	public Long getSpacesGuideNo() {
@@ -43,8 +53,9 @@ public class FacilityInfoVO {
 
 	@Override
 	public String toString() {
-		return "FacilityInfoVO [spacesGuideNo=" + spacesGuideNo + ", facilityNo=" + facilityNo + ", facilityName="
-				+ facilityName + "]";
+		return "FacilityInfoVO [spacesNo=" + spacesNo + ", spacesGuideNo=" + spacesGuideNo + ", facilityNo="
+				+ facilityNo + ", facilityName=" + facilityName + "]";
 	}
 
+	
 }

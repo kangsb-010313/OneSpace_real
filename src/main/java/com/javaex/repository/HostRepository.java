@@ -34,10 +34,17 @@ public class HostRepository {
     public List<FacilityInfoVO> selectCheckedFacilities(long spaceNo) {
         // "host" 네임스페이스에 있는 "selectAllFacilities" 쿼리를 호출합니다.
     	
-    	System.out.println(spaceNo + "=====");
         return sqlSession.selectList(NS + "selectCheckedFacilities", spaceNo);
     }
     
+    /** 신규 저장 */
+    public int insertSpace(HostVO vo) {
+        return sqlSession.insert(NS + "insert_space", vo);
+    }
 
+    /** 시설체크박스 저장 */
+    public int insertFacility(FacilityInfoVO vo) {
+        return sqlSession.insert(NS + "insert_facility", vo);
+    }
 
 }

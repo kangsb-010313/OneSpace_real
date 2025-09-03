@@ -5,173 +5,195 @@
 
 <mapper namespace="room">
 
-  <!-- ======================= 공통 컬럼 ======================= -->
-  <sql id="room_cols">
-    r.roomNo      AS roomNo,
-    r.spacesNo    AS spacesNo,
-    r.roomName    AS roomName,
-    r.roomInfo    AS roomInfo,
-    r.area        AS area,
-    r.capacity    AS capacity,
-    r.thumbImg    AS thumbImg,
-    r.instDtm     AS instDtm,
-    r.updtDtm     AS updtDtm
-  </sql>
+	<!-- ======================= 공통 컬럼 ======================= -->
+	<sql id="room_cols">
+		r.roomNo AS roomNo,
+		r.spacesNo AS spacesNo,
+		r.roomName AS roomName,
+		r.roomInfo AS roomInfo,
+		r.area AS area,
+		r.capacity AS capacity,
+		r.thumbImg AS
+		thumbImg,
+		r.instDtm AS instDtm,
+		r.updtDtm AS updtDtm
+	</sql>
 
-  <!-- ======================= resultMaps ======================= -->
+	<!-- ======================= resultMaps ======================= -->
 
-  <!-- rooms 단순 매핑 (리스트/단건 공용) -->
-  <resultMap id="rooms_rm" type="com.javaex.vo.RoomsVO">
-    <id     property="roomNo"   column="roomNo"/>
-    <result property="spacesNo" column="spacesNo"/>
-    <result property="roomName" column="roomName"/>
-    <result property="roomInfo" column="roomInfo"/>
-    <result property="area"     column="area"/>
-    <result property="capacity" column="capacity"/>
-    <result property="thumbImg" column="thumbImg"/>
-    <result property="instDtm"  column="instDtm"/>
-    <result property="updtDtm"  column="updtDtm"/>
-  </resultMap>
+	<!-- rooms 단순 매핑 (리스트/단건 공용) -->
+	<resultMap id="rooms_rm" type="com.javaex.vo.RoomsVO">
+		<id property="roomNo" column="roomNo" />
+		<result property="spacesNo" column="spacesNo" />
+		<result property="roomName" column="roomName" />
+		<result property="roomInfo" column="roomInfo" />
+		<result property="area" column="area" />
+		<result property="capacity" column="capacity" />
+		<result property="thumbImg" column="thumbImg" />
+		<result property="instDtm" column="instDtm" />
+		<result property="updtDtm" column="updtDtm" />
+	</resultMap>
 
-  <!-- prices(컬렉션) 매핑: p_ 접두 별칭 사용 -->
-  <resultMap id="room_price_rm" type="com.javaex.vo.RoomPriceVO">
-    <id     property="pricesNo"    column="p_pricesNo"/>
-    <result property="roomNo"      column="p_roomNo"/>
-    <result property="dayType"     column="p_dayType"/>
-    <result property="startTime"   column="p_startTime" jdbcType="TIME"/>
-    <result property="endTime"     column="p_endTime"   jdbcType="TIME"/>
-    <result property="hourlyPrice" column="p_hourlyPrice"/>
-  </resultMap>
+	<!-- prices(컬렉션) 매핑: p_ 접두 별칭 사용 -->
+	<resultMap id="room_price_rm" type="com.javaex.vo.RoomPriceVO">
+		<id property="pricesNo" column="p_pricesNo" />
+		<result property="roomNo" column="p_roomNo" />
+		<result property="dayType" column="p_dayType" />
+		<result property="startTime" column="p_startTime" jdbcType="TIME" />
+		<result property="endTime" column="p_endTime" jdbcType="TIME" />
+		<result property="hourlyPrice" column="p_hourlyPrice" />
+	</resultMap>
 
-  <!-- rooms + prices 컬렉션 묶기 (상세 전용) -->
-  <resultMap id="rooms_with_prices_rm" type="com.javaex.vo.RoomsVO">
-    <id     property="roomNo"   column="roomNo"/>
-    <result property="spacesNo" column="spacesNo"/>
-    <result property="roomName" column="roomName"/>
-    <result property="roomInfo" column="roomInfo"/>
-    <result property="area"     column="area"/>
-    <result property="capacity" column="capacity"/>
-    <result property="thumbImg" column="thumbImg"/>
-    <result property="instDtm"  column="r_instDtm"/>
-    <result property="updtDtm"  column="r_updtDtm"/>
+	<!-- rooms + prices 컬렉션 묶기 (상세 전용) -->
+	<resultMap id="rooms_with_prices_rm" type="com.javaex.vo.RoomsVO">
+		<id property="roomNo" column="roomNo" />
+		<result property="spacesNo" column="spacesNo" />
+		<result property="roomName" column="roomName" />
+		<result property="roomInfo" column="roomInfo" />
+		<result property="area" column="area" />
+		<result property="capacity" column="capacity" />
+		<result property="thumbImg" column="thumbImg" />
+		<result property="instDtm" column="r_instDtm" />
+		<result property="updtDtm" column="r_updtDtm" />
 
-    <collection property="prices" resultMap="room_price_rm"/>
-  </resultMap>
+		<collection property="prices" resultMap="room_price_rm" />
+	</resultMap>
 
-  <!-- 첨부(사진) 매핑: 내부클래스 타입 주의 -->
-  <resultMap id="room_attachment_rm" type="com.javaex.vo.RoomsVO$RoomAttachment">
-    <!-- DB가 picturesNo 라면 SELECT에서 AS pictureSno 로 별칭 -->
-    <id     property="pictureSno"     column="pictureSno"/>
-    <result property="refType"        column="refType"/>
-    <!-- DB가 roomNo 라면 SELECT에서 roomNo AS refNo -->
-    <result property="refNo"          column="refNo"/>
-    <result property="storedFileName" column="storedFileName"/>
-    <result property="originFileName" column="originFileName"/>
-    <result property="filePath"       column="filePath"/>
-    <result property="instDtm"        column="instDtm"/>
-    <result property="updtDtm"        column="updtDtm"/>
-  </resultMap>
+	<!-- 첨부(사진) 매핑: 내부클래스 타입 주의 -->
+	<resultMap id="room_attachment_rm" type="com.javaex.vo.RoomsVO$RoomAttachment">
+		<!-- DB가 picturesNo 라면 SELECT에서 AS pictureSno 로 별칭 -->
+		<id property="pictureSno" column="pictureSno" />
+		<result property="refType" column="refType" />
+		<!-- DB가 roomNo 라면 SELECT에서 roomNo AS refNo -->
+		<result property="refNo" column="refNo" />
+		<result property="storedFileName" column="storedFileName" />
+		<result property="originFileName" column="originFileName" />
+		<result property="filePath" column="filePath" />
+		<result property="instDtm" column="instDtm" />
+		<result property="updtDtm" column="updtDtm" />
+	</resultMap>
 
-  <!-- ======================= SELECTS ======================= -->
+	<!-- ======================= SELECTS ======================= -->
 
-  <!-- 리스트: 특정 공간의 연습실 목록(조인 없음/안정) -->
-  <select id="rooms_by_spaces" parameterType="long" resultMap="rooms_rm">
-    SELECT <include refid="room_cols"/>
-    FROM rooms r
-    WHERE r.spacesNo = #{value}
-    ORDER BY r.roomNo DESC
-  </select>
+	<!-- 연습실(방) 전체 리스트 -->
+	<select id="selectRoomList" parameterType="long" resultType="com.javaex.vo.RoomVO">
+      <![CDATA[
+         SELECT   roomNo,
+               	  spacesNo,
+               	  roomName,
+               	  roomInfo,
+               	  area,
+               	  capacity,
+                  thumbImg,
+               	  instDtm,
+                  updtDtm
+         FROM rooms
+         where spacesNo = (select spacesNo
+                       from spaces
+                       where userNo = #{userNo})
+         ORDER BY roomNo desc
+      ]]>
+	</select>
 
-  <!-- 상세: room + prices[] (JOIN) -->
-  <select id="select_room_with_prices" parameterType="long" resultMap="rooms_with_prices_rm">
-    SELECT
-      /* room (단건) */
-      r.roomNo, r.spacesNo, r.roomName, r.roomInfo, r.area, r.capacity, r.thumbImg,
-      r.instDtm AS r_instDtm, r.updtDtm AS r_updtDtm,
 
-      /* prices (컬렉션) - 모두 p_ 접두사 */
-      p.pricesNo     AS p_pricesNo,
-      p.roomNo       AS p_roomNo,
-      p.dayType      AS p_dayType,
-      p.startTime    AS p_startTime,
-      p.endTime      AS p_endTime,
-      p.hourlyPrice  AS p_hourlyPrice
 
-    FROM rooms r
-    LEFT JOIN roomPrices p ON p.roomNo = r.roomNo
-    WHERE r.roomNo = #{value}
-    ORDER BY p.dayType ASC, p.startTime ASC, p.pricesNo ASC
-  </select>
 
-  <!-- 사진 목록 -->
-  <select id="select_photos" parameterType="long" resultMap="room_attachment_rm">
-    SELECT
-      picturesNo       AS pictureSno,
-      refType,
-      roomNo           AS refNo,
-      storedFileName,
-      originFileName,
-      filePath,
-      instDtm, 
-      updtDtm
-    FROM roomAttachments
-    WHERE refType='ROOM' AND roomNo = #{value}
-    ORDER BY picturesNo ASC
-  </select>
 
-  <!-- ======================= INSERT / UPDATE ======================= -->
 
-  <insert id="insert_room" parameterType="com.javaex.vo.RoomsVO"
-          useGeneratedKeys="true" keyProperty="roomNo">
-    INSERT INTO rooms
-      (spacesNo, roomName, roomInfo, area, capacity, thumbImg, instDtm, updtDtm)
-    VALUES
-      (#{spacesNo}, #{roomName}, #{roomInfo}, #{area}, #{capacity}, #{thumbImg}, NOW(), NOW())
-  </insert>
+	<!-- 상세: room + prices[] (JOIN) -->
+	<select id="select_room_with_prices" parameterType="long" resultMap="rooms_with_prices_rm">
+		SELECT
+		/* room (단건) */
+		r.roomNo, r.spacesNo, r.roomName, r.roomInfo, r.area,
+		r.capacity, r.thumbImg,
+		r.instDtm AS r_instDtm, r.updtDtm AS r_updtDtm,
 
-  <update id="update_room" parameterType="com.javaex.vo.RoomsVO">
-    UPDATE rooms
-    SET roomName = #{roomName},
-        roomInfo = #{roomInfo},
-        area     = #{area},
-        capacity = #{capacity},
-        thumbImg = #{thumbImg},   
-        updtDtm = now()
-    WHERE roomNo = #{roomNo}
-  </update>
+		/* prices (컬렉션) - 모두 p_ 접두사 */
+		p.pricesNo AS p_pricesNo,
+		p.roomNo AS p_roomNo,
+		p.dayType AS
+		p_dayType,
+		p.startTime AS p_startTime,
+		p.endTime AS p_endTime,
+		p.hourlyPrice AS p_hourlyPrice
 
-  <!-- 가격 완전교체 -->
-  <delete id="delete_prices_by_room" parameterType="long">
-    DELETE FROM roomPrices WHERE roomNo = #{value}
-  </delete>
+		FROM rooms r
+		LEFT JOIN roomPrices p ON p.roomNo = r.roomNo
+		WHERE
+		r.roomNo = #{value}
+		ORDER BY p.dayType ASC, p.startTime ASC, p.pricesNo ASC
+	</select>
 
-  <insert id="insert_prices_batch" parameterType="java.util.List">
-    INSERT INTO roomPrices (roomNo, dayType, startTime, endTime, hourlyPrice, instDtm, updtDtm)
-    VALUES
-    <foreach collection="list" item="p" separator=",">
-      (#{p.roomNo},
-       #{p.dayType},
-       #{p.startTime, jdbcType=TIME},
-       #{p.endTime,   jdbcType=TIME},
-       #{p.hourlyPrice},
-       NOW(), NOW())
-    </foreach>
-  </insert>
+	<!-- 사진 목록 -->
+	<select id="select_photos" parameterType="long" resultMap="room_attachment_rm">
+		SELECT
+		picturesNo AS pictureSno,
+		refType,
+		roomNo AS refNo,
+		storedFileName,
+		originFileName,
+		filePath,
+		instDtm,
+		updtDtm
+		FROM roomAttachments
+		WHERE refType='ROOM' AND roomNo = #{value}
+		ORDER BY picturesNo ASC
+	</select>
 
-  <!-- 사진 완전교체 -->
-  <delete id="delete_photos_by_room" parameterType="long">
-    DELETE FROM roomAttachments WHERE refType='ROOM' AND roomNo = #{value}
-  </delete>
+	<!-- ======================= INSERT / UPDATE ======================= -->
 
-  <insert id="insert_photo" parameterType="com.javaex.vo.RoomsVO$RoomAttachment"
-          useGeneratedKeys="true" keyProperty="pictureSno">
-    INSERT INTO roomAttachments (
-      refType, roomNo, storedFileName, originFileName,
-      filePath, instDtm, updtDtm
-    ) VALUES (
-      #{refType}, #{refNo}, #{storedFileName}, #{originFileName},
-      #{filePath}, NOW(), NOW()
-    )
-  </insert>
+	<insert id="insert_room" parameterType="com.javaex.vo.RoomsVO" useGeneratedKeys="true" keyProperty="roomNo">
+		INSERT INTO rooms
+		(spacesNo, roomName, roomInfo, area,
+		capacity, thumbImg, instDtm, updtDtm)
+		VALUES
+		(#{spacesNo}, #{roomName}, #{roomInfo}, #{area}, #{capacity}, #{thumbImg}, NOW(), NOW())
+	</insert>
+
+	<update id="update_room" parameterType="com.javaex.vo.RoomsVO">
+		UPDATE rooms
+		SET roomName = #{roomName},
+		roomInfo = #{roomInfo},
+		area = #{area},
+		capacity = #{capacity},
+		thumbImg =
+		#{thumbImg},
+		updtDtm = now()
+		WHERE roomNo = #{roomNo}
+	</update>
+
+	<!-- 가격 완전교체 -->
+	<delete id="delete_prices_by_room" parameterType="long">
+		DELETE FROM roomPrices WHERE roomNo = #{value}
+	</delete>
+
+	<insert id="insert_prices_batch" parameterType="java.util.List">
+		INSERT INTO roomPrices (roomNo, dayType, startTime, endTime, hourlyPrice, instDtm, updtDtm)
+		VALUES
+		<foreach collection="list" item="p" separator=",">
+			(#{p.roomNo},
+			#{p.dayType},
+			#{p.startTime, jdbcType=TIME},
+			#{p.endTime, jdbcType=TIME},
+			#{p.hourlyPrice},
+			NOW(), NOW())
+		</foreach>
+	</insert>
+
+	<!-- 사진 완전교체 -->
+	<delete id="delete_photos_by_room" parameterType="long">
+		DELETE FROM roomAttachments WHERE refType='ROOM' AND roomNo = #{value}
+	</delete>
+
+	<insert id="insert_photo" parameterType="com.javaex.vo.RoomsVO$RoomAttachment" useGeneratedKeys="true" keyProperty="pictureSno">
+		INSERT INTO roomAttachments (
+		refType, roomNo, storedFileName, originFileName,
+		filePath, instDtm, updtDtm
+		) VALUES (
+		#{refType}, #{refNo}, #{storedFileName}, #{originFileName},
+		#{filePath},
+		NOW(), NOW()
+		)
+	</insert>
 
 </mapper>
