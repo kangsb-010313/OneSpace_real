@@ -70,7 +70,6 @@
                             <div class="team-info">
                                 <h2 class="team-title"><c:out value="${item.teamPostTitle}"/></h2>
                                 <p class="team-id"><c:out value="${item.instaAccount}"/></p>
-                                <p class="team-desc"><c:out value='${item.teamContent}'/></p>
                             </div>
                         </article>
                     </c:forEach>
