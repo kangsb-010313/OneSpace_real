@@ -127,6 +127,7 @@
 	      s.tel,
 	      s.spaceLink,
 	      s.repImg,
+	      s.repImg as picturesNo,
 	      s.postCode,
 	      s.address,
 	      s.addressDetail,
@@ -185,9 +186,15 @@
 	           AND vv.voteTime = v.voteTime
 	       ) AS hotCount,
 	       COALESCE(
-	         (select storedFileName from roomAttachments where roomNo = r.roomNo LIMIT 1), /* [수정] 이미지 경로 수정 */
+	         (select storedFileName from roomAttachments where roomNo = r.roomNo LIMIT 1),
 	         '/assets/images/placeholder.jpg'
-	       ) AS picturesNo, /* [수정] 컬럼 별칭을 picturesNo로 맞춰줍니다. */
+	       ) AS picturesNo,
+	       COALESCE(
+			  (SELECT CONCAT(filePath, storedFileName) 
+			   FROM roomAttachments 
+			   WHERE roomNo = r.roomNo LIMIT 1),
+			  '/assets/images/placeholder.jpg'
+			) AS picturesNo,
 	       s.address
 	     FROM voteOptions v
 	     JOIN rooms  r ON r.roomNo   = v.roomNo
