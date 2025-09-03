@@ -59,7 +59,7 @@
       <!-- 폼 -->
       <form id="spaceForm" action="${urlSaveSpace}" method="post" enctype="multipart/form-data">
 
-	  	<input type="text" name="spacesno" value="${requestScope.space.spacesno}">
+	  	<input type="hidden" name="spacesno" value="${requestScope.space.spacesno}">
         <!-- 공간정보 -->
         <section class="form-section">
           <div class="input-group">
