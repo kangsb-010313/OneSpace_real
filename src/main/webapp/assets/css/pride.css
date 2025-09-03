@@ -88,7 +88,6 @@
 .pride .team-card .team-thumb{
   width: 100%;
   height: var(--thumb-h);   /* = 187px */
-  object-fit: contain;      /* ★ 원본 전체 보이기 (잘림 방지) */
   display: block;
   background: #f5f5f5;      /* 레터박스 배경 */
   border-top-left-radius: var(--radius);
