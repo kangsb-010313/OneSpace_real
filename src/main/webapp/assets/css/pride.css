@@ -1,113 +1,150 @@
 /* =========================
-   팀 자랑 (컨텐츠 영역)
-   ========================= */
-.nav li a.space {
-  color: #704CE4 
+   공통 색/간격 변수
+========================= */
+:root{
+  --card-w: 280px;          /* ★ 카드 너비(px) */
+  --thumb-h: 187px;         /* ★ 썸네일 높이(px) */
+  --gap: 20px;              /* 카드 간격(px) */
+  --radius: 14px;           /* 둥근모서리 */
+  --primary: #704CE4;
+
+  --text-strong: #000;
+  --text-sub: #555;
+  --border: #ececec;
+  --card-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  --card-shadow-hover: 0 8px 24px rgba(112,76,228,0.15);
 }
-   
-.pride {
+
+/* 현재 메뉴 강조 */
+.nav li a.space { color: var(--primary); }
+
+/* =========================
+   팀 자랑 (컨텐츠 영역)
+========================= */
+.pride{
   max-width: 1200px;
   margin: 36px auto 0;
 }
 
-.pride .main-head {
-  margin-bottom: 20px;
+.pride .main-head{ margin-bottom: 20px; }
+
+.pride .main-head h1{
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text-strong);
+  margin: 50px 0 20px;
+  text-align: center;
 }
 
-.pride .main-head h1 {
-  font-size: 30px; 
-    font-weight: 800; 
-    color: #000; 
-    margin-top: 50px; 
-    margin-bottom: 20px; 
-    text-align: center;
-}
-
-/* 카드 그리드 */
-.pride .team-grid {
+/* 그리드: px 트랙 반복, 가운데 정렬 */
+.pride .team-grid{
   display: grid;
-  grid-template-columns: repeat(4, 280px);
-  gap: 28px;
-  width: 1205px;
+  grid-template-columns: repeat(auto-fill, var(--card-w)); /* px만 사용 */
+  gap: var(--gap);
+  justify-content: center;   /* 남는 공간 중앙 정렬 */
+  width: 100%;
   margin-bottom: 40px;
 }
 
+/* 비어있을 때 */
+.empty-list{
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 0;
+  color: #888;
+}
+
 /* 카드 */
-.pride .team-card {
+.pride .team-card{
+  width: var(--card-w);              /* 카드 고정폭(px) */
   background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-  border: 1.2px solid #ececec;
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  border: 1.2px solid var(--border);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  transition: box-shadow .15s;
-  width: 275px;   
-  position: relative; /* 카드 기준으로 링크 위치 고정 */
+  position: relative;                /* 카드 전체 클릭 링크 기준 */
+  transition: transform .15s ease, box-shadow .15s ease;
 }
-.pride .team-card:hover {
-  box-shadow: 0 6px 20px rgba(112,76,228,0.08);
+.pride .team-card:hover{
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
 }
-.pride .team-card img {
-  width: 275px;   
-  height: 204px;  
-  object-fit: cover; 
+
+/* 카드 전체 클릭 링크 */
+.pride .team-card .card-link{
+  position: absolute; inset: 0;
+  display: block; z-index: 10;
+  cursor: pointer; text-decoration: none; color: inherit;
+}
+.pride .team-card .card-link:focus{
+  outline: 3px solid var(--primary);
+  outline-offset: -3px;
+}
+
+/* ★ 썸네일: 280×187 고정 + 잘림 없이(레터박스) */
+.pride .team-card .team-thumb{
+  width: 100%;
+  height: var(--thumb-h);   /* = 187px */
+  object-fit: contain;      /* ★ 원본 전체 보이기 (잘림 방지) */
   display: block;
-  background: #eee;
+  background: #f5f5f5;      /* 레터박스 배경 */
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
 }
-.pride .team-info {
+
+/* 카드 내용 */
+.pride .team-info{
   text-align: left;
+  padding: 12px 14px 14px;
 }
-.pride .team-title {
-  font-weight: bold;
+.pride .team-title{
+  font-weight: 700;
   font-size: 17px;
-  margin: 0 0 1px 0;
+  margin: 0 0 4px 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* 한 줄 말줄임 */
 }
-.pride .team-id {
-  color: #704CE4;
+.pride .team-id{
+  color: var(--primary);
   font-size: 16px;
   font-weight: 700;
-  margin: 0 0 2px 0;
+  margin: 0 0 6px 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* 한 줄 말줄임 */
 }
-.pride .team-desc {
-  color: #555;
+/* 설명 3줄 말줄임 */
+.pride .team-desc{
+  color: var(--text-sub);
   font-size: 15px;
-  line-height: 1.4;
-  white-space: nowrap;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* 카드 전체를 클릭 가능하게 하는 링크 (수정본) */
-.pride .team-card .card-link {
-  position: absolute;
-  inset: 0;           /* 카드 전체 덮음 */
-  display: block;     /* ✅ 클릭 영역 보장 */
-  z-index: 10;
-  cursor: pointer;
-  pointer-events: auto;
+/* =========================
+   페이지네이션
+========================= */
+.pagination{
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
 }
-
-.pride .team-card .card-link:link,
-.pride .team-card .card-link:visited {
+.page-link{
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   text-decoration: none;
-  color: inherit;
+  color: #333;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
-
-/* 링크 클릭 시 포인터 커서 */
-.pride .team-card .card-link {
-  cursor: pointer;
-}
-
-/* 카드 hover 시 살짝 떠오르는 효과 */
-.pride .team-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(112,76,228,0.15);
-}
-
-/* 포커스(키보드 탭 이동) 시에도 테두리 표시 */
-.pride .team-card .card-link:focus {
-  outline: 3px solid #704CE4;
-  outline-offset: -3px;
+.page-link:hover{ background: #f6f6ff; }
+.page-link.active{
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
 }

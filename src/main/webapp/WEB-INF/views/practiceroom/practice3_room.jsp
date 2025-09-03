@@ -34,8 +34,11 @@
                 <div class="detail-container">
                     <!-- 왼쪽 대표 이미지 (room.roomInfo) -->
                     <div class="left-col">
-                        <img id="mainPhoto" class="main-photo" src="${ctx}/uploads/${zone.repImg}" alt="${room.roomName}"/>
-                        
+                        <!-- <img id="mainPhoto" class="main-photo" src="${ctx}/uploads/${zone.repImg}" alt="${room.roomName}"/> -->
+                        <div id="mainPhoto" class="main-photo"
+						     style="background-image:url('${ctx}/uploads/${zone.repImg}'); background-size:cover; background-position:center;" onclick="resetMainImage()">
+						</div>
+
                         <!-- 2x2 그리드 -->
                         <div class="thumb-grid">
                             <div class="thumb-quad quad-tl" role="button" tabindex="0"
@@ -205,18 +208,35 @@
     }
     
     function swapMainImageFromQuad(el) {
-        var full = el.getAttribute('data-full') || '';
-        if (!full) return;
         var main = document.getElementById('mainPhoto');
         if (!main) return;
-        main.src = full;
-        main.onerror = function() { this.onerror = null; this.src = '${ctx}/assets/images/placeholder.jpg'; };
-        
-        // 선택 상태 토글 (한 개만 active)
+
+        // 썸네일의 background-image / position 가져오기
+        var bgImage = window.getComputedStyle(el).backgroundImage;
+        var bgPosition = window.getComputedStyle(el).backgroundPosition;
+
+        main.style.backgroundImage = bgImage;
+        main.style.backgroundPosition = bgPosition;
+        main.style.backgroundSize = "200% 200%"; // 클릭했을 때만 확대 적용
+
+        // active 표시
         document.querySelectorAll('.thumb-quad').forEach(e => e.classList.remove('active'));
         el.classList.add('active');
     }
     
+    // 원본 전체 사진으로 되돌리기
+    function resetMainImage() {
+        var main = document.getElementById('mainPhoto');
+        if (!main) return;
+
+        // 원본 전체 사진으로 되돌리기
+        main.style.backgroundImage = "url('${ctx}/uploads/${zone.repImg}')";
+        main.style.backgroundPosition = "center";
+        main.style.backgroundSize = "cover";
+
+        // 썸네일 active 표시 해제
+        document.querySelectorAll('.thumb-quad').forEach(e => e.classList.remove('active'));
+    }
 	</script>
     
     </div>

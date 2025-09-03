@@ -1,25 +1,30 @@
 package com.javaex.repository;
 
-import java.util.List;
+import com.javaex.vo.PrideVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import com.javaex.vo.PrideVO;
+import java.util.List;
 
 @Mapper
 public interface PrideRepository {
 
-    // 카드 목록 (팀자랑 전용)
-    List<PrideVO> selectPrideCards(@Param("teamPostType") String teamPostType,
-                                   @Param("limit") int limit,
-                                   @Param("offset") int offset);
+    // 목록(페이징) — teamNo 필터 포함
+	List<PrideVO> selectPrideCards(
+	        @Param("teamPostType") String teamPostType,
+	        @Param("teamNo")       Long teamNo,
+	        @Param("limit")        int limit,
+	        @Param("offset")       int offset
+	    );
 
-    // 총 개수
-    int countPride(@Param("teamPostType") String teamPostType);
+	    int countPride(
+	        @Param("teamPostType") String teamPostType,
+	        @Param("teamNo")       Long teamNo
+	    );
 
-    // 상세
-    PrideVO selectPrideDetail(@Param("teamPostType") String teamPostType,
-                              @Param("id") Long id);
+	    PrideVO selectPrideDetail(
+	        @Param("teamPostType") String teamPostType,
+	        @Param("id")           Long id
+	    );
 
-    // 상세 첨부 이미지 경로 리스트
-    List<String> selectPrideImages(@Param("id") Long id);
+	    List<String> selectPrideImages(@Param("id") Long id);
 }

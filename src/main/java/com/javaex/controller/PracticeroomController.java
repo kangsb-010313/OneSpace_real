@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import com.javaex.service.TeampageService;
 import com.javaex.vo.ReserveInfoVO;
 import com.javaex.vo.SlotVO;
 import com.javaex.vo.SpacesVO;
+import com.javaex.vo.TeamVO;
 import com.javaex.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -26,7 +28,10 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/practice")
 public class PracticeroomController {
-
+	
+	@Value("${google.maps.api.key}")
+	private String googleMapsApiKey;
+	
     @Autowired
     private PracticeroomService practiceroomService;
 
@@ -56,6 +61,10 @@ public class PracticeroomController {
     public String zone(@RequestParam("spacesNo") Long spacesNo, Model model) {
         model.addAttribute("zone", practiceroomService.getZoneDetail(spacesNo));
         model.addAttribute("rooms", practiceroomService.getRoomsBySpace(spacesNo));
+
+		// Model에 Google Maps API 키를 "googleMapsApiKey"라는 이름으로 추가하여 JSP로 전달
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+        
         return "practiceroom/practice2_zone";
     }
 
@@ -81,6 +90,14 @@ public class PracticeroomController {
         model.addAttribute("favoriteSpaces", practiceroomService.getFavoriteSpaces(userNo));
         model.addAttribute("favoriteCandidates", practiceroomService.getFavoriteCandidates(userNo));
         model.addAttribute("allTeams", teampageService.exeGetUserTeams(userNo));
+        
+        List<TeamVO> teams = teampageService.exeGetUserTeams(userNo);
+        model.addAttribute("allTeams", teams);
+        
+        if (!teams.isEmpty()) {
+            model.addAttribute("teamNo", teams.get(0).getTeamNo());
+        }
+        
         return "practiceroom/practice4_wish";
     }
 

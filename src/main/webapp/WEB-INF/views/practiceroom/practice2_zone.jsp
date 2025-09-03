@@ -21,6 +21,7 @@
         <main>
             <div class="container">
 				
+				<!-- 상단 타이틀 영역 -->
                 <div class="title-box">
                     <div class="spacer"></div>
                     <h2 class="page-title">${zone.spaceName}</h2>
@@ -48,6 +49,12 @@
                                                 <img class="main-photo" src="${pageContext.request.contextPath}/uploads/${zone.repImg}" alt="${zone.spaceName} 대표사진">
                                             </div>
                                         </c:when>
+                                        <c:otherwise>
+							            <!-- 이미지 없을 때도 동일한 높이의 빈 박스 -->
+							            <div class="main-photo placeholder-photo">
+							                이미지가 없습니다
+							            </div>
+							        </c:otherwise>
                                     </c:choose>
                                 </div>
                                 
@@ -63,14 +70,17 @@
                                 <%-- 주소 표시 --%>
                                 <div class="section-title">주소</div>
                                 <div class="address">${zone.address} ${zone.addressDetail}</div>
-
+                                
                                 <!-- 구글 지도 -->
                                 <div class="map-wrap">
                                 	<!-- 지도 출력 영역 -->
                                     <div id="map" style="width:100%;height:400px"></div>
                                     <script>
-                                        function getLatLngFromAddress(address, callback) {
-                                            const apiKey = "AIzaSyDZfZ-aDUeEP3W-VW_n2FEVSDzuiK8k5iE";
+                                    	const apiKey = "${googleMapsApiKey}";
+                                    	
+                                    	console.log("googleMapsApiKey from JSP: ${googleMapsApiKey}");
+
+                                    	function getLatLngFromAddress(address, callback) {
                                             const url = `https://maps.googleapis.com/maps/api/geocode/json?address=\${encodeURIComponent(address)}&key=\${apiKey}`;
                                          	
                                             // fetch로 API 호출
@@ -88,6 +98,7 @@
                                         }
                                         // Google Map 초기화
                                         function initMap() {
+                                        	console.log("DB에서 전달된 주소 값:", "${zone.address}");
                                             getLatLngFromAddress("${zone.address}", function(lat, lng) {
                                                 var center = { lat: lat, lng: lng };
                                                 
@@ -107,8 +118,10 @@
                                         }
                                     </script>
                                     <!-- Google Maps JavaScript API 호출 -->
-                                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZfZ-aDUeEP3W-VW_n2FEVSDzuiK8k5iE&callback=initMap" async defer></script>
+                                    <script src="https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&callback=initMap" defer></script>
+                                    
                                 </div>
+                                
                             </div>
 
                             <!-- 오른쪽: 방 목록 -->
@@ -119,6 +132,7 @@
                                         <div class="room-card">
                                             <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${room.roomNo}">
                                                 <div class="room-thumb-wrap">
+                                                	<%-- 방 썸네일 (대표 이미지 재사용... 이거 바꿔야하나) --%>
                                                     <img class="room-thumb" src="${pageContext.request.contextPath}/uploads/${zone.repImg}" alt="${zone.spaceName} 대표사진">
                                                     <div class="room-title">${room.roomName}</div>
                                                 </div>
@@ -133,8 +147,6 @@
                                                             ${room.area}
                                                         </div>
                                                     </div>
-                                                    <%-- 추후 찜하기/좋아요 버튼 영역 --%>
-                                                    <!-- <div class="room-like">♡<span>0</span></div> -->
                                                 </div>
                                             </a>
                                         </div>

@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -11,6 +10,11 @@
     <link rel="stylesheet" href="<c:url value='/assets/css/reset.css'/>">
     <link rel="stylesheet" href="<c:url value='/assets/css/basicdefault.css'/>">
     <link rel="stylesheet" href="<c:url value='/assets/css/pride.css'/>">
+
+    <!-- 페이지네이션 disabled 스타일 (필요 시 pride.css로 옮겨도 됨) -->
+    <style>
+      .page-link.disabled{ pointer-events:none; opacity:.45; }
+    </style>
 </head>
 
 <body>
@@ -31,156 +35,112 @@
                 <!-- 카드 그리드 -->
                 <div class="team-grid">
 
-                    <!-- DB에서 불러온 카드 반복 -->
+                    <!-- 빈 목록 처리 -->
+                    <c:if test="${empty list}">
+                        <div class="empty-list">등록된 게시글이 없습니다.</div>
+                    </c:if>
+
+                    <!-- DB 카드 반복 -->
                     <c:forEach var="item" items="${list}">
+                        <!-- 상세 링크: 현재 목록 상태(type/teamNo/page/size) 유지 -->
+                        <c:url var="detailUrl" value="/pride/detail/${item.teamPostNo}">
+                            <c:if test="${not empty teamPostType}">
+                                <c:param name="type" value="${teamPostType}"/>
+                            </c:if>
+                            <c:if test="${not empty teamNo}">
+                                <c:param name="teamNo" value="${teamNo}"/>
+                            </c:if>
+                            <c:param name="page" value="${page}"/>
+                            <c:param name="size" value="${size}"/>
+                        </c:url>
+
+                        <!-- 썸네일: 없으면 기본 이미지 -->
+                        <c:set var="thumb" value="${empty item.thumbnailUrl ? '/assets/images/default_team.jpg' : item.thumbnailUrl}" />
+
                         <article class="team-card">
-                            <a class="card-link"
-                               href="<c:url value='/pride/detail/${item.teamPostNo}'/>"
-                               aria-label="상세보기"></a>
-                            <img src="<c:url value='/assets/images/default_team.jpg'/>" alt="팀 이미지"/>
+                            <a class="card-link" href="${detailUrl}" aria-label="상세보기"></a>
+
+                            <img class="team-thumb"
+                                 loading="lazy"
+                                 src="<c:url value='${thumb}'/>"
+                                 alt="<c:out value='${item.teamName}'/> 이미지"
+                                 onerror="this.onerror=null;this.src='<c:url value='/assets/images/default_team.jpg'/>';" />
+
                             <div class="team-info">
-                                <h2 class="team-title">${item.teamPostTitle}</h2>
-                                <p class="team-id">${item.instaAccount}</p>
-                                <p class="team-desc">${item.teamContent}</p>
+                                <h2 class="team-title"><c:out value="${item.teamPostTitle}"/></h2>
+                                <p class="team-id"><c:out value="${item.instaAccount}"/></p>
+                                <p class="team-desc"><c:out value='${item.teamContent}'/></p>
                             </div>
                         </article>
                     </c:forEach>
                     <!-- DB 카드 반복 끝 -->
-
-
-                    <%-- =======================
-                         하드코딩된 카드 (2~12)
-                         ======================= --%>
-
-                    <%--
-                    <!-- 카드 2 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/댄스팀연습사진02.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 아우라</h2>
-                            <p class="team-id">@aura_official</p>
-                            <p class="team-desc">#힙합 #단체군무 #에너지</p>
-                        </div>
-                    </article>
-
-                    <!-- 카드 3 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/댄스팀연습사진03.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 네오스</h2>
-                            <p class="team-id">@neos_dance</p>
-                            <p class="team-desc">#걸리시 #하이틴무드 #컨셉촬영</p>
-                        </div>
-                    </article>
-
-                    <!-- 카드 4 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/댄스팀연습사진04.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 비전</h2>
-                            <p class="team-id">@vision.crew</p>
-                            <p class="team-desc">#코레오 #뮤비커버 #영상팀</p>
-                        </div>
-                    </article>
-
-                    <!-- 카드 5 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/댄스팀연습사진05.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 모션</h2>
-                            <p class="team-id">@motion_kr</p>
-                            <p class="team-desc">#팝핀 #프리스타일 #배틀러</p>
-                        </div>
-                    </article>
-
-                    <!-- 카드 6 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/댄스팀연습사진06.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 플레인</h2>
-                            <p class="team-id">@plane.dance</p>
-                            <p class="team-desc">#재즈 #테크닉 #무대연출</p>
-                        </div>
-                    </article>
-
-                    <!-- 카드 7 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/댄스팀연습사진07.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 하이드</h2>
-                            <p class="team-id">@hide.musical</p>
-                            <p class="team-desc">#뮤지컬 #웅장함 #무대연출</p>
-                        </div>
-                    </article>
-
-                    <!-- 카드 8 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/댄스팀연습사진08.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 코브라</h2>
-                            <p class="team-id">@cobra.dnace</p>
-                            <p class="team-desc">#현대무용 #웅장함 #무대연출</p>
-                        </div>
-                    </article>
-
-                    <!-- 카드 9 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/팀자랑사진04.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 다이아몬드</h2>
-                            <p class="team-id">@diamond.dnace</p>
-                            <p class="team-desc">#칼군무 #웅장함 #무대연출</p>
-                        </div>
-                    </article>
-
-                    <!-- 카드 10 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/팀자랑사진02.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 플라워</h2>
-                            <p class="team-id">@flower.dnace</p>
-                            <p class="team-desc">#현대무용 #웅장함 #무대연출</p>
-                        </div>
-                    </article>
-
-                    <!-- 카드 11 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/팀자랑사진03.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 JP</h2>
-                            <p class="team-id">@japan.dnace</p>
-                            <p class="team-desc">#댄스 #일본 #무대연출</p>
-                        </div>
-                    </article>
-
-                    <!-- 카드 12 -->
-                    <article class="team-card">
-                        <a class="card-link" href="/pride/detail/1" aria-label="상세보기"></a>
-                        <img src="../../assets/images/팀자랑사진01.jpg" alt="팀 이미지" />
-                        <div class="team-info">
-                            <h2 class="team-title">팀 엘레강스</h2>
-                            <p class="team-id">@Elegant.dnace</p>
-                            <p class="team-desc">#발레 #우아함 #무대연출</p>
-                        </div>
-                    </article>
-                    --%>
-
                 </div>
                 <!-- 카드 그리드 끝 -->
 
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <!-- 처음 / 이전 : 1페이지면 안 보임 -->
+                    <c:if test="${page > 1}">
+                        <c:url var="firstUrl" value="/pride/list">
+                            <c:param name="page" value="1"/>
+                            <c:param name="size" value="${size}"/>
+                            <c:if test="${not empty teamPostType}"><c:param name="type" value="${teamPostType}"/></c:if>
+                            <c:if test="${not empty teamNo}"><c:param name="teamNo" value="${teamNo}"/></c:if>
+                        </c:url>
+                        <a class="page-link" href="${firstUrl}">« 처음</a>
+
+                        <c:url var="prevUrl" value="/pride/list">
+                            <c:param name="page" value="${page-1}"/>
+                            <c:param name="size" value="${size}"/>
+                            <c:if test="${not empty teamPostType}"><c:param name="type" value="${teamPostType}"/></c:if>
+                            <c:if test="${not empty teamNo}"><c:param name="teamNo" value="${teamNo}"/></c:if>
+                        </c:url>
+                        <a class="page-link" href="${prevUrl}">‹ 이전</a>
+                    </c:if>
+
+                    <%-- 숫자 5개 고정 블록: startPage 기준으로 5칸 표시 --%>
+                    <c:set var="blockEnd" value="${startPage + 4}"/>
+                    <c:forEach var="p" begin="${startPage}" end="${blockEnd}">
+                        <c:choose>
+                            <%-- 존재하는 페이지면 링크 --%>
+                            <c:when test="${p <= totalPages}">
+                                <c:url var="pageUrl" value="/pride/list">
+                                    <c:param name="page" value="${p}"/>
+                                    <c:param name="size" value="${size}"/>
+                                    <c:if test="${not empty teamPostType}"><c:param name="type" value="${teamPostType}"/></c:if>
+                                    <c:if test="${not empty teamNo}"><c:param name="teamNo" value="${teamNo}"/></c:if>
+                                </c:url>
+                                <a class="page-link ${p==page ? 'active' : ''}" href="${pageUrl}">${p}</a>
+                            </c:when>
+                            <%-- 없는 페이지면 비활성 숫자 출력 --%>
+                            <c:otherwise>
+                                <span class="page-link disabled">${p}</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+
+                    <!-- 다음 / 마지막 : 마지막 페이지면 안 보임 -->
+                    <c:if test="${page < totalPages}">
+                        <c:url var="nextUrl" value="/pride/list">
+                            <c:param name="page" value="${page+1}"/>
+                            <c:param name="size" value="${size}"/>
+                            <c:if test="${not empty teamPostType}"><c:param name="type" value="${teamPostType}"/></c:if>
+                            <c:if test="${not empty teamNo}"><c:param name="teamNo" value="${teamNo}"/></c:if>
+                        </c:url>
+                        <a class="page-link" href="${nextUrl}">다음 ›</a>
+
+                        <c:url var="lastUrl" value="/pride/list">
+                            <c:param name="page" value="${totalPages}"/>
+                            <c:param name="size" value="${size}"/>
+                            <c:if test="${not empty teamPostType}"><c:param name="type" value="${teamPostType}"/></c:if>
+                            <c:if test="${not empty teamNo}"><c:param name="teamNo" value="${teamNo}"/></c:if>
+                        </c:url>
+                        <a class="page-link" href="${lastUrl}">마지막 »</a>
+                    </c:if>
+                </div>
+
             </section>
         </div>
-        <!-- container 끝 -->
     </main>
 
     <!-- 푸터 -->

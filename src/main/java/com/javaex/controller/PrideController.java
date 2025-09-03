@@ -1,67 +1,92 @@
 package com.javaex.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.javaex.service.PrideService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.javaex.service.PrideService;
-import com.javaex.vo.PrideVO;
+import java.util.Map;
 
 @Controller
-@RequestMapping("/pride")
+@RequestMapping
 public class PrideController {
 
-    private final PrideService service;
+    private final PrideService prideService;
 
-    public PrideController(PrideService service) {
-        this.service = service;
+    public PrideController(PrideService prideService) {
+        this.prideService = prideService;
     }
 
-    // 팀자랑 리스트 (첫 페이지 12개)
-    @GetMapping("/list")
-    public String list(@RequestParam(defaultValue="1") int page,
-                       @RequestParam(defaultValue="12") int size,
+    // 루트 리다이렉트
+    @GetMapping("/pride")
+    public String redirectToList() {
+        return "redirect:/pride/list";
+    }
+
+    // 목록 + 페이징 (JSP)
+    @GetMapping("/pride/list")
+    public String list(@RequestParam(name = "type",   required = false) String type,   // 서비스에서 기본 타입 보정
+                       @RequestParam(name = "teamNo", required = false) Long teamNo,
+                       @RequestParam(name = "page",   defaultValue = "1")  int page,
+                       @RequestParam(name = "size",   defaultValue = "5")  int size,   // ★ 기본 5
                        Model model) {
-        List<PrideVO> list = service.getCards(page, size); // ← PrideVO 리스트
-        model.addAttribute("list", list);
-        model.addAttribute("totalCount", service.getTotalCount());
+
+        // 서비스가 size를 최대 5로 보정하므로 여기서는 그대로 위임
+        Map<String, Object> m = prideService.getPridePage(type, teamNo, page, size);
+
+        // JSP에서 쓰는 키들 주입
+        model.addAllAttributes(m);
+        model.addAttribute("list", m.get("content"));   // pridemain.jsp는 items="${list}" 사용
         return "pride/pridemain";
     }
 
-    // 팀자랑 목록 데이터 API (무한스크롤/Ajax용)
-    @ResponseBody
-    @GetMapping("/api")
-    public Map<String, Object> api(@RequestParam(defaultValue = "1") int page,
-                                   @RequestParam(defaultValue = "12") int size) {
+    // 상세 ( /pride/{id}, /pride/detail/{id} 모두 허용 )
+    @GetMapping({"/pride/{id}", "/pride/detail/{id}"})
+    public String detail(@PathVariable Long id,
+                         @RequestParam(name = "type",   required = false) String type,
+                         @RequestParam(name = "teamNo", required = false) Long teamNo,
+                         @RequestParam(name = "page",   defaultValue = "1") int page,
+                         @RequestParam(name = "size",   defaultValue = "5") int size,   // ★ 기본 5
+                         Model model) {
 
-        // 서비스에 page()가 없으면 아래처럼 바로 구성해도 됩니다.
-        List<PrideVO> list = service.getCards(page, size);
-        int total = service.getTotalCount();
+        Map<String, Object> m = prideService.getDetailModel(type, id);
+        if (m == null) {
+            // 상세 없으면 목록으로 리다이렉트 (현재 페이징/필터 유지)
+            StringBuilder sb = new StringBuilder("redirect:/pride/list?page=").append(page)
+                    .append("&size=").append(size);
+            if (type != null && !type.isBlank())  sb.append("&type=").append(type);
+            if (teamNo != null)                   sb.append("&teamNo=").append(teamNo);
+            return sb.toString();
+        }
 
-        Map<String, Object> res = new HashMap<>();
-        res.put("list", list);
-        res.put("totalCount", total);
-        res.put("page", page);
-        res.put("size", size);
-        res.put("hasMore", page * size < total);
-        return res;
+        // JSP에서 post / pride 둘 다 참조 가능하도록 별칭 제공
+        model.addAllAttributes(m);                 // post, images
+        model.addAttribute("pride", m.get("post"));
+        model.addAttribute("teamPostType", type);  // 링크 파라미터 유지용
+        model.addAttribute("teamNo", teamNo);
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
+        return "pride/pridepage";
     }
 
- // PrideController.java
-    @GetMapping("/detail/{id}")
-    public String detail(@PathVariable Long id, Model model) {
-      PrideVO pride = service.getDetail(id);
-      if (pride == null) return "redirect:/pride/pridemain";
-      model.addAttribute("pride", pride);
-      model.addAttribute("images", service.getImages(id)); // ★ 추가
-      return "pride/pridepage";
+    // 목록 API (JSON)
+    @GetMapping("/api/pride")
+    @ResponseBody
+    public Map<String, Object> listApi(@RequestParam(name = "teamNo", required = false) Long teamNo,
+                                       @RequestParam(name = "page",   defaultValue = "1") int page,
+                                       @RequestParam(name = "size",   defaultValue = "5") int size,   // ★ 기본 5
+                                       @RequestParam(name = "type",   required = false) String type) {
+        return prideService.pageApiModel(teamNo, page, size, type);
+    }
+
+    // 상세 API (JSON)
+    @GetMapping("/api/pride/{id}")
+    public ResponseEntity<Map<String, Object>> detailApi(@PathVariable Long id,
+                                                         @RequestParam(name = "type", required = false) String type) {
+        Map<String, Object> m = prideService.getDetailModel(type, id);
+        return (m == null) ? ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+                           : ResponseEntity.ok(m);
     }
 }

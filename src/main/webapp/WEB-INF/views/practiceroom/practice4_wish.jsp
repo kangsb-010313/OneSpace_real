@@ -112,7 +112,7 @@
 						<br> <br>
 						<!-- 하단 CTA 버튼 -->
 						<div class="cta-row">
-							<button class="btn-outline btn-primary" onclick="location.href='${pageContext.request.contextPath}/team/teams/3/posts/writeform?teamPostType=투표'">투표 만들기</button>
+							<button class="btn-outline btn-primary" onclick="location.href='${pageContext.request.contextPath}/team/teams/${teamNo}/posts/writeform?teamPostType=투표'">투표 만들기</button>
 							<button class="btn-outline btn-pill" onclick="location.href='${pageContext.request.contextPath}/practice/practice1_main'">취소</button>
 						</div>
 						<!-- //cta-row -->

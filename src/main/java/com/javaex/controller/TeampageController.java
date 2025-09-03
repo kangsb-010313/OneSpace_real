@@ -245,6 +245,7 @@ public class TeampageController {
   		*/
   	    
   	    List<Map<String, Object>> voteCandidates = practiceroomService.getFavoriteCandidates(userNo);
+  	    System.out.println(voteCandidates);
 
   	    model.addAttribute("voteCandidates", voteCandidates);
   	    System.out.println("불러온 투표 후보 목록: " + voteCandidates);

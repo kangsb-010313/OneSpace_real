@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="${ctx}/assets/css/reset.css">
     <link rel="stylesheet" href="${ctx}/assets/css/basicdefault.css">
     <link rel="stylesheet" href="${ctx}/assets/css/practice1_main.css">
+    
+    <%-- JSP 변수: contextPath를 ctx로 세팅 --%>
     <c:set var="ctx" value="${pageContext.request.contextPath}" />
 </head>
 <body>
@@ -28,15 +30,18 @@
                 <div class="title-box">
                     <div class="spacer"></div>
                     <h2 class="page-title">연습실찜하기</h2>
+                    
+                    <%-- 찜리스트 버튼 --%>
                     <button class="btn-list" onclick="location.href='${pageContext.request.contextPath}/practice/practice4_wish'">
                         찜리스트<span style="color: #ff3333;">❤</span>
                     </button>
                 </div>
-
+                
+                <!-- 메인 콘텐츠 -->
                 <div class="main-section">
                     <div class="content-area">
 						
-						<!-- 검색/필터 영역 -->
+						<!-- 검색창 영역 -->
                         <div class="search-row">
                             <input id="searchInput" class="search-hash" type="text" placeholder="#찾는 공간이 있나요?" />
                             <!-- 
@@ -81,14 +86,15 @@
                                 <div style="padding: 24px; color: #777;">등록된 연습실이 없습니다.</div>
                             </c:if>
                         </div>
-                        <%-- 무한 스크롤을 위한 sentinel(관찰 지점) --%>
+                        <%-- 무한 스크롤을 위한 sentinel --%>
                         <div id="sentinel" style="height: 1px;"></div>
                     </div>
                 </div>
             </div>
         </main>
         <!-- /컨텐츠 영역---------------------------------------------- -->
-
+		
+		<!-- JavaScript: 무한 스크롤 & 검색 기능 -->
         <script>
             const ctx = '${pageContext.request.contextPath}';
             

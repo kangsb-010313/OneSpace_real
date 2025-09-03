@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -46,7 +47,7 @@
                                 <div class="left-column">
                                     <h3 class="section-title">#예약하실 연습실 정보</h3>
                                     <div class="vote-option">
-                                        <a href="#" class="vote-item-card">
+                                        <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${confirmedOption.roomNo}" class="vote-item-card">
                                             <img src="${pageContext.request.contextPath}/uploads/${confirmedOption.thumbImg}" alt="연습실 이미지">
                                             <div class="card-content-wrapper">
                                                 <div class="card-main-info">
