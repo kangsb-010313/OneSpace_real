@@ -232,7 +232,7 @@
 		
 	  	/* ------------------ 캘린더 렌더 ------------------ */
 	  	function renderCalendar(){
-		    $schedTitle.text(formatTitle(calendarCursor));
+	  		$schedTitle.text(formatTitle(calendarCursor));
 	    	$schedDays.empty();
 			
 	    	const year = calendarCursor.getFullYear();
@@ -285,7 +285,8 @@
 	  	}
 		
 	 	/* ------------------ 슬롯 로드 & 렌더 ------------------ */
-	  	function loadSlots(roomNo, targetDate) {
+	  	/* 깜빡거려서 아래 코드로 교체해봄
+	 	function loadSlots(roomNo, targetDate) {
 		    console.log('[sched] loadSlots', roomNo, targetDate);
 	    	$schedSlots.empty();
 	    	$.ajax({
@@ -316,6 +317,29 @@
 	        	$schedSlots.append('<li style="color:#c00;padding:8px;">슬롯 조회 실패</li>');
 	    	});
 	  	}
+		*/
+		function loadSlots(roomNo, targetDate) {
+		    $schedSlots.addClass("fading"); // 페이드 아웃
+		    $.ajax({
+		        url: ctx + '/practice/api/room-slots',
+		        type: 'POST',
+		        data: { roomNo: roomNo, targetDate: targetDate },
+		        dataType: 'json'
+		    }).done(function(slotList) {
+		        setTimeout(() => {
+		            $schedSlots.removeClass("fading").empty(); // 페이드인 되면서 교체
+		            if (!slotList || slotList.length === 0) {
+		                $schedSlots.append('<li style="color:#888;padding:8px;">예약 가능한 시간대가 없습니다.</li>');
+		            } else {
+		                slotList.forEach(slot => {
+		                    if (slot.price > 0) renderSlot(slot);
+		                });
+		            }
+		            bindSlotClick();
+		            updateSummaryAndState();
+		        }, 200); // transition 시간과 맞춤
+		    });
+		}
 		
 	  	function renderSlot(slotVO) {
 	    	const start = slotVO.slotNo !== undefined ? +slotVO.slotNo : 0;
@@ -629,7 +653,7 @@
 	    	console.log("삭제 응답:", res);
 	        if (res.success) {
 	            $btn.closest('.fav-item').slideUp(200, function(){ $(this).remove(); });
-	            alert(res.message);
+	            //alert(res.message);
 	        } else {
 	            alert(res.message);
 	        }
