@@ -43,7 +43,7 @@
       </div>
 
       <!-- 타이틀 -->
-      <div class="main-title-box"><h2 class="main-title">기본정보</h2></div>
+      <div class="main-title-box"><h2 class="main-title">기본 정보 관리</h2></div>
 
       <!-- 안내 -->
       <div class="maininfo-row">
