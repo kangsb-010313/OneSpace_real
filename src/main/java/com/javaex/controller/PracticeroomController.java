@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.service.PracticeroomService;
+import com.javaex.service.TeampageService;
 import com.javaex.vo.FavoriteVO;
 import com.javaex.vo.ReserveInfoVO;
 import com.javaex.vo.SlotVO;
 import com.javaex.vo.SpacesVO;
+import com.javaex.vo.TeamVO;
 import com.javaex.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -33,7 +35,10 @@ public class PracticeroomController {
 	
     @Autowired
     private PracticeroomService practiceroomService;
-    
+
+    @Autowired
+    private TeampageService teampageService;
+
     // 메인
     @RequestMapping(value = "/practice1_main", method = { RequestMethod.GET, RequestMethod.POST })
     public String main(Model model) {
@@ -95,16 +100,16 @@ public class PracticeroomController {
         model.addAttribute("favoritesList", favoritesList);
         
         
-        //model.addAttribute("favoriteSpaces", practiceroomService.getFavoriteSpaces(userNo));
+        model.addAttribute("favoriteSpaces", practiceroomService.getFavoriteSpaces(userNo));
         model.addAttribute("favoriteCandidates", practiceroomService.getFavoriteCandidates(userNo));
-        //model.addAttribute("allTeams", teampageService.exeGetUserTeams(userNo));
+        model.addAttribute("allTeams", teampageService.exeGetUserTeams(userNo));
         
-        //List<TeamVO> teams = teampageService.exeGetUserTeams(userNo);
-        //model.addAttribute("allTeams", teams);
+        List<TeamVO> teams = teampageService.exeGetUserTeams(userNo);
+        model.addAttribute("allTeams", teams);
         
-        //if (!teams.isEmpty()) {
-        //    model.addAttribute("teamNo", teams.get(0).getTeamNo());
-        //}
+        if (!teams.isEmpty()) {
+            model.addAttribute("teamNo", teams.get(0).getTeamNo());
+        }
         
         return "practiceroom/practice4_wish";
     }

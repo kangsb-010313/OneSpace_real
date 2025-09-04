@@ -99,14 +99,6 @@ public class PracticeroomRepository {
     	
         return sqlSession.insert("practiceroom.insertVotesOption", voteOptionVO);
     }
- 
-    
-    
-    
-    
-    
-    
-    
     
     // 방 정보 조회
     public RoomsVO selectRoomByNo(Long roomNo) {

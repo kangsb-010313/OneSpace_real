@@ -163,6 +163,8 @@
 		 	select   r.roomNo,
 			         r.spacesNo,
 			         r.roomName,
+			         r.thumbImg,
+			         s.address,
 			         v.voteNo,
 			         v.minTime,
 			         v.maxTime,
@@ -178,9 +180,11 @@
 			                 from voteOptions
 			                 where userNo = #{userNo}
 			                 group by voteNo ) v,
-			      votes vo           
+			      votes vo,
+                  spaces s
 			where r.roomNo = v.roomNo
 			and vo.voteNo = v.voteNo
+            and r.spacesNo = s.spacesNo
 		 ]]>
 		 <!-- 
 		 <![CDATA[
