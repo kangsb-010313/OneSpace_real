@@ -97,6 +97,7 @@
     color: #222;
     margin-bottom: 16px;
     box-shadow: 0 3px 12px rgba(239,234,255,0.2);
+    white-space: pre-line;
 }
 
 .zone .address {
