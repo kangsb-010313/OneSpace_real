@@ -72,6 +72,7 @@
 		FROM spaces
 		WHERE spaceName LIKE #{_parameter}
 		OR spaceSummary LIKE #{_parameter}
+		OR address LIKE #{_parameter}
 		ORDER BY spacesNo DESC
 	</select>
 

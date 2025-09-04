@@ -353,7 +353,7 @@
 	        	.attr('data-start', start)
 	        	.attr('data-end', end)
 	        	.attr('data-price', price)
-	        	.html(pad2(start) + '~' + pad2(end) + '<span>(' + price.toLocaleString() + ')</span>' + slotVO.state);
+	        	.html(pad2(start) + '~' + pad2(end) + '<span>(' + price.toLocaleString() + ')</span>');
 			
 	    		$schedSlots.append($li);
 	    	}else{
@@ -362,7 +362,7 @@
 	        	.attr('data-start', start)
 	        	.attr('data-end', end)
 	        	.attr('data-price', price)
-	        	.html(pad2(start) + '~' + pad2(end) + '<span>(' + price.toLocaleString() + ')</span>' + slotVO.state);
+	        	.html(pad2(start) + '~' + pad2(end) + '<span>(' + price.toLocaleString() + ')</span>');
 			
 	    		$schedSlots.append($li);
 	    	}
