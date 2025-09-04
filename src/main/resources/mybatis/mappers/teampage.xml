@@ -520,7 +520,7 @@
 	        vo.voteDate,
 	        TIME_FORMAT(MIN(vo.voteTime), '%H:%i') AS startTime,
 	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
-	        (SELECT storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) as thumbImg
+	        r.thumbImg
 	    FROM votes v
 	    JOIN voteOptions vo ON v.voteNo = vo.voteNo
 	    JOIN rooms r ON vo.roomNo = r.roomNo
@@ -549,7 +549,7 @@
 	        TIME_FORMAT(min(vo.voteTime), '%H:%i') as startTime,
 	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
 	        v.totalPrice,
-	        (select storedFileName from roomAttachments where roomNo = r.roomNo LIMIT 1) as thumbImg
+	        r.thumbImg
 	    from votes v
 	    join voteOptions vo ON v.voteNo = vo.voteNo
 	    join rooms r ON vo.roomNo = r.roomNo
