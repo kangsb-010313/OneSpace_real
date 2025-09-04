@@ -231,26 +231,61 @@
         	
             
             // 검색
+            /*
             document.getElementById('searchInput').addEventListener('keypress', function(e) {
-		    if (e.key === 'Enter') {
-		        const keyword = this.value.trim();
-		        if (keyword) {
-		            fetch(`${ctx}/practice/api/search?keyword=` + encodeURIComponent(keyword), {
-		                headers: { 'Accept': 'application/json' }
-		            })
-		            .then(res => res.json())
-		            .then(data => {
-		                console.log('[search result]', data);
-		                document.getElementById('cardList').innerHTML = ''; 
-		                appendCards(data);
-		
-		                // 검색 모드에서는 무한 스크롤 종료
-		                done = true;
-		            })
-		            .catch(err => console.error(err));
-		        }
-		    }
-		});
+			    if (e.key === 'Enter') {
+			        const keyword = this.value.trim();
+			        if (keyword) {
+			            fetch(`${ctx}/practice/api/search?keyword=` + encodeURIComponent(keyword), {
+			                headers: { 'Accept': 'application/json' }
+			            })
+			            .then(res => res.json())
+			            .then(data => {
+			                console.log('[search result]', data);
+			                document.getElementById('cardList').innerHTML = ''; 
+			                appendCards(data);
+			
+			                // 검색 모드에서는 무한 스크롤 종료
+			                done = true;
+			            })
+			            .catch(err => console.error(err));
+			        }
+			    }
+			});
+            */
+            //검색(+검색어 지우면 새로고침)
+            const searchInput = document.getElementById('searchInput');
+
+            searchInput.addEventListener('input', function() {
+                const keyword = this.value.trim();
+
+                if (!keyword) {
+                    // 검색어가 다 지워졌을 때 페이지 새로고침
+                    location.reload();
+                    return;
+                }
+            });
+
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const keyword = this.value.trim();
+                    if (keyword) {
+                        fetch(`${ctx}/practice/api/search?keyword=` + encodeURIComponent(keyword), {
+                            headers: { 'Accept': 'application/json' }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log('[search result]', data);
+                            document.getElementById('cardList').innerHTML = ''; 
+                            appendCards(data);
+
+                            // 검색 모드에서는 무한 스크롤 종료
+                            done = true;
+                        })
+                        .catch(err => console.error(err));
+                    }
+                }
+            });
             
         </script>
 

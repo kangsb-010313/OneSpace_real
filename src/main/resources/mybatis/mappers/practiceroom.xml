@@ -344,8 +344,7 @@
 	<!-- 찜 목록에 새 항목 삽입 -->
 	<insert id="insertStudioWishlist" parameterType="map" useGeneratedKeys="true" keyProperty="studioWishlistNo">
 		INSERT INTO studioWishlist (userNo, roomNo)
-		VALUES (#{userNo},
-		#{roomNo})
+		VALUES (#{userNo}, #{roomNo})
 	</insert>
 
 	<!-- 사용자 소속 팀 리스트 조회 -->
