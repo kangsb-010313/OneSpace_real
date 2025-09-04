@@ -202,8 +202,8 @@
         var bgPosition = window.getComputedStyle(el).backgroundPosition;
 
         main.style.backgroundImage = bgImage;
-        main.style.backgroundPosition = bgPosition;
-        main.style.backgroundSize = "200% 200%"; // 클릭했을 때만 확대 적용
+        main.style.backgroundPosition = "center";
+        main.style.backgroundSize = "cover"; // 클릭했을 때만 확대 적용
 
         // active 표시
         document.querySelectorAll('.thumb-quad').forEach(e => e.classList.remove('active'));
@@ -216,7 +216,8 @@
         if (!main) return;
 
         // 원본 전체 사진으로 되돌리기
-        main.style.backgroundImage = "url('${ctx}/uploads/${zone.repImg}')";
+        //main.style.backgroundImage = "url('${ctx}/uploads/${zone.repImg}')";
+        main.style.backgroundImage = "url('${ctx}/uploads/${room.thumbImg}')";
         main.style.backgroundPosition = "center";
         main.style.backgroundSize = "cover";
 
