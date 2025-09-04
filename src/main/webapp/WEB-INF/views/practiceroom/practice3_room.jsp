@@ -84,12 +84,15 @@
                             
                             <!-- 추가 정보(예: 수용인원/면적) -->
                             <hr style="margin:12px 0 10px;">
-                            <div><strong>연습실 소개:</strong> ${room.roomInfo}</div>
-                            <div><strong>수용인원:</strong> ${room.capacity}명</div>
-                            <div><strong>면적:</strong> ${room.area}</div>
+                            <div><strong>연습실 소개:</strong> ${room.roomInfo}</div><br>
+                            <div><strong>수용인원:</strong> ${room.capacity}명</div><br>
+                            <div><strong>면적:</strong> ${room.area}</div><br>
                             
                             <c:forEach items="${room.prices}"  var="roomPriceVO">
-                            	${roomPriceVO.dayType}, ${roomPriceVO.startTime}~${roomPriceVO.endTime}, ${roomPriceVO.hourlyPrice}
+                            	${roomPriceVO.dayType}: 
+    							${fn:substring(roomPriceVO.startTime,0,5)}~
+    							${fn:substring(roomPriceVO.endTime,0,5)}
+    							${roomPriceVO.hourlyPrice}원<br>
                             </c:forEach>
                             
                             <div class="team-like-list" style="margin-top:12px;">

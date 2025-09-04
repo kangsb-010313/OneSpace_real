@@ -281,6 +281,7 @@
 	    	calendarCursor = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
 	    	$schedDate.text(formatSummaryDate(selectedDate));
 	    	renderCalendar();
+	    	bindMonthNav();
 	  	}
 		
 	 	/* ------------------ 슬롯 로드 & 렌더 ------------------ */
@@ -406,11 +407,36 @@
       	});
 		
 	  	// 달 이동 버튼
-	  	$(document).off('click', '.sched-nav').on('click', '.sched-nav', function(){
-		    const dir = $(this).data('dir') === 'prev' ? -1 : 1;
-	    	calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + dir, 1);
-	    	renderCalendar();
-	  	});
+	  	//$(document).off('click', '.sched-nav').on('click', '.sched-nav', function(){
+		//    const dir = $(this).data('dir') === 'prev' ? -1 : 1;
+	    //	calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + dir, 1);
+	    //	renderCalendar();
+	  	//});
+	  	
+	  	function bindMonthNav() {
+		    //console.log("달 이동 버튼 이벤트 바인딩 실행됨");
+		    $('#scheduleModal .sched-nav').off('click').on('click', function(e){
+		        e.preventDefault();
+		        e.stopPropagation();
+		        const dir = $(this).data('dir') === 'prev' ? -1 : 1;
+		        //console.log("클릭됨, dir=", dir);
+				
+		        calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + dir, 1);
+				
+		        // 선택 날짜를 새 달의 1일로 초기화
+		        selectedDate = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth(), 1);
+		        $schedDate.text(formatSummaryDate(selectedDate));
+				
+		        // 달력 다시 그리기
+		        renderCalendar();
+				
+		        // 슬롯 재조회
+		        const roomNo = $overlay.data('room-no');
+		        if (roomNo) {
+		            loadSlots(roomNo, toYYYYMMDD(selectedDate));
+		        }
+		    });
+		}
 		
 	  	// 닫기/선택
 	  	$schedClose.on('click', function(){ $overlay.hide(); });
