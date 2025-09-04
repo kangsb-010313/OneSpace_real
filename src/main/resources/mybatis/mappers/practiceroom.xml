@@ -173,7 +173,7 @@
 			         vo.totalPrice
 			from rooms r, ( select voteNo,
 			                        min(voteTime) minTime,
-			                        max(voteTime)+1 maxTime,
+			                        CONVERT(max(voteTime) + 1, SIGNED) AS maxTime,
 			                        count(voteTime) count,
 			                        voteDate,
 			                        roomNo
@@ -185,6 +185,7 @@
 			where r.roomNo = v.roomNo
 			and vo.voteNo = v.voteNo
             and r.spacesNo = s.spacesNo
+            order by r.roomNo
 		 ]]>
 		 <!-- 
 		 <![CDATA[
@@ -447,6 +448,7 @@
 		and s.spacesNo = r.spacesNo
 		and sw.userNo = #{roomNo}
 		and r.roomNo = hp.roomNo
+	    order by sw.roomNo	
 	</select>
 	
 

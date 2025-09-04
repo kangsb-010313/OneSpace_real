@@ -83,7 +83,6 @@
 													<%-- 후보 날짜 --%>
 													<fmt:formatDate value="${c.voteDate}" pattern="yyyy/MM/dd" />
 													<%-- 시작시간 ~ 종료시간 --%>
-													
 													<span class="fav-time">${c.minTime}:00~${c.maxTime}:00</span>
 													<span class="fav-duration">${c.count}시간</span>
 												</div>
