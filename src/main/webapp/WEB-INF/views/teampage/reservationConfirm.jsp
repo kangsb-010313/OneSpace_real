@@ -59,6 +59,11 @@
                                                         <p class="item-price"><fmt:formatNumber value="${confirmedOption.totalPrice}" pattern="#,###" /> 원</p>
                                                     </div>
                                                 </div>
+                                                
+                                                <div class="card-sub-info">
+									                <p class="item-location"><img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon">${confirmedOption.address}</p>
+									            </div>
+									            
                                             </div>
                                         </a>
                                     </div>

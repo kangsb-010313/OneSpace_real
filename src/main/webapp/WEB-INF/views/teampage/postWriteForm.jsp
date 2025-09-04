@@ -153,13 +153,17 @@
 								                        <li>
 								                            <div class="vote-item-card">
 								                                <%-- 이미지: candidate 변수의 picturesNo 필드를 사용 --%>
-								                                <img src="${pageContext.request.contextPath}/uploads/${candidate['picturesNo']}" alt="후보 이미지">
+								                                <%-- <img src="${pageContext.request.contextPath}/uploads/${candidate['picturesNo']}" alt="후보 이미지"> --%>
+								                                <img src="${pageContext.request.contextPath}/uploads/${candidate['thumbImg']}" alt="후보 이미지">
 								                                <div class="card-content-wrapper">
 								                                    <div class="card-main-info">
 								                                        <div class="info-left">
 								                                            <%-- 연습실 이름과 날짜/시간: candidate 변수의 필드들 사용 --%>
-								                                            <p class="item-title">${candidate['spaceName']}</p>
-                        													<p class="item-datetime">${candidate['voteDate']} ${candidate['startHour']}:00 ~ ${candidate['endHour']}:00</p> 
+								                                            <p class="item-title">${candidate['roomName']}</p>
+                        													<%-- <p class="item-datetime">${candidate['voteDate']} ${candidate['startHour']}:00 ~ ${candidate['endHour']}:00</p>  --%>
+                        													 <p class="item-datetime">
+								                                                <fmt:formatDate value="${candidate.voteDate}" pattern="yyyy-MM-dd" /> ${candidate['minTime']}:00 ~ ${candidate['maxTime']}:00
+								                                            </p> 
 								                                        </div>
 								                                        <div class="info-right">
 								                                            <%-- 가격: candidate 변수의 totalPrice 필드 사용 --%>

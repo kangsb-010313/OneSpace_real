@@ -244,6 +244,8 @@ public class TeampageController {
   	    }
   		*/
   	    
+  	    
+  	    // PracticeroomService를 통해 '찜한 후보' 목록을 가져옴. 반환 타입은 List<Map<String, Object>>
   	    List<Map<String, Object>> voteCandidates = practiceroomService.getFavoriteCandidates(userNo);
   	    System.out.println(voteCandidates);
 
@@ -252,20 +254,20 @@ public class TeampageController {
   	    
   		model.addAttribute("authUser", authUser);
   		model.addAttribute("teamPostType", teamPostType); // 글 종류 JSP 전달용
-          model.addAttribute("teamNo", teamNo); // teamNo도 JSP로 전달 (hidden input에 사용)
-  		
-          //exeGetAllTeams() 대신 exeGetUserTeams() 사용
-          List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
-          model.addAttribute("allTeams", userTeamList);
+  		model.addAttribute("teamNo", teamNo); // teamNo도 JSP로 전달 (hidden input에 사용)
+	
+  		//exeGetAllTeams() 대신 exeGetUserTeams() 사용
+  		List<TeamVO> userTeamList = teampageService.exeGetUserTeams(userNo);
+  		model.addAttribute("allTeams", userTeamList);
 
-          TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
-          model.addAttribute("currentTeam", currentTeam); // instaAccount를 포함한 팀 정보 전체를 전달
-          
-          if (currentTeam != null) {
-              model.addAttribute("teamName", currentTeam.getTeamName());
-          } else {
-              model.addAttribute("teamName", "알 수 없는 팀");
-          }
+  		TeamVO currentTeam = teampageService.exeGetTeamInfo(teamNo);
+  		model.addAttribute("currentTeam", currentTeam); // instaAccount를 포함한 팀 정보 전체를 전달
+  
+  		if (currentTeam != null) {
+  			model.addAttribute("teamName", currentTeam.getTeamName());
+  		} else {
+  			model.addAttribute("teamName", "알 수 없는 팀");
+  		}
   		
           
   		return "teampage/postWriteForm";

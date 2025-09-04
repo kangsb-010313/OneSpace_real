@@ -390,63 +390,60 @@
     </select>
 	
 	
-	<!-- [투표글 상세] 특정 게시글(postNo)에 포함된 모든 후보 목록을 조회 !!!불꽃 카운트!!! -->
-    <select id="selectVoteOptionsByPostNo" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
- 	    select
+	<!-- [투표글 상세] 특정 게시글(postNo)에 포함된 모든 후보 목록을 조회 -->
+	<select id="selectVoteOptionsByPostNo" parameterType="int" resultType="com.javaex.vo.TeamVotePostVO">
+	    select
 	        v.voteNo,
 	        s.spaceName,
 	        r.roomName,
 	        r.roomNo,
-	        SUBSTRING_INDEX(SUBSTRING_INDEX(s.address, ' ', 2), ' ', -1) AS address,
+	        s.address,      /* WHY: 주소가 축약되어 있었습니다. */
+	                        /* HOW: spaces 테이블(s)에서 전체 주소(address)를 가져오도록 수정합니다. */
+	        r.thumbImg,     /* WHY: 잘못된 이미지(picturesNo)를 가져오고 있었습니다. */
+	                        /* HOW: rooms 테이블(r)에서 올바른 대표 이미지(thumbImg)를 가져오도록 수정합니다. */
 	        vo.voteDate,
-			TIME_FORMAT(min(vo.voteTime), '%H:%i') as startTime,
-       		TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
+	        TIME_FORMAT(min(vo.voteTime), '%H:%i') as startTime,
+	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
 	        v.totalPrice,
-	        (select storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) AS picturesNo,
-               /* 이 후보가 이미 예약 완료되었는지 확인하는 플래그 (0: 예약가능, 1: 예약불가) */
+	        /* (기존 isReserved, spacesGuideNo, competitionCount 쿼리는 유지) */
 	        (
 	            SELECT IF(COUNT(*) > 0, 1, 0)
 	            FROM voteOptions vo_check
 	            WHERE vo_check.roomNo = r.roomNo
 	              AND vo_check.voteDate = vo.voteDate
-	              AND vo_check.voteStatus = 2  /* '예약확정' 상태인 데이터가 */
-	              AND vo_check.voteTime IN ( /* 현재 후보의 시간대와 겹치는지 확인 */
-	                  SELECT voteTime FROM voteOptions WHERE voteNo = v.voteNo
-	              )
+	              AND vo_check.voteStatus = 2
+	              AND vo_check.voteTime IN (SELECT voteTime FROM voteOptions WHERE voteNo = v.voteNo)
 	        ) AS isReserved,
-	        ( 	-- 편의시설 정보
+	        (
 	            select group_concat(
 	                CASE WHEN fi.facilityName = '블루투스 스피커' THEN '스피커' ELSE fi.facilityName END
 	                SEPARATOR ', ')
 	            from spacesGuide sg join facilityInfo fi on sg.facilityNo = fi.facilityNo
 	            where sg.spacesNo = s.spacesNo and fi.facilityName in ('주차', '조명', '블루투스 스피커')
 	        ) as spacesGuideNo,
-	
-	        -- [불꽃 카운트] 이 후보의 시간과 겹치는 '다른 팀'의 투표가 몇 개인지 계산
 	        (
 	            select count(DISTINCT v2.userNo)
 	            from votes v2
 	            join voteOptions vo2 ON v2.voteNo = vo2.voteNo
-	            where v2.postNo IS NOT NULL      /* 이미 등록된 투표 중에서-> 게시물로 등록이 완료된 투표 중에서 */
-	              and v2.postNo != v.postNo      /* 지금 내가 보고 있는 이 게시물이 아닌, 다른 팀의 투표가 */
-	              and vo2.roomNo = r.roomNo      /* 현재 후보와 같은 연습실, */
-	              and vo2.voteDate = vo.voteDate /* 같은 날짜에 */
-	              and EXISTS (                   /* 겹치는 시간이 하나라도 존재하는 경우 */
+	            where v2.postNo IS NOT NULL
+	              and v2.postNo != v.postNo
+	              and vo2.roomNo = r.roomNo
+	              and vo2.voteDate = vo.voteDate
+	              and EXISTS (
 	                  select 1
 	                  from voteOptions vo_current
-	                  where vo_current.voteNo = v.voteNo /* 현재 후보의 시간 목록과 */
-	                    and vo_current.voteTime = vo2.voteTime /* 다른 팀 후보의 시간 비교 */
+	                  where vo_current.voteNo = v.voteNo
+	                    and vo_current.voteTime = vo2.voteTime
 	              )
-	        ) as competitionCount 
-		
+	        ) as competitionCount
 	    from votes v
 	    join voteOptions vo ON v.voteNo = vo.voteNo
 	    join rooms r ON vo.roomNo = r.roomNo
 	    join spaces s ON r.spacesNo = s.spacesNo
-	    	where v.postNo = #{postNo}
-	    group by v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice
+	    where v.postNo = #{postNo}
+	    group by v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, r.thumbImg, vo.voteDate, v.totalPrice
 	    order by vo.voteDate, startTime
-	</select> 
+	</select>
 	
 	
 
@@ -515,19 +512,21 @@
 	    SELECT
 	        v.voteNo,
 	        v.totalPrice,
-	        s.spaceName, 
-	        r.roomName, 
+	        s.spaceName,
+	        r.roomName,
 	        r.roomNo,
-	        vo.voteDate, 
+	        s.address,      /* WHY: 주소 정보가 없어 JSP에서 표시할 수 없었습니다. */
+	                        /* HOW: spaces 테이블(별칭 s)에서 address 컬럼을 조회하도록 추가합니다. */
+	        vo.voteDate,
 	        TIME_FORMAT(MIN(vo.voteTime), '%H:%i') AS startTime,
 	        TIME_FORMAT(ADDTIME(MAX(vo.voteTime), '01:00:00'), '%H:%i') AS endTime,
 	        (SELECT storedFileName FROM roomAttachments WHERE roomNo = r.roomNo LIMIT 1) as thumbImg
 	    FROM votes v
 	    JOIN voteOptions vo ON v.voteNo = vo.voteNo
 	    JOIN rooms r ON vo.roomNo = r.roomNo
-	    JOIN spaces s ON r.spacesNo = s.spacesNo
+	    JOIN spaces s ON r.spacesNo = s.spacesNo /* HOW: 주소를 가져오기 위해 spaces 테이블(s)과 조인합니다. */
 	    WHERE v.postNo = #{postNo}
-	      /* 이 후보와 시간/장소가 겹치는 '예약확정(2)' 상태의 다른 후보가 없는 경우만 조회 */
+	      /* (이하 기존 겹치는 예약 확인 로직은 유지) */
 	      AND NOT EXISTS (
 	          SELECT 1
 	          FROM voteOptions vo_check
@@ -536,8 +535,7 @@
 	            AND vo_check.voteStatus = 2
 	            AND vo_check.voteTime IN (SELECT voteTime FROM voteOptions WHERE voteNo = v.voteNo)
 	      )
-	    GROUP BY v.voteNo
-	    /* 득표수(voteResults 테이블의 행 개수) 순으로 정렬하여 최다 득표 후보가 맨 위로 오도록 함 */
+	    GROUP BY v.voteNo, s.spaceName, r.roomName, r.roomNo, s.address, vo.voteDate, v.totalPrice, thumbImg
 	    ORDER BY (SELECT COUNT(*) FROM voteResults WHERE voteNo = v.voteNo) DESC
 	</select>
 	

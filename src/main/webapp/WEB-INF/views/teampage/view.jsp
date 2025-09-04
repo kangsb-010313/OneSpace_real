@@ -109,6 +109,11 @@
 								                                        <p class="item-price"><fmt:formatNumber value="${confirmedOption.totalPrice}" pattern="#,###" /> 원</p>
 								                                    </div>
 								                                </div>
+								                                
+			                                                    <div class="card-sub-info">
+						                                            <p class="item-location"><img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon">${confirmedOption.address}</p>
+						                                        </div>
+								                                
 								                            </div>
 								                        </a>
 								                    </div>
@@ -149,136 +154,6 @@
 								                </c:forEach>
 								            </div>
 								            
-								            <%-- '투표' 타입일 때만 투표 옵션 표시 --%>
-<%-- 								            <c:if test="${post.teamPostType == '투표'}">
-								                <div class="vote-section-wrap">
-								                    <ol class="vote-items-container">
-								                        <c:forEach items="${voteOptions}" var="option" varStatus="status">
-								                            <li>
-								                                <div class="vote-option">
-								                                
-													                하나의 큰 <c:choose> 블록으로 모든 경우의 수를 처리합니다.
-													                <c:choose>
-													                    [우선순위 1] 게시물 자체가 마감된 경우 (postStatus == 1)
-													                    <c:when test="${post.postStatus == 1}">
-													                        이 안에서 다시 분기: 예약된 후보인가 아닌가
-													                        <c:choose>
-													                            1-1. '예약된 후보'이면서 '투표가 마감'된 경우
-													                            <c:when test="${option.isReserved == 1}">
-													                                <div class="vote-item-card reserved-overlay">
-													                                
-													                                
-													                                    카드 내용은 동일
-													                                     <a href="${pageContext.request.contextPath}/practice/practice3_room?roomNo=${option.roomNo}"
-													                                      class="vote-item-card ${option.isReserved == 1 ? 'reserved-overlay' : ''}">
-													                                    <div class="favorite-count">🔥 ${option.competitionCount}</div>
-													                                    <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
-													                                    <div class="card-content-wrapper">
-													                                        <div class="card-main-info">
-													                                            <div class="info-left">
-													                                                <p class="item-title">${status.count}. ${option.roomName}</p>
-													                                                <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
-													                                            </div>
-													                                            <div class="info-right">
-													                                                <p class="item-price"><fmt:formatNumber value="${option.totalPrice}" pattern="#,###" /> 원</p>
-													                                            </div>
-													                                        </div>
-													                                    </div>
-													                                    </a>
-													                                    
-													                                    
-													                                </div>
-													                                <div class="vote-action-area reserved">
-													                                    '예약 완료'가 더 중요한 정보이므로 이것만 표시
-													                                    <span>예약이 완료된 시간대입니다.</span>
-													                                </div>
-													                            </c:when>
-													                            1-2. '예약되지 않았지만' '투표가 마감'된 경우
-													                            <c:otherwise>
-													                                <a href="#" class="vote-item-card">
-													                                    카드 내용은 동일
-													                                    <div class="favorite-count">🔥 ${option.competitionCount}</div>
-													                                    <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
-													                                    <div class="card-content-wrapper">
-													                                        <div class="card-main-info">
-													                                            <div class="info-left">
-													                                                <p class="item-title">${status.count}. ${option.roomName}</p>
-													                                                <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
-													                                            </div>
-													                                            <div class="info-right">
-													                                                <p class="item-price">${option.totalPrice} 원</p>
-													                                            </div>
-													                                        </div>
-													                                    </div>
-													                                </a>
-													                                <div class="vote-action-area reserved">
-													                                    <span>투표진행이 완료된 항목입니다.</span>
-													                                </div>
-													                            </c:otherwise>
-													                        </c:choose>
-													                    </c:when>
-													
-													                    [우선순위 2] 게시물은 진행 중이지만, 이 후보만 예약된 경우 (postStatus == 0 && option.isReserved == 1)
-													                    <c:when test="${option.isReserved == 1}">
-													                        <div class="vote-item-card reserved-overlay">
-													                            카드 내용은 동일
-													                            <div class="favorite-count">🔥 ${option.competitionCount}</div>
-													                            <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
-													                            <div class="card-content-wrapper">
-													                                <div class="card-main-info">
-													                                    <div class="info-left">
-													                                        <p class="item-title">${status.count}. ${option.roomName}</p>
-													                                        <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
-													                                    </div>
-													                                    <div class="info-right">
-													                                        <p class="item-price">${option.totalPrice} 원</p>
-													                                    </div>
-													                                </div>
-													                            </div>
-													                        </div>
-													                        <div class="vote-action-area reserved">
-													                            <span>다른 팀이 예약을 완료한 시간대입니다.</span>
-													                        </div>
-													                    </c:when>
-													
-													                    [우선순위 3] 투표 가능한 정상 상태일 경우
-													                    <c:otherwise>
-													                        <a href="#" class="vote-item-card">
-													                            <div class="favorite-count">🔥 ${option.competitionCount}</div>
-													                            <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
-													                            <div class="card-content-wrapper">
-													                                <div class="card-main-info">
-													                                    <div class="info-left">
-													                                        <p class="item-title">${status.count}. ${option.roomName}</p>
-													                                        <p class="item-datetime">${option.voteDate} ${option.startTime} ~ ${option.endTime}</p>
-													                                    </div>
-													                                    <div class="info-right">
-													                                        <p class="item-price">${option.totalPrice} 원</p>
-													                                    </div>
-													                                </div>
-													                            </div>
-													                        </a>
-													                        <div class="vote-action-area">
-													                            <c:set var="isVoted" value="false" />
-													                            <c:forEach items="${userVotedList}" var="votedNo">
-													                                <c:if test="${votedNo == option.voteNo}">
-													                                    <c:set var="isVoted" value="true" />
-													                                </c:if>
-													                            </c:forEach>
-													                            <button type="button" class="btn-vote ${isVoted ? 'active' : ''}" data-voteno="${option.voteNo}">투표</button>
-													                            <div class="voter-list" id="voter-list-${option.voteNo}"></div>
-													                        </div>
-													                    </c:otherwise>
-													                </c:choose>
-								                                </div>
-								                            </li>
-								                        </c:forEach>
-								                    </ol>
-								                </div>
-								            </c:if> --%>
-								            
-								            
-								            
 								            
                                             <%-- '투표' 타입일 때만 투표 옵션 표시 --%>
                                             <c:if test="${post.teamPostType == '투표'}">
@@ -296,7 +171,7 @@
                                                                                 
                                                                                 <%-- 카드 내부 컨텐츠는 기존과 동일하게 유지합니다. --%>
                                                                                 <div class="favorite-count">🔥 ${option.competitionCount}</div>
-                                                                                <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
+                                                                                 <img src="${pageContext.request.contextPath}/uploads/${option.thumbImg}" alt="${option.roomName}">
                                                                                 <div class="card-content-wrapper">
                                                                                     <div class="card-main-info">
                                                                                         <div class="info-left">
@@ -307,6 +182,11 @@
                                                                                             <p class="item-price"><fmt:formatNumber value="${option.totalPrice}" pattern="#,###" /> 원</p>
                                                                                         </div>
                                                                                     </div>
+                                                                                    
+																					<div class="card-sub-info">
+										                                            	<p class="item-location"><img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon">${option.address}</p>
+										                                        	</div>
+                                                                                    
                                                                                 </div>
                                                                             </a>
                                                                             
@@ -331,7 +211,7 @@
                                                                                 
                                                                                 <%-- 카드 내부 컨텐츠는 기존과 동일하게 유지합니다. --%>
                                                                                 <div class="favorite-count">🔥 ${option.competitionCount}</div>
-                                                                                <img src="${pageContext.request.contextPath}/uploads/${option.picturesNo}" alt="${option.roomName}">
+                                                                                <img src="${pageContext.request.contextPath}/uploads/${option.thumbImg}" alt="${option.roomName}">
                                                                                 <div class="card-content-wrapper">
                                                                                     <div class="card-main-info">
                                                                                         <div class="info-left">
@@ -342,6 +222,10 @@
                                                                                             <p class="item-price"><fmt:formatNumber value="${option.totalPrice}" pattern="#,###" /> 원</p>
                                                                                         </div>
                                                                                     </div>
+                                                                                    
+                                                                                     <div class="card-sub-info">
+											                                            <p class="item-location"><img src="${pageContext.request.contextPath}/assets/images/위치아이콘.jpg" class="map-icon">${option.address}</p>
+											                                        </div>
                                                                                 </div>
                                                                             </a>
                                                                             
