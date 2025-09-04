@@ -187,6 +187,7 @@ public class PracticeroomService {
 		int count = practiceroomRepository.insertVotes(voteVO);
 		
 		System.out.println("=====================================");
+		System.out.println(count);
 		System.out.println(voteVO);
 		System.out.println("=====================================");
 		//예약시간 저장(회원번호, 투표번호, 연습실번호, 날짜, 시간 03~ 05
