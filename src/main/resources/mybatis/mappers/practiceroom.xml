@@ -179,6 +179,7 @@
 			                        roomNo
 			                 from voteOptions
 			                 where userNo = #{userNo}
+			                 and voteStatus = 0
 			                 group by voteNo ) v,
 			      votes vo,
                   spaces s
