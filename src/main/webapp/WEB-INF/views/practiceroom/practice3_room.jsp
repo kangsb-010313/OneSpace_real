@@ -94,7 +94,7 @@
     							${fn:substring(roomPriceVO.endTime,0,5)}
     							${roomPriceVO.hourlyPrice}원<br>
                             </c:forEach>
-                            
+                            <br>
                             <div class="team-like-list" style="margin-top:12px;">
 							    <!-- 팀 선택 기능 제거 -->
 							    <button class="btn-like" type="button"
